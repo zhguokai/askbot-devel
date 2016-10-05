@@ -2,6 +2,9 @@
 *.swp
 *.log
 *~
+fetch
+push
+propagate
 db
 rebuild-locales.pl
 /src

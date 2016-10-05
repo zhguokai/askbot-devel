@@ -121,7 +121,7 @@ settings.register(
             'Categorize your question using this tag selector or '
             'entering text in tag box.'
         ),
-        description=_('Instruction for the catogory selector'),
+        description=_('Instruction for the category selector'),
         help_text=_('Plain text only'),
         localized=True
     )
