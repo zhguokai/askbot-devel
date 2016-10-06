@@ -1,19 +1,19 @@
 """
 External service key settings
 """
+from django.utils.translation import string_concat
+from django.utils.translation import ugettext_lazy as _
+
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import LOGIN_USERS_COMMUNICATION
 from askbot.deps import livesettings
-from django.utils.translation import string_concat
-from django.utils.translation import ugettext_lazy as _
-from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
 from askbot.utils.loading import module_exists
 
 LOGIN_PROVIDERS = livesettings.ConfigurationGroup(
                     'LOGIN_PROVIDERS',
                     _('Login provider settings'),
-                    super_group = LOGIN_USERS_COMMUNICATION
+                    super_group=LOGIN_USERS_COMMUNICATION
                 )
 
 settings.register(
@@ -22,7 +22,8 @@ settings.register(
         'TERMS_CONSENT_REQUIRED',
         default=False,
         description=_('Acceptance of terms required at registration'),
-        help_text=settings.get_related_settings_info(('FLATPAGES', 'TERMS', True))
+        help_text=settings.get_related_settings_info(('FLATPAGES', 'TERMS',
+                                                      True))
     )
 )
 
@@ -30,9 +31,11 @@ settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
         'SIGNIN_WORDPRESS_SITE_ENABLED',
-        default = False,
-        description=_('Activate to allow login with self-hosted wordpress site'),
-        help_text=_('to activate this feature you must fill out the wordpress xml-rpc setting bellow')
+        default=False,
+        description=_('Activate to allow login with self-hosted '
+                      'wordpress site'),
+        help_text=_('to activate this feature you must fill out the wordpress '
+                    'xml-rpc setting bellow')
     )
 )
 
@@ -40,9 +43,11 @@ settings.register(
     livesettings.URLValue(
         LOGIN_PROVIDERS,
         'WORDPRESS_SITE_URL',
-        default = '',
-        description=_('Fill it with the wordpress url to the xml-rpc, normally http://mysite.com/xmlrpc.php'),
-        help_text=_('To enable, go to Settings->Writing->Remote Publishing and check the box for XML-RPC')
+        default='',
+        description=_('Fill it with the wordpress url to the xml-rpc, '
+                      'normally http://mysite.com/xmlrpc.php'),
+        help_text=_('To enable, go to Settings->Writing->Remote Publishing '
+                    'and check the box for XML-RPC')
     )
 )
 
@@ -118,24 +123,23 @@ if module_exists('cas'):
         )
     )
 
-"""
-    settings.register(
-        livesettings.BooleanValue(
-            LOGIN_PROVIDERS,
-            'CAS_ONE_CLICK_REGISTRATION_ENABLED',
-            default=False,
-            description=_('CAS - enable one click registration'),
-            help_text=string_concat(
-                _('Allows skipping the registration page after the CAS authentication.'),
-                ' ',
-                settings.get_related_settings_info(
-                    ('EMAIL', 'BLANK_EMAIL_ALLOWED', True, _('Must be enabled')),
-                    ('ACCESS_CONTROL', 'REQUIRE_VALID_EMAIL_FOR', True, _('Must be not be required')),
-                )
-            ),
-        )
-    )
-"""
+# settings.register(
+#     livesettings.BooleanValue(
+#         LOGIN_PROVIDERS,
+#         'CAS_ONE_CLICK_REGISTRATION_ENABLED',
+#         default=False,
+#         description=_('CAS - enable one click registration'),
+#         help_text=string_concat(
+#             _('Allows skipping the registration page after the CAS '
+#               'authentication.'),
+#             ' ',
+#             settings.get_related_settings_info(
+#                 ('EMAIL', 'BLANK_EMAIL_ALLOWED', True, _('Must be enabled')),
+#                 ('ACCESS_CONTROL', 'REQUIRE_VALID_EMAIL_FOR', True, _('Must be not be required')),
+#             )
+#         ),
+#     )
+# )
 
 settings.register(
     livesettings.StringValue(
@@ -189,7 +193,7 @@ settings.register(
         'OPENSTACKID_ENDPOINT_URL',
         default='https://openstackid.org',
         description=_('OpenStackID service endpoint url'),
-   )
+    )
 )
 
 providers = (
@@ -206,7 +210,7 @@ providers = (
     'MediaWiki',
     'LinkedIn',
     'LiveJournal',
-    #'myOpenID',
+    # 'myOpenID',
     'OpenID',
     'Technorati',
     'Wordpress',
@@ -220,7 +224,8 @@ providers = (
 
 DISABLED_BY_DEFAULT = ('LaunchPad', 'Mozilla Persona', 'OpenStackID')
 
-NEED_EXTRA_SETUP = ('Google Plus', 'Twitter', 'MediaWiki', 'Facebook', 'LinkedIn', 'identi.ca',)
+NEED_EXTRA_SETUP = ('Google Plus', 'Twitter', 'MediaWiki', 'Facebook',
+                    'LinkedIn', 'identi.ca')
 
 for provider in providers:
     if provider == 'local':
@@ -266,7 +271,8 @@ for provider in providers:
                 default=False,
                 description=_('MediaWiki - enable one click registration'),
                 help_text=string_concat(
-                    _('Allows skipping the registration page after the wiki authentication.'),
+                    _('Allows skipping the registration page after the wiki '
+                      'authentication.'),
                     ' ',
                     settings.get_related_settings_info(
                         ('EMAIL', 'BLANK_EMAIL_ALLOWED', True, _('Must be enabled')),
