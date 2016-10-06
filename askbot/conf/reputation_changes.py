@@ -3,17 +3,17 @@ Settings for reputation changes that apply to
 user in response to various actions by the same
 users or others
 """
+from django.utils.translation import ugettext_lazy as _
 from askbot.conf.settings_wrapper import settings
 from askbot.deps.livesettings import ConfigurationGroup, IntegerValue
-from django.utils.translation import ugettext_lazy as _
 from askbot.conf.super_groups import REP_AND_BADGES
 
 REP_CHANGES = ConfigurationGroup(
-                    'REP_CHANGES',
-                    _('Karma loss and gain rules'),
-                    super_group = REP_AND_BADGES,
-                    ordering=2
-                )
+    'REP_CHANGES',
+    _('Karma loss and gain rules'),
+    super_group=REP_AND_BADGES,
+    ordering=2
+)
 
 settings.register(
     IntegerValue(
@@ -59,7 +59,7 @@ settings.register(
         description=_('Loss for giving a downvote')
     )
 )
-#'lose_by_downvoted',
+# 'lose_by_downvoted',
 
 settings.register(
     IntegerValue(
@@ -69,7 +69,7 @@ settings.register(
         description=_('Loss for owner of post that was flagged offensive')
     )
 )
-#'lose_by_flagged',
+# 'lose_by_flagged',
 
 settings.register(
     IntegerValue(
@@ -79,24 +79,26 @@ settings.register(
         description=_('Loss for owner of post that was downvoted')
     )
 )
-#'lose_by_downvoting',
+# 'lose_by_downvoting',
 
 settings.register(
     IntegerValue(
         REP_CHANGES,
         'REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION',
         default=-30,
-        description=_('Loss for owner of post that was flagged 3 times per same revision')
+        description=_('Loss for owner of post that was flagged 3 times per '
+                      'same revision')
     )
 )
-#'lose_by_flagged_lastrevision_3_times',
+# 'lose_by_flagged_lastrevision_3_times',
 
 settings.register(
     IntegerValue(
         REP_CHANGES,
         'REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION',
         default=-100,
-        description=_('Loss for owner of post that was flagged 5 times per same revision')
+        description=_('Loss for owner of post that was flagged 5 times per '
+                      'same revision')
     )
 )
-#'lose_by_flagged_lastrevision_5_times',
+# 'lose_by_flagged_lastrevision_5_times',

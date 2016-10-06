@@ -1,16 +1,16 @@
 """
 Settings responsible for display of questions lists
 """
+from django.utils.translation import ugettext_lazy as _
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import DATA_AND_FORMATTING
 from askbot.deps import livesettings
-from django.utils.translation import ugettext_lazy as _
 
 QUESTION_LISTS = livesettings.ConfigurationGroup(
-            'QUESTION_LISTS',
-            _('Listings of questions'),
-            super_group=DATA_AND_FORMATTING
-        )
+    'QUESTION_LISTS',
+    _('Listings of questions'),
+    super_group=DATA_AND_FORMATTING
+)
 
 settings.register(
     livesettings.BooleanValue(
@@ -42,6 +42,7 @@ settings.register(
     )
 )
 
+
 def enable_default_selector_if_disabled(old_value, new_value):
     scope_switch_name = new_value.upper() + '_SCOPE_ENABLED'
     is_enabled = getattr(settings, scope_switch_name)
@@ -66,7 +67,7 @@ settings.register(
     )
 )
 
-SCOPE_CHOICES_ANONYMOUS = (#anonymous users can't see followed questions
+SCOPE_CHOICES_ANONYMOUS = (  # Anonymous users can't see followed questions
     ('all', _('All Questions')),
     ('unanswered', _('Unanswered Questions')),
 )
