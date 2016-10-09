@@ -3,6 +3,7 @@ import subprocess
 
 locales = os.listdir('locale')
 
+
 def call_command(command):
     print command
     subprocess.call(command.split())
