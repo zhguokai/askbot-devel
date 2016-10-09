@@ -2,21 +2,21 @@
 Q&A website settings - title, desctiption, basic urls
 keywords
 """
+from urlparse import urlparse
+
+from django.utils.translation import ugettext_lazy as _
+from django.conf import settings as django_settings
+
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import CONTENT_AND_UI
 from askbot.deps import livesettings
-from django.utils.translation import ugettext_lazy as _
-from django.conf import settings as django_settings
-from django.core.validators import ValidationError, validate_email
-import re
-from urlparse import urlparse
 
 
 QA_SITE_SETTINGS = livesettings.ConfigurationGroup(
-                    'QA_SITE_SETTINGS',
-                    _('URLS, keywords & greetings'),
-                    super_group = CONTENT_AND_UI
-                )
+    'QA_SITE_SETTINGS',
+    _('URLS, keywords & greetings'),
+    super_group=CONTENT_AND_UI
+)
 
 settings.register(
     livesettings.StringValue(
@@ -49,8 +49,8 @@ settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_DESCRIPTION',
-        default='Open source question and answer forum written in ' +\
-                'Python and Django',
+        default=_('Open source question and answer forum written in '
+                  'Python and Django'),
         description=_('Site description for the search engines')
     )
 )
@@ -64,10 +64,11 @@ settings.register(
     )
 )
 
+
 def app_url_callback(old_value, new_value):
     """validates the site url and sets
     Sites framework record"""
-    #1) validate the site url
+    # 1) validate the site url
     parsed = urlparse(new_value)
     if parsed.netloc == '':
         msg = _('Please enter url of your site')
@@ -78,7 +79,7 @@ def app_url_callback(old_value, new_value):
     if parsed.path == '':
         new_value += '/'
 
-    #2) update domain name in the sites framework
+    # 2) update domain name in the sites framework
     from django.contrib.sites.models import Site
     site = Site.objects.get(id=django_settings.SITE_ID)
     site.domain = parsed.netloc
@@ -92,9 +93,7 @@ settings.register(
         QA_SITE_SETTINGS,
         'APP_URL',
         description=_(
-                'Base URL for your Q&A forum, must start with '
-                'http or https'
-            ),
+            'Base URL for your Q&A forum, must start with http or https'),
         update_callback=app_url_callback
     )
 )
@@ -103,9 +102,9 @@ settings.register(
     livesettings.BooleanValue(
         QA_SITE_SETTINGS,
         'ENABLE_GREETING_FOR_ANON_USER',
-        default = True,
-        description = _('Check to enable greeting for anonymous user')
-   )
+        default=True,
+        description=_('Check to enable greeting for anonymous user')
+    )
 )
 
 settings.register(
@@ -116,11 +115,7 @@ settings.register(
         localized=True,
         hidden=False,
         description=_(
-                'Text shown in the greeting message '
-                'shown to the anonymous user'
-            ),
-        help_text=_(
-                'Use HTML to format the message '
-            )
+            'Text shown in the greeting message shown to the anonymous user'),
+        help_text=_('Use HTML to format the message ')
     )
 )
