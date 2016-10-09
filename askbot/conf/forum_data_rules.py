@@ -1,17 +1,17 @@
 """
 Settings for askbot data display and entry
 """
+from django.utils.translation import ugettext_lazy as _
 from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
 from askbot import const
 from askbot.conf.super_groups import DATA_AND_FORMATTING
-from django.utils.translation import ugettext_lazy as _
 
 FORUM_DATA_RULES = livesettings.ConfigurationGroup(
-                        'FORUM_DATA_RULES',
-                        _('Data entry and display rules'),
-                        super_group = DATA_AND_FORMATTING
-                    )
+    'FORUM_DATA_RULES',
+    _('Data entry and display rules'),
+    super_group=DATA_AND_FORMATTING
+)
 
 EDITOR_CHOICES = (
     ('markdown', 'markdown'),
@@ -22,9 +22,9 @@ settings.register(
     livesettings.StringValue(
         FORUM_DATA_RULES,
         'EDITOR_TYPE',
-        default = 'markdown',
-        choices = EDITOR_CHOICES,
-        description = _('Editor for the posts')
+        default='markdown',
+        choices=EDITOR_CHOICES,
+        description=_('Editor for the posts')
     )
 )
 
@@ -62,9 +62,9 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'ENABLE_VIDEO_EMBEDDING',
-        default = False,
-        description = _('Enable embedding videos. '),
-        help_text = _(
+        default=False,
+        description=_('Enable embedding videos. '),
+        help_text=_(
             '<em>Note: please read <a href="%(url)s">read this</a> first.</em>'
         ) % {'url': const.DEPENDENCY_URLS['embedding-video']}
     )
@@ -74,8 +74,8 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'WIKI_ON',
-        default = True,
-        description = _('Check to enable community wiki feature')
+        default=True,
+        description=_('Check to enable community wiki feature')
     )
 )
 
@@ -107,9 +107,9 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'ALLOW_POSTING_BEFORE_LOGGING_IN',
-        default = True,
-        description = _('Allow posting before logging in'),
-        help_text = _(
+        default=True,
+        description=_('Allow posting before logging in'),
+        help_text=_(
             'Check if you want to allow users start posting questions '
             'or answers before logging in. '
             'Enabling this may require adjustments in the '
@@ -141,9 +141,9 @@ settings.register(
         choices=QUESTION_BODY_EDITOR_MODE_CHOICES,
         default='open',
         description=_('Question details/body editor should be'),
-        help_text =_(
-            '<b style="color:red;">To use folded mode, please first set minimum '
-            'question body length to 0. Also - please make tags '
+        help_text=_(
+            '<b style="color:red;">To use folded mode, please first set '
+            'minimum question body length to 0. Also - please make tags '
             'optional.</b>'
         )
     )
@@ -234,7 +234,7 @@ settings.register(
         FORUM_DATA_RULES,
         'ACCEPTING_ANSWERS_ENABLED',
         default=True,
-        description = _('Enable accepting best answer')
+        description=_('Enable accepting best answer')
     )
 )
 
@@ -261,8 +261,8 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'TAGS_ARE_REQUIRED',
-        description = _('Are tags required?'),
-        default = False,
+        description=_('Are tags required?'),
+        default=False,
     )
 )
 
@@ -275,10 +275,10 @@ settings.register(
     livesettings.StringValue(
         FORUM_DATA_RULES,
         'TAG_SOURCE',
-        description = _('Source of tags'),
-        #hidden = True,
-        choices = TAG_SOURCE_CHOICES,
-        default = 'user-input'
+        description=_('Source of tags'),
+        # hidden=True,
+        choices=TAG_SOURCE_CHOICES,
+        default='user-input'
     )
 )
 
@@ -286,9 +286,9 @@ settings.register(
     livesettings.StringValue(
         FORUM_DATA_RULES,
         'MANDATORY_TAGS',
-        description = _('Mandatory tags'),
-        default = '',
-        help_text = _(
+        description=_('Mandatory tags'),
+        default='',
+        help_text=_(
             'At least one of these tags will be required for any new '
             'or newly edited question. A mandatory tag may be wildcard, '
             'if the wildcard tags are active.'
@@ -300,9 +300,9 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'FORCE_LOWERCASE_TAGS',
-        default = False,
-        description = _('Force lowercase the tags'),
-        help_text = _(
+        default=False,
+        description=_('Force lowercase the tags'),
+        help_text=_(
             'Attention: after checking this, please back up the database, '
             'and run a management command: '
             '<code>python manage.py fix_question_tags</code> to globally '
@@ -315,10 +315,10 @@ settings.register(
     livesettings.StringValue(
         FORUM_DATA_RULES,
         'TAG_LIST_FORMAT',
-        default = 'list',
+        default='list',
         choices=const.TAG_LIST_FORMAT_CHOICES,
-        description = _('Format of tag list'),
-        help_text = _(
+        description=_('Format of tag list'),
+        help_text=_(
                         'Select the format to show tags in, '
                         'either as a simple list, or as a '
                         'tag cloud'
@@ -330,9 +330,9 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'USE_WILDCARD_TAGS',
-        default = False,
-        description = _('Use wildcard tags'),
-        help_text = _(
+        default=False,
+        description=_('Use wildcard tags'),
+        help_text=_(
                         'Wildcard tags can be used to follow or ignore '
                         'many tags at once, a valid wildcard tag has a single '
                         'wildcard at the very end'
@@ -344,9 +344,9 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'SUBSCRIBED_TAG_SELECTOR_ENABLED',
-        default = False,
-        description = _('Use separate set for subscribed tags'),
-        help_text = _(
+        default=False,
+        description=_('Use separate set for subscribed tags'),
+        help_text=_(
             'If enabled, users will have a third set of tag selections '
             '- "subscribed" (by email) in addition to "interesting" '
             'and "ignored"'
@@ -363,9 +363,9 @@ settings.register(
     livesettings.StringValue(
         FORUM_DATA_RULES,
         'MARKED_TAGS_ARE_PUBLIC_WHEN',
-        default = 'always',
-        choices = MARKED_TAG_DISPLAY_CHOICES,
-        description = _('Publicly show user tag selections')
+        default='always',
+        choices=MARKED_TAG_DISPLAY_CHOICES,
+        description=_('Publicly show user tag selections')
     )
 )
 
@@ -440,8 +440,8 @@ settings.register(
         'MAX_COMMENT_LENGTH',
         default=300,
         description=_(
-                'Maximum comment length, must be &lt; %(max_len)s'
-            ) % {'max_len': const.COMMENT_HARD_MAX_LENGTH }
+            'Maximum comment length, must be &lt; %(max_len)s'
+        ) % {'max_len': const.COMMENT_HARD_MAX_LENGTH}
     )
 )
 
@@ -449,7 +449,7 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'USE_TIME_LIMIT_TO_EDIT_COMMENT',
-        default = True,
+        default=True,
         description=_('Limit time to edit comments'),
         help_text=_('If unchecked, there will be no time limit')
     )
@@ -492,7 +492,7 @@ settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MINUTES_TO_EDIT_ANSWER',
-        default = 300,
+        default=300,
         description=_('Minutes allowed to edit answers'),
         help_text=_('To enable this setting, check the previous one')
     )
@@ -512,9 +512,9 @@ settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MINUTES_TO_EDIT_QUESTION',
-        default = 300,
-        description = _('Minutes allowed to edit questions'),
-        help_text = _('To enable this setting, check the previous one')
+        default=300,
+        description=_('Minutes allowed to edit questions'),
+        help_text=_('To enable this setting, check the previous one')
     )
 )
 
@@ -552,8 +552,8 @@ settings.register(
     )
 )
 
-#todo: looks like there is a bug in askbot.deps.livesettings
-#that does not allow Integer values with defaults and choices
+# TODO: looks like there is a bug in askbot.deps.livesettings
+# that does not allow Integer values with defaults and choices
 settings.register(
     livesettings.StringValue(
         FORUM_DATA_RULES,
@@ -587,9 +587,9 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'ALLOW_SWAPPING_QUESTION_WITH_ANSWER',
-        default = False,
-        description = _('Allow swapping answer with question'),
-        help_text = _(
+        default=False,
+        description=_('Allow swapping answer with question'),
+        help_text=_(
             'This setting will help import data from other forums '
             'such as zendesk, when automatic '
             'data import fails to detect the original question correctly.'
