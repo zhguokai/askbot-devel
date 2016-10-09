@@ -1,35 +1,37 @@
 """
 Email related settings
 """
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import string_concat
+from django.conf import settings as django_settings
+
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import LOGIN_USERS_COMMUNICATION
 from askbot.deps import livesettings
 from askbot import const
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import string_concat
-from django.conf import settings as django_settings
 
 EMAIL_SUBJECT_PREFIX = getattr(django_settings, 'EMAIL_SUBJECT_PREFIX', '')
 
 EMAIL = livesettings.ConfigurationGroup(
             'EMAIL',
             _('Email and email alert settings'),
-            super_group = LOGIN_USERS_COMMUNICATION
+            super_group=LOGIN_USERS_COMMUNICATION
         )
 
 settings.register(
     livesettings.StringValue(
         EMAIL,
         'EMAIL_SUBJECT_PREFIX',
-        default = EMAIL_SUBJECT_PREFIX,
-        description = _('Prefix for the email subject line'),
-        help_text = _(
+        default=EMAIL_SUBJECT_PREFIX,
+        description=_('Prefix for the email subject line'),
+        help_text=_(
                 'This setting takes default from the django setting'
                 'EMAIL_SUBJECT_PREFIX. A value entered here will override'
                 'the default.'
             )
     )
 )
+
 
 def get_default_admin_email():
     try:
@@ -146,10 +148,8 @@ settings.register(
         default='w',
         choices=const.NOTIFICATION_DELIVERY_SCHEDULE_CHOICES,
         description=_('Default notification frequency all questions'),
-        help_text=_(
-                    'Option to define frequency of emailed updates for: '
-                    'all questions.'
-                    )
+        help_text=_('Option to define frequency of emailed updates for: '
+                    'all questions.')
     )
 )
 
@@ -159,11 +159,10 @@ settings.register(
         'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_Q_ASK',
         default='i',
         choices=const.NOTIFICATION_DELIVERY_SCHEDULE_CHOICES,
-        description=_('Default notification frequency questions asked by the user'),
-        help_text=_(
-                    'Option to define frequency of emailed updates for: '
-                    'Question asked by the user.'
-                    )
+        description=_('Default notification frequency questions asked by the '
+                      'user'),
+        help_text=_('Option to define frequency of emailed updates for: '
+                    'Question asked by the user.')
     )
 )
 
@@ -173,11 +172,10 @@ settings.register(
         'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_Q_ANS',
         default='d',
         choices=const.NOTIFICATION_DELIVERY_SCHEDULE_CHOICES,
-        description=_('Default notification frequency questions answered by the user'),
-        help_text=_(
-                    'Option to define frequency of emailed updates for: '
-                    'Question answered by the user.'
-                    )
+        description=_('Default notification frequency questions answered by '
+                      'the user'),
+        help_text=_('Option to define frequency of emailed updates for: '
+                    'Question answered by the user.')
     )
 )
 
@@ -189,10 +187,8 @@ settings.register(
         choices=const.NOTIFICATION_DELIVERY_SCHEDULE_CHOICES,
         description=_('Default notification frequency questions individually \
                        selected by the user'),
-        help_text=_(
-                    'Option to define frequency of emailed updates for: '
-                    'Question individually selected by the user.'
-                    )
+        help_text=_('Option to define frequency of emailed updates for: '
+                    'Question individually selected by the user.')
     )
 )
 
@@ -204,10 +200,8 @@ settings.register(
         choices=const.NOTIFICATION_DELIVERY_SCHEDULE_CHOICES,
         description=_('Default notification frequency for mentions \
                        and comments'),
-        help_text=_(
-                    'Option to define frequency of emailed updates for: '
-                    'Mentions and comments.'
-                    )
+        help_text=_('Option to define frequency of emailed updates for: '
+                    'Mentions and comments.')
     )
 )
 
@@ -215,13 +209,12 @@ settings.register(
     livesettings.BooleanValue(
         EMAIL,
         'ENABLE_UNANSWERED_REMINDERS',
-        default = False,
-        description = _('Enable reminders about unanswered questions'),
-        help_text = _(
+        default=False,
+        description=_('Enable reminders about unanswered questions'),
+        help_text=_(
             'NOTE: in order to use this feature, it is necessary to '
             'run the management command "send_unanswered_question_reminders" '
-            '(for example, via a cron job - with an appropriate frequency) '
-        )
+            '(for example, via a cron job - with an appropriate frequency) ')
     )
 )
 
@@ -244,8 +237,8 @@ settings.register(
     livesettings.IntegerValue(
         EMAIL,
         'DAYS_BEFORE_SENDING_UNANSWERED_REMINDER',
-        default = 1,
-        description = _(
+        default=1,
+        description=_(
             'Days before starting to send reminders about unanswered questions'
         ),
     )
@@ -255,11 +248,10 @@ settings.register(
     livesettings.IntegerValue(
         EMAIL,
         'UNANSWERED_REMINDER_FREQUENCY',
-        default = 1,
-        description = _(
+        default=1,
+        description=_(
             'How often to send unanswered question reminders '
-            '(in days between the reminders sent).'
-        )
+            '(in days between the reminders sent).')
     )
 )
 
@@ -267,11 +259,9 @@ settings.register(
     livesettings.IntegerValue(
         EMAIL,
         'MAX_UNANSWERED_REMINDERS',
-        default = 5,
-        description = _(
-            'Max. number of reminders to send '
-            'about unanswered questions'
-        )
+        default=5,
+        description=_('Max. number of reminders to send '
+                      'about unanswered questions')
     )
 )
 
@@ -279,13 +269,12 @@ settings.register(
     livesettings.BooleanValue(
         EMAIL,
         'ENABLE_ACCEPT_ANSWER_REMINDERS',
-        default = False,
-        description = _('Enable accept the best answer reminders'),
-        help_text = _(
+        default=False,
+        description=_('Enable accept the best answer reminders'),
+        help_text=_(
             'NOTE: in order to use this feature, it is necessary to '
             'run the management command "send_accept_answer_reminders" '
-            '(for example, via a cron job - with an appropriate frequency) '
-        )
+            '(for example, via a cron job - with an appropriate frequency) ')
     )
 )
 
@@ -293,10 +282,9 @@ settings.register(
     livesettings.IntegerValue(
         EMAIL,
         'DAYS_BEFORE_SENDING_ACCEPT_ANSWER_REMINDER',
-        default = 3,
-        description = _(
-            'Days before starting to send reminders to accept an answer'
-        ),
+        default=3,
+        description=_(
+            'Days before starting to send reminders to accept an answer'),
     )
 )
 
@@ -304,8 +292,8 @@ settings.register(
     livesettings.IntegerValue(
         EMAIL,
         'ACCEPT_ANSWER_REMINDER_FREQUENCY',
-        default = 3,
-        description = _(
+        default=3,
+        description=_(
             'How often to send accept answer reminders '
             '(in days between the reminders sent).'
         )
@@ -316,11 +304,9 @@ settings.register(
     livesettings.IntegerValue(
         EMAIL,
         'MAX_ACCEPT_ANSWER_REMINDERS',
-        default = 5,
-        description = _(
-            'Max. number of reminders to send '
-            'to accept the best answer'
-        )
+        default=5,
+        description=_(
+            'Max. number of reminders to send to accept the best answer')
     )
 )
 
@@ -354,7 +340,7 @@ settings.register(
     livesettings.BooleanValue(
         EMAIL,
         'ALLOW_ASKING_BY_EMAIL',
-        default = False,
+        default=False,
         description=_('Allow posting questions by email'),
         help_text=_(
             'Before enabling this setting - please fill out IMAP settings '
@@ -367,26 +353,22 @@ settings.register(
     livesettings.BooleanValue(
         EMAIL,
         'REPLACE_SPACE_WITH_DASH_IN_EMAILED_TAGS',
-        default = True,
-        description = _('Replace space in emailed tags with dash'),
-        help_text = _(
+        default=True,
+        description=_('Replace space in emailed tags with dash'),
+        help_text=_(
             'This setting applies to tags written in the subject line '
-            'of questions asked by email'
-        )
+            'of questions asked by email')
     )
 )
 
 settings.register(
-     livesettings.BooleanValue(
-         EMAIL,
+    livesettings.BooleanValue(
+        EMAIL,
         'REPLY_BY_EMAIL',
-        default = False,
+        default=False,
         description=_('Enable posting answers and comments by email'),
-        #TODO give a better explanation depending on lamson startup procedure
-        help_text=_(
-            'To enable this feature make sure lamson is running'
-
-        )
+        # TODO give a better explanation depending on lamson startup procedure
+        help_text=_('To enable this feature make sure lamson is running')
     )
 )
 
@@ -394,35 +376,32 @@ settings.register(
     livesettings.StringValue(
         EMAIL,
         'SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN',
-        description=_(
-            'Emailed post: when to notify author about publishing'
-        ),
+        description=_('Emailed post: when to notify author about publishing'),
         choices=const.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN_CHOICES,
         default=const.NEVER
     )
 )
 
-#not implemented at this point
-#settings.register(
-#    livesettings.IntegerValue(
-#        EMAIL,
-#        'SELF_NOTIFY_WEB_POST_AUTHOR_WHEN',
-#        description = _(
-#            'Web post: when to notify author about publishing'
-#        ),
-#        choices = const.SELF_NOTIFY_WEB_POST_AUTHOR_WHEN_CHOICES,
-#        default =  const.NEVER
-#    )
-#)
+# not implemented at this point
+# settings.register(
+#     livesettings.IntegerValue(
+#         EMAIL,
+#         'SELF_NOTIFY_WEB_POST_AUTHOR_WHEN',
+#         description = _(
+#             'Web post: when to notify author about publishing'
+#         ),
+#         choices = const.SELF_NOTIFY_WEB_POST_AUTHOR_WHEN_CHOICES,
+#         default =  const.NEVER
+#     )
+# )
 
 settings.register(
-     livesettings.StringValue(
-         EMAIL,
+    livesettings.StringValue(
+        EMAIL,
         'REPLY_BY_EMAIL_HOSTNAME',
-        default = "",
+        default="",
         description=_('Reply by email hostname'),
-        #TODO give a better explanation depending on lamson startup procedure
-
+        # TODO give a better explanation depending on lamson startup procedure
     )
 )
 
@@ -431,6 +410,7 @@ settings.register(
         EMAIL,
         'MIN_WORDS_FOR_ANSWER_BY_EMAIL',
         default=14,
-        description=_('Email replies having fewer words than this number will be posted as comments instead of answers')
+        description=_('Email replies having fewer words than this number '
+                      'will be posted as comments instead of answers')
     )
 )

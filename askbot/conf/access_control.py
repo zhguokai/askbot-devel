@@ -1,15 +1,16 @@
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import string_concat
+
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import LOGIN_USERS_COMMUNICATION
 from askbot.deps import livesettings
 from askbot.deps.livesettings import BooleanValue
 from askbot.deps.livesettings import StringValue
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import string_concat
 
 ACCESS_CONTROL = livesettings.ConfigurationGroup(
                     'ACCESS_CONTROL',
                     _('Access control settings'),
-                    super_group = LOGIN_USERS_COMMUNICATION
+                    super_group=LOGIN_USERS_COMMUNICATION
                 )
 
 settings.register(
@@ -54,7 +55,8 @@ settings.register(
     livesettings.LongStringValue(
         ACCESS_CONTROL,
         'NEW_REGISTRATIONS_DISABLED_MESSAGE',
-        default=_('<p>New users cannot be registered at this time. Please sign in if you already have an account.</p>'),
+        default=_('<p>New users cannot be registered at this time. Please sign'
+                  ' in if you already have an account.</p>'),
         description=_('Message explaining that user registrations are disabled'),
         help_text=_('HTML is allowed')
     )
@@ -63,7 +65,7 @@ settings.register(
 EMAIL_VALIDATION_CASE_CHOICES = (
     ('nothing', _('nothing - not required')),
     ('see-content', _('account registration')),
-    #'post-content', _('posting content'),
+    # ('post-content', _('posting content')),
 )
 
 settings.register(
@@ -76,15 +78,17 @@ settings.register(
     )
 )
 
-#todo: move REQUIRE_VALID_EMAIL_FOR to boolean setting
-#settings.register(
-#    livesettings.BooleanValue(
-#        ACCESS_CONTROL,
-#        'EMAIL_VALIDATION_REQUIRED',
-#        default=False,
-#        description=_('Require valid email address to register')
-#    )
-#)
+# TODO: move REQUIRE_VALID_EMAIL_FOR to boolean setting
+# settings.register(
+#     livesettings.BooleanValue(
+#         ACCESS_CONTROL,
+#         'EMAIL_VALIDATION_REQUIRED',
+#         default=False,
+#         description=_('Require valid email address to register')
+#     )
+# )
+
+
 def update_email_callback(old, new):
     if new.strip():
         settings.update('BLACKLISTED_EMAIL_PATTERNS_MODE', 'disabled')
@@ -122,13 +126,9 @@ settings.register(
 
 BLACKLISTED_EMAIL_PATTERNS_MODE_CHOICES = (
     ('disabled', _('disable')),
-    ('medium', 
-            string_concat(
-                            _('block user registrations'),
-                            ', ',
-                            _('allow existing users to post')
-                        )
-    ),
+    ('medium', string_concat(_('block user registrations'),
+                             ', ',
+                             _('allow existing users to post'))),
     ('strict', _('block completely')),
 )
 
@@ -150,7 +150,7 @@ settings.register(
         description=_('Blacklisted email address patterns'),
         help_text=string_concat(
             _('Please use space to separate the entries'),
-            ', ', 
+            ', ',
             _('regular expressions are allowed'),
             '.'
         )
