@@ -1,19 +1,18 @@
 """Settings to control content moderation"""
 
+from django.utils.translation import ugettext_lazy as _
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import DATA_AND_FORMATTING
 from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import BooleanValue
 from askbot.deps.livesettings import LongStringValue
 from askbot.deps.livesettings import StringValue
-from django.core.cache import cache
-from django.utils.translation import ugettext_lazy as _
 
 MODERATION = ConfigurationGroup(
-                    'MODERATION',
-                    _('Content moderation'),
-                    super_group=DATA_AND_FORMATTING
-                )
+    'MODERATION',
+    _('Content moderation'),
+    super_group=DATA_AND_FORMATTING
+)
 
 CONTENT_MODERATION_MODE_CHOICES = (
     ('flags', _('audit flagged posts')),
@@ -28,7 +27,9 @@ settings.register(
         choices=CONTENT_MODERATION_MODE_CHOICES,
         default='flags',
         description=_('Content moderation method'),
-        help_text=_("Audit is made after the posts are published, pre-moderation prevents publishing before moderator's decision.")
+        help_text=_(
+            "Audit is made after the posts are published, pre-moderation "
+            "prevents publishing before moderator's decision.")
     )
 )
 
@@ -38,7 +39,8 @@ settings.register(
         'FORBIDDEN_PHRASES',
         default='',
         description=_('Reject all posts with these phrases'),
-        help_text=_('Enter one phrase per line (case-insensitive). '
+        help_text=_(
+            'Enter one phrase per line (case-insensitive). '
             'Posts with these phrases will be rejected '
             'without moderation.'
         )

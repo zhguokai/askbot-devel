@@ -2,34 +2,33 @@
 Settings that modify processing of user text input
 """
 
+import re
+from django.utils.translation import ugettext_lazy as _
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import DATA_AND_FORMATTING
 from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import BooleanValue, StringValue, LongStringValue
 from askbot import const
-from django.utils.translation import ugettext_lazy as _
-import re
 
 MARKUP = ConfigurationGroup(
-                    'MARKUP',
-                    _('Markup in posts'),
-                    super_group = DATA_AND_FORMATTING
-                )
+    'MARKUP',
+    _('Markup in posts'),
+    super_group=DATA_AND_FORMATTING
+)
+
 
 def regex_settings_validation(*args):
     """
     Validate the regular expressions
     """
     try:
-
         new_value = args[1]
         regex_list = new_value.split('\n')
 
         for i in range(0, len(regex_list)):
             re.compile(regex_list[i].strip())
         return args[1]
-
-    except Exception:
+    except re.error:
         # The regex is invalid, so we overwrite it with empty string
         return ""
 
@@ -38,8 +37,8 @@ settings.register(
     BooleanValue(
         MARKUP,
         'MARKUP_CODE_FRIENDLY',
-        description = _('Enable code-friendly Markdown'),
-        help_text = _(
+        description=_('Enable code-friendly Markdown'),
+        help_text=_(
             'If checked, underscore characters will not '
             'trigger italic or bold formatting - '
             'bold and italic text can still be marked up '
@@ -47,7 +46,7 @@ settings.register(
             'implicitly turns this feature on, because '
             'underscores are heavily used in LaTeX input.'
         ),
-        default = False
+        default=False
     )
 )
 
@@ -57,13 +56,11 @@ settings.register(
         'ENABLE_MATHJAX',
         description=_('Mathjax support (rendering of LaTeX)'),
         help_text=_(
-                    'If you enable this feature, '
-                    '<a href="%(url)s">mathjax</a> must be '
-                    'installed on your server in its own directory.'
-                    ) % {
-                            'url': const.DEPENDENCY_URLS['mathjax'],
-                        },
-        default = False
+            'If you enable this feature, '
+            '<a href="%(url)s">mathjax</a> must be '
+            'installed on your server in its own directory.'
+        ) % {'url': const.DEPENDENCY_URLS['mathjax']},
+        default=False
     )
 )
 
@@ -73,13 +70,12 @@ settings.register(
         'MATHJAX_BASE_URL',
         description=_('Base url of MathJax deployment'),
         help_text=_(
-                    'Note - <strong>MathJax is not included with '
-                    'askbot</strong> - you should deploy it yourself, '
-                    'preferably at a separate domain and enter url '
-                    'pointing to the "mathjax" directory '
-                    '(for example: http://mysite.com/mathjax)'
-                    ),
-        default = ''
+            'Note - <strong>MathJax is not included with '
+            'askbot</strong> - you should deploy it yourself, '
+            'preferably at a separate domain and enter url '
+            'pointing to the "mathjax" directory '
+            '(for example: http://mysite.com/mathjax)'),
+        default=''
     )
 )
 
@@ -94,7 +90,7 @@ settings.register(
             'the application  will be able to '
             'detect patterns and auto link to URLs'
         ),
-        default = False
+        default=False
     )
 )
 
@@ -116,7 +112,7 @@ settings.register(
             ' expressions elsewhere.'
         ),
         update_callback=regex_settings_validation,
-        default = ''
+        default=''
         )
     )
 
@@ -136,6 +132,6 @@ settings.register(
             ' and the entry in the post #123'
             ' will produce link to the bug 123 in the redhat bug tracker.'
         ),
-        default = ''
+        default=''
     )
 )

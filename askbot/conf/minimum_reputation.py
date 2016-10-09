@@ -2,16 +2,16 @@
 Settings for minimum reputation required for
 a variety of actions on the askbot askbot
 """
+from django.utils.translation import ugettext_lazy as _
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import REP_AND_BADGES
 from askbot.deps import livesettings
-from django.utils.translation import ugettext_lazy as _
 
 MIN_REP = livesettings.ConfigurationGroup(
     'MIN_REP',
     _('Karma thresholds'),
     ordering=0,
-    super_group = REP_AND_BADGES
+    super_group=REP_AND_BADGES
 )
 
 settings.register(
@@ -78,17 +78,15 @@ settings.register(
     )
 )
 
-"""
-#this is disabled to possibly be completely removed later
-settings.register(
-    livesettings.IntegerValue(
-        MIN_REP,
-        'MIN_REP_TO_LEAVE_COMMENTS',
-        default=10,
-        description=_('Leave comments')
-    )
-)
-"""
+# this is disabled to possibly be completely removed later
+# settings.register(
+#     livesettings.IntegerValue(
+#         MIN_REP,
+#         'MIN_REP_TO_LEAVE_COMMENTS',
+#         default=10,
+#         description=_('Leave comments')
+#     )
+# )
 
 settings.register(
     livesettings.IntegerValue(
@@ -142,8 +140,9 @@ settings.register(
         default=1,
         description=_('Insert link suggestions as plain text'),
         help_text=_(
-            'This value should be smaller than that for "insert clickable links". '
-            'This setting should stop link-spamming by newly registered users.'
+            'This value should be smaller than that for "insert clickable '
+            'links". This setting should stop link-spamming by newly '
+            'registered users.'
         )
     )
 )
@@ -158,7 +157,7 @@ settings.register(
 )
 
 settings.register(
-            livesettings.IntegerValue(
+    livesettings.IntegerValue(
         MIN_REP,
         'MIN_REP_TO_EDIT_WIKI',
         default=75,
@@ -200,10 +199,10 @@ settings.register(
         default=25,
         description=_('Remove rel=nofollow from own homepage'),
         help_text=_(
-                    'When a search engine crawler will see a rel=nofollow '
-                    'attribute on a link - the link will not count towards '
-                    'the rank of the users personal site.'
-                   )
+            'When a search engine crawler will see a rel=nofollow '
+            'attribute on a link - the link will not count towards '
+            'the rank of the users personal site.'
+        )
     )
 )
 

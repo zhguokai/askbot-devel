@@ -20,8 +20,8 @@ at run time
 
 askbot.deps.livesettings is a module developed for satchmo project
 """
-import askbot
 import logging
+
 from django.conf import settings as django_settings
 from django.core.cache import cache
 from django.contrib.sites.models import Site
@@ -30,10 +30,13 @@ from django.utils.functional import lazy
 from django.utils.translation import get_language
 from django.utils.translation import string_concat
 from django.utils.translation import ugettext_lazy as _
+
+import askbot
 from askbot.deps.livesettings import SortedDotDict, config_register
 from askbot.deps.livesettings.functions import config_get
 from askbot.deps.livesettings import signals
 from askbot.utils.functions import format_setting_name
+
 
 def assert_setting_info_correct(info):
     assert isinstance(info, tuple), u'must be tuple, %s found' % unicode(info)
@@ -54,7 +57,7 @@ class ConfigSettings(object):
 
     def __init__(self):
         """assigns SortedDotDict to self.__instance if not set"""
-        if ConfigSettings.__instance == None:
+        if ConfigSettings.__instance is None:
             ConfigSettings.__instance = SortedDotDict()
         self.__dict__['_ConfigSettings__instance'] = ConfigSettings.__instance
         self.__ordering_index = {}
@@ -98,7 +101,7 @@ class ConfigSettings(object):
         except:
             from askbot.deps.livesettings.models import Setting
             lang_postfix = '_' + get_language().upper()
-            #first try localized setting
+            # First try localized setting
             try:
                 setting = Setting.objects.get(key=key + lang_postfix)
             except Setting.DoesNotExist:
@@ -106,7 +109,7 @@ class ConfigSettings(object):
 
             setting.value = value
             setting.save()
-        #self.prime_cache()
+        # self.prime_cache()
 
     def register(self, value):
         """registers the setting
@@ -129,20 +132,19 @@ class ConfigSettings(object):
             self.__group_map[key] = group_key
 
     def get_setting_url(self, data):
-        from askbot.utils.html import internal_link #not site_link
+        from askbot.utils.html import internal_link  # not site_link
         group_name = data[0]
         setting_name = data[1]
 
         link = internal_link(
             'group_settings',
-            setting_name, #todo: better use description
+            setting_name,  # TODO: better use description
             kwargs={'group': group_name},
             anchor='id_%s__%s__%s' % (group_name, setting_name, get_language())
         )
         if len(data) == 4:
             return force_unicode(string_concat(link, ' (', data[3], ')'))
         return link
-
 
     def get_related_settings_info(self, *requirements):
         """returns a translated string explaining which
@@ -151,7 +153,7 @@ class ConfigSettings(object):
             (<group name>, <setting name>, <required or noot boolean>)
         """
         def _func():
-            #error checking
+            # error checking
             map(assert_setting_info_correct, requirements)
             required = list()
             optional = list()
@@ -226,7 +228,7 @@ class ConfigSettings(object):
                 setting_value = cls.__instance[key]
                 if setting_value.localized:
                     db_key = '{}_{}'.format(key, format_setting_name(get_language()))
-                else:   
+                else:
                     db_key = key
 
                 if db_key in db_keys:
@@ -260,9 +262,11 @@ def update_cached_value(key, value, language_code=None):
         settings_dict[key] = value
         cache.set(cache_key, settings_dict)
 
-def cached_value_update_handler(setting=None, new_value=None, language_code=None, *args, **kwargs):
-    key=setting.key
-    if setting.localized == False and askbot.is_multilingual():
+
+def cached_value_update_handler(setting=None, new_value=None,
+                                language_code=None, *args, **kwargs):
+    key = setting.key
+    if not setting.localized and askbot.is_multilingual():
         languages = dict(django_settings.LANGUAGES).keys()
         for lang in languages:
             update_cached_value(key, new_value, lang)
@@ -273,5 +277,5 @@ signals.configuration_value_changed.connect(
     cached_value_update_handler,
     dispatch_uid='update_cached_value_upon_config_change'
 )
-#settings instance to be used elsewhere in the project
+# settings instance to be used elsewhere in the project
 settings = ConfigSettings()
