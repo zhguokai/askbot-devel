@@ -30,7 +30,7 @@
                 django.jQuery = $;
             </script>
             <script type="text/javascript">
-                askbot['settings']['tinyMCEPlugins'] = JSON.parse('{{ TINYMCE_PLUGINS|as_json }}');
+                askbot['settings']['tinyMCEPlugins'] = JSON.parse('{{ settings.TINYMCE_PLUGINS|as_json }}');
             </script>
             {{ post_form.media }}
             {{ post_form.text }}
