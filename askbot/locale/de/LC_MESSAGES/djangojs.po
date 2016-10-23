@@ -66,7 +66,7 @@ msgstr[0] "Sorry, dieses Tag existiert nicht"
 msgstr[1] "Sorry, diese Tags existieren nicht"
 
 #: media/js/live_search.js:315
-msgid "search or ask your question"
+msgid "Search or ask your question"
 msgstr " "
 
 #: media/js/post.js:28

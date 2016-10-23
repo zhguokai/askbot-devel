@@ -61,7 +61,7 @@ msgstr[0] "מצטער, תגים אלה אינם קיימים"
 msgstr[1] "מצטער, תגים אלה אינם קיימים"
 
 #: media/js/live_search.js:315
-msgid "search or ask your question"
+msgid "Search or ask your question"
 msgstr "לחפש או לשאול את השאלה שלך"
 
 #: media/js/post.js:28

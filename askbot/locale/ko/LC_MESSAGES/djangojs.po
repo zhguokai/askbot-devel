@@ -64,7 +64,7 @@ msgid_plural "Sorry, these tags do not exist"
 msgstr[0] "죄송합니다, 그 tag가 존재하지 않습니다."
 
 #: media/js/live_search.js:315
-msgid "search or ask your question"
+msgid "Search or ask your question"
 msgstr "의문점을 질문하거나 검색"
 
 #: media/js/post.js:28

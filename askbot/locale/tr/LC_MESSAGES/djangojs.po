@@ -70,7 +70,7 @@ msgstr[0] "Üzgünüz, bu etiket mevcut değil"
 msgstr[1] "Üzgünüz, bu etiketler mevcut değil"
 
 #: media/js/live_search.js:315
-msgid "search or ask your question"
+msgid "Search or ask your question"
 msgstr "sorunuzu sorun veya arayın"
 
 #: media/js/post.js:28

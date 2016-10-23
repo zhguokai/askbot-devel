@@ -64,7 +64,7 @@ msgid_plural "Sorry, these tags do not exist"
 msgstr[0] "对不起，这些标签不存在"
 
 #: media/js/live_search.js:315
-msgid "search or ask your question"
+msgid "Search or ask your question"
 msgstr "搜索或提问"
 
 #: media/js/post.js:28

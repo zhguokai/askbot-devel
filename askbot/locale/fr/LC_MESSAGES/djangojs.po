@@ -72,8 +72,8 @@ msgstr[0] "Désolé, cette étiquette n'existe pas"
 msgstr[1] "Désolé, ces mots-clés n'existent pas."
 
 #: media/js/live_search.js:315
-msgid "search or ask your question"
-msgstr "rechercher ou poser votre question"
+msgid "Search or ask your question"
+msgstr "Rechercher ou poser votre question"
 
 #: media/js/post.js:28
 msgid "loading..."
