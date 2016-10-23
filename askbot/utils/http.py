@@ -1,6 +1,29 @@
 """http-related utilities for askbot
 """
 from copy import copy
+from urlparse import urlparse
+from django.http import HttpResponseRedirect
+from askbot.utils.sessions import get_savepoint_url, delete_savepoint_url
+
+class HttpResponseSavepointRedirect(HttpResponseRedirect):
+
+    def __init__(self, request, *args, **kwargs):
+        redirect_to = get_savepoint_url(request)
+        delete_savepoint_url(request)
+        super(HttpResponseSavepointRedirect, self).__init__(redirect_to, *args, **kwargs)
+
+
+def get_referrer_url(request, default=None):
+    url = request.META.get('HTTP_REFERER', None)
+    if url:
+        netloc = urlparse(url).netloc
+        from askbot.conf import settings as askbot_settings
+        site_url = askbot_settings.APP_URL
+        site_netloc = urlparse(site_url).netloc
+        if netloc and netloc == site_netloc:
+            return url
+    from askbot.models.spaces import get_feed_url
+    return default or get_feed_url('questions')
 
 def hide_passwords(data):
     """replaces content of values that may contain passsword

@@ -8,6 +8,7 @@ from django.conf import settings
 from django.core.urlresolvers import resolve
 from askbot.shims.django_shims import ResolverMatch
 from askbot.conf import settings as askbot_settings
+from askbot.utils.sessions import set_savepoint_url
 import urllib
 
 PROTECTED_VIEW_MODULES = (
@@ -64,9 +65,7 @@ class ForumModeMiddleware(object):
                     _('Please log in to use %s') % \
                     askbot_settings.APP_SHORT_NAME
                 )
-                redirect_url = '%s?next=%s' % (
-                    settings.LOGIN_URL,
-                    urllib.quote_plus(request.get_full_path())
-                )
-                return HttpResponseRedirect(redirect_url)
+                url = request.get_full_path()
+                set_savepoint_url(request, url)
+                return HttpResponseRedirect(settings.LOGIN_URL)
         return None

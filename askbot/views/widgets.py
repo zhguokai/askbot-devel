@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
+from askbot.utils.sessions import get_savepoint_url, set_savepoint_url
 from askbot import models
 from askbot import forms
 
@@ -99,11 +100,9 @@ def ask_widget(request, widget_id):
                 return redirect('ask_by_widget_complete')
             else:
                 request.session['widget_question'] = data_dict
-                next_url = '%s?next=%s' % (
-                        reverse('widget_signin'),
-                        reverse('ask_by_widget', args=(widget.id,))
-                )
-                return redirect(next_url)
+                savepoint_url = reverse('ask_by_widget', args=(widget.id,))
+                set_savepoint_url(request, savepoint_url, sticky=True)
+                return redirect(reverse('widget_signin'))
     else:
         if 'widget_question' in request.session and \
                 request.GET.get('action', 'post-after-login'):
@@ -115,9 +114,9 @@ def ask_widget(request, widget_id):
                 return redirect('ask_by_widget_complete')
             else:
                 #FIXME: this redirect is temporal need to create the correct view
-                next_url = '%s?next=%s' % (reverse('widget_signin'),
-                                           reverse('ask_by_widget', args=(widget_id,)))
-                return redirect(next_url)
+                savepoint_url = reverse('ask_by_widget', args=(widget_id,))
+                set_savepoint_url(request, savepoint_url, sticky=True)
+                return redirect(reverse('widget_signin'))
 
         form = forms.AskWidgetForm(
             include_text=widget.include_text_field,

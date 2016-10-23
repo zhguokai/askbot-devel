@@ -48,14 +48,18 @@ from django.views.decorators import csrf
 from django.utils.encoding import smart_unicode
 from askbot.utils.functions import generate_random_key
 from django.utils.html import escape
+from askbot.utils.http import get_referrer_url
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from askbot.mail import send_mail
 from askbot.utils.html import site_url
+from askbot.utils.http import HttpResponseSavepointRedirect
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
 from askbot.utils.loading import load_module
+from askbot.utils.sessions import set_savepoint_url, get_savepoint_url, is_savepoint_url_sticky
+from askbot.models.spaces import get_feed_url
 from sanction.client import Client as OAuth2Client
 from urlparse import urlparse
 
@@ -85,10 +89,10 @@ from askbot.deps.django_authopenid.models import UserAssociation, UserEmailVerif
 from askbot.deps.django_authopenid import forms
 from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
-from askbot.utils.forms import get_next_url
 from askbot.utils.forms import get_feed
 from askbot.utils.http import get_request_info
 from askbot.models.signals import user_logged_in, user_registered
+
 
 def create_authenticated_user_account(
     username=None, email=None, password=None,
@@ -155,18 +159,27 @@ def login(request, user):
     
     from django.contrib.auth import login as _login
 
-    # get old session key
+    # get old savepoint url and put it into new session
+    savepoint_url = get_savepoint_url(request)
+    savepoint_sticky = is_savepoint_url_sticky(request)
     session_key = request.session.session_key
-
-    # login and get new session key
     _login(request, user)
 
+    #pubish anon content
+    new_post = user.post_anonymous_askbot_content(session_key)
+    if new_post:
+        savepoint_url = new_post.get_absolute_url()
+        savepoint_sticky = False
+
+
+    set_savepoint_url(request, savepoint_url, sticky=savepoint_sticky)
+
+
     # send signal with old session key as argument
-    logging.debug('logged in user %s with session key %s' % (user.username, session_key))
     #todo: move to auth app
     user_logged_in.send(
-                        request = request,
-                        user = user,
+                        request=request,
+                        user=user,
                         session_key=session_key,
                         sender=None
                     )
@@ -271,17 +284,11 @@ def not_authenticated(func):
     he/she is already logged in."""
     def decorated(request, *args, **kwargs):
         if request.user.is_authenticated():
-            return HttpResponseRedirect(get_next_url(request))
+            return HttpResponseSavepointRedirect(request)
         return func(request, *args, **kwargs)
     return decorated
 
 def complete_oauth2_signin(request):
-    if 'next_url' in request.session:
-        next_url = request.session['next_url']
-        del request.session['next_url']
-    else:
-        next_url = reverse('index')
-
     if 'error' in request.GET:
         return HttpResponseRedirect(reverse('index'))
 
@@ -336,23 +343,16 @@ def complete_oauth2_signin(request):
                         request = request,
                         user = user,
                         user_identifier = user_id,
-                        login_provider_name = provider_name,
-                        redirect_url = next_url
+                        login_provider_name = provider_name
                     )
 
 
 
 def complete_oauth_signin(request):
-    if 'next_url' in request.session:
-        next_url = request.session['next_url']
-        del request.session['next_url']
-    else:
-        next_url = reverse('index')
-
     if 'denied' in request.GET:
-        return HttpResponseRedirect(next_url)
+        return HttpResponseSavepointRedirect(request)
     if 'oauth_problem' in request.GET:
-        return HttpResponseRedirect(next_url)
+        return HttpResponseSavepointRedirect(request)
 
     try:
         oauth_token = request.GET['oauth_token']
@@ -390,8 +390,7 @@ def complete_oauth_signin(request):
                             request = request,
                             user = user,
                             user_identifier = user_id,
-                            login_provider_name = oauth_provider_name,
-                            redirect_url = next_url
+                            login_provider_name = oauth_provider_name
                         )
 
     except Exception, e:
@@ -401,9 +400,8 @@ def complete_oauth_signin(request):
                 'or use another login method'
             )
         request.user.message_set.create(message = msg)
-        return HttpResponseRedirect(next_url)
+        return HttpResponseSavepointRedirect(request)
 
-#@not_authenticated
 @csrf.csrf_protect
 def signin(request, template_name='authopenid/signin.html'):
     """
@@ -417,25 +415,16 @@ def signin(request, template_name='authopenid/signin.html'):
     logging.debug('in signin view')
     on_failure = signin_failure
 
-    #we need a special priority on where to redirect on successful login
-    #here:
-    #1) url parameter "next" - if explicitly set
-    #2) url from django setting LOGIN_REDIRECT_URL
-    #3) home page of the forum
-    login_redirect_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', None)
-    next_url = get_next_url(request, default = login_redirect_url)
-    logging.debug('next url is %s' % next_url)
+    if request.method == 'GET':
+        login_form = forms.LoginForm()
+        if 'SAVEPOINT_URL_STICKY' not in request.session:
+            if 'manage_logins' in request.GET:
+                savepoint_url = reverse('user_signin')
+            else:
+                savepoint_url = get_referrer_url(request)
+            # Save login redirect url in session
+            set_savepoint_url(request, savepoint_url)
 
-    if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False \
-        and request.user.is_authenticated():
-        return HttpResponseRedirect(next_url)
-
-    if next_url == reverse('user_signin'):
-        next_url = '%(next)s?next=%(next)s' % {'next': next_url}
-
-    login_form = forms.LoginForm(initial = {'next': next_url})
-
-    #todo: get next url make it sticky if next is 'user_signin'
     if request.method == 'POST':
 
         login_form = forms.LoginForm(request.POST)
@@ -458,7 +447,7 @@ def signin(request, template_name='authopenid/signin.html'):
 
                     if user:
                         login(request, user)
-                        return HttpResponseRedirect(next_url)
+                        return HttpResponseSavepointRedirect(request)
                     else:
                         #try to login again via LDAP
                         user_info = ldap_authenticate(username, password)
@@ -469,7 +458,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                 user = authenticate(method='force', user_id=user.id)
                                 assert(user is not None)
                                 login(request, user)
-                                return HttpResponseRedirect(next_url)
+                                return HttpResponseSavepointRedirect(request)
                             else:
                                 #continue with proper registration
                                 ldap_username = user_info['ldap_username']
@@ -488,9 +477,8 @@ def signin(request, template_name='authopenid/signin.html'):
                                     request.session.pop('last_name', None)
                                 return finalize_generic_signin(
                                     request,
-                                    login_provider_name = 'ldap',
-                                    user_identifier = ldap_username + '@ldap',
-                                    redirect_url = next_url
+                                    login_provider_name='ldap',
+                                    user_identifier=ldap_username + '@ldap'
                                 )
                         else:
                             auth_fail_func_path = getattr(
@@ -519,7 +507,7 @@ def signin(request, template_name='authopenid/signin.html'):
                             login(request, user)
                             #todo: here we might need to set cookies
                             #for external login sites
-                            return HttpResponseRedirect(next_url)
+                            return HttpResponseSavepointRedirect(request)
                     elif password_action == 'change_password':
                         if request.user.is_authenticated():
                             new_password = \
@@ -532,7 +520,7 @@ def signin(request, template_name='authopenid/signin.html'):
                             request.user.message_set.create(
                                         message = _('Your new password saved')
                                     )
-                            return HttpResponseRedirect(next_url)
+                            return HttpResponseSavepointRedirect(request)
                     else:
                         logging.critical(
                             'unknown password action %s' % password_action
@@ -547,7 +535,7 @@ def signin(request, template_name='authopenid/signin.html'):
 
                 sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
                 url_params = {
-                    'next': next_url,
+                    'next': get_savepoint_url(request),
                     'space': get_feed(request)#todo make work w/o spaces
                 }
                 redirect_to = "%s%s?%s" % (
@@ -575,7 +563,6 @@ def signin(request, template_name='authopenid/signin.html'):
 
                     request.session['oauth_token'] = connection.get_token()
                     request.session['oauth_provider_name'] = provider_name
-                    request.session['next_url'] = next_url#special case for oauth
 
                     oauth_url = connection.get_auth_url(login_only=True)
                     return HttpResponseRedirect(oauth_url)
@@ -594,6 +581,7 @@ def signin(request, template_name='authopenid/signin.html'):
                     redirect_url = util.get_oauth2_starter_url(provider_name, csrf_token)
                     request.session['oauth2_csrf_token'] = csrf_token
                     request.session['provider_name'] = provider_name
+
                     return HttpResponseRedirect(redirect_url)
                 except util.OAuthError, e:
                     logging.critical(unicode(e))
@@ -622,8 +610,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                     request = request,
                                     user = user,
                                     user_identifier = custom_wp_openid_url,
-                                    login_provider_name = provider_name,
-                                    redirect_url = next_url
+                                    login_provider_name = provider_name
                                 )
                 except WpFault, e:
                     logging.critical(unicode(e))
@@ -644,10 +631,10 @@ def signin(request, template_name='authopenid/signin.html'):
 
     return show_signin_view(
                         request,
-                        login_form = login_form,
-                        view_subtype = view_subtype,
+                        login_form=login_form,
+                        view_subtype=view_subtype,
                         template_name=template_name
-                        )
+                    )
 
 @csrf.csrf_protect
 def show_signin_view(
@@ -673,12 +660,10 @@ def show_signin_view(
     assert(view_subtype in allowed_subtypes)
 
     if sticky:
-        next_url = reverse('user_signin')
-    else:
-        next_url = get_next_url(request)
+        set_savepoint_url(request, reverse('user_signin'))
 
     if login_form is None:
-        login_form = forms.LoginForm(initial = {'next': next_url})
+        login_form = forms.LoginForm()
     if account_recovery_form is None:
         account_recovery_form = forms.AccountRecoveryForm()#initial = initial_data)
 
@@ -859,7 +844,6 @@ def signin_success(request, identity_url, openid_response):
                     method = 'openid'
                 )
 
-    next_url = get_next_url(request)
     provider_name = util.get_provider_name(openid_url)
 
     request.session['email'] = openid_data.sreg.get('email', '')
@@ -869,16 +853,14 @@ def signin_success(request, identity_url, openid_response):
                         request = request,
                         user = user,
                         user_identifier = openid_url,
-                        login_provider_name = provider_name,
-                        redirect_url = next_url
+                        login_provider_name = provider_name
                     )
 
 def finalize_generic_signin(
                     request = None,
                     user = None,
                     login_provider_name = None,
-                    user_identifier = None,
-                    redirect_url = None
+                    user_identifier = None
                 ):
     """non-view function
     generic signin, run after all protocol-dependent details
@@ -902,7 +884,7 @@ def finalize_generic_signin(
                     'to the site administrator.'
                 )
                 request.user.message_set.create(message=message)
-                return HttpResponseRedirect(redirect_url)
+                return HttpResponseSavepointRedirect(request)
             except UserAssociation.DoesNotExist:
                 #register new association
                 UserAssociation(
@@ -911,7 +893,7 @@ def finalize_generic_signin(
                     openid_url=user_identifier,
                     last_used_timestamp=datetime.datetime.now()
                 ).save()
-                return HttpResponseRedirect(redirect_url)
+                return HttpResponseSavepointRedirect(request)
 
         elif user != request.user:
             #prevent theft of account by another pre-existing user
@@ -926,18 +908,19 @@ def finalize_generic_signin(
                 )
             logout(request)#log out current user
             login(request, user)#login freshly authenticated user
-            return HttpResponseRedirect(redirect_url)
+            # Here we redirect to main page, as we can't use previous user's session
+            return get_feed_url('questions')
         else:
             #user just checks if another login still works
             msg = _('Your %(provider)s login works fine') % \
                     {'provider': login_provider_name}
             request.user.message_set.create(message = msg)
-            return HttpResponseRedirect(redirect_url)
+            return HttpResponseSavepointRedirect(request)
     elif user:
         #login branch
         login(request, user)
         logging.debug('login success')
-        return HttpResponseRedirect(redirect_url)
+        return HttpResponseSavepointRedirect(request)
     else:
         #need to register
         request.method = 'GET'#this is not a good thing to do
@@ -967,7 +950,6 @@ def register(request, login_provider_name=None, user_identifier=None):
     """
 
     logging.debug('')
-    next_url = get_next_url(request)
 
     user = None
     username = request.session.get('username', '')
@@ -977,9 +959,8 @@ def register(request, login_provider_name=None, user_identifier=None):
     form_class = forms.get_registration_form_class()
     register_form = form_class(
                 initial={
-                    'next': next_url,
                     'username': request.session.get('username', ''),
-                    'email': request.session.get('email', ''),
+                    'email': request.session.get('email', '')
                 }
             )
 
@@ -1022,7 +1003,7 @@ def register(request, login_provider_name=None, user_identifier=None):
                 del request.session['ldap_user_info']
                 login(request, user)
                 cleanup_post_register_session(request)
-                return HttpResponseRedirect(next_url)
+                return HttpResponseSavepointRedirect(request)
 
             elif askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
 
@@ -1034,7 +1015,7 @@ def register(request, login_provider_name=None, user_identifier=None):
                         )
                 login(request, user)
                 cleanup_post_register_session(request)
-                return HttpResponseRedirect(next_url)
+                return HttpResponseSavepointRedirect(request)
             else:
                 email_verifier = UserEmailVerifier(key=generate_random_key())
                 email_verifier.value = {'username': username, 'email': email,
@@ -1043,8 +1024,7 @@ def register(request, login_provider_name=None, user_identifier=None):
                 email_verifier.save()
                 send_email_key(email, email_verifier.key,
                                handler_url_name='verify_email_and_register')
-                redirect_url = reverse('verify_email_and_register') + '?next=' + next_url
-                return HttpResponseRedirect(redirect_url)
+                return HttpResponseRedirect(reverse('verify_email_and_register'))
 
     providers = {
             'yahoo':'<font color="purple">Yahoo!</font>',
@@ -1123,7 +1103,7 @@ def verify_email_and_register(request):
             email_verifier.save()
             cleanup_post_register_session(request)
 
-            return HttpResponseRedirect(get_next_url(request))
+            return HttpResponseSavepointRedirect(request)
         except Exception, e:
             message = _(
                 'Sorry, registration failed. '
@@ -1144,8 +1124,7 @@ def signup_with_password(request):
     template: authopenid/signup_with_password.html
     """
 
-    logging.debug(get_request_info(request))
-    login_form = forms.LoginForm(initial = {'next': get_next_url(request)})
+    login_form = forms.LoginForm()
     #this is safe because second decorator cleans this field
     provider_name = request.REQUEST['login_provider']
 
@@ -1168,7 +1147,6 @@ def signup_with_password(request):
 
         if form1_is_valid:
             logging.debug('both forms are valid')
-            next = form.cleaned_data['next']
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
@@ -1181,7 +1159,7 @@ def signup_with_password(request):
                 )
                 login(request, user)
                 cleanup_post_register_session(request)
-                return HttpResponseRedirect(get_next_url(request))
+                return HttpResponseSavepointRedirect(request)
             else:
                 email_verifier = UserEmailVerifier(key=generate_random_key())
                 email_verifier.value = {'username': username,
@@ -1190,9 +1168,7 @@ def signup_with_password(request):
                 email_verifier.save()
                 send_email_key(email, email_verifier.key,
                                handler_url_name='verify_email_and_register')
-                redirect_url = reverse('verify_email_and_register') + \
-                                '?next=' + get_next_url(request)
-                return HttpResponseRedirect(redirect_url)
+                return HttpResponseRedirect(reverse('verify_email_and_register'))
 
         else:
             #todo: this can be solved with a decorator, maybe
@@ -1200,12 +1176,7 @@ def signup_with_password(request):
             logging.debug('create classic account forms were invalid')
     else:
         #todo: here we have duplication of get_password_login_provider...
-        form = RegisterForm(
-                        initial={
-                            'next': get_next_url(request),
-                            'login_provider': provider_name
-                        }
-                    )
+        form = RegisterForm(initial={'login_provider': provider_name})
     logging.debug('printing legacy signup form')
 
     major_login_providers = util.get_enabled_major_login_providers()
@@ -1241,7 +1212,7 @@ def signout(request):
         pass
     logout(request)
     logging.debug('user logged out')
-    return HttpResponseRedirect(reverse('index'))
+    return HttpResponseRedirect(get_referrer_url(request))
 
 XRDF_TEMPLATE = """<?xml version='1.0' encoding='UTF-8'?>
 <xrds:XRDS
@@ -1349,7 +1320,7 @@ def account_recover(request):
         else:
             return show_signin_view(request, view_subtype = 'bad_key')
 
-        return HttpResponseRedirect(get_next_url(request))
+        return HttpResponseSavepointRedirect(request)
 
 #internal server view used as return value by other views
 def validation_email_sent(request):

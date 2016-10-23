@@ -18,6 +18,7 @@ from askbot import exceptions as askbot_exceptions
 from askbot.conf import settings as askbot_settings
 from askbot.utils import url_utils
 from askbot.utils.html import site_url
+from askbot.utils.sessions import set_referrer_as_savepoint_url
 from askbot import get_version
 from askbot.models import get_feed_url
 
@@ -132,8 +133,8 @@ def check_authorization_to_post(func_or_message):
                 #todo: expand for handling ajax responses
                 if askbot_settings.ALLOW_POSTING_BEFORE_LOGGING_IN == False:
                     request.user.message_set.create(message = message)
-                    params = 'next=%s' % request.path
-                    return HttpResponseRedirect(url_utils.get_login_url() + '?' + params)
+                    set_referrer_as_savepoint_url(request, sticky=True)
+                    return HttpResponseRedirect(url_utils.get_login_url())
             return view_func(request, *args, **kwargs)
         return wrapper
 

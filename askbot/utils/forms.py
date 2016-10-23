@@ -17,34 +17,9 @@ import urllib
 def is_url(url):
     return url.startswith('/') or url.startswith('http://') or url.startswith('https://')
 
-DEFAULT_NEXT = '/' + getattr(settings, 'ASKBOT_URL')
-def clean_next(next, default = None):
-    if next is None or not is_url(next):
-        if default:
-            return default
-        else:
-            return DEFAULT_NEXT
-    if isinstance(next, str):
-        next = unicode(urllib.unquote(next), 'utf-8', 'replace')
-    next = next.strip()
-    logging.debug('next url is %s' % next)
-    return next
-
 def get_feed(request):
     from askbot.models import Feed
     return request.session.get('askbot_feed', Feed.objects.get_default())
-
-def get_next_url(request, default = None):
-    #todo: clean this up - the "space" parameter is new
-    from askbot.models import get_feed_url
-    feed = get_feed(request)
-    if feed:
-        #default to the space root url for now
-        default_next_url = get_feed_url('questions', feed)
-    else:
-        default_next_url = None
-    #otherwise use the old way of passing next url
-    return clean_next(request.REQUEST.get('next'), default_next_url)
 
 def get_db_object_or_404(params):
     """a utility function that returns an object
@@ -82,18 +57,6 @@ class StrippedNonEmptyCharField(forms.CharField):
             raise forms.ValidationError(_('this field is required'))
         return value
 
-class NextUrlField(forms.CharField):
-    def __init__(self):
-        super(
-            NextUrlField,
-            self
-        ).__init__(
-            max_length = 255,
-            widget = forms.HiddenInput(),
-            required = False
-        )
-    def clean(self,value):
-        return clean_next(value)
 
 login_form_widget_attrs = { 'class': 'required login' }
 

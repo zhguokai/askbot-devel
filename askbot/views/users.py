@@ -48,6 +48,7 @@ from askbot.models.badges import award_badges_signal
 from askbot.models.tag import format_personal_group_name
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
+from askbot.utils.sessions import set_savepoint_url
 from askbot.utils.loading import load_module
 
 def owner_or_moderator_required(f):
@@ -58,9 +59,9 @@ def owner_or_moderator_required(f):
         elif request.user.is_authenticated() and request.user.can_moderate_user(profile_owner):
             pass
         else:
-            next_url = request.path + '?' + urllib.urlencode(request.REQUEST)
-            params = '?next=%s' % urllib.quote(next_url)
-            return HttpResponseRedirect(url_utils.get_login_url() + params)
+            savepoint_url = request.path + '?' + urllib.urlencode(request.REQUEST)
+            set_savepoint_url(request, savepoint_url, sticky=True)
+            return HttpResponseRedirect(url_utils.get_login_url())
         return f(request, profile_owner, context)
     return wrapped_func
 

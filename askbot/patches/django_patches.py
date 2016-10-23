@@ -5,6 +5,8 @@ import sys
 from django.utils.safestring import mark_safe
 from django.utils.functional import lazy
 from django.template import Node
+from askbot.utils.http import get_referrer_url
+
 try:
     from functools import WRAPPER_ASSIGNMENTS
 except ImportError:
@@ -211,7 +213,7 @@ class CsrfViewMiddleware(object):
                 return accept()
             if request.is_secure():
                 # Strict referer checking for HTTPS
-                referer = request.META.get('HTTP_REFERER')
+                referer = get_referrer_url(request)
                 if referer is None:
                     return reject("Referer checking failed - no Referer.")
                 # The following check ensures that the referer is HTTPS,

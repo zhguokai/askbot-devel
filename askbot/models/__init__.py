@@ -1398,7 +1398,7 @@ def user_post_anonymous_askbot_content(user, session_key):
     """
     aq_list = AnonymousQuestion.objects.filter(session_key = session_key)
     aa_list = AnonymousAnswer.objects.filter(session_key = session_key)
-
+    latest_post = None
 
     is_on_read_only_group = user.get_groups().filter(read_only=True).count()
     if is_on_read_only_group:
@@ -1420,10 +1420,20 @@ def user_post_anonymous_askbot_content(user, session_key):
             msg = get_i18n_message('SUSPENDED_USERS_CANNOT_POST')
             user.message_set.create(message = msg)
         else:
+            latest_date = datetime.datetime(1, 1, 1)
             for aq in aq_list:
-                aq.publish(user)
+                q = aq.publish(user)
+                if q and aq.added_at > latest_date:
+                    latest_post = q
+                latest_date = aq.added_at
+
             for aa in aa_list:
-                aa.publish(user)
+                ans = aa.publish(user)
+                if ans and aa.added_at > latest_date:
+                    latest_post = ans
+                latest_date = aa.added_at
+
+    return latest_post
 
 
 def user_mark_tags(
@@ -3770,19 +3780,6 @@ def add_missing_tag_subscriptions(sender, instance, created, **kwargs):
                 instance.mark_tags(tagnames = tag_list,
                                 reason='subscribed', action='add')
 
-def post_anonymous_askbot_content(
-                                sender,
-                                request,
-                                user,
-                                session_key,
-                                signal,
-                                *args,
-                                **kwargs):
-    """signal handler, unfortunately extra parameters
-    are necessary for the signal machinery, even though
-    they are not used in this function"""
-    user.post_anonymous_askbot_content(session_key)
-
 def set_user_avatar_type_flag(instance, created, **kwargs):
     instance.user.update_avatar_type()
 
@@ -3853,7 +3850,6 @@ signals.user_registered.connect(init_askbot_user_profile)
 signals.user_registered.connect(greet_new_user)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
-signals.user_logged_in.connect(post_anonymous_askbot_content)
 signals.post_updated.connect(record_post_update_activity)
 signals.new_answer_posted.connect(tweet_new_post)
 signals.new_question_posted.connect(tweet_new_post)

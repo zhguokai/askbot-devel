@@ -41,7 +41,6 @@ parameters:
             {% endif %}
             method="POST"
         >{% csrf_token %}
-            {{ openid_register_form.next }}
             <div class="form-row-vertical">
                 <label for="id_username">
                     {%- trans %}<strong>Screen Name</strong> (<i>will be shown to others</i>){% endtrans %}

@@ -14,7 +14,7 @@ from django.utils.translation import ungettext_lazy, string_concat
 from django.utils.text import get_text_list
 from django.contrib.auth.models import User
 from django_countries import countries
-from askbot.utils.forms import NextUrlField, UserNameField
+from askbot.utils.forms import UserNameField
 from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
@@ -765,7 +765,6 @@ class FeedbackForm(forms.Form):
         label=_("I don't want to give my email or receive a response:"),
         required=False
     )
-    next = NextUrlField()
 
     def __init__(self, is_auth=False, *args, **kwargs):
         super(FeedbackForm, self).__init__(*args, **kwargs)

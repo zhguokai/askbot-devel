@@ -35,7 +35,7 @@ except:
 import time, base64, hmac, hashlib, operator, logging
 from models import Association, Nonce
 
-__all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
+__all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response']
 
 ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username', 'wordpress')
 
@@ -484,7 +484,7 @@ def get_enabled_major_login_providers():
         'type': 'openid-direct',
         'icon_media_path': '/jquery-openid/images/yahoo.gif',
         'tooltip_text': _('Sign in with Yahoo'),
-        'openid_endpoint': 'http://yahoo.com',
+        'openid_endpoint': 'https://me.yahoo.com',
     }
     data['aol'] = {
         'name': 'aol',

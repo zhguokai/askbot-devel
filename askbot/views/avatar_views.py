@@ -23,6 +23,8 @@ from avatar.util import get_primary_avatar, get_default_avatar_url
 from avatar.views import render_primary as django_avatar_render_primary
 
 from askbot import models
+from askbot.utils.sessions import get_savepoint_url
+from askbot.utils.http import get_referrer_url
 
 notification = False
 if 'notification' in settings.INSTALLED_APPS:
@@ -37,21 +39,10 @@ def _get_next(request):
     """
     The part that's the least straightforward about views in this module is how they 
     determine their redirects after they have finished computation.
-
-    In short, they will try and determine the next place to go in the following order:
-
-    1. If there is a variable named ``next`` in the *POST* parameters, the view will
-    redirect to that variable's value.
-    2. If there is a variable named ``next`` in the *GET* parameters, the view will
-    redirect to that variable's value.
-    3. If Django can determine the previous page from the HTTP headers, the view will
-    redirect to that previous page.
     """
-    next = request.POST.get('next', request.GET.get('next',
-        request.META.get('HTTP_REFERER', None)))
-    if not next:
-        next = request.path
-    return next
+
+    default_next = get_referrer_url(request, request.path)
+    return get_savepoint_url(request, default_next)
     
 def _notification_updated(request, avatar):
     notification.send([request.user], "avatar_updated",

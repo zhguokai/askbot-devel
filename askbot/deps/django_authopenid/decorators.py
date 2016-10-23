@@ -3,7 +3,7 @@ from django.forms import ValidationError
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from askbot.deps.django_authopenid import forms
-from askbot.utils.forms import get_next_url
+from askbot.utils.sessions import get_savepoint_url, set_savepoint_url
 
 def valid_password_login_provider_required(view_func):
     """decorator for a view function which will
@@ -20,8 +20,7 @@ def valid_password_login_provider_required(view_func):
             return view_func(request)
         except ValidationError:
             redirect_url = reverse('user_signin')
-            next = get_next_url(request)
-            if next:
-                redirect_url += '?next=%s' % next
+            savepoint_url = get_savepoint_url(request)
+            set_savepoint_url(request, savepoint_url, sticky=True)
             return HttpResponseRedirect(redirect_url)
     return decorated_function

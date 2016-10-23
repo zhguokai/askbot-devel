@@ -8,7 +8,7 @@
         {% if not thread.closed %}
             <a
                     class="button submit"
-                    href="{{settings.LOGIN_URL}}?next={{ question.get_absolute_url() }}"
+                    href="{{settings.LOGIN_URL}}"
                     >{% trans %}Login/Signup to Answer{% endtrans %}</a>
         {% endif %}
     {% else %}

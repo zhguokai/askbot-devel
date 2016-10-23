@@ -20,15 +20,15 @@ from askbot import skins
 from askbot.conf import settings as askbot_settings
 from askbot.forms import FeedbackForm
 from askbot.utils.url_utils import get_login_url
-from askbot.utils.forms import get_next_url
+from askbot.utils.http import HttpResponseSavepointRedirect
 from askbot.mail import mail_moderators
 from askbot.models import BadgeData, Award, User, Tag
 from askbot.models import badges as badge_data
 from askbot.models import get_feed_url
 from askbot.skins.loaders import render_text_into_skin
 from askbot.utils.decorators import admins_only
-from askbot.utils.forms import get_next_url
 from askbot.utils import functions
+from askbot.utils.sessions import set_referrer_as_savepoint_url, get_savepoint_url, set_savepoint_url
 
 def generic_view(request, template = None, page_class = None):
     """this may be not necessary, since it is just a rewrite of render"""
@@ -91,8 +91,8 @@ def feedback(request):
         if request.user.is_anonymous():
             message = _('Please sign in or register to send your feedback')
             request.user.message_set.create(message=message)
-            redirect_url = get_login_url() + '?next=' + request.path
-            return HttpResponseRedirect(redirect_url)
+            set_savepoint_url(request, request.path, sticky=True)
+            return HttpResponseRedirect(get_login_url())
 
     if request.method == "POST":
         form = FeedbackForm(
@@ -122,10 +122,10 @@ def feedback(request):
             )
             msg = _('Thanks for the feedback!')
             request.user.message_set.create(message=msg)
-            return HttpResponseRedirect(get_next_url(request))
+            return HttpResponseSavepointRedirect(request)
     else:
-        form = FeedbackForm(is_auth = request.user.is_authenticated(),
-                            initial={'next':get_next_url(request)})
+        set_referrer_as_savepoint_url(request)
+        form = FeedbackForm(is_auth = request.user.is_authenticated())
 
     data['form'] = form
     return render(request, 'feedback.html', data)

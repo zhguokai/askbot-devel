@@ -39,7 +39,7 @@ from askbot.conf import settings as askbot_settings
 from askbot import const as askbot_const
 from django.utils.safestring import mark_safe
 from recaptcha_works.fields import RecaptchaField
-from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
+from askbot.utils.forms import UserNameField, UserEmailField, SetPasswordForm
 from askbot.utils.loading import load_module
 
 # needed for some linux distributions like debian
@@ -51,10 +51,9 @@ except ImportError:
 from askbot.deps.django_authopenid import util
 
 __all__ = [
-    'OpenidSigninForm','OpenidRegisterForm',
+    'OpenidRegisterForm',
     'ClassicRegisterForm', 'ChangePasswordForm',
-    'ChangeEmailForm', 'EmailPasswordForm', 'DeleteForm',
-    'ChangeOpenidForm'
+    'ChangeEmailForm', 'EmailPasswordForm', 'DeleteForm'
 ]
 
 class LoginProviderField(forms.CharField):
@@ -97,21 +96,6 @@ class PasswordLoginProviderField(LoginProviderField):
         return value
 
 
-class OpenidSigninForm(forms.Form):
-    """ signin form """
-    openid_url = forms.CharField(max_length=255, widget=forms.widgets.TextInput(attrs={'class': 'openid-login-input', 'size':80}))
-    next = NextUrlField()
-
-    def clean_openid_url(self):
-        """ test if openid is accepted """
-        if 'openid_url' in self.cleaned_data:
-            openid_url = self.cleaned_data['openid_url']
-            if xri.identifierScheme(openid_url) == 'XRI' and getattr(
-                    django_settings, 'OPENID_DISALLOW_INAMES', False
-                ):
-                raise forms.ValidationError(_('i-names are not supported'))
-            return self.cleaned_data['openid_url']
-
 class LoginForm(forms.Form):
     """All-inclusive login form.
 
@@ -123,7 +107,6 @@ class LoginForm(forms.Form):
     * oauth login
     * facebook login (javascript-based facebook's sdk)
     """
-    next = NextUrlField()
     login_provider_name = LoginProviderField()
     openid_login_token = forms.CharField(
                             max_length=256,
@@ -312,14 +295,12 @@ class LoginForm(forms.Form):
 
 class OpenidRegisterForm(forms.Form):
     """ openid signin form """
-    next = NextUrlField()
     username = UserNameField(widget_attrs={'tabindex': 0})
     email = UserEmailField()
 
 class ClassicRegisterForm(SetPasswordForm):
     """ legacy registration form """
 
-    next = NextUrlField()
     username = UserNameField(widget_attrs={'tabindex': 0})
     email = UserEmailField()
     login_provider = PasswordLoginProviderField()

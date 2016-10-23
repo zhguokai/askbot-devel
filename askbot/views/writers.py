@@ -38,6 +38,7 @@ from askbot.models import signals
 from askbot.conf import settings as askbot_settings
 from askbot.search.state_manager import SearchState
 from askbot.utils import decorators
+from askbot.utils.http import get_referrer_url
 from askbot.utils.forms import format_errors
 from askbot.utils.functions import diff_date
 from askbot.utils import url_utils
@@ -47,6 +48,7 @@ from askbot.views import context
 from askbot.templatetags import extra_filters_jinja as template_filters
 from askbot.importers.stackexchange import management as stackexchange#todo: may change
 from askbot.utils.slug import slugify
+from askbot.models.spaces import get_feed_url
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -224,7 +226,7 @@ def ask(request, feed=None):#view used to ask a new question
     request.session['askbot_feed'] = feed
     if request.user.is_authenticated():
         if request.user.is_read_only():
-            referer = request.META.get("HTTP_REFERER", reverse('questions'))
+            referer = get_referrer_url(request)
             request.user.message_set.create(message=_('Sorry, but you have only read access'))
             return HttpResponseRedirect(referer)
 
