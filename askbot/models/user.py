@@ -540,25 +540,22 @@ class Group(AuthGroup):
     moderate_email = models.BooleanField(default=True)
     moderate_answers_to_enquirers = models.BooleanField(
                         default=False,
-                        help_text='If true, answers to outsiders questions '
-                                'will be shown to the enquirers only when '
-                                'selected by the group moderators.'
+                        help_text=_('If true, answers to outsiders questions '
+                                    'will be shown to the enquirers only when '
+                                    'selected by the group moderators.')
                     )
     openness = models.SmallIntegerField(default=CLOSED, choices=OPENNESS_CHOICES)
-    #preapproved email addresses and domain names to auto-join groups
-    #trick - the field is padded with space and all tokens are space separated
+    # preapproved email addresses and domain names to auto-join groups
+    # trick - the field is padded with space and all tokens are space separated
     preapproved_emails = models.TextField(
-                            null = True, blank = True, default = ''
-                        )
-    #only domains - without the '@' or anything before them
+        null=True, blank=True, default='')
+    # only domains - without the '@' or anything before them
     preapproved_email_domains = models.TextField(
-                            null = True, blank = True, default = ''
-                        )
+        null=True, blank=True, default='')
 
     is_vip = models.BooleanField(
         default=False,
-        help_text='Check to make members of this group site moderators'
-    )
+        help_text=_('Check to make members of this group site moderators'))
     read_only = models.BooleanField(default=False)
 
     objects = GroupManager()
@@ -596,11 +593,11 @@ class Group(AuthGroup):
         if user.is_anonymous():
             return 'closed'
 
-        #a special case - automatic global group cannot be joined or left
+        # A special case - automatic global group cannot be joined or left
         if self.name == askbot_settings.GLOBAL_GROUP_NAME:
             return 'closed'
 
-        #todo - return 'closed' for internal per user groups too
+        # TODO: return 'closed' for internal per user groups too
 
         if self.openness == Group.OPEN:
             return 'open'
@@ -608,7 +605,7 @@ class Group(AuthGroup):
         if user.is_administrator_or_moderator():
             return 'open'
 
-        #relying on a specific method of storage
+        # Relying on a specific method of storage
         from askbot.utils.forms import email_is_allowed
         if email_is_allowed(
             user.email,
@@ -653,6 +650,7 @@ class Group(AuthGroup):
     def save(self, *args, **kwargs):
         self.clean()
         super(Group, self).save(*args, **kwargs)
+
 
 class BulkTagSubscriptionManager(BaseQuerySetManager):
 

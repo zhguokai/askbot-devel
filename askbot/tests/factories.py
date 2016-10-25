@@ -60,3 +60,11 @@ class MessageFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'askbot.Message'
+
+
+class GroupFactory(factory.django.DjangoModelFactory):
+    name = factory.Faker('company')
+    description = factory.SubFactory(PostFactory)
+
+    class Meta:
+        model = 'askbot.Group'
