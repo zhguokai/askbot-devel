@@ -81,3 +81,10 @@ class GroupMembershipFactory(factory.django.DjangoModelFactory):
 class BulkTagSubscriptionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'askbot.BulkTagSubscription'
+
+
+class EmailFeedSettingFactory(factory.django.DjangoModelFactory):
+    subscriber = factory.SubFactory(UserFactory)
+
+    class Meta:
+        model = 'askbot.EmailFeedSetting'
