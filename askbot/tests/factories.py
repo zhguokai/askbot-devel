@@ -76,3 +76,8 @@ class GroupMembershipFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'askbot.GroupMembership'
+
+
+class BulkTagSubscriptionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'askbot.BulkTagSubscription'

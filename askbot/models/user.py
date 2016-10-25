@@ -702,7 +702,7 @@ class BulkTagSubscriptionManager(BaseQuerySetManager):
         if group_list:
             group_ids = []
             for group in group_list:
-                #TODO: do the group marked tag thing here
+                # TODO: do the group marked tag thing here
                 group_ids.append(group.id)
             new_object.groups.add(*group_ids)
 
