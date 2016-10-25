@@ -28,16 +28,6 @@ settings.register(
     )
 )
 
-settings.register(
-    livesettings.StringValue(
-        FORUM_DATA_RULES,
-        'MARKDOWN_CLASS',
-        default='markdown2.Markdown',
-        description=_('Custom Markdown class if you want to customize the '
-                      'markdown templating')
-    )
-)
-
 COMMENTS_EDITOR_CHOICES = (
     ('plain-text', 'Plain text editor'),
     ('rich-text', 'Same editor as for questions and answers')

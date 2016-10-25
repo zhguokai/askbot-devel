@@ -20,10 +20,19 @@ from askbot.utils.html import urlize_html
 URL_RE = re.compile("((?<!(href|.src|data)=['\"])((http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*))")
 
 
-def get_parser():
-    """returns an instance of configured ``markdown2`` parser
+def get_parser(markdown_class_addr=None):
     """
-    Markdown = import_string(askbot_settings.MARKDOWN_CLASS)
+    Returns an instance of configured :class:`markdown2.Markdown parser.
+
+    :param markdown_class_addr: Path to :class:`markdown2.Markdown` custom
+                                class. (default: `'markdown2.Markdown'`)
+    :type markdown_class_addr: ``str``
+    """
+    if markdown_class_addr is None:
+        from django.conf import settings as django_settings
+        markdown_class_addr = getattr(django_settings, 'ASKBOT_MARKDOWN_CLASS',
+                                      'markdown2.Markdown')
+    Markdown = import_string(markdown_class_addr)
     extras = ['link-patterns', 'video']
 
     if askbot_settings.ENABLE_MATHJAX or askbot_settings.MARKUP_CODE_FRIENDLY:

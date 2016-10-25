@@ -1,3 +1,4 @@
+import markdown2
 from django.test import TestCase
 from askbot.tests.utils import with_settings
 from askbot.utils.url_utils import urls_equal
@@ -121,4 +122,8 @@ class HTMLUtilsTests(TestCase):
 class GetParserTest(TestCase):
     def test_func(self):
         parser = get_parser()
-        import ipdb; ipdb.set_trace()
+        self.assertIsInstance(parser, markdown2.Markdown)
+
+    def test_markdown_class_addr(self):
+        parser = get_parser('askbot.tests.utils.Markdown')
+        self.assertIsInstance(parser, markdown2.Markdown)
