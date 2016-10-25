@@ -52,3 +52,11 @@ class ThreadFactory(factory.django.DjangoModelFactory):
         manager = cls._get_manager(model_class)
         instance = manager.create_new(*args, **kwargs)
         return instance
+
+
+class MessageFactory(factory.django.DjangoModelFactory):
+    user = factory.SubFactory(UserFactory)
+    message = factory.Faker('paragraph')
+
+    class Meta:
+        model = 'askbot.Message'
