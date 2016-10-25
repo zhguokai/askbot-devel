@@ -68,3 +68,11 @@ class GroupFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'askbot.Group'
+
+
+class GroupMembershipFactory(factory.django.DjangoModelFactory):
+    group = factory.SubFactory(GroupFactory)
+    user = factory.SubFactory(UserFactory)
+
+    class Meta:
+        model = 'askbot.GroupMembership'

@@ -420,10 +420,10 @@ class EmailFeedSetting(models.Model):
 
 
 class GroupMembership(models.Model):
-    NONE = -1#not part of the choices as for this records should be just missing
+    NONE = -1  # not part of the choices as for this records should be just missing
     PENDING = 0
     FULL = 1
-    LEVEL_CHOICES = (#'none' is by absence of membership
+    LEVEL_CHOICES = (  # 'none' is by absence of membership
         (PENDING, 'pending'),
         (FULL, 'full')
     )
@@ -432,10 +432,7 @@ class GroupMembership(models.Model):
     group = models.ForeignKey(AuthGroup, related_name='user_membership')
     user = models.ForeignKey(User, related_name='group_membership')
     level = models.SmallIntegerField(
-                        default=FULL,
-                        choices=LEVEL_CHOICES,
-                    )
-
+        default=FULL, choices=LEVEL_CHOICES,)
 
     class Meta:
         app_label = 'askbot'
