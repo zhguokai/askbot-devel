@@ -1,10 +1,13 @@
 import markdown2
+from mock import patch
 from django.test import TestCase
 from askbot.tests.utils import with_settings
 from askbot.utils.url_utils import urls_equal
 from askbot.utils.html import absolutize_urls
 from askbot.utils.html import replace_links_with_text
 from askbot.utils.html import get_text_from_html
+from askbot.utils.html import sanitize_html
+from askbot.utils.html import HTMLSanitizerMixin
 from askbot.utils.markup import get_parser
 from askbot.conf import settings as askbot_settings
 
@@ -127,3 +130,28 @@ class GetParserTest(TestCase):
     def test_markdown_class_addr(self):
         parser = get_parser('askbot.tests.utils.Markdown')
         self.assertIsInstance(parser, markdown2.Markdown)
+
+
+class SanitizeHtml(TestCase):
+    def test_sanitize_html(self):
+        html = '<p id="foo" class="bar">TEXT</p>'
+        new_html = sanitize_html(html)
+        self.assertNotIn('foo', new_html)
+        self.assertIn('bar', new_html)
+
+    @patch('askbot.utils.html.HTMLSanitizerMixin.allowed_elements',
+           HTMLSanitizerMixin.allowed_elements + ('ham',))
+    def test_sanitize_html_with_extra_elements(self):
+        html = '<p id="foo" class="bar">TEXT</p><p><ham></ham></p>'
+        new_html = sanitize_html(html)
+        self.assertIn('<ham>', new_html)
+        self.assertNotIn('foo', new_html)
+        self.assertIn('bar', new_html)
+
+    @patch('askbot.utils.html.HTMLSanitizerMixin.allowed_elements',
+           HTMLSanitizerMixin.allowed_attributes + ('id',))
+    def test_sanitize_html_with_extra_attrs(self):
+        html = '<p id="foo" class="bar">TEXT</p>'
+        new_html = sanitize_html(html)
+        self.assertIn('foo', new_html)
+        self.assertIn('bar', new_html)
