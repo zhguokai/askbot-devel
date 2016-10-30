@@ -65,7 +65,10 @@ class ForumModeMiddleware(object):
                     _('Please log in to use %s') % \
                     askbot_settings.APP_SHORT_NAME
                 )
-                url = request.get_full_path()
-                set_savepoint_url(request, url)
+                try:
+                    url = request.get_full_path()
+                    set_savepoint_url(request, url)
+                except:
+                    pass
                 return HttpResponseRedirect(settings.LOGIN_URL)
         return None
