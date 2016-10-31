@@ -7983,7 +7983,7 @@ msgid "FOLLOWED"
 msgstr "SEGUIDAS"
 
 #: templates/widgets/search_bar.html:20
-msgid "search or ask your question"
+msgid "Search or ask your question"
 msgstr "pesquise ou pergunte"
 
 #: templates/widgets/tag_selector.html:4

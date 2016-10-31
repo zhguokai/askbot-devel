@@ -59,7 +59,7 @@ msgid_plural "Sorry, these tags do not exist"
 msgstr[0] ""
 
 #: media/js/live_search.js:315
-msgid "search or ask your question"
+msgid "Search or ask your question"
 msgstr ""
 
 #: media/js/post.js:28

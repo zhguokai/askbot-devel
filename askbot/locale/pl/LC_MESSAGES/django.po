@@ -8009,7 +8009,7 @@ msgid "FOLLOWED"
 msgstr "Obserwowane"
 
 #: templates/widgets/search_bar.html:20
-msgid "search or ask your question"
+msgid "Search or ask your question"
 msgstr ""
 
 #: templates/widgets/tag_selector.html:4

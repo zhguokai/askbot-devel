@@ -63,7 +63,7 @@ msgstr[0] "Tämä tagi ei ole olemassa"
 msgstr[1] "Nämä tagit eivät ole olemassa"
 
 #: media/js/live_search.js:315
-msgid "search or ask your question"
+msgid "Search or ask your question"
 msgstr "etsi tai kysy kysymyksesi"
 
 #: media/js/post.js:28

@@ -7991,8 +7991,8 @@ msgid "FOLLOWED"
 msgstr "SUIVI"
 
 #: templates/widgets/search_bar.html:20
-msgid "search or ask your question"
-msgstr "rechercher ou poser votre question"
+msgid "Search or ask your question"
+msgstr "Rechercher ou poser votre question"
 
 #: templates/widgets/tag_selector.html:4
 msgid "Interesting tags"
