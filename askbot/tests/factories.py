@@ -52,3 +52,39 @@ class ThreadFactory(factory.django.DjangoModelFactory):
         manager = cls._get_manager(model_class)
         instance = manager.create_new(*args, **kwargs)
         return instance
+
+
+class MessageFactory(factory.django.DjangoModelFactory):
+    user = factory.SubFactory(UserFactory)
+    message = factory.Faker('paragraph')
+
+    class Meta:
+        model = 'askbot.Message'
+
+
+class GroupFactory(factory.django.DjangoModelFactory):
+    name = factory.Faker('company')
+    description = factory.SubFactory(PostFactory)
+
+    class Meta:
+        model = 'askbot.Group'
+
+
+class GroupMembershipFactory(factory.django.DjangoModelFactory):
+    group = factory.SubFactory(GroupFactory)
+    user = factory.SubFactory(UserFactory)
+
+    class Meta:
+        model = 'askbot.GroupMembership'
+
+
+class BulkTagSubscriptionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'askbot.BulkTagSubscription'
+
+
+class EmailFeedSettingFactory(factory.django.DjangoModelFactory):
+    subscriber = factory.SubFactory(UserFactory)
+
+    class Meta:
+        model = 'askbot.EmailFeedSetting'
