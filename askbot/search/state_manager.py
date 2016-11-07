@@ -290,7 +290,7 @@ class DummySearchState(object): # Used for caching question/thread summaries
 
     def __init__(self):
         self.tag = ''
-        self.feed = Feed.objects.get_default()
+        self.feed = Feed.objects.get_default().name
 
     def add_tag(self, tag):
         self.tag = tag
@@ -306,7 +306,7 @@ class DummySearchState(object): # Used for caching question/thread summaries
         return '<<<%s>>>' % self.tag
 
     def full_ask_url(self):
-        return get_feed_url('ask', Feed.objects.get_default())
+        return get_feed_url('ask', Feed.objects.get_default().name)
 
     def query_string(self):
         return ''

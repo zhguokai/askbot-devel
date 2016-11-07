@@ -19,7 +19,7 @@ def is_url(url):
 
 def get_feed(request):
     from askbot.models import Feed
-    return request.session.get('askbot_feed', Feed.objects.get_default())
+    return request.session.get('askbot_feed', Feed.objects.get_default().name)
 
 def get_db_object_or_404(params):
     """a utility function that returns an object
