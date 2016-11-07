@@ -1,6 +1,5 @@
 import sys
 from django.core.management.base import NoArgsCommand
-from django.db import transaction
 from askbot import models
 from askbot import forms
 from askbot.utils import console
@@ -13,7 +12,6 @@ class Command(NoArgsCommand):
         self.run_command()
         signals.set_all_db_signal_receivers(signal_data)
 
-    @transaction.commit_manually
     def run_command(self):
         """method that runs the actual command"""
         #go through tags and find character case duplicates and eliminate them
@@ -34,7 +32,6 @@ class Command(NoArgsCommand):
                     print 'Converting tag %s to lower case' % first_tag.name
                     first_tag.name = lowercased_name
                     first_tag.save()
-        transaction.commit()
 
         #go through questions and fix tag records on each
         threads = models.Thread.objects.all()
@@ -48,28 +45,48 @@ class Command(NoArgsCommand):
             norm_tag_set = set(thread.tags.values_list('name', flat=True))
             if norm_tag_set != denorm_tag_set:
 
-                if thread.last_edited_by:
-                    user = thread.last_edited_by
-                    timestamp = thread.last_edited_at
+                if thread.last_activity_by:
+                    user = thread.last_activity_by
+                    timestamp = thread.last_activity_at
                 else:
                     user = thread.author
                     timestamp = thread.added_at
 
-                tagnames = forms.TagNamesField().clean(thread.tagnames)
+                split_tags = thread.tagnames.split()
+                clean_tagnames = set()
+                for tagname in split_tags:
+                    try:
+                        clean_tagname = forms.TagNamesField().clean(tagname)
+                        clean_tagnames.add(clean_tagname)
+                    except:
+                        pass
+
+                tagnames = ' '.join(list(clean_tagnames))
 
                 thread.update_tags(
-                    tagnames = tagnames,
-                    user = user,
-                    timestamp = timestamp
+                    tagnames=tagnames,
+                    user=user,
+                    timestamp=timestamp
                 )
                 thread.tagnames = tagnames
                 thread.save()
                 found_count += 1
 
-            transaction.commit()
             checked_count += 1
             console.print_progress(checked_count, total_count)
         console.print_progress(checked_count, total_count)
+
+        #update tag used counts
+        print '\nFixing tag use counts ...',
+        total_count = models.Tag.objects.count()
+        checked_count = 0
+        for tag in models.Tag.objects.all().iterator():
+            tag.update_used_counts()
+            checked_count += 1
+            console.print_progress(checked_count, total_count)
+        console.print_progress(checked_count, total_count)
+
+        print '\n'
 
         if found_count:
             print '%d problem questions found, tag records restored' % found_count

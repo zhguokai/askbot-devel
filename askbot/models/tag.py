@@ -116,7 +116,7 @@ class TagQuerySet(models.query.QuerySet):
         tags = self.all().filter(deleted=False).exclude(used_count=0).order_by("-id")[:page_size]
         return tags
 
-    def update_use_counts(self, tags):
+    def update_used_counts(self, tags):
         """Updates the given Tags with their current use counts."""
         for tag in tags:
             tag.used_count = tag.threads.count()
@@ -317,6 +317,13 @@ class Tag(models.Model):
     def add_to_site(self, site):
         link, created = TagToSite.objects.get_or_create(tag=self, site=site)
         return link
+
+    def update_used_counts(self):
+        self.used_count = self.threads.count()
+        for site in Site.objects.all():
+            used_count = self.threads.filter(site=site).count()
+            counters = self.askbot_site_links.all()
+            counters.update(used_count=used_count)
 
 class TagToSite(models.Model):
     """used only when askbot is used in the multi-portal mode

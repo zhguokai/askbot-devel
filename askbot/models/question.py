@@ -1391,6 +1391,9 @@ class Thread(models.Model):
         exist when update_tags() is called!
         """
         if tagnames.strip() == '':
+            tags = list(self.tags.all())
+            self.tags.clear()
+            Tag.objects.update_used_counts(tags)
             return
 
         previous_tags = list(self.tags.filter(status = Tag.STATUS_ACCEPTED))
@@ -1501,7 +1504,7 @@ class Thread(models.Model):
         #if there are any modified tags, update their use counts
         modified_tags = set(modified_tags)
         if modified_tags:
-            Tag.objects.update_use_counts(modified_tags)
+            Tag.objects.update_used_counts(modified_tags)
             signals.tags_updated.send(None,
                                 thread=self,
                                 tags=modified_tags,
