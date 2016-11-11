@@ -17,40 +17,39 @@ from django.utils.html import urlize
 from django.utils.translation import ugettext as _
 
 
-EXTRA_ACCEPTABLE_ELEMENTS = tuple(getattr(django_settings,
-                                          'ASKBOT_EXTRA_ACCEPTABLE_ELEMENTS',
-                                          ()))
-EXTRA_ACCEPTABLE_ATTRIBUTES = tuple(getattr(django_settings,
-                                            'ASKBOT_EXTRA_ACCEPTABLE_ELEMENTS',
-                                            ()))
-
-
-class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
-    acceptable_elements = (
-        'a', 'abbr', 'acronym', 'address', 'b', 'big',
+ALLOWED_HTML_ELEMENTS = ('a', 'abbr', 'acronym', 'address', 'b', 'big',
         'blockquote', 'br', 'caption', 'center', 'cite', 'code', 'col',
         'colgroup', 'dd', 'del', 'dfn', 'dir', 'div', 'dl', 'dt', 'em', 'font',
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins', 'kbd',
         'li', 'ol', 'p', 'pre', 'q', 's', 'samp', 'small', 'span', 'strike',
         'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead',
-        'tr', 'tt', 'u', 'ul', 'var', 'param'
-    ) + EXTRA_ACCEPTABLE_ELEMENTS
+        'tr', 'tt', 'u', 'ul', 'var', 'param')
 
-    acceptable_attributes = (
-        'abbr', 'align', 'alt', 'axis', 'border', 'class',
+
+ALLOWED_HTML_ATTRIBUTES = ('abbr', 'align', 'alt', 'axis', 'border', 'class',
         'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'cite',
         'cols', 'colspan', 'datetime', 'dir', 'frame', 'headers', 'height',
         'href', 'hreflang', 'hspace', 'lang', 'longdesc', 'name', 'nohref',
         'noshade', 'nowrap', 'rel', 'rev', 'rows', 'rowspan', 'rules', 'scope',
         'span', 'src', 'start', 'summary', 'title', 'type', 'valign', 'vspace',
-        'width',
-    ) + EXTRA_ACCEPTABLE_ATTRIBUTES
+        'width')
 
-    allowed_elements = acceptable_elements
-    allowed_attributes = acceptable_attributes
+
+class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
     allowed_css_properties = ()
     allowed_css_keywords = ()
     allowed_svg_properties = ()
+
+    def __init__(self, *args, **kwargs):
+        self.allowed_elements = tuple(getattr(django_settings,
+                                           'ASKBOT_ALLOWED_HTML_ELEMENTS',
+                                           ALLOWED_HTML_ELEMENTS
+                                           ))
+
+        self.allowed_attributes = tuple(getattr(django_settings,
+                                           'ASKBOT_ALLOWED_HTML_ATTRIBUTES',
+                                           ALLOWED_HTML_ATTRIBUTES
+                                           ))
 
 
 class HTMLSanitizer(tokenizer.HTMLTokenizer, HTMLSanitizerMixin):

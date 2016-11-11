@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added settings `ASKBOT_ALLOWED_HTML_ELEMENTS` and
+  `ASKBOT_ALLOWED_HTML_ATTRIBUTES`
 * Allow custom markdown parser via `ASKBOT_MARKDOWN_CLASS` setting
 * Applied Akismet check (if enabled) to editing of all content
 * Updated Facebook API to v2.2.
