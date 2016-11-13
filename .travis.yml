@@ -1,12 +1,20 @@
 language: python
 
+services:
+  - mysql
+
 python:
   - "2.7"
-  - "pypy"
+
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS askbot;'
+  - export DATABASE_URL="mysql://travis:@127.0.0.1:3306/askbot?reconnect=true"
 
 install:
   - TOX_ENV=py${TRAVIS_PYTHON_VERSION}
+  - pip install tox
   - tox -e $TOX_ENV --notest
+  - tox -e $TOX_ENV -- pip install mysqlclient
 
 script:
   - tox -e $TOX_ENV
