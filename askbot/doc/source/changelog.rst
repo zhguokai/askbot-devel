@@ -1,7 +1,7 @@
 Changes in Askbot
 =================
 
-0.7.57 (Nov 16, 2016)
+0.8.1 (Nov 16, 2016)
 ---------------------
 * Applied Akismet check (if enabled) to editing of all content
 * Updated Facebook API to v2.2.
@@ -15,10 +15,6 @@ Changes in Askbot
   option shows questions in one listing per language.
 * Added option to close new account registrations
 * Added support of CAS protocol
-
-0.8.1 (Nov 30, 2015)
---------------------
-* bugfix
 
 0.8.0 (Oct 18, 2015)
 --------------------
