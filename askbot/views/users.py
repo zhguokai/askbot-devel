@@ -407,7 +407,7 @@ def user_stats(request, user, context):
                 ).filter(
                     **question_filter
                 ).order_by(
-                    '-points', '-thread__last_activity_at'
+                    '-thread__last_activity_at', '-points'
                 ).select_related(
                     'thread', 'thread__last_activity_by'
                 )[:100]
