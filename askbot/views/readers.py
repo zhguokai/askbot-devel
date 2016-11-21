@@ -82,8 +82,8 @@ def questions(request, **kwargs):
     matching search query or user selection
     """
     #before = datetime.datetime.now()
-    if request.method != 'GET':
-        return HttpResponseNotAllowed(['GET'])
+    if request.method not in ('GET', 'HEAD'):
+        return HttpResponseNotAllowed(['GET', 'HEAD'])
 
     form = ShowQuestionsForm(kwargs)
     if form.is_valid() is False:

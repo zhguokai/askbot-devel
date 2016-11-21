@@ -1176,7 +1176,7 @@ def edit_object_property_text(request):
         text = CharField().clean(request.POST['text'])
         setattr(obj, property_name, text)
         obj.save()
-    elif request.method == 'GET':
+    elif request.method in ('GET', 'HEAD'):
         return {'text': getattr(obj, property_name)}
     else:
         raise exceptions.PermissionDenied()

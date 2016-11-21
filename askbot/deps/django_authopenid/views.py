@@ -415,7 +415,7 @@ def signin(request, template_name='authopenid/signin.html'):
     logging.debug('in signin view')
     on_failure = signin_failure
 
-    if request.method == 'GET':
+    if request.method in ('GET', 'HEAD'):
         login_form = forms.LoginForm()
         if 'SAVEPOINT_URL_STICKY' not in request.session:
             if 'manage_logins' in request.GET:
@@ -624,7 +624,7 @@ def signin(request, template_name='authopenid/signin.html'):
             logging.debug(login_form.errors)
             logging.debug(request.REQUEST)
 
-    if request.method == 'GET' and request.user.is_authenticated():
+    if request.method in ('GET', 'HEAD') and request.user.is_authenticated():
         view_subtype = 'change_openid'
     else:
         view_subtype = 'default'
@@ -666,10 +666,6 @@ def show_signin_view(
         login_form = forms.LoginForm()
     if account_recovery_form is None:
         account_recovery_form = forms.AccountRecoveryForm()#initial = initial_data)
-
-    #if request is GET
-    if request.method == 'GET':
-        logging.debug('request method was GET')
 
     #todo: this sthuff must be executed on some signal
     #because askbot should have nothing to do with the login app
@@ -964,7 +960,7 @@ def register(request, login_provider_name=None, user_identifier=None):
                 }
             )
 
-    if request.method == 'GET':
+    if request.method in ('GET', 'HEAD'):
         if None in (login_provider_name, user_identifier):
             return HttpResponseRedirect(reverse('user_signin'))
 

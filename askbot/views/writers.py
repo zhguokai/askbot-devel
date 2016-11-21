@@ -289,7 +289,7 @@ def ask(request, feed=None):#view used to ask a new question
                 )
                 return HttpResponseRedirect(url_utils.get_login_url())
 
-    if request.method == 'GET':
+    if request.method in ('GET', 'HEAD'):
         form = forms.AskForm(user=request.user)
 
     draft_title = ''
@@ -462,7 +462,7 @@ def edit_question(request, id):
                         )
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
-            #request type was "GET"
+            #request type was "GET" or "HEAD"
             revision_form = forms.RevisionForm(question, revision)
             initial = {
                 'language': question.thread.language_code,
@@ -710,7 +710,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
 
     if request.method == 'POST':
         form = forms.NewCommentForm(request.POST)
-    elif request.method == 'GET':
+    elif request.method in ('GET', 'HEAD'):
         form = forms.GetCommentsForPostForm(request.GET)
 
     if form.is_valid() == False:
@@ -733,7 +733,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
         (user.is_anonymous() or (user.can_access_admin_comments() == False)):
         raise exceptions.PermissionDenied()
 
-    if request.method == "GET":
+    if request.method in ('GET', 'HEAD'):
         response = __generate_comments_json(post, user, comment_type)
     elif request.method == "POST":
         try:

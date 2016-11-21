@@ -261,7 +261,7 @@ def question_widget(request, widget_id):
     # make sure this is a GET request with the correct parameters.
     widget = get_object_or_404(models.QuestionWidget, pk=widget_id)
 
-    if request.method != 'GET':
+    if request.method not in ('GET', 'HEAD'):
         raise Http404
 
     filter_params = {}
