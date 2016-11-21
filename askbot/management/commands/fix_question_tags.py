@@ -5,6 +5,7 @@ from askbot import forms
 from askbot.utils import console
 from askbot.models import signals
 from askbot.conf import settings as askbot_settings
+from django.utils.translation import activate
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -15,6 +16,7 @@ class Command(NoArgsCommand):
     def run_command(self):
         """method that runs the actual command"""
         #go through tags and find character case duplicates and eliminate them
+        activate('en')
         tagnames = models.Tag.objects.values_list('name', flat = True)
         for name in tagnames:
             dupes = models.Tag.objects.filter(name__iexact = name)
