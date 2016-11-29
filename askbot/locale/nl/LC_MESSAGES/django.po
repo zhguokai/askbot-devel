@@ -3,14 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# cor nouws <nouwsc@xs4all.nl>, 2016
+# kees kriek <kees538@gmail.com>, 2016
 # Maurice <m-ou.se@m-ou.se>, 2013
+# Rob Westein <robwestein@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-16 03:00-0500\n"
-"PO-Revision-Date: 2016-06-16 08:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"POT-Creation-Date: 2016-10-04 14:06-0500\n"
+"PO-Revision-Date: 2016-11-28 21:17+0000\n"
+"Last-Translator: cor nouws <nouwsc@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/askbot/askbot/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,100 +32,112 @@ msgstr "-"
 #: feed.py:37
 #, python-format
 msgid "Individual %(question)s feed"
-msgstr ""
+msgstr "Overzicht van individuele %(question)s"
 
 #: feed.py:110
 #, python-format
 msgid "Latest %(question)s feed"
-msgstr ""
+msgstr "Overzicht van recente %(question)s"
 
-#: forms.py:167
+#: forms.py:100
+msgid "Wildcard tag must have only one '*' symbol"
+msgstr "Joker-markeringen mogen maar één '*' bevatten"
+
+#: forms.py:102
+msgid "Wildcard tag must have at least one symbol"
+msgstr "Joker-markeringen mogen maar één symbool bevatten"
+
+#: forms.py:108
+msgid "Wildcard tag must end with an '*' symbol"
+msgstr "Jokermarkeringen moeten met een '*' symbool eindigen"
+
+#: forms.py:190
 msgid "select country"
 msgstr "selecteer een land"
 
-#: forms.py:169
+#: forms.py:192
 msgid "Country"
 msgstr "Land"
 
-#: forms.py:176
+#: forms.py:199
 msgid "Country field is required"
-msgstr "Invullen van een land is verplicht."
+msgstr "Invullen van een stad is verplicht."
 
-#: forms.py:206
+#: forms.py:229
 #, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:217
+#: forms.py:240
 #, python-format
 msgid "must be < %d word"
 msgid_plural "must be < %d words"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:240 templates/widgets/ask_form.html:46
+#: forms.py:263 templates/widgets/ask_form.html:46
 msgid "Select language"
-msgstr ""
+msgstr "Selecteer taal"
 
-#: forms.py:268
+#: forms.py:291
 msgid "minor edit (don't send alerts)"
-msgstr ""
+msgstr "geringe bewerking (stuur geen melding)"
 
-#: forms.py:295 templates/widgets/markdown_help.html:20
+#: forms.py:318 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "title"
 msgstr "titel"
 
-#: forms.py:308
+#: forms.py:331
 #, python-format
 msgid "must have > %d non-punctuation character"
 msgid_plural "must have > %d non-punctuation characters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:320
+#: forms.py:343
 #, python-format
 msgid ""
 "The %(question)s is too long, maximum allowed size is %(length)d characters"
 msgstr ""
 
-#: forms.py:327
+#: forms.py:350
 #, python-format
 msgid "The %(question)s is too long, maximum allowed size is %(length)d bytes"
 msgstr ""
 
-#: forms.py:357
+#: forms.py:380
 msgid "post"
-msgstr ""
+msgstr "verstuur"
 
-#: forms.py:364
+#: forms.py:387
 #, python-format
 msgid "%(post)s content must be > %(count)d character"
 msgid_plural "%(post)s content must be > %(count)d characters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:412
+#: forms.py:436
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] "labels mogen niet langer zijn dan %(max_chars)d teken"
 msgstr[1] "labels mogen niet langer zijn dan %(max_chars)d tekens"
 
-#: forms.py:459
+#: forms.py:483
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of"
 " them."
-msgstr ""
+msgstr "We hebben geen ruimte meer om de labels op te slaan. AUB de labels verkorten of verwijderen."
 
-#: forms.py:462 forms.py:1134 models/widgets.py:27
+#: forms.py:486 forms.py:1157 models/widgets.py:27
 #: templates/widgets/meta_nav.html:6 templates/widgets/tags_field.html:10
 msgid "tags"
 msgstr "labels"
 
-#: forms.py:464
+#: forms.py:488
 #, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
@@ -133,732 +148,738 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:491
+#: forms.py:514
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] "gebruik maximaal %(tag_count)d label"
 msgstr[1] "gebruik maximaal %(tag_count)d labels"
 
-#: forms.py:499
+#: forms.py:522
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
 msgstr "Ten minste één van de volgende labels is verplicht: %(tags)s"
 
-#: forms.py:527
+#: forms.py:550
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr "gemeenschappelijke wiki (geen karma wordt uitgereikt en anderen kunnen de wiki post bewerken)"
 
-#: forms.py:570
+#: forms.py:593
 msgid "update summary:"
-msgstr ""
+msgstr "samenvatting update:"
 
-#: forms.py:572
+#: forms.py:595
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style...), this field is optional"
-msgstr ""
+msgstr "type een korte omschrijving van je bewerking (bv spelling aangepast, grammatica, verbeterde stijl...), dit veld is optioneel"
 
-#: forms.py:696
+#: forms.py:719
 msgid "Enter number of points to add or subtract"
 msgstr "Vul het aantal punten in om toe te voegen of af te trekken"
 
-#: forms.py:699
+#: forms.py:722
 msgid "Comment"
-msgstr ""
+msgstr "Commentaar"
 
-#: forms.py:711 const/__init__.py:497
+#: forms.py:734 const/__init__.py:497
 msgid "approved"
 msgstr "goedgekeurd"
 
-#: forms.py:712 const/__init__.py:498
+#: forms.py:735 const/__init__.py:498
 msgid "watched"
-msgstr ""
+msgstr "bekeken"
 
-#: forms.py:713 const/__init__.py:499
+#: forms.py:736 const/__init__.py:499
 msgid "suspended"
 msgstr "uitgeschakeld"
 
-#: forms.py:714 const/__init__.py:500
+#: forms.py:737 const/__init__.py:500
 msgid "blocked"
 msgstr "geblokkeerd"
 
-#: forms.py:716 const/__init__.py:495
+#: forms.py:739 const/__init__.py:495
 msgid "administrator"
 msgstr "administrator"
 
-#: forms.py:717 const/__init__.py:496
+#: forms.py:740 const/__init__.py:496
 msgid "moderator"
 msgstr "moderator"
 
-#: forms.py:736
+#: forms.py:759
 msgid "Change status to"
 msgstr "Wijzig status naar"
 
-#: forms.py:764
+#: forms.py:787
 msgid "which one?"
 msgstr "welke?"
 
-#: forms.py:794
+#: forms.py:817
 msgid "Cannot change own status"
 msgstr "Kan niet eigen status wijzigen"
 
-#: forms.py:800
+#: forms.py:823
 msgid "Cannot turn other user to moderator"
 msgstr "Kan niet van een gebruiker een moderator maken"
 
-#: forms.py:807
+#: forms.py:830
 msgid "Cannot change status of another moderator"
 msgstr "Kan niet de status van een andere moderator wijzigen"
 
-#: forms.py:813
+#: forms.py:836
 msgid "Cannot change status to admin"
 msgstr "Kan niet de status naar administrator wijzigen"
 
-#: forms.py:819
+#: forms.py:842
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr "Maak een juiste selectie om %(username)s's status te wijzigen."
 
-#: forms.py:833
+#: forms.py:856
 msgid "Subject line"
 msgstr "Onderwerp"
 
-#: forms.py:838
+#: forms.py:861
 msgid "Message text"
 msgstr "Inhoud van het bericht"
 
-#: forms.py:845
+#: forms.py:868
 msgid "Your name (optional):"
-msgstr ""
+msgstr "Je naam (optioneel):"
 
-#: forms.py:846
+#: forms.py:869
 msgid "Email:"
-msgstr ""
+msgstr "Emailadres:"
 
-#: forms.py:848
+#: forms.py:871
 msgid "Your message:"
 msgstr "Je bericht:"
 
-#: forms.py:852
+#: forms.py:875
 msgid "I don't want to give my email or receive a response:"
-msgstr ""
+msgstr "Ik wil mijn emailadres niet geven of geen reacties ontvangen:"
 
-#: forms.py:866
+#: forms.py:889
 msgid "Message is required"
-msgstr ""
+msgstr "Bericht is vereist"
 
-#: forms.py:872 models/__init__.py:2543
+#: forms.py:895 models/__init__.py:2566
 msgid "Anonymous"
 msgstr "Anoniem"
 
-#: forms.py:882
+#: forms.py:905
 msgid "Either provide email address or mark \"I dont want to give email below\""
-msgstr ""
+msgstr "Voer uw emailadres in of markeer 'Ik wil mijn emailadres niet geven' hieronder"
 
-#: forms.py:915
+#: forms.py:938
 msgid "keep private within your groups"
-msgstr ""
+msgstr "houd persoonlijk binnen uw groepen"
 
-#: forms.py:954 templates/ask.html:41 templates/question.html:413
+#: forms.py:977 templates/ask.html:41 templates/question.html:421
 msgid "User name:"
-msgstr ""
+msgstr "Gebruikersnaam:"
 
-#: forms.py:956
+#: forms.py:979
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
-msgstr ""
+msgstr "Voer een naam in om voor iemand anders te versturen. Kunnen nieuwe accounts maken."
 
-#: forms.py:963 templates/question.html:414
+#: forms.py:986 templates/question.html:422
 msgid "Email address:"
-msgstr ""
+msgstr "Email adres:"
 
-#: forms.py:1013
+#: forms.py:1036
 msgid "User name is required with the email"
-msgstr ""
+msgstr "Gebruikersnaam is vereist bij de e-mail"
 
-#: forms.py:1018
+#: forms.py:1041
 msgid "Email is required if user name is added"
-msgstr ""
+msgstr "Emailadres is vereist als de gebruikersnaam is toegevoegd"
 
-#: forms.py:1048
+#: forms.py:1071
 msgid "Add details (optional)"
-msgstr ""
+msgstr "Voeg details toe (optioneel)"
 
-#: forms.py:1050
+#: forms.py:1073
 msgid "Add details"
-msgstr ""
+msgstr "Voeg details toe"
 
-#: forms.py:1055
+#: forms.py:1078
 msgid "post anonymously"
-msgstr ""
+msgstr "verstuur anoniem"
 
-#: forms.py:1076
+#: forms.py:1099
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
 msgstr ""
 
-#: forms.py:1085
+#: forms.py:1108
 msgid "ask anonymously"
 msgstr "anoniem vragen"
 
-#: forms.py:1358
+#: forms.py:1381
 msgid "Details"
-msgstr ""
+msgstr "Details"
 
-#: forms.py:1364
+#: forms.py:1387
 msgid "remove anonymity"
-msgstr ""
+msgstr "verwijder anonimiteit"
 
-#: forms.py:1449
+#: forms.py:1472
 msgid "Real name"
 msgstr "Echte naam"
 
-#: forms.py:1456
+#: forms.py:1479
 msgid "Website"
 msgstr "Website"
 
-#: forms.py:1463
+#: forms.py:1486
 msgid "City"
 msgstr "Woonplaats"
 
-#: forms.py:1472
+#: forms.py:1495
 msgid "Show country"
 msgstr "Land weergeven"
 
-#: forms.py:1477
+#: forms.py:1500
 msgid "Show tag choices"
-msgstr ""
+msgstr "Labelkeuzes weergeven"
 
-#: forms.py:1482
+#: forms.py:1505
 msgid "Date of birth"
 msgstr "Geboortedatum"
 
-#: forms.py:1484
+#: forms.py:1507
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "wordt niet weergegeven, maar gebruikt om je leeftijd te berekenen. Vul dit in volgens: JJJJ-MM-DD"
 
-#: forms.py:1492
+#: forms.py:1515
 msgid "Profile"
 msgstr "Profiel"
 
-#: forms.py:1502
+#: forms.py:1525
 msgid "Screen name"
 msgstr "Schermnaam"
 
-#: forms.py:1540 forms.py:1544
+#: forms.py:1563 forms.py:1567
 msgid "this email has already been registered, please use another one"
 msgstr "dit e-mail adres is al geregistreerd. Gebruik een andere."
 
-#: forms.py:1553
+#: forms.py:1576
 msgid "Choose email tag filter"
 msgstr "Kies een e-mail label filter"
 
-#: forms.py:1609
+#: forms.py:1632
 msgid "Individually selected"
 msgstr "Persoonlijk geselecteerd"
 
-#: forms.py:1610
+#: forms.py:1633
 msgid "Entire forum (tag filtered)"
 msgstr "Gehele forum (gefilterd op label)"
 
-#: forms.py:1611
+#: forms.py:1634
 msgid "Comments and posts mentioning me"
 msgstr "Reacties, vragen en antwoorden waarin ik genoemd wordt"
 
-#: forms.py:1695
+#: forms.py:1718
 msgid "please choose one of the options above"
 msgstr "kies een van de bovenstaande opties"
 
-#: forms.py:1698
+#: forms.py:1721
 msgid "okay, let's try!"
 msgstr "goed, laten we het proberen!"
 
-#: forms.py:1701
+#: forms.py:1724
 #, python-format
 msgid "no %(sitename)s email please, thanks"
-msgstr ""
+msgstr "geen %(sitename)s e-mail alstublieft, bedankt"
 
-#: forms.py:1749 templates/reopen.html:7
+#: forms.py:1777 templates/reopen.html:7
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
-#: forms.py:1752 templates/groups.html:32 templates/email/preview_email.html:9
+#: forms.py:1780 templates/groups.html:32 templates/email/preview_email.html:9
 msgid "Description"
-msgstr ""
+msgstr "Omschrijving"
 
-#: forms.py:1771 templates/tags.html:3 templates/main_page/sidebar.html:23
+#: forms.py:1799 templates/tags.html:3 templates/main_page/sidebar.html:23
 #: templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
 #: templates/widgets/tag_category_selector.html:2
 #: templates/widgets/tags_field.html:4 templates/widgets/tags_field.html:14
 #: templates/widgets/tags_field.html:18
 msgid "Tags"
-msgstr ""
+msgstr "Labels"
 
 #: tasks.py:127
 msgid "make an edit by email"
-msgstr ""
+msgstr "maak een bewerking via e-mail"
 
 #: urls.py:46
 msgctxt "urls"
 msgid "questions"
-msgstr ""
+msgstr "vragen"
 
 #: urls.py:51
 msgctxt "urls"
 msgid "question"
-msgstr ""
+msgstr "vraag"
 
-#: urls.py:78 urls.py:396 urls.py:402 urls.py:411 urls.py:420
+#: urls.py:78 urls.py:404 urls.py:410 urls.py:419 urls.py:428
 msgctxt "urls"
 msgid "tags/"
-msgstr ""
+msgstr "labels/"
 
-#: urls.py:83 urls.py:89 urls.py:98 urls.py:119 urls.py:128 urls.py:135
+#: urls.py:83 urls.py:89 urls.py:98 urls.py:119 urls.py:128 urls.py:136
+#: urls.py:143
 msgctxt "urls"
 msgid "users/"
-msgstr ""
+msgstr "gebruikers/"
 
 #: urls.py:90
 msgctxt "urls"
 msgid "by-group/"
 msgstr ""
 
-#: urls.py:98 urls.py:196 urls.py:303 urls.py:422 urls.py:642
+#: urls.py:98 urls.py:204 urls.py:311 urls.py:430 urls.py:655
 msgctxt "urls"
 msgid "edit/"
-msgstr ""
+msgstr "bewerken/"
 
-#: urls.py:120 urls.py:396 urls.py:403 urls.py:412 urls.py:421
+#: urls.py:120 urls.py:404 urls.py:411 urls.py:420 urls.py:429
 msgctxt "urls"
 msgid "subscriptions/"
-msgstr ""
+msgstr "abonnementen/"
 
 #: urls.py:129
 msgctxt "urls"
-msgid "select_languages/"
-msgstr ""
+msgid "unsubscribe/"
+msgstr "afmelden"
 
-#: urls.py:140
+#: urls.py:137
+msgctxt "urls"
+msgid "select_languages/"
+msgstr "selecteer_talen/"
+
+#: urls.py:148
 msgctxt "urls"
 msgid "groups/"
-msgstr ""
+msgstr "groepen/"
 
-#: urls.py:145 urls.py:150
+#: urls.py:153 urls.py:158
 msgctxt "urls"
 msgid "badges/"
-msgstr ""
+msgstr "badges/"
 
-#: urls.py:163
+#: urls.py:171
 msgctxt "urls"
 msgid "feedback/"
-msgstr ""
+msgstr "terugkoppeling?"
 
-#: urls.py:185
+#: urls.py:193
 msgctxt "urls"
 msgid "about/"
-msgstr ""
-
-#: urls.py:186
-msgctxt "urls"
-msgid "faq/"
-msgstr ""
-
-#: urls.py:187
-msgctxt "urls"
-msgid "privacy/"
-msgstr ""
-
-#: urls.py:189
-msgctxt "urls"
-msgid "terms/"
-msgstr ""
+msgstr "over/"
 
 #: urls.py:194
 msgctxt "urls"
-msgid "help/"
-msgstr ""
+msgid "faq/"
+msgstr "faq/"
 
-#: urls.py:196 urls.py:201
+#: urls.py:195
+msgctxt "urls"
+msgid "privacy/"
+msgstr "privacy/"
+
+#: urls.py:197
+msgctxt "urls"
+msgid "terms/"
+msgstr "voorwaarden/"
+
+#: urls.py:202
+msgctxt "urls"
+msgid "help/"
+msgstr "help/"
+
+#: urls.py:204 urls.py:209
 msgctxt "urls"
 msgid "answers/"
-msgstr ""
+msgstr "antwoorden/"
 
-#: urls.py:201 urls.py:338
+#: urls.py:209 urls.py:346
 msgctxt "urls"
 msgid "revisions/"
-msgstr ""
+msgstr "herzieningen/"
 
-#: urls.py:233
+#: urls.py:241
 msgctxt "urls"
 msgid "moderation-queue/"
 msgstr ""
 
-#: urls.py:298 urls.py:601 urls.py:609 urls.py:617 urls.py:625
+#: urls.py:306 urls.py:614 urls.py:622 urls.py:630 urls.py:638
 msgctxt "urls"
 msgid "ask/"
-msgstr ""
+msgstr "vraag/"
 
-#: urls.py:308
+#: urls.py:316
 msgctxt "urls"
 msgid "retag/"
 msgstr ""
 
-#: urls.py:313
+#: urls.py:321
 msgctxt "urls"
 msgid "close/"
-msgstr ""
+msgstr "sluit/"
 
-#: urls.py:318
+#: urls.py:326
 msgctxt "urls"
 msgid "reopen/"
-msgstr ""
+msgstr "heropenen/"
 
-#: urls.py:323
+#: urls.py:331
 msgctxt "urls"
 msgid "answer/"
-msgstr ""
+msgstr "antwoord/"
 
-#: urls.py:404 urls.py:650
+#: urls.py:412 urls.py:663
 msgctxt "urls"
 msgid "delete/"
-msgstr ""
+msgstr "verwijderen/"
 
-#: urls.py:413 urls.py:634
+#: urls.py:421 urls.py:647
 msgctxt "urls"
 msgid "create/"
-msgstr ""
+msgstr "maken/"
 
-#: urls.py:428
+#: urls.py:436
 msgctxt "urls"
 msgid "suggested-tags/"
-msgstr ""
+msgstr "voorgestelde-labels/"
 
-#: urls.py:594 urls.py:600 urls.py:608 urls.py:616 urls.py:624 urls.py:633
-#: urls.py:641 urls.py:649 urls.py:656
+#: urls.py:607 urls.py:613 urls.py:621 urls.py:629 urls.py:637 urls.py:646
+#: urls.py:654 urls.py:662 urls.py:669
 msgctxt "urls"
 msgid "widgets/"
-msgstr ""
+msgstr "widgets/"
 
-#: urls.py:626 deps/django_authopenid/urls.py:27
+#: urls.py:639 deps/django_authopenid/urls.py:27
 msgctxt "urls"
 msgid "complete/"
-msgstr ""
+msgstr "voltooien/"
 
-#: urls.py:687
+#: urls.py:700
 msgctxt "urls"
 msgid "upload/"
-msgstr ""
+msgstr "upload/"
 
-#: urls.py:718
+#: urls.py:731
 msgctxt "urls"
 msgid "account/"
-msgstr ""
+msgstr "account/"
 
 #: conf/access_control.py:11
 msgid "Access control settings"
-msgstr ""
+msgstr "Instellingen voor toegangscontrole"
 
 #: conf/access_control.py:20
 msgid "Make site read-only"
-msgstr ""
+msgstr "maak internetpagina alleen-lezen"
 
 #: conf/access_control.py:29
 msgid ""
 "The site is temporarily read-only. Only viewing of the content is possible "
 "at the moment."
-msgstr ""
+msgstr "De internetpagina is tijdelijk alleen-lezen. De inhoud kan op dit moment alleen bekeken worden."
 
 #: conf/access_control.py:40
 msgid "Allow only registered user to access the forum"
-msgstr ""
+msgstr "Alleen geregistreerde gebruikers hebben toegang tot het forum"
 
 #: conf/access_control.py:49
 msgid "Disable registration of new users"
-msgstr ""
+msgstr "Registreren van nieuwe gebruikers uitschakelen"
 
 #: conf/access_control.py:57
 msgid ""
 "<p>New users cannot be registered at this time. Please sign in if you "
 "already have an account.</p>"
-msgstr ""
+msgstr "<p>Nieuwe gebruikers kunnen zich op dit moment niet registreren. Log in als u al een account heeft.</p>"
 
 #: conf/access_control.py:58
 msgid "Message explaining that user registrations are disabled"
-msgstr ""
+msgstr "Bericht met uitleg over het inactief zijn van het registreren van gebruikers"
 
 #: conf/access_control.py:59 conf/words.py:82 conf/words.py:96
 #: conf/words.py:111
 msgid "HTML is allowed"
-msgstr ""
+msgstr "HTML is toegestaan"
 
 #: conf/access_control.py:64
 msgid "nothing - not required"
-msgstr ""
+msgstr "niets - niet vereist"
 
 #: conf/access_control.py:65
 msgid "account registration"
-msgstr ""
+msgstr "account-registratie"
 
 #: conf/access_control.py:75
 msgid "Require valid email for"
-msgstr ""
+msgstr "Geldig emailadres vereist voor"
 
 #: conf/access_control.py:98
 msgid "Allowed email addresses"
-msgstr ""
+msgstr "Toegestaan emailadres"
 
 #: conf/access_control.py:100 conf/access_control.py:152
 msgid "Please use space to separate the entries"
-msgstr ""
+msgstr "Gebruik spaties tussen afzonderlijke items"
 
 #: conf/access_control.py:102 conf/access_control.py:117
 msgid "Entry disables blacklisted email patterns"
-msgstr ""
+msgstr "Invoer schakelt ge-blackliste email-patronen uit"
 
 #: conf/access_control.py:113
 msgid "Allowed email domain names"
-msgstr ""
+msgstr "Toegestane email domeinnamen"
 
 #: conf/access_control.py:115
 msgid "Please use space to separate the entries, do not use the @ symbol!"
-msgstr ""
+msgstr "Gebruik spaties om ingaven te scheiden en geen @-symbool!"
 
-#: conf/access_control.py:124 conf/login_providers.py:228
+#: conf/access_control.py:124
 msgid "disable"
-msgstr ""
+msgstr "uitschakelen"
 
 #: conf/access_control.py:127
 msgid "block user registrations"
-msgstr ""
+msgstr "blokkeer gebruikers registratie"
 
 #: conf/access_control.py:129
 msgid "allow existing users to post"
-msgstr ""
+msgstr "bestaande gebruikers toestaan om te versturen"
 
 #: conf/access_control.py:132
 msgid "block completely"
-msgstr ""
+msgstr "volledig blokkeren"
 
 #: conf/access_control.py:141
 msgid "Blacklisted email address patterns mode"
-msgstr ""
+msgstr "Modus ge-blackliste emailadres-patronen"
 
 #: conf/access_control.py:150
 msgid "Blacklisted email address patterns"
-msgstr ""
+msgstr "Ge-blackliste emailadres-patronen"
 
 #: conf/access_control.py:154
 msgid "regular expressions are allowed"
-msgstr ""
+msgstr "reguliere expressies zijn toegestaan"
 
 #: conf/access_control.py:165
 msgid "Allow moderators to access other's messages"
-msgstr ""
+msgstr "Geef moderators toegang tot berichten van anderen"
 
 #: conf/badges.py:16
 msgid "Badge settings"
-msgstr "Medaille instellingen"
+msgstr "Badge-instellingen"
 
 #: conf/badges.py:27
 #, python-format
 msgid "Enable \"%s\" badge"
-msgstr ""
+msgstr "\"%s\" badge inschakelen"
 
 #: conf/badges.py:47 models/badges.py:709
 msgid "Associate Editor"
-msgstr ""
+msgstr "Mede-redacteur"
 
 #: conf/badges.py:49
 msgid "minimum number of edits"
-msgstr ""
+msgstr "minimum aantal bewerkingen"
 
 #: conf/badges.py:53 models/badges.py:732
 msgid "Autobiographer"
-msgstr ""
+msgstr "autobiograaf"
 
 #: conf/badges.py:55 models/badges.py:628
 msgid "Citizen Patrol"
-msgstr ""
+msgstr "burgerwacht"
 
 #: conf/badges.py:59 models/badges.py:254
 msgid "Civic Duty"
-msgstr ""
+msgstr "burgerplicht"
 
 #: conf/badges.py:61
 msgid "minimum votes"
-msgstr ""
+msgstr "minimum aantal stemmen"
 
 #: conf/badges.py:65 models/badges.py:644
 msgid "Cleanup"
-msgstr ""
+msgstr "Opschonen"
 
 #: conf/badges.py:69 models/badges.py:831
 msgid "Commentator"
-msgstr ""
+msgstr "Commentator"
 
 #: conf/badges.py:71
 msgid "minimum comments"
-msgstr ""
+msgstr "minimum aantal opmerkingen"
 
 #: conf/badges.py:75 models/badges.py:243
 msgid "Critic"
-msgstr ""
+msgstr "criticus"
 
 #: conf/badges.py:79 models/badges.py:141
 msgid "Disciplined"
-msgstr ""
+msgstr "Gedisciplineerd"
 
 #: conf/badges.py:81
 msgid "minimum upvotes for deleted post"
-msgstr ""
+msgstr "Minimaal aantal stemmen voor terugvragen verwijderd bericht"
 
 #: conf/badges.py:85 models/badges.py:697
 msgid "Editor"
-msgstr ""
+msgstr "Redacteur"
 
 #: conf/badges.py:89
 msgid "Enlightened Duty"
-msgstr ""
+msgstr "Verlichte plicht"
 
 #: conf/badges.py:91 conf/badges.py:157 conf/badges.py:165
 msgid "minimum upvotes"
-msgstr ""
+msgstr "Minimum aantal stemmen voor"
 
 #: conf/badges.py:97 models/badges.py:808
 msgid "Enthusiast"
-msgstr ""
+msgstr "enthousiast"
 
 #: conf/badges.py:99
 msgid "minimum days"
-msgstr ""
+msgstr "minimum aantal dagen"
 
 #: conf/badges.py:103 models/badges.py:877
 msgid "Expert"
-msgstr ""
+msgstr "Expert"
 
 #: conf/badges.py:107 conf/words.py:466 conf/words.py:467
 msgid "Famous Question"
-msgstr ""
+msgstr "Beroemde vraag"
 
 #: conf/badges.py:109 conf/badges.py:190 conf/badges.py:208
 msgid "minimum views"
-msgstr ""
+msgstr "minimum aantal keer bekeken"
 
 #: conf/badges.py:115 conf/words.py:488 conf/words.py:489
 msgid "Favorite Question"
-msgstr ""
+msgstr "Favoriete Vraag"
 
 #: conf/badges.py:117 conf/badges.py:228
 msgid "minimum followers"
-msgstr ""
+msgstr "minimum aantal volgers"
 
 #: conf/badges.py:123 conf/words.py:400 conf/words.py:401
 msgid "Good Answer"
-msgstr ""
+msgstr "Goed Antwoord"
 
 #: conf/badges.py:125 conf/badges.py:141 conf/badges.py:182 conf/badges.py:248
 msgid "minimum upvotes for the answer"
-msgstr ""
+msgstr "minimaal aantal stemmen voor het antwoord"
 
 #: conf/badges.py:131 conf/words.py:411 conf/words.py:412
 msgid "Good Question"
-msgstr ""
+msgstr "Goede Vraag"
 
 #: conf/badges.py:133 conf/badges.py:149 conf/badges.py:174
 msgid "minimum upvotes for the question"
-msgstr ""
+msgstr "minimum aantal stemmen voor de vraag"
 
 #: conf/badges.py:139 conf/words.py:422 conf/words.py:423
 msgid "Great Answer"
-msgstr ""
+msgstr "Geweldig Antwoord"
 
 #: conf/badges.py:147 conf/words.py:433 conf/words.py:434
 msgid "Great Question"
-msgstr ""
+msgstr "Geweldige Vraag"
 
 #: conf/badges.py:155 models/badges.py:578
 msgid "Guru"
-msgstr ""
+msgstr "Goeroe"
 
 #: conf/badges.py:163 models/badges.py:604
 msgid "Necromancer"
-msgstr ""
+msgstr "Tovenaar"
 
 #: conf/badges.py:166
 msgid "minimum delay in days"
-msgstr ""
+msgstr "minimale vertraging in dagen"
 
 #: conf/badges.py:172 conf/words.py:389 conf/words.py:390
 msgid "Nice Question"
-msgstr ""
+msgstr "Mooie Vraag"
 
 #: conf/badges.py:180 conf/words.py:378 conf/words.py:379
 msgid "Nice Answer"
-msgstr ""
+msgstr "Mooi Antwoord"
 
 #: conf/badges.py:188 conf/words.py:455 conf/words.py:456
 msgid "Notable Question"
-msgstr ""
+msgstr "Opvallende Vraag"
 
 #: conf/badges.py:194 models/badges.py:721
 msgid "Organizer"
-msgstr ""
+msgstr "Organisator"
 
 #: conf/badges.py:198
 msgid "Peer pressure"
-msgstr ""
+msgstr "Groepsdruk"
 
 #: conf/badges.py:200
 msgid "minimum downvotes for deleted post"
-msgstr ""
+msgstr "minimaal aantal stemmen tegen een verwijderd bericht|"
 
 #: conf/badges.py:206 conf/words.py:444 conf/words.py:445
 msgid "Popular Question"
-msgstr ""
+msgstr "Populaire Vraag"
 
 #: conf/badges.py:212 models/badges.py:659
 msgid "Pundit"
-msgstr ""
+msgstr "Geleerde"
 
 #: conf/badges.py:214 models/badges.py:518
 msgid "Scholar"
-msgstr ""
+msgstr "Leerling"
 
 #: conf/badges.py:218 models/badges.py:279
 msgid "Self-Learner"
-msgstr ""
+msgstr "Zelflerend"
 
 #: conf/badges.py:220
 msgid "minimum answer upvotes"
-msgstr ""
+msgstr "minimum aantal stemmen voor antwoord"
 
 #: conf/badges.py:226 conf/words.py:477 conf/words.py:478
 msgid "Stellar Question"
-msgstr ""
+msgstr "Stellar Question"
 
 #: conf/badges.py:232 models/badges.py:426
 msgid "Student"
-msgstr ""
+msgstr "Student"
 
 #: conf/badges.py:234 models/badges.py:233
 msgid "Supporter"
-msgstr ""
+msgstr "Supporter"
 
 #: conf/badges.py:238 models/badges.py:852
 msgid "Taxonomist"
-msgstr ""
+msgstr "Taxonomist"
 
 #: conf/badges.py:240
 msgid "minimum tag use count"
-msgstr ""
+msgstr "minimum getagd hoeveelheid gebruik"
 
 #: conf/badges.py:246 models/badges.py:191
 msgid "Teacher"
-msgstr ""
+msgstr "Leraar"
 
 #: conf/email.py:16
 msgid "Email and email alert settings"
@@ -876,51 +897,51 @@ msgstr "Deze instellingen neemt standaard de Django instelling EMAIL_SUBJECT_PRE
 
 #: conf/email.py:45
 msgid "Site administrator email address"
-msgstr ""
+msgstr "e-mailadres sitebeheerder"
 
 #: conf/email.py:54
 msgid "Enable email alerts"
-msgstr ""
+msgstr "Email-alerts inschakelen"
 
 #: conf/email.py:62
 msgid "Enable instant email alerts"
-msgstr ""
+msgstr "Onmiddellijke email-alerts inschakelen"
 
 #: conf/email.py:71
 msgid "Enable welcome email"
-msgstr ""
+msgstr "Welkomstmail inschakelen"
 
 #: conf/email.py:80
 msgid "Enable rejected post alert"
-msgstr ""
+msgstr "Afgewezen berichten-alert inschakelen"
 
 #: conf/email.py:81 conf/email.py:91
 msgid "Also, premoderation mode must be enabled"
-msgstr ""
+msgstr "Ook de modus pre-moderatie moet geactiveerd zijn"
 
 #: conf/email.py:90
 msgid "Enable approved post alert"
-msgstr ""
+msgstr "Goedgekeurde berichten-alert inschakelen"
 
 #: conf/email.py:100
 msgid "Enable batch email alert"
-msgstr ""
+msgstr "Batch email-alert inschakelen"
 
 #: conf/email.py:109
 msgid "Enable private messaging alerts"
-msgstr ""
+msgstr "Inschakelen van alerts voor privé-berichten"
 
 #: conf/email.py:118
 msgid "Enable moderation queue alerts"
-msgstr ""
+msgstr "Inschakelen van alerts voor moderatie-rij"
 
 #: conf/email.py:128
 msgid "Enable HTML-formatted email"
-msgstr ""
+msgstr "E-mail in HTML-opmaak toestaan"
 
 #: conf/email.py:129
 msgid "May not be supported by some email clients"
-msgstr ""
+msgstr "Wordt mogelijk niet ondersteund door sommige e-mailclients"
 
 #: conf/email.py:138
 msgid "Maximum number of news entries in an email alert"
@@ -970,7 +991,7 @@ msgstr ""
 msgid ""
 "Default notification frequency for mentions                        and "
 "comments"
-msgstr ""
+msgstr "Standaard melding frequentie voor vermeldingen en commentaar"
 
 #: conf/email.py:208
 msgid ""
@@ -979,7 +1000,7 @@ msgstr ""
 
 #: conf/email.py:219
 msgid "Enable reminders about unanswered questions"
-msgstr ""
+msgstr "Herinneringen over onbeantwoorde vragen sturen toestaan"
 
 #: conf/email.py:221
 msgid ""
@@ -990,7 +1011,7 @@ msgstr ""
 
 #: conf/email.py:229 conf/group_settings.py:43
 msgid "everyone"
-msgstr ""
+msgstr "iedereen"
 
 #: conf/email.py:230
 msgid "moderators & administrators"
@@ -1041,15 +1062,15 @@ msgstr ""
 
 #: conf/email.py:332
 msgid "Allow blank email"
-msgstr ""
+msgstr "Lege e-mail toestaan"
 
 #: conf/email.py:334
 msgid "DANGER: makes impossible account recovery by email."
 msgstr ""
 
-#: conf/email.py:337 conf/login_providers.py:279
+#: conf/email.py:337 conf/login_providers.py:273
 msgid "Must be not be required"
-msgstr ""
+msgstr "Mag niet vereist zijn"
 
 #: conf/email.py:348
 msgid "Fake email for anonymous user"
@@ -1061,7 +1082,7 @@ msgstr "Gebruik deze instelling voor de Gravatar van een gebruiker zonder e-mail
 
 #: conf/email.py:358
 msgid "Allow posting questions by email"
-msgstr ""
+msgstr "Vragen met email indienen toestaan"
 
 #: conf/email.py:360
 msgid ""
@@ -1081,7 +1102,7 @@ msgstr ""
 
 #: conf/email.py:384
 msgid "Enable posting answers and comments by email"
-msgstr ""
+msgstr "Antwoorden en opmerkingen met email indienen toestaan"
 
 #: conf/email.py:387
 msgid "To enable this feature make sure lamson is running"
@@ -1149,7 +1170,7 @@ msgstr ""
 
 #: conf/external_keys.py:11
 msgid "Keys for external services"
-msgstr ""
+msgstr "Sleutels voor externe services"
 
 #: conf/external_keys.py:19
 msgid "Google site verification key"
@@ -1284,11 +1305,11 @@ msgstr ""
 
 #: conf/feedback.py:16
 msgid "Anyone"
-msgstr ""
+msgstr "iedereen"
 
 #: conf/feedback.py:17
 msgid "Only authenticated users"
-msgstr ""
+msgstr "Alleen geautoriseerde gebruikers"
 
 #: conf/feedback.py:18
 msgid "Nobody, disable feedback form"
@@ -1296,7 +1317,7 @@ msgstr ""
 
 #: conf/feedback.py:27
 msgid "Who can send feedback"
-msgstr ""
+msgstr "Wie kan feedback versturen"
 
 #: conf/feedback.py:36
 msgid "Feedback site URL"
@@ -1308,7 +1329,7 @@ msgstr ""
 
 #: conf/feedback.py:49
 msgid "Message on the feedback page"
-msgstr ""
+msgstr "Bericht op de feedback pagina"
 
 #: conf/feedback.py:51
 msgid ""
@@ -1329,7 +1350,7 @@ msgstr ""
 
 #: conf/feedback.py:79
 msgid "Internal feedback form email recipients"
-msgstr ""
+msgstr "Interne feedback-formulier e-mailontvangers"
 
 #: conf/feedback.py:81
 msgid ""
@@ -1373,7 +1394,7 @@ msgstr ""
 
 #: conf/flatpages.py:62
 msgid "Instructions on how to ask questions"
-msgstr ""
+msgstr "Instructies voor het stellen van vragen"
 
 #: conf/flatpages.py:66
 msgid ""
@@ -1393,15 +1414,15 @@ msgstr ""
 
 #: conf/flatpages.py:91
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Voorwaarden"
 
 #: conf/flatpages.py:112
 msgid "Do not edit this field manually!!!"
-msgstr ""
+msgstr "Aub dit veld niet handmatig bewerken !!!"
 
 #: conf/forum_data_rules.py:12
 msgid "Data entry and display rules"
-msgstr ""
+msgstr "Gegevensinvoer en weergaveregels"
 
 #: conf/forum_data_rules.py:27
 msgid "Editor for the posts"
@@ -1423,7 +1444,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:66
 msgid "Enable embedding videos. "
-msgstr ""
+msgstr "Inbedding van video's inschakelen."
 
 #: conf/forum_data_rules.py:68
 #, python-format
@@ -1446,7 +1467,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:101
 msgid "Allow asking without registration"
-msgstr ""
+msgstr "Vragen zonder registratie toestaan"
 
 #: conf/forum_data_rules.py:102
 msgid "Enabling ReCaptcha is recommended with this feature"
@@ -1470,11 +1491,11 @@ msgstr ""
 
 #: conf/forum_data_rules.py:133
 msgid "Fully open by default"
-msgstr ""
+msgstr "Standaard volledig open"
 
 #: conf/forum_data_rules.py:134
 msgid "Folded by default"
-msgstr ""
+msgstr "Standaard ingeklapt"
 
 #: conf/forum_data_rules.py:143
 msgid "Question details/body editor should be"
@@ -1492,15 +1513,15 @@ msgstr ""
 
 #: conf/forum_data_rules.py:166
 msgid "Minimum length of title (number of characters)"
-msgstr ""
+msgstr "Minimale lengte van de titel (aantal tekens)"
 
 #: conf/forum_data_rules.py:176
 msgid "Minimum length of question body (number of characters)"
-msgstr ""
+msgstr "Minimale lengte van de vraag (aantal tekens)"
 
 #: conf/forum_data_rules.py:187
 msgid "Minimum length of answer body (number of characters)"
-msgstr ""
+msgstr "Minimale lengte van het antwoord (aantal tekens)"
 
 #: conf/forum_data_rules.py:197
 msgid "Show comment updates on the main page"
@@ -1508,27 +1529,27 @@ msgstr ""
 
 #: conf/forum_data_rules.py:207
 msgid "Minimum length of comment (number of characters)"
-msgstr ""
+msgstr "Minimale lengte van de opmerking (aantal tekens)"
 
 #: conf/forum_data_rules.py:218
 msgid "Limit one answer per question per user"
-msgstr ""
+msgstr "Beperkt tot één antwoord per vraag per gebruiker"
 
 #: conf/forum_data_rules.py:228
 msgid "Allow commenting in closed questions"
-msgstr ""
+msgstr "Commentaar in gesloten vragen toestaan"
 
 #: conf/forum_data_rules.py:237
 msgid "Enable accepting best answer"
-msgstr ""
+msgstr "Beste antwoord accepteren toestaan"
 
 #: conf/forum_data_rules.py:246
 msgid "Show accepted answer first"
-msgstr ""
+msgstr "Geaccepteerd antwoord eerst weergeven"
 
 #: conf/forum_data_rules.py:256
 msgid "How to sort answers by default"
-msgstr ""
+msgstr "Hoe de antwoorden standaard te sorteren"
 
 #: conf/forum_data_rules.py:264
 msgid "Are tags required?"
@@ -1536,11 +1557,11 @@ msgstr ""
 
 #: conf/forum_data_rules.py:270
 msgid "category tree"
-msgstr ""
+msgstr "categorieboom"
 
 #: conf/forum_data_rules.py:271
 msgid "user input"
-msgstr ""
+msgstr "gebruikersinvoer"
 
 #: conf/forum_data_rules.py:278
 msgid "Source of tags"
@@ -1594,20 +1615,20 @@ msgstr ""
 #: conf/forum_data_rules.py:350
 msgid ""
 "If enabled, users will have a third set of tag selections - \"subscribed\" "
-"(by email) in additon to \"interesting\" and \"ignored\""
+"(by email) in addition to \"interesting\" and \"ignored\""
 msgstr ""
 
 #: conf/forum_data_rules.py:358
 msgid "Always, for all users"
-msgstr ""
+msgstr "Altijd, voor alle gebruikers"
 
 #: conf/forum_data_rules.py:359
 msgid "Never, for all users"
-msgstr ""
+msgstr "Nooit, voor alle gebruikers"
 
 #: conf/forum_data_rules.py:360
 msgid "Let users decide"
-msgstr ""
+msgstr "Laat gebruiker beslissen"
 
 #: conf/forum_data_rules.py:368
 msgid "Publicly show user tag selections"
@@ -1619,11 +1640,11 @@ msgstr ""
 
 #: conf/forum_data_rules.py:386
 msgid "Enable comments under questions"
-msgstr ""
+msgstr "Commentaar onder vragen toestaan"
 
 #: conf/forum_data_rules.py:395
 msgid "Enable comments under answers"
-msgstr ""
+msgstr "Commentaar onder antwoorden toestaan"
 
 #: conf/forum_data_rules.py:405
 msgid "Default max number of comments to display under posts"
@@ -1635,7 +1656,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:424
 msgid "Minimum words to start wrapping comments"
-msgstr ""
+msgstr "Minimaal aantal woorden om terugloop voor commentaar te starten"
 
 #: conf/forum_data_rules.py:433
 msgid "Minimum words to start wrapping posts"
@@ -1648,21 +1669,21 @@ msgstr ""
 
 #: conf/forum_data_rules.py:453
 msgid "Limit time to edit comments"
-msgstr ""
+msgstr "Beperkte tijd om commentaren te bewerken"
 
 #: conf/forum_data_rules.py:454 conf/forum_data_rules.py:487
 #: conf/forum_data_rules.py:507
 msgid "If unchecked, there will be no time limit"
-msgstr ""
+msgstr "Indien niet geactiveerd, zal er geen tijdsbeperking zijn"
 
 #: conf/forum_data_rules.py:463
 msgid "Minutes allowed to edit a comment"
-msgstr ""
+msgstr "Aantal minuten om een commentaar te bewerken"
 
 #: conf/forum_data_rules.py:464 conf/forum_data_rules.py:497
 #: conf/forum_data_rules.py:517
 msgid "To enable this setting, check the previous one"
-msgstr ""
+msgstr "Controleer de vorige om deze instelling te activeren"
 
 #: conf/forum_data_rules.py:473
 msgid "Save comment by pressing &lt;Enter&gt; key"
@@ -1676,19 +1697,19 @@ msgstr ""
 
 #: conf/forum_data_rules.py:486
 msgid "Limit time to edit answers"
-msgstr ""
+msgstr "Beperkte tijd om antwoorden te bewerken"
 
 #: conf/forum_data_rules.py:496
 msgid "Minutes allowed to edit answers"
-msgstr ""
+msgstr "Aantal minuten om antwoorden te bewerken"
 
 #: conf/forum_data_rules.py:506
 msgid "Limit time to edit questions"
-msgstr ""
+msgstr "Beperkte tijd om vragen te bewerken"
 
 #: conf/forum_data_rules.py:516
 msgid "Minutes allowed to edit questions"
-msgstr ""
+msgstr "Aantal minuten om vragen te bewerken"
 
 #: conf/forum_data_rules.py:526
 msgid "Minimum length of search term for Ajax search"
@@ -1715,11 +1736,11 @@ msgstr ""
 
 #: conf/forum_data_rules.py:563
 msgid "Number of questions to list by default"
-msgstr ""
+msgstr "Standaard aantal weer te geven vragen"
 
 #: conf/forum_data_rules.py:572
 msgid "Maximum users per users page"
-msgstr ""
+msgstr "Maximum aantal gebruikers per pagina"
 
 #: conf/forum_data_rules.py:582
 msgid "What should \"unanswered question\" mean?"
@@ -1737,19 +1758,19 @@ msgstr ""
 
 #: conf/group_settings.py:9
 msgid "Group settings"
-msgstr ""
+msgstr "Groepsinstellingen"
 
 #: conf/group_settings.py:18
 msgid "Enable user groups"
-msgstr ""
+msgstr "Gebruikersgroepen inschakelen"
 
 #: conf/group_settings.py:44
 msgid "Global user group name"
-msgstr ""
+msgstr "Algemene groepsnaam"
 
 #: conf/group_settings.py:45
 msgid "All users belong to this group automatically"
-msgstr ""
+msgstr "Alle gebruikers behoren automatisch tot deze groep"
 
 #: conf/group_settings.py:55
 msgid "Enable group email adddresses"
@@ -1800,11 +1821,11 @@ msgstr ""
 
 #: conf/ldap.py:37
 msgid "Version 3"
-msgstr ""
+msgstr "Versie 3"
 
 #: conf/ldap.py:38
 msgid "Version 2 (insecure and deprecated)!!!"
-msgstr ""
+msgstr "Versie 2 (onzeker en verouderd)"
 
 #: conf/ldap.py:47
 msgid "LDAP protocol version"
@@ -1875,11 +1896,11 @@ msgstr ""
 
 #: conf/ldap.py:139
 msgid "First name, Last name"
-msgstr ""
+msgstr "Voornaam, Achternaam"
 
 #: conf/ldap.py:140
 msgid "Last name, First name"
-msgstr ""
+msgstr "Achternaam, Voornaam"
 
 #: conf/ldap.py:147
 msgid "\"Common Name\" field format"
@@ -1891,15 +1912,15 @@ msgstr ""
 
 #: conf/ldap.py:158
 msgid "Given (First) name"
-msgstr ""
+msgstr "Voornaam"
 
 #: conf/ldap.py:160 conf/ldap.py:170
 msgid "This field can be blank"
-msgstr ""
+msgstr "Dit veld kan leeg zijn"
 
 #: conf/ldap.py:168
 msgid "Surname (last) name"
-msgstr ""
+msgstr "Achternaam"
 
 #: conf/ldap.py:178
 msgid "LDAP Server EMAIL field name"
@@ -1907,19 +1928,19 @@ msgstr ""
 
 #: conf/ldap.py:180
 msgid "This field is required"
-msgstr ""
+msgstr "Dit veld is vereist"
 
 #: conf/leading_sidebar.py:12
 msgid "Common left sidebar"
-msgstr ""
+msgstr "Gemeenschappelijke zijbalk links"
 
 #: conf/leading_sidebar.py:20
 msgid "Enable left sidebar"
-msgstr ""
+msgstr "Zijbalk links inschakelen"
 
 #: conf/leading_sidebar.py:29
 msgid "HTML for the left sidebar"
-msgstr ""
+msgstr "HTML voor zijbalk links"
 
 #: conf/leading_sidebar.py:32
 msgid ""
@@ -2044,7 +2065,7 @@ msgstr ""
 
 #: conf/login_providers.py:151
 msgid "Requires username"
-msgstr ""
+msgstr "Vereist gebruikersnaam"
 
 #: conf/login_providers.py:159
 msgid "Type of OpenID login"
@@ -2069,47 +2090,37 @@ msgstr ""
 msgid "OpenStackID service endpoint url"
 msgstr ""
 
-#: conf/login_providers.py:233
+#: conf/login_providers.py:227
 msgid "local password"
-msgstr ""
+msgstr "lokaal wachtwoord"
 
-#: conf/login_providers.py:238
+#: conf/login_providers.py:232
 #, python-format
 msgid "Activate %(provider)s login"
 msgstr ""
 
-#: conf/login_providers.py:243
+#: conf/login_providers.py:237
 #, python-format
 msgid ""
 "Note: to really enable %(provider)s login some additional parameters will "
 "need to be set in the \"External keys\" section"
 msgstr ""
 
-#: conf/login_providers.py:263
+#: conf/login_providers.py:257
 msgid "MediaWiki login button image"
 msgstr ""
 
-#: conf/login_providers.py:273
+#: conf/login_providers.py:267
 msgid "MediaWiki - enable one click registration"
 msgstr ""
 
-#: conf/login_providers.py:275
+#: conf/login_providers.py:269
 msgid "Allows skipping the registration page after the wiki authentication."
 msgstr ""
 
-#: conf/login_providers.py:278
+#: conf/login_providers.py:272
 msgid "Must be enabled"
-msgstr ""
-
-#: conf/login_providers.py:294
-msgid "Google login"
-msgstr ""
-
-#: conf/login_providers.py:296
-msgid ""
-"To enable Google-Plus login, OAuth keys are required in the \"External "
-"keys\" section"
-msgstr ""
+msgstr "Moet zijn ingeschakeld"
 
 #: conf/markup.py:15
 msgid "Markup in posts"
@@ -2212,7 +2223,7 @@ msgstr ""
 
 #: conf/minimum_reputation.py:59
 msgid "Accept own answer"
-msgstr ""
+msgstr "Eigen antwoord accepteren"
 
 #: conf/minimum_reputation.py:68
 msgid "Accept any answer"
@@ -2232,7 +2243,7 @@ msgstr "Verwijderen van vragen en antwoorden van anderen"
 
 #: conf/minimum_reputation.py:116
 msgid "Delete own questions"
-msgstr ""
+msgstr "Eigen vraag verwijderen"
 
 #: conf/minimum_reputation.py:125
 msgid "Upload files"
@@ -2270,7 +2281,7 @@ msgstr ""
 
 #: conf/minimum_reputation.py:192
 msgid "Close and reopen questions"
-msgstr ""
+msgstr "Vragen sluiten en opnieuw openen"
 
 #: conf/minimum_reputation.py:201
 msgid "Remove rel=nofollow from own homepage"
@@ -2292,7 +2303,7 @@ msgstr ""
 
 #: conf/minimum_reputation.py:225 conf/minimum_reputation.py:235
 msgid "Reduces spam"
-msgstr ""
+msgstr "Vermindert spam"
 
 #: conf/minimum_reputation.py:234
 msgid "Trigger tweets on others accounts"
@@ -2375,15 +2386,15 @@ msgstr ""
 
 #: conf/question_lists.py:53 conf/question_lists.py:70
 msgid "All Questions"
-msgstr ""
+msgstr "Alle Vragen"
 
 #: conf/question_lists.py:54 conf/question_lists.py:71
 msgid "Unanswered Questions"
-msgstr ""
+msgstr "Onbeantwoorde Vragen"
 
 #: conf/question_lists.py:55
 msgid "Followed Questions"
-msgstr ""
+msgstr "Gevolgde vragen"
 
 #: conf/question_lists.py:64
 msgid "Default questions selector for the authenticated users"
@@ -2521,7 +2532,7 @@ msgstr ""
 
 #: conf/sidebar_profile.py:20
 msgid "Custom sidebar"
-msgstr ""
+msgstr "aangepaste zijbalk"
 
 #: conf/sidebar_question.py:11
 msgid "Question page banners and sidebar"
@@ -2608,7 +2619,7 @@ msgstr ""
 
 #: conf/site_settings.py:25
 msgid "My site"
-msgstr ""
+msgstr "Mijn internetpagina"
 
 #: conf/site_settings.py:26
 msgid "Site title for the Q&A forum"
@@ -2632,11 +2643,11 @@ msgstr ""
 
 #: conf/site_settings.py:73
 msgid "Please enter url of your site"
-msgstr ""
+msgstr "Voer de URL van uw internetpagina in"
 
 #: conf/site_settings.py:76
 msgid "Url must start either from http or https"
-msgstr ""
+msgstr "URL moet met http of https beginnen"
 
 #: conf/site_settings.py:95
 msgid "Base URL for your Q&A forum, must start with http or https"
@@ -2656,7 +2667,7 @@ msgstr ""
 
 #: conf/site_settings.py:123
 msgid "Use HTML to format the message "
-msgstr ""
+msgstr "Gebruik HTML om het bericht op te maken"
 
 #: conf/skin_general_settings.py:18
 msgid "Skin, logos and HTML <head> parts"
@@ -2664,7 +2675,7 @@ msgstr ""
 
 #: conf/skin_general_settings.py:35
 msgid "Please enter a valid url"
-msgstr ""
+msgstr "Voer een geldige URL in"
 
 #: conf/skin_general_settings.py:42
 msgid "Custom destination URL for the logo"
@@ -2680,11 +2691,11 @@ msgstr ""
 
 #: conf/skin_general_settings.py:71
 msgid "Select Language"
-msgstr ""
+msgstr "Kies taal"
 
 #: conf/skin_general_settings.py:79
 msgid "Show logo"
-msgstr ""
+msgstr "Loge weergeven"
 
 #: conf/skin_general_settings.py:81
 msgid ""
@@ -3060,28 +3071,28 @@ msgstr ""
 
 #: conf/words.py:22 conf/words.py:23 templates/ask.html:4
 msgid "Ask Your Question"
-msgstr ""
+msgstr "Stel uw vraag"
 
 #: conf/words.py:24 conf/words.py:45 conf/words.py:56 conf/words.py:67
 #: conf/words.py:136
 msgid "Used on a button"
-msgstr ""
+msgstr "Op een knop gebruikt"
 
 #: conf/words.py:33 conf/words.py:34 conf/words.py:542 conf/words.py:543
 msgid "Please enter your question"
-msgstr ""
+msgstr "Voer uw vraag in"
 
 #: conf/words.py:43 conf/words.py:44
 msgid "Ask the Group"
-msgstr ""
+msgstr "Vraag het de groep"
 
 #: conf/words.py:54 conf/words.py:55
 msgid "Post Your Answer"
-msgstr ""
+msgstr "Verstuur uw antwoord"
 
 #: conf/words.py:65 conf/words.py:66
 msgid "Answer Your Own Question"
-msgstr ""
+msgstr "Beantwoord uw eigen vraag"
 
 #: conf/words.py:77
 msgid ""
@@ -3092,7 +3103,7 @@ msgstr ""
 
 #: conf/words.py:81
 msgid "Instruction to answer own questions"
-msgstr ""
+msgstr "Instructie voor het beantwoorden van eigen vragen"
 
 #: conf/words.py:92
 msgid ""
@@ -3102,7 +3113,7 @@ msgstr ""
 
 #: conf/words.py:95
 msgid "Instruction to post anonymously"
-msgstr ""
+msgstr "Instructie voor het anoniem versturen"
 
 #: conf/words.py:106
 msgid ""
@@ -3113,7 +3124,7 @@ msgstr ""
 
 #: conf/words.py:110
 msgid "Instruction to give answers"
-msgstr ""
+msgstr "Instructie voor het geven van antwoorden"
 
 #: conf/words.py:121
 msgid ""
@@ -3122,28 +3133,28 @@ msgid ""
 msgstr ""
 
 #: conf/words.py:124
-msgid "Instruction for the catogory selector"
+msgid "Instruction for the category selector"
 msgstr ""
 
 #: conf/words.py:125
 msgid "Plain text only"
-msgstr ""
+msgstr "Alleen platte tekst"
 
 #: conf/words.py:134 conf/words.py:135
 msgid "Edit Your Previous Answer"
-msgstr ""
+msgstr "Bewerk uw vorige antwoord"
 
 #: conf/words.py:145 conf/words.py:146
 msgid "ask questions"
-msgstr ""
+msgstr "stel vragen"
 
 #: conf/words.py:155 conf/words.py:156
 msgid "post answers"
-msgstr ""
+msgstr "verstuur antwoorden"
 
 #: conf/words.py:165 conf/words.py:166
 msgid "Merge duplicate questions"
-msgstr ""
+msgstr "Dubbele vragen samenvoegen"
 
 #: conf/words.py:175 conf/words.py:176
 msgid "Enter duplicate question ID"
@@ -3151,11 +3162,11 @@ msgstr ""
 
 #: conf/words.py:185 conf/words.py:186
 msgid "asked"
-msgstr ""
+msgstr "gevraagd"
 
 #: conf/words.py:195 conf/words.py:196
 msgid "Asked first question"
-msgstr ""
+msgstr "Eerst gestelde vraag"
 
 #: conf/words.py:205 conf/words.py:206
 msgid "Asked by me"
@@ -3163,11 +3174,11 @@ msgstr "Door mij gesteld"
 
 #: conf/words.py:215 conf/words.py:216
 msgid "Asked a question"
-msgstr ""
+msgstr "Een vraag gesteld"
 
 #: conf/words.py:225 conf/words.py:226
 msgid "Answered a question"
-msgstr ""
+msgstr "Een vraag beantwoord"
 
 #: conf/words.py:235 conf/words.py:236
 msgid "Answered by me"
@@ -3175,21 +3186,21 @@ msgstr "Door mij beantwoord"
 
 #: conf/words.py:246 conf/words.py:247
 msgid "accepted an answer"
-msgstr ""
+msgstr "een antwoord geaccepteerd"
 
 #: conf/words.py:256 conf/words.py:257
 msgid "Gave accepted answer"
-msgstr ""
+msgstr "Een geaccepteerd antwoord gegeven"
 
 #: conf/words.py:266 conf/words.py:267
 msgid "answered"
-msgstr ""
+msgstr "beantwoord"
 
 #: conf/words.py:276
 msgid ""
 "question\n"
 "questions"
-msgstr ""
+msgstr "vraag\nvragen"
 
 #: conf/words.py:277
 msgid "Countable plural forms for \"question\""
@@ -3203,7 +3214,7 @@ msgstr ""
 msgid ""
 "answer\n"
 "answers"
-msgstr ""
+msgstr "antwoord\nantwoorden"
 
 #: conf/words.py:288
 msgid "Countable plural forms for \"answer\""
@@ -3211,43 +3222,43 @@ msgstr ""
 
 #: conf/words.py:298
 msgid "question"
-msgstr ""
+msgstr "vraag"
 
 #: conf/words.py:299
 msgid "question (noun, singular)"
-msgstr ""
+msgstr "vraag (zelfstandig naamwoord, enkelvoud)"
 
 #: conf/words.py:308
 msgid "questions"
-msgstr ""
+msgstr "vragen"
 
 #: conf/words.py:309
 msgid "questions (noun, plural)"
-msgstr ""
+msgstr "vragen (zelfstandig naamwoord, meervoud)"
 
 #: conf/words.py:318
 msgid "unanswered question"
-msgstr ""
+msgstr "onbeantwoorde vraag"
 
 #: conf/words.py:319
 msgid "unanswered question (singular)"
-msgstr ""
+msgstr "onbeantwoorde vraag (enkelvoud)"
 
 #: conf/words.py:328
 msgid "unanswered questions"
-msgstr ""
+msgstr "onbeantwoorde vragen"
 
 #: conf/words.py:329
 msgid "unanswered questions (plural)"
-msgstr ""
+msgstr "onbeantwoorde vragen (meervoud)"
 
 #: conf/words.py:338
 msgid "answer"
-msgstr ""
+msgstr "antwoord"
 
 #: conf/words.py:339
 msgid "answer (noun, sungular)"
-msgstr ""
+msgstr "antwoord (zelfstandig naamwoord, enkelvoud)"
 
 #: conf/words.py:348 conf/words.py:349
 msgid "Question voted up"
@@ -3277,35 +3288,35 @@ msgstr ""
 
 #: conf/words.py:519 conf/words.py:520
 msgid "Please ask your question here"
-msgstr ""
+msgstr "Stel uw vraag hier"
 
 #: conf/words.py:530
 msgid "Sorry, this question has been deleted and is no longer accessible"
-msgstr ""
+msgstr "Sorry, deze vraag is verwijderd en is niet meer te benaderen"
 
 #: conf/words.py:533
 msgid "This question has been deleted"
-msgstr ""
+msgstr "Deze vraag is verwijderd"
 
 #: conf/words.py:552 conf/words.py:553
 msgid "delete your question"
-msgstr ""
+msgstr "verwijder uw vraag"
 
 #: conf/words.py:562 conf/words.py:563
 msgid "ask a question interesting to this community"
-msgstr ""
+msgstr "stel een vraag die voor deze gemeenschap interessant is"
 
 #: conf/words.py:572 conf/words.py:573
 msgid "No questions here."
-msgstr ""
+msgstr "Geen vragen hier."
 
 #: conf/words.py:582 conf/words.py:583
 msgid "Please follow some questions or follow some users."
-msgstr ""
+msgstr "Volg vragen of gebruikers."
 
 #: conf/words.py:592 conf/words.py:593
 msgid "Please feel free to ask your question!"
-msgstr ""
+msgstr "Stel gerust uw vraag!"
 
 #: conf/words.py:602 conf/words.py:603
 msgid "swap with question"
@@ -3321,7 +3332,7 @@ msgstr ""
 
 #: conf/words.py:623
 msgid "Only one answer per user is allowed"
-msgstr ""
+msgstr "Alleen één vraag per gebruiker toegestaan"
 
 #: conf/words.py:632 conf/words.py:633
 msgid "Accept the best answers for your questions"
@@ -3329,31 +3340,31 @@ msgstr ""
 
 #: conf/words.py:642 conf/words.py:643
 msgid "author of the question"
-msgstr ""
+msgstr "schrijver van de vraag"
 
 #: conf/words.py:652 conf/words.py:653
 msgid "accept or unaccept the best answer"
-msgstr ""
+msgstr "Beste antwoord accepteren of verwerpen"
 
 #: conf/words.py:662 conf/words.py:663
 msgid "accept or unaccept your own answer"
-msgstr ""
+msgstr "uw eigen antwoord accepteren of verwerpen"
 
 #: conf/words.py:672 conf/words.py:673
 msgid "you already gave an answer"
-msgstr ""
+msgstr "u heeft al een antwoord gegeven"
 
 #: conf/words.py:682 conf/words.py:683
 msgid "gave an answer"
-msgstr ""
+msgstr "een antwoord gegeven"
 
 #: conf/words.py:692 conf/words.py:693
 msgid "answer own questions"
-msgstr ""
+msgstr "beantwoord uw eigen vragen"
 
 #: conf/words.py:702 conf/words.py:703
 msgid "Answered own question"
-msgstr ""
+msgstr "Beantwoorde eigen vraag"
 
 #: conf/words.py:712 conf/words.py:713
 msgid "repost as a comment under older answer"
@@ -3365,7 +3376,7 @@ msgstr ""
 
 #: conf/words.py:732 conf/words.py:733
 msgid "Related questions"
-msgstr ""
+msgstr "Gerelateerde vragen"
 
 #: conf/words.py:742 conf/words.py:743
 msgid "Question Tools"
@@ -3381,11 +3392,11 @@ msgstr ""
 
 #: conf/words.py:772 conf/words.py:773
 msgid "followed questions"
-msgstr ""
+msgstr "gevolgde vragen"
 
 #: conf/words.py:782 conf/words.py:783
 msgid "follow questions"
-msgstr ""
+msgstr "volg vragen"
 
 #: conf/words.py:784
 msgid "Indefinite form"
@@ -3401,7 +3412,7 @@ msgstr ""
 
 #: conf/words.py:813 conf/words.py:814
 msgid "List of questions"
-msgstr ""
+msgstr "lijst met vragen"
 
 #: conf/words.py:823 conf/words.py:824
 msgid "Community gives you awards for your questions, answers and votes"
@@ -3409,15 +3420,15 @@ msgstr ""
 
 #: conf/words.py:833 conf/words.py:834
 msgid "Close question"
-msgstr ""
+msgstr "Gesloten vragen"
 
 #: conf/words.py:843 conf/words.py:844
 msgid "close questions"
-msgstr ""
+msgstr "sluit vragen"
 
 #: conf/words.py:853 conf/words.py:854
 msgid "Edit question"
-msgstr ""
+msgstr "Bewerk vraag"
 
 #: conf/words.py:863 conf/words.py:864
 msgid "Question - in one sentence"
@@ -3433,19 +3444,19 @@ msgstr ""
 
 #: conf/words.py:893 conf/words.py:894
 msgid "Reopen question"
-msgstr ""
+msgstr "Vraag heropenen"
 
 #: conf/words.py:903 conf/words.py:904
 msgid "There are no unanswered questions here"
-msgstr ""
+msgstr "Er zijn hier geen onbeantwoorde vragen"
 
 #: conf/words.py:913 conf/words.py:914
 msgid "this answer has been selected as correct"
-msgstr ""
+msgstr "dit antwoord is als het juiste geselecteerd"
 
 #: conf/words.py:923 conf/words.py:924
 msgid "mark this answer as correct"
-msgstr ""
+msgstr "markeer dit antwoord als juist"
 
 #: conf/words.py:933 conf/words.py:934
 msgid "Login/Signup to Answer"
@@ -3453,23 +3464,23 @@ msgstr ""
 
 #: conf/words.py:943 conf/words.py:944
 msgid "Your Answer"
-msgstr ""
+msgstr "Jouw Antwoord"
 
 #: conf/words.py:953 conf/words.py:954
 msgid "Add Answer"
-msgstr ""
+msgstr "Antwoord toevoegen"
 
 #: conf/words.py:963 conf/words.py:964
 msgid "give an answer interesting to this community"
-msgstr ""
+msgstr "geef een antwoord die voor deze gemeenschap interessant is"
 
 #: conf/words.py:973 conf/words.py:974
 msgid "give a substantial answer"
-msgstr ""
+msgstr "geven een substantieel antwoord"
 
 #: conf/words.py:983 conf/words.py:984
 msgid "try to give an answer, rather than engage into a discussion"
-msgstr ""
+msgstr "probeer een antwoord te geven, in plaats van in aan discussie deel te nemen"
 
 #: conf/words.py:993 conf/words.py:994
 msgid "show only selected answers to enquirers"
@@ -3477,15 +3488,15 @@ msgstr ""
 
 #: conf/words.py:1003 conf/words.py:1004
 msgid "UNANSWERED"
-msgstr ""
+msgstr "ONBEANTWOORD"
 
 #: conf/words.py:1013 conf/words.py:1014
 msgid "Edit Answer"
-msgstr ""
+msgstr "Bewerk antwoord"
 
 #: conf/words.py:1023 conf/words.py:1024
 msgid "Answered"
-msgstr ""
+msgstr "Beantwoord"
 
 #: const/__init__.py:12
 msgid "duplicate question"
@@ -3531,13 +3542,13 @@ msgstr ""
 #: templates/user_profile/twitter_sharing_controls.html:13
 #: templates/user_profile/twitter_sharing_controls.html:17
 msgid "my posts"
-msgstr ""
+msgstr "mijn berichten"
 
 #: const/__init__.py:32
 #: templates/user_profile/twitter_sharing_controls.html:14
 #: templates/user_profile/twitter_sharing_controls.html:16
 msgid "all posts"
-msgstr ""
+msgstr "alle berichten"
 
 #: const/__init__.py:55 templates/question/answer_tab_bar.html:12
 msgid "newest"
@@ -3578,7 +3589,7 @@ msgstr "relevantie"
 
 #: const/__init__.py:75
 msgid "Never"
-msgstr ""
+msgstr "Nooit"
 
 #: const/__init__.py:76
 msgid "When new post is published"
@@ -3590,11 +3601,11 @@ msgstr ""
 
 #: const/__init__.py:111
 msgid "latest first"
-msgstr ""
+msgstr "laatste eerst"
 
 #: const/__init__.py:112
 msgid "oldest first"
-msgstr ""
+msgstr "oudste eerst"
 
 #: const/__init__.py:113
 msgid "most voted first"
@@ -3606,7 +3617,7 @@ msgstr ""
 
 #: const/__init__.py:119 templates/tags/header.html:19
 msgid "sorted alphabetically"
-msgstr ""
+msgstr "alfabetisch gesorteerd"
 
 #: const/__init__.py:124 templates/users.html:40
 msgid "see people with the highest reputation"
@@ -3635,15 +3646,15 @@ msgstr "onbeantwoord"
 
 #: const/__init__.py:140
 msgid "followed"
-msgstr ""
+msgstr "gevolgd"
 
 #: const/__init__.py:145
 msgid "list"
-msgstr ""
+msgstr "lijst"
 
 #: const/__init__.py:146
 msgid "cloud"
-msgstr ""
+msgstr "cloud"
 
 #: const/__init__.py:156
 msgid "Question has no answers"
@@ -3824,7 +3835,7 @@ msgstr "wekelijks"
 #: const/__init__.py:465
 #: templates/user_profile/user_email_subscriptions.html:25
 msgid "never"
-msgstr ""
+msgstr "nooit"
 
 #: const/__init__.py:471
 msgid "identicon"
@@ -3888,19 +3899,19 @@ msgstr ""
 
 #: const/__init__.py:550
 msgid "more responses"
-msgstr ""
+msgstr "meer reacties"
 
 #: const/__init__.py:551
 msgid "fewer responses"
-msgstr ""
+msgstr "minder reacties"
 
 #: const/__init__.py:552
 msgid "more votes"
-msgstr ""
+msgstr "meer stemmen"
 
 #: const/__init__.py:553
 msgid "less votes"
-msgstr ""
+msgstr "minder stemmen"
 
 #: const/message_keys.py:15
 msgid "most relevant questions"
@@ -3912,7 +3923,7 @@ msgstr "klik om de meest relevante vragen te zien"
 
 #: const/message_keys.py:17
 msgid "by relevance"
-msgstr ""
+msgstr "op relevantie"
 
 #: const/message_keys.py:18
 msgid "click to see the oldest questions"
@@ -3920,7 +3931,7 @@ msgstr "klik om de oudste vragen te zien"
 
 #: const/message_keys.py:19
 msgid "by date"
-msgstr ""
+msgstr "op datum"
 
 #: const/message_keys.py:20
 msgid "click to see the newest questions"
@@ -3932,7 +3943,7 @@ msgstr "klik om de minst recent gewijzigde vragen te zien"
 
 #: const/message_keys.py:22
 msgid "by activity"
-msgstr ""
+msgstr "op activiteit"
 
 #: const/message_keys.py:23
 msgid "click to see the most recently updated questions"
@@ -3944,7 +3955,7 @@ msgstr "klik om de minst beantwoordde vragen te zien"
 
 #: const/message_keys.py:25
 msgid "by answers"
-msgstr ""
+msgstr "op antwoord"
 
 #: const/message_keys.py:26
 msgid "click to see the most answered questions"
@@ -3956,7 +3967,7 @@ msgstr "klik om de vragen met de minste stemmen te zien"
 
 #: const/message_keys.py:28
 msgid "by votes"
-msgstr ""
+msgstr "op stemmen"
 
 #: const/message_keys.py:29
 msgid "click to see most voted questions"
@@ -3964,15 +3975,15 @@ msgstr "klik om de vragen met de meeste stemmen te zien"
 
 #: const/message_keys.py:30 models/tag.py:303
 msgid "interesting"
-msgstr ""
+msgstr "interessant"
 
 #: const/message_keys.py:31 models/tag.py:304
 msgid "ignored"
-msgstr ""
+msgstr "genegeerd"
 
 #: const/message_keys.py:32 models/tag.py:305
 msgid "subscribed"
-msgstr ""
+msgstr "geabonneerd"
 
 #: const/message_keys.py:33 templates/question_retag.html:62
 msgid "tags are required"
@@ -3980,7 +3991,7 @@ msgstr "labels zijn verplicht"
 
 #: const/message_keys.py:35
 msgid "please use letters, numbers and characters \"-+.#\""
-msgstr ""
+msgstr "gebruik letters, cijfers en tekens \"- + #\""
 
 #: const/message_keys.py:38
 msgid ""
@@ -4022,7 +4033,7 @@ msgstr "Welkom! Vul je e-mail adres in bij je profiel (belangrijk!) en kies een 
 
 #: deps/django_authopenid/forms.py:62
 msgid "I have read and agree with the terms of service"
-msgstr ""
+msgstr "Ik heb de voorwaarden gelezen en ga er mee akkoord"
 
 #: deps/django_authopenid/forms.py:65
 msgid "In order to register, you must accept the terms of service"
@@ -4056,19 +4067,19 @@ msgstr "Wachtwoorden kwamen niet overeen"
 #: deps/django_authopenid/forms.py:290 deps/django_authopenid/forms.py:374
 #, python-format
 msgid "choose password > %(len)s characters"
-msgstr ""
+msgstr "kies een wachtwoord > %(len)s tekens"
 
 #: deps/django_authopenid/forms.py:359 utils/forms.py:286
 msgid "password is required"
-msgstr ""
+msgstr "wachtwoord is vereist"
 
 #: deps/django_authopenid/forms.py:365
 msgid "retype your password"
-msgstr ""
+msgstr "voer uw wachtwoord opnieuw in"
 
 #: deps/django_authopenid/forms.py:385 utils/forms.py:295
 msgid "entered passwords did not match, please try again"
-msgstr ""
+msgstr "woordwoorden komen niet overeen, voer opnieuw in"
 
 #: deps/django_authopenid/forms.py:437
 msgid "Sorry, we don't have this email address in the database"
@@ -4076,11 +4087,11 @@ msgstr "Sorry, dit e-mail adres bestaat niet in onze database."
 
 #: deps/django_authopenid/forms.py:477
 msgid "Your user name"
-msgstr ""
+msgstr "Uw gebruikersnaam"
 
 #: deps/django_authopenid/forms.py:493
 msgid "sorry, there is no such user name"
-msgstr ""
+msgstr "sorry, deze gebruikersnaam komt niet voor"
 
 #: deps/django_authopenid/urls.py:17 deps/django_authopenid/urls.py:19
 #: deps/django_authopenid/urls.py:27 deps/django_authopenid/urls.py:31
@@ -4128,100 +4139,100 @@ msgctxt "urls"
 msgid "verify-email/"
 msgstr ""
 
-#: deps/django_authopenid/util.py:437
+#: deps/django_authopenid/util.py:431
 #, python-format
 msgid "%(site)s user name and password"
 msgstr "%(site)s gebruikersnaam en wachtwoord"
 
-#: deps/django_authopenid/util.py:443 templates/authopenid/signin.html:100
+#: deps/django_authopenid/util.py:437 templates/authopenid/signin.html:100
 #: templates/authopenid/widget_signin.html:90
 msgid "Create a password-protected account"
 msgstr "Maak een account met wachtwoord"
 
-#: deps/django_authopenid/util.py:444
+#: deps/django_authopenid/util.py:438
 msgid "Change your password"
 msgstr "Wijzig je wachtwoord"
 
-#: deps/django_authopenid/util.py:456 deps/django_authopenid/util.py:808
+#: deps/django_authopenid/util.py:450 deps/django_authopenid/util.py:792
 #: templates/widgets/login_link.html:15
 #, python-format
 msgid "Sign in via %(login_name)s"
 msgstr ""
 
-#: deps/django_authopenid/util.py:458
+#: deps/django_authopenid/util.py:452
 #, python-format
 msgid "%(login_name)s username"
 msgstr ""
 
-#: deps/django_authopenid/util.py:604
+#: deps/django_authopenid/util.py:588
 msgid "Sign in with Yahoo"
 msgstr "Log in met Yahoo"
 
-#: deps/django_authopenid/util.py:611
+#: deps/django_authopenid/util.py:595
 msgid "AOL screen name"
 msgstr "AOL schermnaam"
 
-#: deps/django_authopenid/util.py:620
+#: deps/django_authopenid/util.py:604
 msgid "Sign in with LaunchPad"
 msgstr ""
 
-#: deps/django_authopenid/util.py:627
+#: deps/django_authopenid/util.py:611
 msgid "OpenID url"
 msgstr "OpenID url"
 
-#: deps/django_authopenid/util.py:665
+#: deps/django_authopenid/util.py:649
 msgid "Flickr user name"
 msgstr "Flickr gebruikersnaam"
 
-#: deps/django_authopenid/util.py:673
+#: deps/django_authopenid/util.py:657
 msgid "Technorati user name"
 msgstr "Technorati gebruikersnaam"
 
-#: deps/django_authopenid/util.py:681
+#: deps/django_authopenid/util.py:665
 msgid "WordPress blog name"
 msgstr "WordPress blog naam"
 
-#: deps/django_authopenid/util.py:689
+#: deps/django_authopenid/util.py:673
 msgid "Blogger blog name"
 msgstr "Blogger blog naam"
 
-#: deps/django_authopenid/util.py:697
+#: deps/django_authopenid/util.py:681
 msgid "LiveJournal blog name"
 msgstr "LiveJournal blog name"
 
-#: deps/django_authopenid/util.py:705
+#: deps/django_authopenid/util.py:689
 msgid "ClaimID user name"
 msgstr "ClaimID gebruikersnaam"
 
-#: deps/django_authopenid/util.py:713
+#: deps/django_authopenid/util.py:697
 msgid "Vidoop user name"
 msgstr "Vidoop gebruikersnaam"
 
-#: deps/django_authopenid/util.py:721
+#: deps/django_authopenid/util.py:705
 msgid "Verisign user name"
 msgstr "Verisign gebruikersnaam"
 
-#: deps/django_authopenid/util.py:775
+#: deps/django_authopenid/util.py:759
 #, python-format
 msgid "Change your %(provider)s password"
 msgstr "Wijzig je %(provider)s wachtwoord"
 
-#: deps/django_authopenid/util.py:779
+#: deps/django_authopenid/util.py:763
 #, python-format
 msgid "Click to see if your %(provider)s signin still works for %(site_name)s"
 msgstr "Klik om te zien of inloggen met %(provider)s nog steeds werkt voor %(site_name)s"
 
-#: deps/django_authopenid/util.py:788
+#: deps/django_authopenid/util.py:772
 #, python-format
 msgid "Create password for %(provider)s"
 msgstr "Kies een wachtwoord voor %(provider)s"
 
-#: deps/django_authopenid/util.py:792
+#: deps/django_authopenid/util.py:776
 #, python-format
 msgid "Connect your %(provider)s account to %(site_name)s"
 msgstr "Link je %(provider)s account met %(site_name)s"
 
-#: deps/django_authopenid/util.py:801
+#: deps/django_authopenid/util.py:785
 #, python-format
 msgid "Signin with %(provider)s user name and password"
 msgstr "Log in met je %(provider)s gebruikersnaam en wachtwoord"
@@ -4241,7 +4252,7 @@ msgstr "Er was helaas een probleem bij het verbinden met %(provider)s, probeer h
 
 #: deps/django_authopenid/views.py:572 deps/django_authopenid/views.py:887
 msgid "Your new password is saved"
-msgstr ""
+msgstr "Uw nieuwe wachtwoord is opgeslagen"
 
 #: deps/django_authopenid/views.py:709
 msgid "The login password combination was not correct"
@@ -4394,7 +4405,7 @@ msgstr ""
 
 #: mail/lamson_handlers.py:257
 msgid "Please reply to the welcome email without editing it"
-msgstr ""
+msgstr "Beantwoord de welkoms e-mail zonder het te bewerken"
 
 #: mail/messages.py:157
 msgid "Instant email notification"
@@ -4418,7 +4429,7 @@ msgstr ""
 
 #: mail/messages.py:394
 msgid "Welcome message"
-msgstr ""
+msgstr "Welkomsbericht"
 
 #: mail/messages.py:395
 msgid "Sent to newly registered user when replying by email is disabled"
@@ -4468,7 +4479,7 @@ msgstr ""
 
 #: mail/messages.py:537
 msgid "Post was rejected"
-msgstr ""
+msgstr "Bericht werd afgewezen"
 
 #: mail/messages.py:539
 msgid "Sent when post was rejected by a moderator with a reason given"
@@ -4498,7 +4509,7 @@ msgstr ""
 
 #: mail/messages.py:614 management/commands/send_email_alerts.py:484
 msgid "new question"
-msgstr ""
+msgstr "nieuwe vraag"
 
 #: mail/messages.py:643
 msgid "Accept answers reminder"
@@ -4508,8 +4519,8 @@ msgstr ""
 msgid "Sent to author of questions without accepted answers"
 msgstr ""
 
-#: mail/messages.py:646 mail/messages.py:663 mail/messages.py:714
-#: mail/messages.py:739
+#: mail/messages.py:646 mail/messages.py:663 mail/messages.py:727
+#: mail/messages.py:752
 msgid "At least one user and one question are required to generate a preview"
 msgstr ""
 
@@ -4530,41 +4541,49 @@ msgid "Sent when user validates email or recovers account"
 msgstr ""
 
 #: mail/messages.py:711
+msgid "Unsubscribe link"
+msgstr ""
+
+#: mail/messages.py:712
+msgid "Sent when email key expired, but user is identified"
+msgstr ""
+
+#: mail/messages.py:724
 msgid "Approved post notification"
 msgstr ""
 
-#: mail/messages.py:712 mail/messages.py:737
+#: mail/messages.py:725 mail/messages.py:750
 msgid "Sent when post revision is approved by the moderator"
 msgstr ""
 
-#: mail/messages.py:736
+#: mail/messages.py:749
 msgid "Respondable approved post notification"
 msgstr ""
 
-#: mail/messages.py:767
+#: mail/messages.py:780
 msgid "To add to your post EDIT ABOVE THIS LINE"
 msgstr ""
 
-#: mail/messages.py:780
+#: mail/messages.py:793
 msgid "Private message notification"
 msgstr ""
 
-#: mail/messages.py:781
+#: mail/messages.py:794
 msgid "Sent when a private message is sent to the user"
 msgstr ""
 
-#: mail/messages.py:783
+#: mail/messages.py:796
 msgid ""
 "At least one user and one personal message are required to generate a "
 "preview"
 msgstr ""
 
-#: mail/messages.py:808
+#: mail/messages.py:821
 msgid "Feedback email"
 msgstr ""
 
-#: mail/messages.py:809
-msgid "Sent when users submits feedback form"
+#: mail/messages.py:822
+msgid "Sent when user submits feedback form"
 msgstr ""
 
 #: middleware/forum_mode.py:64
@@ -4572,101 +4591,101 @@ msgstr ""
 msgid "Please log in to use %s"
 msgstr ""
 
-#: models/__init__.py:703
+#: models/__init__.py:726
 msgid "perform this action"
 msgstr ""
 
-#: models/__init__.py:709
+#: models/__init__.py:732
 #, python-format
 msgid ""
 "Sorry, you cannot %(perform_action)s because the site is temporarily read "
 "only"
 msgstr ""
 
-#: models/__init__.py:716
+#: models/__init__.py:739
 #, python-format
 msgid ""
 "Sorry, you cannot %(perform_action)s because %(domain)s emails have been "
 "blacklisted."
 msgstr ""
 
-#: models/__init__.py:720
+#: models/__init__.py:743
 #, python-format
 msgid "Please <a href=\"%(url)s\">change your email</a>."
 msgstr ""
 
-#: models/__init__.py:728 models/__init__.py:1524 views/writers.py:210
+#: models/__init__.py:751 models/__init__.py:1547 views/writers.py:211
 msgid "Sorry, but you have only read access"
-msgstr ""
+msgstr "Sorry, maar u heeft alleen leesrechten"
 
-#: models/__init__.py:736
+#: models/__init__.py:759
 msgid "your account is disabled"
-msgstr ""
+msgstr "uw account is uitgeschakeld"
 
-#: models/__init__.py:743 models/__init__.py:814
+#: models/__init__.py:766 models/__init__.py:837
 msgid "your account is blocked"
-msgstr ""
+msgstr "uw account is geblokkeerd"
 
-#: models/__init__.py:751 models/__init__.py:759 models/__init__.py:810
+#: models/__init__.py:774 models/__init__.py:782 models/__init__.py:833
 msgid "your account is suspended"
-msgstr ""
+msgstr "uw account is verlopen"
 
-#: models/__init__.py:780
+#: models/__init__.py:803
 #, python-format
 msgid "Sorry, only moderators and site administrators can %(perform_action)s"
 msgstr ""
 
-#: models/__init__.py:787
+#: models/__init__.py:810
 #, python-format
 msgid ""
 "Sorry, only administrators, moderators or users with reputation > "
 "%(min_rep)s can %(perform_action)s"
 msgstr ""
 
-#: models/__init__.py:880
+#: models/__init__.py:903
 msgid "Sorry, you cannot vote for your own posts"
-msgstr ""
+msgstr "Sorry, u kunt niet op uw eigen berichten stemmen"
 
-#: models/__init__.py:887 templates/faq_static.html:32
+#: models/__init__.py:910 templates/faq_static.html:32
 #: templates/user_profile/user_votes.html:14
 msgid "upvote"
 msgstr ""
 
-#: models/__init__.py:890 templates/faq_static.html:42
+#: models/__init__.py:913 templates/faq_static.html:42
 #: templates/user_profile/user_votes.html:16
 msgid "downvote"
 msgstr ""
 
-#: models/__init__.py:904
+#: models/__init__.py:927
 msgid "upload files"
 msgstr ""
 
-#: models/__init__.py:914
+#: models/__init__.py:937
 msgid "join or leave groups"
 msgstr ""
 
-#: models/__init__.py:927 views/commands.py:220
+#: models/__init__.py:950 views/commands.py:221
 msgid "mark or unmark tags"
 msgstr ""
 
-#: models/__init__.py:935
+#: models/__init__.py:958
 msgid "merge duplicate questions"
 msgstr ""
 
-#: models/__init__.py:948
+#: models/__init__.py:971
 msgid "Could not post, because your karma is insufficient to publish links"
 msgstr ""
 
-#: models/__init__.py:971
+#: models/__init__.py:994
 #, python-format
 msgid "Sorry, %(you_already_gave_an_answer)s, please edit it instead."
 msgstr ""
 
-#: models/__init__.py:996 models/__init__.py:1082
+#: models/__init__.py:1019 models/__init__.py:1105
 msgid "Sorry, commenting closed entries is not allowed"
 msgstr ""
 
-#: models/__init__.py:1007
+#: models/__init__.py:1030
 #, python-format
 msgid ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
@@ -4677,39 +4696,39 @@ msgid_plural ""
 msgstr[0] "Sorry, reacties (behalve de laatste) zijn alleen te bewerken binnen %(minutes)s minuut na plaatsing"
 msgstr[1] "Sorry, reacties (behalve de laatste) zijn alleen te bewerken binnen %(minutes)s minuten na plaatsing"
 
-#: models/__init__.py:1023
+#: models/__init__.py:1046
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr ""
 
-#: models/__init__.py:1036
+#: models/__init__.py:1059
 msgid "repost items"
 msgstr ""
 
-#: models/__init__.py:1071
+#: models/__init__.py:1094
 msgid "post comments"
 msgstr ""
 
-#: models/__init__.py:1100
+#: models/__init__.py:1123
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
 msgstr ""
 
-#: models/__init__.py:1112
+#: models/__init__.py:1135
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted"
 " posts"
 msgstr ""
 
-#: models/__init__.py:1128
+#: models/__init__.py:1151
 msgid "edit wiki posts"
 msgstr ""
 
-#: models/__init__.py:1131
+#: models/__init__.py:1154
 msgid "edit posts"
-msgstr ""
+msgstr "berichten bewerken"
 
-#: models/__init__.py:1171
+#: models/__init__.py:1194
 #, python-format
 msgid ""
 "Sorry, posts like this are editable only within %(minutes)s minute from "
@@ -4720,12 +4739,12 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1223
+#: models/__init__.py:1246
 #, python-format
 msgid "At least %d karma point is required to delete own questions"
 msgstr ""
 
-#: models/__init__.py:1237
+#: models/__init__.py:1260
 #, python-format
 msgid ""
 "Sorry, cannot %(delete_your_question)s since it has an %(upvoted_answers)s "
@@ -4736,50 +4755,50 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1259
+#: models/__init__.py:1282
 msgid "delete posts"
-msgstr ""
+msgstr "berichten verwijderen"
 
-#: models/__init__.py:1287
+#: models/__init__.py:1310
 msgid "reopen questions"
-msgstr ""
+msgstr "berichten opnieuw openen"
 
-#: models/__init__.py:1301
+#: models/__init__.py:1324
 msgid "You have flagged this post before and cannot do it more than once"
 msgstr ""
 
-#: models/__init__.py:1313
+#: models/__init__.py:1336
 msgid "flag posts as offensive"
 msgstr ""
 
-#: models/__init__.py:1325
+#: models/__init__.py:1348
 #, python-format
 msgid ""
 "Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
 "offensive flags per day."
 msgstr ""
 
-#: models/__init__.py:1347
+#: models/__init__.py:1370
 msgid "cannot remove non-existing flag"
 msgstr ""
 
-#: models/__init__.py:1356
+#: models/__init__.py:1379
 msgid "remove flags"
 msgstr ""
 
-#: models/__init__.py:1365
+#: models/__init__.py:1388
 msgid "you don't have the permission to remove all flags"
 msgstr ""
 
-#: models/__init__.py:1366
+#: models/__init__.py:1389
 msgid "no flags for this entry"
 msgstr ""
 
-#: models/__init__.py:1405
+#: models/__init__.py:1428
 msgid "delete comments"
-msgstr ""
+msgstr "commentaren verwijderen"
 
-#: models/__init__.py:1422
+#: models/__init__.py:1445
 #, python-format
 msgid ""
 "Sorry, comments (except the last one) are deletable only within %(minutes)s "
@@ -4790,126 +4809,126 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1440
+#: models/__init__.py:1463
 msgid "sorry, but older votes cannot be revoked"
 msgstr ""
 
-#: models/__init__.py:2350 utils/functions.py:136
+#: models/__init__.py:2373 utils/functions.py:136
 #, python-format
 msgid "on %(date)s"
 msgstr "op %(date)s"
 
-#: models/__init__.py:2352
+#: models/__init__.py:2375
 msgid "in two days"
 msgstr "over twee dagen"
 
-#: models/__init__.py:2354
+#: models/__init__.py:2377
 msgid "tomorrow"
 msgstr "morgen"
 
-#: models/__init__.py:2356
+#: models/__init__.py:2379
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
 msgstr[0] "over %(hr)d uur"
 msgstr[1] "over %(hr)d uur"
 
-#: models/__init__.py:2358
+#: models/__init__.py:2381
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
 msgstr[0] "over %(min)d minuut"
 msgstr[1] "over %(min)d minuten"
 
-#: models/__init__.py:2359
+#: models/__init__.py:2382
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
 msgstr[0] "%(days)d dag"
 msgstr[1] "%(days)d dagen"
 
-#: models/__init__.py:2361
+#: models/__init__.py:2384
 #, python-format
 msgid ""
 "New users must wait %(days)s to %(answer_own_questions)s.  You can post an "
 "answer %(left)s"
 msgstr ""
 
-#: models/__init__.py:2647
+#: models/__init__.py:2670
 msgid "Registered User"
 msgstr "Geregistreerde gebruiker"
 
-#: models/__init__.py:2649
+#: models/__init__.py:2672
 msgid "Administrator"
 msgstr ""
 
-#: models/__init__.py:2651
+#: models/__init__.py:2674
 msgid "Moderator"
 msgstr ""
 
-#: models/__init__.py:2653
+#: models/__init__.py:2676
 msgid "Suspended User"
 msgstr "Uitgeschakelde gebruiker"
 
-#: models/__init__.py:2655
+#: models/__init__.py:2678
 msgid "Blocked User"
 msgstr "Geblokkeerde gebruiker"
 
-#: models/__init__.py:2657
+#: models/__init__.py:2680
 msgid "New User"
-msgstr ""
+msgstr "Nieuwe Gebruiker"
 
-#: models/__init__.py:2871
+#: models/__init__.py:2906
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr ""
 
-#: models/__init__.py:2884
+#: models/__init__.py:2919
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:2891
+#: models/__init__.py:2926
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:2898
+#: models/__init__.py:2933
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:2909
+#: models/__init__.py:2944
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr ""
 
-#: models/__init__.py:2911
+#: models/__init__.py:2946
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr ""
 
-#: models/__init__.py:3059
+#: models/__init__.py:3094
 #, python-format
 msgid "At least %d karma point is required to post links"
 msgid_plural "At least %d karma points is required to post links"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:3691
+#: models/__init__.py:3741
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr "Gefeliciteerd! Je hebt een '%(badge_name)s' medaille gekregen. Bekijk <a href=\"%(user_profile)s\">je profiel</a>."
 
-#: models/__init__.py:3997 views/commands.py:482
+#: models/__init__.py:4025 views/commands.py:494
 msgid "Your tag subscription was saved, thanks!"
 msgstr "Je label aanmelding is opgeslagen."
 
@@ -4925,7 +4944,7 @@ msgstr ""
 
 #: models/badges.py:164
 msgid "Peer Pressure"
-msgstr ""
+msgstr "Groepsdruk"
 
 #: models/badges.py:185
 #, python-format
@@ -5054,7 +5073,7 @@ msgstr ""
 
 #: models/message.py:16
 msgid "message"
-msgstr ""
+msgstr "bericht"
 
 #: models/post.py:904 models/question.py:1562
 msgid "Sharing did not work, because group is unknown"
@@ -5067,23 +5086,23 @@ msgstr ""
 #: models/post.py:1125 templates/question/answer_controls.html:60
 #: templatetags/extra_filters_jinja.py:147
 msgid "more"
-msgstr ""
+msgstr "meer"
 
 #: models/post.py:1800
 msgid "Sorry, this content is not available"
-msgstr ""
+msgstr "Sorry, deze inhoud is niet beschikbaar"
 
 #: models/post.py:1802 models/post.py:1815 models/post.py:1818
 msgid "Sorry, this content is no longer available"
-msgstr ""
+msgstr "Sorry, deze inhoud is niet meer beschikbaar"
 
 #: models/post.py:1831 models/post.py:1834
 msgid "Sorry, this comment is no longer available"
-msgstr ""
+msgstr "Sorry, dit commentaar is niet meer beschikbaar"
 
 #: models/post.py:1853
 msgid "This post is temporarily not available"
-msgstr ""
+msgstr "Dit bericht is tijdelijk niet beschikbaar"
 
 #: models/post.py:2295
 msgid "Suggested edit"
@@ -5173,15 +5192,15 @@ msgstr "Wekelijks"
 
 #: models/user.py:357
 msgid "No email"
-msgstr ""
+msgstr "Geen e-mail"
 
 #: models/user.py:615
 msgid "Can join when they want"
-msgstr ""
+msgstr "Kunnen lid worden wanneer ze willen"
 
 #: models/user.py:616
 msgid "Users ask permission"
-msgstr ""
+msgstr "Gebruikers vragen toestemming"
 
 #: models/user.py:617
 msgid "Moderator adds users"
@@ -5189,7 +5208,7 @@ msgstr ""
 
 #: models/user.py:667
 msgid "Please give a list of valid email addresses."
-msgstr ""
+msgstr "Voer een lijst met geldige e-mailadressen in"
 
 #: models/user.py:678
 msgid "Please give a list of valid email domain names."
@@ -5209,19 +5228,19 @@ msgstr "login/"
 
 #: templates/404.html:3 templates/404.html.py:5
 msgid "Page not found"
-msgstr ""
+msgstr "Pagina niet gevonden"
 
 #: templates/404.html:7
 msgid "Sorry, could not find the page you requested."
-msgstr ""
+msgstr "Sorry, kon de gevraagde pagina niet vinden."
 
 #: templates/404.html:8
 msgid "This might have happened for the following reasons:"
-msgstr ""
+msgstr "Dit kan door de volgende redenen gebeurd zijn:"
 
 #: templates/404.html:11
 msgid "This page has been deleted"
-msgstr ""
+msgstr "Deze pagina is verwijderd"
 
 #: templates/404.html:12
 msgid "url has error - please check it;"
@@ -5231,11 +5250,11 @@ msgstr ""
 msgid ""
 "the page you tried to visit is protected or you don't have sufficient "
 "points, see"
-msgstr ""
+msgstr "de pagina die u wilt bezoeken is beveiligd of u heeft geen voldoende punten, zie"
 
 #: templates/404.html:14 templates/widgets/footer.html:39
 msgid "faq"
-msgstr ""
+msgstr "faq"
 
 #: templates/404.html:16
 msgid "if you believe this error 404 should not have occured, please"
@@ -5243,7 +5262,7 @@ msgstr ""
 
 #: templates/404.html:17
 msgid "report this problem"
-msgstr ""
+msgstr "rapporteer dit probleem"
 
 #: templates/500.html:3 templates/500.html.py:5
 msgid "Internal server error"
@@ -5261,11 +5280,11 @@ msgstr ""
 #: templates/question_retag.html:5 templates/revisions.html:7
 #: templates/group_messaging/home.html:9
 msgid "back"
-msgstr ""
+msgstr "terug"
 
 #: templates/answer_edit.html:42 templates/question_edit.html:57
 msgid "Save edit"
-msgstr ""
+msgstr "Sla bewerking op"
 
 #: templates/answer_edit.html:46 templates/close.html:17
 #: templates/feedback.html:49 templates/question_edit.html:58
@@ -5276,7 +5295,7 @@ msgstr ""
 #: templates/moderation/manage_reject_reasons_dialog.html:19
 #: templates/user_profile/user_edit.html:90
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #: templates/answer_edit.html:85 templates/answer_edit.html.py:88
 #: templates/ask.html:60 templates/ask.html.py:63
@@ -5284,19 +5303,19 @@ msgstr ""
 #: templates/editors/rich_text.html:18 templates/question/javascript.html:129
 #: templates/question/javascript.html:132
 msgid "hide preview"
-msgstr ""
+msgstr "voorbeeld verbergen"
 
 #: templates/answer_edit.html:88 templates/ask.html:63
 #: templates/question_edit.html:106 templates/question/javascript.html:132
 msgid "show preview"
-msgstr ""
+msgstr "voorbeeld weergeven"
 
 #: templates/badge.html:5 templates/badge.html.py:9
 #: templates/user_profile/user_recent.html:18
 #: templates/user_profile/user_stats.html:77
 #, python-format
 msgid "%(name)s"
-msgstr ""
+msgstr "%(name)s"
 
 #: templates/badge.html:5
 msgid "Badge"
@@ -5359,24 +5378,24 @@ msgstr ""
 
 #: templates/close.html:12
 msgid "Reasons"
-msgstr ""
+msgstr "Redenen"
 
 #: templates/close.html:16
 msgid "OK to close"
-msgstr ""
+msgstr "OK om te sluiten"
 
 #: templates/faq_static.html:3 templates/faq_static.html.py:5
 #: views/meta.py:112
 msgid "FAQ"
-msgstr ""
+msgstr "FAQ"
 
 #: templates/faq_static.html:5
 msgid "Frequently Asked Questions "
-msgstr ""
+msgstr "Veel gestelde vragen"
 
 #: templates/faq_static.html:6
 msgid "What kinds of questions can I ask here?"
-msgstr ""
+msgstr "Welke vragen kan ik hier stellen?"
 
 #: templates/faq_static.html:7
 msgid ""
@@ -5392,17 +5411,17 @@ msgstr ""
 
 #: templates/faq_static.html:10
 msgid "What kinds of questions should be avoided?"
-msgstr ""
+msgstr "Welk soort vragen moeten worden vermeden?"
 
 #: templates/faq_static.html:11
 msgid ""
 "Please avoid asking questions that are not relevant to this community, too "
 "subjective and argumentative."
-msgstr ""
+msgstr "Vermijd het stellen van vragen die niet relevant zijn voor deze gemeenschap, te subjectief en argumentatief zijn."
 
 #: templates/faq_static.html:13
 msgid "What should I avoid in my answers?"
-msgstr ""
+msgstr "Wat moet ik achterwege laten in mijn antwoorden?"
 
 #: templates/faq_static.html:14
 msgid ""
@@ -5418,7 +5437,7 @@ msgstr ""
 
 #: templates/faq_static.html:16
 msgid "The short answer is: <strong>you</strong>."
-msgstr ""
+msgstr "Het korte antwoord is: <strong>u</strong>."
 
 #: templates/faq_static.html:17
 msgid "This website is moderated by the users."
@@ -5432,7 +5451,7 @@ msgstr ""
 
 #: templates/faq_static.html:20
 msgid "How does karma system work?"
-msgstr ""
+msgstr "Hoe werkt het karma systeem?"
 
 #: templates/faq_static.html:21
 msgid ""
@@ -5458,11 +5477,11 @@ msgstr ""
 
 #: templates/faq_static.html:37
 msgid "add comments"
-msgstr ""
+msgstr "commentaar toevoegen"
 
 #: templates/faq_static.html:46
 msgid " accept own answer to own questions"
-msgstr ""
+msgstr "antwoord op eigen vraag accepteren"
 
 #: templates/faq_static.html:50
 msgid "retag other's questions"
@@ -5474,11 +5493,11 @@ msgstr ""
 
 #: templates/faq_static.html:60
 msgid "edit any answer"
-msgstr ""
+msgstr "beantwoord een vraag"
 
 #: templates/faq_static.html:64
 msgid "delete any comment"
-msgstr ""
+msgstr "verwijder een commentaar"
 
 #: templates/faq_static.html:68
 msgid "How to change my picture (gravatar) and what is gravatar?"
@@ -5504,7 +5523,7 @@ msgstr ""
 
 #: templates/faq_static.html:70
 msgid "To register, do I need to create new password?"
-msgstr ""
+msgstr "Heb ik een wachtwoord nodig om me te registreren?"
 
 #: templates/faq_static.html:71
 msgid ""
@@ -5518,11 +5537,11 @@ msgstr ""
 
 #: templates/faq_static.html:74
 msgid "Why other people can edit my questions/answers?"
-msgstr ""
+msgstr "Waarom kunnen andere personen mijn antwoorden/vragen bewerken?"
 
 #: templates/faq_static.html:75
 msgid "Goal of this site is..."
-msgstr ""
+msgstr "Het doel van deze internetpagina is..."
 
 #: templates/faq_static.html:75
 msgid ""
@@ -5537,7 +5556,7 @@ msgstr ""
 
 #: templates/faq_static.html:78
 msgid "Still have questions?"
-msgstr ""
+msgstr "Heeft u nog vragen?"
 
 #: templates/faq_static.html:79
 #, python-format
@@ -5570,23 +5589,23 @@ msgstr ""
 #: templates/question/sidebar.html:109
 #: templates/tags/list_bulk_tag_subscription.html:15
 msgid "Groups"
-msgstr ""
+msgstr "Groepen"
 
 #: templates/groups.html:11
 msgid "All groups"
-msgstr ""
+msgstr "Alle groepen"
 
 #: templates/groups.html:13
 msgid "all groups"
-msgstr ""
+msgstr "alle groepen"
 
 #: templates/groups.html:15
 msgid "My groups"
-msgstr ""
+msgstr "Mijn groepen"
 
 #: templates/groups.html:17
 msgid "my groups"
-msgstr ""
+msgstr "mijn groepen"
 
 #: templates/groups.html:25
 msgid ""
@@ -5596,25 +5615,25 @@ msgstr ""
 
 #: templates/groups.html:30
 msgid "Group"
-msgstr ""
+msgstr "Groep"
 
 #: templates/groups.html:31
 msgid "Number of members"
-msgstr ""
+msgstr "Aantal leden"
 
 #: templates/help_static.html:2 templates/help_static.html.py:4
 #: views/meta.py:95
 msgid "Help"
-msgstr ""
+msgstr "Help"
 
 #: templates/help_static.html:7
 #, python-format
 msgid "Welcome %(username)s,"
-msgstr ""
+msgstr "Welkom %(username)s,"
 
 #: templates/help_static.html:9
 msgid "Welcome,"
-msgstr ""
+msgstr "Welkom,"
 
 #: templates/help_static.html:13
 #, python-format
@@ -5645,7 +5664,7 @@ msgstr ""
 
 #: templates/help_static.html:26
 msgid "Please search before asking your questions"
-msgstr ""
+msgstr "Zoek eerst voordat u vragen stelt."
 
 #: templates/help_static.html:27
 msgid ""
@@ -5707,7 +5726,7 @@ msgstr ""
 
 #: templates/help_static.html:51
 msgid "Other topics"
-msgstr ""
+msgstr "Andere onderwerpen"
 
 #: templates/help_static.html:53
 msgid ""
@@ -5717,7 +5736,7 @@ msgstr ""
 
 #: templates/help_static.html:56
 msgid "Enjoy."
-msgstr ""
+msgstr "Veel plezier."
 
 #: templates/import_data.html:2 templates/import_data.html.py:4
 msgid "Import StackExchange data"
@@ -5739,7 +5758,7 @@ msgstr ""
 
 #: templates/import_data.html:25
 msgid "Import data"
-msgstr ""
+msgstr "Gegevens importeren"
 
 #: templates/import_data.html:27
 msgid ""
@@ -5749,7 +5768,7 @@ msgstr ""
 
 #: templates/list_suggested_tags.html:11
 msgid "Tag"
-msgstr ""
+msgstr "Label"
 
 #: templates/list_suggested_tags.html:12
 msgid "Suggested by"
@@ -5757,7 +5776,7 @@ msgstr ""
 
 #: templates/list_suggested_tags.html:13
 msgid "Your decision"
-msgstr ""
+msgstr "Uw besluit"
 
 #: templates/list_suggested_tags.html:14
 msgid "Where the tag was used"
@@ -5765,11 +5784,11 @@ msgstr ""
 
 #: templates/list_suggested_tags.html:34 templates/list_suggested_tags.html:45
 msgid "Accept"
-msgstr ""
+msgstr "Geaccepteerd"
 
 #: templates/list_suggested_tags.html:35 templates/list_suggested_tags.html:46
 msgid "Reject"
-msgstr ""
+msgstr "Verwerpen"
 
 #: templates/list_suggested_tags.html:38
 msgid "This tag has not yet been used"
@@ -5787,7 +5806,7 @@ msgstr ""
 #: templates/list_suggested_tags.html:70 templates/tags/content.html:5
 #: templates/tags/content.html.py:30
 msgid "Nothing found"
-msgstr ""
+msgstr "Niets gevonden"
 
 #: templates/macros.html:5
 #, python-format
@@ -5800,11 +5819,11 @@ msgstr ""
 
 #: templates/macros.html:61
 msgid "anonymous user"
-msgstr ""
+msgstr "anonieme gebruiker"
 
 #: templates/macros.html:80
 msgid "posted"
-msgstr ""
+msgstr "geplaatst"
 
 #: templates/macros.html:86
 msgid "this post is marked as community wiki"
@@ -5819,25 +5838,25 @@ msgstr ""
 
 #: templates/macros.html:239 templates/macros.html.py:245
 msgid "Leave this group"
-msgstr ""
+msgstr "Verlaat deze groep"
 
 #: templates/macros.html:240 templates/macros.html.py:242
 #: templates/macros.html:261
 msgid "Join this group"
-msgstr ""
+msgstr "Wordt lid van deze groep"
 
 #: templates/macros.html:241 templates/macros.html.py:246
 #: templates/macros.html:256
 msgid "You are a member"
-msgstr ""
+msgstr "Je bent een lid"
 
 #: templates/macros.html:248
 msgid "Cancel application"
-msgstr ""
+msgstr "Aanmelding annuleren"
 
 #: templates/macros.html:249 templates/macros.html.py:258
 msgid "Awaiting approval"
-msgstr ""
+msgstr "Wacht op goedkeuring"
 
 #: templates/macros.html:251 templates/macros.html.py:252
 #: templates/macros.html:263
@@ -5845,21 +5864,21 @@ msgid "Ask to join"
 msgstr ""
 
 #: templates/macros.html:337 templates/macros.html.py:348
-#: templates/question.html:412
+#: templates/question.html:420
 msgid "add a comment"
-msgstr ""
+msgstr "commentaar roevoegen"
 
 #: templates/macros.html:341
 msgid "load older comments"
-msgstr ""
+msgstr "oudere commentaren laden"
 
 #: templates/macros.html:343
 msgid "see more comments"
-msgstr ""
+msgstr "meer commentaren weergeven"
 
 #: templates/macros.html:376
 msgid "delete this comment"
-msgstr ""
+msgstr "verwijder dit commentaar"
 
 #: templates/macros.html:379 templates/question/answer_card.html:25
 #: templates/question/question_card.html:34
@@ -5872,7 +5891,7 @@ msgstr ""
 #: templates/question/question_controls.html:1
 #: templates/user_profile/user_info.html:171
 msgid "edit"
-msgstr ""
+msgstr "bewerken"
 
 #: templates/macros.html:404
 msgid "convert to answer"
@@ -5880,7 +5899,7 @@ msgstr ""
 
 #: templates/macros.html:435
 msgid "Comments"
-msgstr ""
+msgstr "Commentaren"
 
 #: templates/macros.html:584 templatetags/extra_tags.py:45
 #, python-format
@@ -5895,11 +5914,11 @@ msgstr ""
 #: templates/macros.html:614 templates/macros.html.py:615
 #: templates/macros.html:676 templates/macros.html.py:677
 msgid "previous"
-msgstr ""
+msgstr "vorig"
 
 #: templates/macros.html:633 templates/macros.html.py:688
 msgid "current page"
-msgstr ""
+msgstr "huidige pagina"
 
 #: templates/macros.html:639 templates/macros.html.py:652
 #: templates/macros.html:690 templates/macros.html.py:697
@@ -5909,11 +5928,11 @@ msgstr ""
 
 #: templates/macros.html:661 templates/macros.html.py:701
 msgid "next page"
-msgstr ""
+msgstr "volgende pagina"
 
 #: templates/macros.html:662
 msgid "next"
-msgstr ""
+msgstr "volgende"
 
 #: templates/macros.html:713
 #, python-format
@@ -5944,15 +5963,15 @@ msgstr ""
 
 #: templates/main_page.html:15
 msgid "Questions"
-msgstr ""
+msgstr "Vragen"
 
 #: templates/question_edit.html:46
 msgid "Change language"
-msgstr ""
+msgstr "Taal wijzigen"
 
 #: templates/question_edit.html:64 templates/widgets/answer_edit_tips.html:3
 msgid "Tips"
-msgstr ""
+msgstr "Tips"
 
 #: templates/question_retag.html:21
 msgid "Retag"
@@ -5987,11 +6006,11 @@ msgstr ""
 
 #: templates/reopen.html:20
 msgid "When:"
-msgstr ""
+msgstr "Wanneer:"
 
 #: templates/revisions.html:4 templates/revisions.html.py:7
 msgid "Revision history"
-msgstr ""
+msgstr "Revisiegeschiedenis"
 
 #: templates/revisions.html:23
 msgid "click to hide/show revision"
@@ -6012,12 +6031,12 @@ msgstr ""
 
 #: templates/subscribe_for_tags.html:11
 msgid "Subscribe"
-msgstr ""
+msgstr "Aanmelden"
 
 #: templates/users.html:8 templates/users.html.py:18
 #: templates/tags/list_bulk_tag_subscription.html:13
 msgid "Users"
-msgstr ""
+msgstr "Gebruikers"
 
 #: templates/users.html:16
 #, python-format
@@ -6050,7 +6069,7 @@ msgstr ""
 
 #: templates/users.html:60
 msgid "by username"
-msgstr ""
+msgstr "op gebruikersnaam"
 
 #: templates/users.html:66
 #, python-format
@@ -6059,13 +6078,13 @@ msgstr ""
 
 #: templates/users.html:69
 msgid "No users found."
-msgstr ""
+msgstr "Geen gebruikers gevonden"
 
 #: templates/authopenid/account_recovery_form.html:2
 #: templates/authopenid/signin.html:181
 #: templates/authopenid/widget_signin.html:169
 msgid "Enter your email"
-msgstr ""
+msgstr "Vul uw e-mailadres in"
 
 #: templates/authopenid/account_recovery_form.html:5
 msgid "Send a new recovery key"
@@ -6093,7 +6112,7 @@ msgstr ""
 #: templates/authopenid/signin.html:98
 #: templates/authopenid/widget_signin.html:88
 msgid "Sign in"
-msgstr ""
+msgstr "Inloggen"
 
 #: templates/authopenid/complete.html:21 templates/authopenid/complete.html:30
 msgid "Complete registration"
@@ -6113,17 +6132,17 @@ msgstr ""
 #: templates/authopenid/signup_with_password.html:40
 #: templates/widgets/proxy_author_fields.html:18
 msgid "Email address"
-msgstr ""
+msgstr "e-mailadres"
 
 #: templates/authopenid/complete.html:88
 #: templates/authopenid/signup_with_password.html:5
 #: templates/authopenid/signup_with_password.html:68
 msgid "Signup"
-msgstr ""
+msgstr "Aanmelden"
 
 #: templates/authopenid/complete.html:100
 msgid "Already have an account?"
-msgstr ""
+msgstr "Heeft u al een account?"
 
 #: templates/authopenid/complete.html:101
 msgid "Recover it by email."
@@ -6135,7 +6154,7 @@ msgstr ""
 
 #: templates/authopenid/complete.html:105
 msgid "Return to registration."
-msgstr ""
+msgstr "Terug naar registratie."
 
 #: templates/authopenid/confirm_email.txt:1
 msgid "Thank you for registering at our Q&A forum!"
@@ -6143,15 +6162,15 @@ msgstr ""
 
 #: templates/authopenid/confirm_email.txt:3
 msgid "Your account details are:"
-msgstr ""
+msgstr "De details van uw account zijn:"
 
 #: templates/authopenid/confirm_email.txt:5
 msgid "Username:"
-msgstr ""
+msgstr "Gebruikersnaam:"
 
 #: templates/authopenid/confirm_email.txt:6
 msgid "Password:"
-msgstr ""
+msgstr "Wachtwoord:"
 
 #: templates/authopenid/confirm_email.txt:8
 msgid "Please sign in here:"
@@ -6166,11 +6185,11 @@ msgstr ""
 
 #: templates/authopenid/logout.html:3
 msgid "Logout"
-msgstr ""
+msgstr "Uitloggen"
 
 #: templates/authopenid/logout.html:5
 msgid "You have successfully logged out"
-msgstr ""
+msgstr "U bent uitgelogd"
 
 #: templates/authopenid/logout.html:7
 msgid ""
@@ -6235,18 +6254,18 @@ msgstr ""
 
 #: templates/authopenid/signin.html:82
 msgid "Username"
-msgstr ""
+msgstr "Gebruikersnaam"
 
 #: templates/authopenid/signin.html:84
 #: templates/authopenid/widget_signin.html:79
 msgid "Username or email"
-msgstr ""
+msgstr "Gebruikersnaam of e-mailadres"
 
 #: templates/authopenid/signin.html:94
 #: templates/authopenid/signup_with_password.html:50
 #: templates/authopenid/widget_signin.html:83 utils/forms.py:285
 msgid "Password"
-msgstr ""
+msgstr "Wachtwoord"
 
 #: templates/authopenid/signin.html:105
 #: templates/authopenid/widget_signin.html:95
@@ -6256,33 +6275,33 @@ msgstr ""
 #: templates/authopenid/signin.html:115
 #: templates/authopenid/widget_signin.html:99
 msgid "New password"
-msgstr ""
+msgstr "Nieuw wachtwoord"
 
 #: templates/authopenid/signin.html:125
 #: templates/authopenid/widget_signin.html:108
 msgid "Please, retype"
-msgstr ""
+msgstr "Typ opnieuw"
 
 #: templates/authopenid/signin.html:130
 #: templates/authopenid/widget_signin.html:118
 #: templates/livesettings/site_settings.html:24
 msgid "Change password"
-msgstr ""
+msgstr "Wijzig wachtwoord"
 
 #: templates/authopenid/signin.html:144
 #: templates/authopenid/widget_signin.html:132
 msgid "Here are your current login methods"
-msgstr ""
+msgstr "Hier zijn uw huidige inlogmethodes"
 
 #: templates/authopenid/signin.html:148
 #: templates/authopenid/widget_signin.html:136
 msgid "provider"
-msgstr ""
+msgstr "aanbieder"
 
 #: templates/authopenid/signin.html:149
 #: templates/authopenid/widget_signin.html:137
 msgid "last used"
-msgstr ""
+msgstr "laatst gebruikt"
 
 #: templates/authopenid/signin.html:163
 #: templates/authopenid/widget_signin.html:151
@@ -6290,17 +6309,17 @@ msgstr ""
 #: templates/question/question_controls.html:34
 #: templates/user_inbox/responses.html:10
 msgid "delete"
-msgstr ""
+msgstr "verwijderen"
 
 #: templates/authopenid/signin.html:165
 #: templates/authopenid/widget_signin.html:153
 msgid "cannot be deleted"
-msgstr ""
+msgstr "kan niet worden verwijderd"
 
 #: templates/authopenid/signin.html:177
 #: templates/authopenid/widget_signin.html:165
 msgid "Having trouble signing in?"
-msgstr ""
+msgstr "Ondervindt u problemen met inloggen?"
 
 #: templates/authopenid/signup_with_password.html:10
 msgid ""
@@ -6313,7 +6332,7 @@ msgstr ""
 
 #: templates/authopenid/signup_with_password.html:21
 msgid "Create login name and password"
-msgstr ""
+msgstr "Maak een gebruikersnaam en wachtwoord"
 
 #: templates/authopenid/signup_with_password.html:60 utils/forms.py:293
 msgid "Password retyped"
@@ -6321,12 +6340,12 @@ msgstr ""
 
 #: templates/authopenid/tos_field.html:4
 msgid "Terms of service:"
-msgstr ""
+msgstr "Voorwaarden:"
 
 #: templates/authopenid/verify_email.html:2
 #: templates/authopenid/verify_email.html:4
 msgid "Confirm email address"
-msgstr ""
+msgstr "Bevestig e-mailadres"
 
 #: templates/authopenid/verify_email.html:6
 msgid ""
@@ -6336,7 +6355,7 @@ msgstr ""
 
 #: templates/authopenid/verify_email.html:11
 msgid "Confirm email"
-msgstr ""
+msgstr "Bevestig email"
 
 #: templates/authopenid/widget_signin.html:19
 msgid ""
@@ -6424,7 +6443,7 @@ msgstr ""
 #: templates/avatar/show_list.html:21 templates/avatar/show_list.html.py:35
 #: templates/avatar/show_list.html:45
 msgid "Set as primary"
-msgstr ""
+msgstr "Als primair instellen"
 
 #: templates/avatar/show_list.html:26
 #, python-format
@@ -6435,7 +6454,7 @@ msgstr ""
 
 #: templates/avatar/show_list.html:52
 msgid "Remove"
-msgstr ""
+msgstr "Verwijder"
 
 #: templates/avatar/show_list.html:56
 msgid "Primary avatar"
@@ -6467,7 +6486,13 @@ msgid ""
 "href=\"%(url)s\">your user profile</a>."
 msgstr ""
 
-#: templates/email/change_settings_info.html:9
+#: templates/email/change_settings_info.html:10
+#: templates/email/unsubscribe_link/body.html:5
+#, python-format
+msgid "To unsubscribe, visit <a href=\"%(unsubscribe_url)s\">this page</a>"
+msgstr ""
+
+#: templates/email/change_settings_info.html:12
 #, python-format
 msgid ""
 "If you believe that this message was sent in an error, please email about it"
@@ -6477,7 +6502,7 @@ msgstr ""
 
 #: templates/email/list_emails.html:2
 msgid "Preview of emails"
-msgstr ""
+msgstr "Voorbeeld van e-mails"
 
 #: templates/email/list_emails.html:4
 msgid "List of emails sent by Askbot"
@@ -6490,7 +6515,7 @@ msgstr ""
 
 #: templates/email/macros.html:51
 msgid "Tags:"
-msgstr ""
+msgstr "Labels:"
 
 #: templates/email/post_as_subthread.html:8
 #, python-format
@@ -6521,7 +6546,7 @@ msgstr ""
 
 #: templates/email/preview_email.html:19
 msgid "Subject"
-msgstr ""
+msgstr "Onderwerp"
 
 #: templates/email/preview_email.html:20
 msgid "Body text (below, email styling preserved)"
@@ -6535,7 +6560,7 @@ msgstr ""
 #: templates/email/approved_post_notification/body.html:9
 #: templates/email/approved_post_notification_respondable/body.html:20
 msgid "Below is a copy of your post:"
-msgstr ""
+msgstr "Hieronder is een kopie van uw bericht:"
 
 #: templates/email/approved_post_notification/subject.txt:1
 #: templates/email/approved_post_notification_respondable/subject.txt:1
@@ -6562,7 +6587,7 @@ msgstr ""
 
 #: templates/email/ask_for_signature/body.html:11
 msgid "Please make a simple response, without editing this message."
-msgstr ""
+msgstr "Geef een eenvoudig reactie, zonder bewerking van dit bericht."
 
 #: templates/email/ask_for_signature/body.html:12
 msgid ""
@@ -6608,7 +6633,7 @@ msgstr ""
 
 #: templates/email/feedback/body.html:10 templates/email/feedback/body.html:12
 msgid "wrote:"
-msgstr ""
+msgstr "schreef:"
 
 #: templates/email/feedback/subject.txt:1
 #, python-format
@@ -6661,7 +6686,7 @@ msgstr ""
 #: templates/email/re_welcome/body.html:3
 #, python-format
 msgid "Great, you are ready to use %(site_name)s!"
-msgstr ""
+msgstr "Geweldig, u bent klaar om %(site_name)s! te gebruiken"
 
 #: templates/email/re_welcome/body.html:8
 msgid ""
@@ -6691,19 +6716,19 @@ msgstr ""
 #: templates/email/rejected_post/body.html:2
 #: templates/email/rejected_post/body.html:3
 msgid "Your post was rejected."
-msgstr ""
+msgstr "Uw bericht is geweigerd."
 
 #: templates/email/rejected_post/body.html:5
 msgid "Your post (copied in the end), was rejected for the following reason:"
-msgstr ""
+msgstr "Uw bericht (aan het eind gekopieerd) is geweigerd om de volgende redenen:"
 
 #: templates/email/rejected_post/body.html:7
 msgid "Here is your original post"
-msgstr ""
+msgstr "Hier is uw originele bericht"
 
 #: templates/email/rejected_post/subject.txt:1
 msgid "your post was not accepted"
-msgstr ""
+msgstr "uw bericht is niet geaccepteerd"
 
 #: templates/email/reply_by_email_error/body.html:3
 msgid "The system was unable to process your message successfully"
@@ -6719,17 +6744,22 @@ msgid ""
 "%(question_count)s %(unanswered_questions_phrase)s about %(tag_summary)s"
 msgstr ""
 
+#: templates/email/unsubscribe_link/subject.txt:1
+#, python-format
+msgid "Link to unsubscribe from %(site_name)s"
+msgstr ""
+
 #: templates/email/welcome/subject.txt:1
 #: templates/email/welcome_respondable/subject.txt:1
 #, python-format
 msgid "Welcome to %(site_name)s"
-msgstr ""
+msgstr "Welkom bij %(site_name)s"
 
 #: templates/email/welcome_respondable/body.html:3
 #: templates/email/welcome_respondable/body.html:4
 #, python-format
 msgid "Welcome to %(site_name)s!"
-msgstr ""
+msgstr "Welkom bij %(site_name)s!"
 
 #: templates/email/welcome_respondable/body.html:10
 msgid ""
@@ -6756,25 +6786,25 @@ msgstr ""
 
 #: templates/embed/list_widgets.html:9
 msgid "Code"
-msgstr ""
+msgstr "Code"
 
 #: templates/embed/list_widgets.html:10
 msgid "Actions"
-msgstr ""
+msgstr "Acties"
 
 #: templates/embed/list_widgets.html:23 templates/embed/list_widgets.html:34
-#: templates/tags/list_bulk_tag_subscription.html:49 views/commands.py:546
+#: templates/tags/list_bulk_tag_subscription.html:49 views/commands.py:558
 msgid "Edit"
-msgstr ""
+msgstr "Bewerken"
 
 #: templates/embed/list_widgets.html:24 templates/embed/list_widgets.html:35
 #: templates/tags/list_bulk_tag_subscription.html:53
 msgid "Delete"
-msgstr ""
+msgstr "Verwijderen"
 
 #: templates/embed/list_widgets.html:48
 msgid "How to use?"
-msgstr ""
+msgstr "Hoe te gebruiken?"
 
 #: templates/embed/list_widgets.html:50
 msgid ""
@@ -6793,7 +6823,7 @@ msgstr ""
 #: templates/tags/form_bulk_tag_subscription.html:10
 #: templates/user_profile/user_languages.html:19
 msgid "Save"
-msgstr ""
+msgstr "Bewaren"
 
 #: templates/embed/widgets.html:3 templates/embed/widgets.html.py:5
 msgid "Widgets"
@@ -6806,33 +6836,33 @@ msgstr ""
 
 #: templates/embed/widgets.html:17 templates/embed/widgets.html.py:26
 msgid "create"
-msgstr ""
+msgstr "maak"
 
 #: templates/embed/widgets.html:20 templates/embed/widgets.html.py:29
 msgid "view list"
-msgstr ""
+msgstr "lijst bekijken"
 
 #: templates/group_messaging/home.html:10
 #: templates/group_messaging/home_thread_details.html:7
 msgid "compose"
-msgstr ""
+msgstr "samenstellen"
 
 #: templates/group_messaging/home.html:25
 #: templates/group_messaging/home.html:43
 msgid "Send"
-msgstr ""
+msgstr "Versturen"
 
 #: templates/group_messaging/home.html:26
 msgid "Reply"
-msgstr ""
+msgstr "Beantwoorden"
 
 #: templates/group_messaging/home.html:33
 msgid "Recipient"
-msgstr ""
+msgstr "Ontvanger"
 
 #: templates/group_messaging/home.html:39
 msgid "Write your message"
-msgstr ""
+msgstr "Schrijf uw bericht"
 
 #: templates/group_messaging/macros.html:5
 #, python-format
@@ -6846,19 +6876,19 @@ msgstr ""
 #: templates/group_messaging/senders_list.html:5
 #: templates/user_inbox/base.html:5
 msgid "inbox"
-msgstr ""
+msgstr "inbox"
 
 #: templates/group_messaging/senders_list.html:9
 msgid "sent"
-msgstr ""
+msgstr "verzonden"
 
 #: templates/group_messaging/senders_list.html:16
 msgid "trash"
-msgstr ""
+msgstr "prullenbak"
 
 #: templates/group_messaging/threads_list.html:25
 msgid "there are no messages yet..."
-msgstr ""
+msgstr "er zijn nog geen berichten..."
 
 #: templates/group_messaging/email_alert/body.html:7
 #, python-format
@@ -6873,11 +6903,11 @@ msgstr ""
 
 #: templates/livesettings/_admin_site_views.html:4
 msgid "Sites"
-msgstr ""
+msgstr "Sites"
 
 #: templates/livesettings/group_settings.html:4
 msgid "Settings"
-msgstr ""
+msgstr "Instellingen"
 
 #: templates/livesettings/group_settings.html:9
 #: templates/livesettings/site_settings.html:51
@@ -6894,15 +6924,15 @@ msgstr ""
 #: templates/livesettings/group_settings.html:50
 #: templates/livesettings/site_settings.html:98
 msgid "You don't have permission to edit values."
-msgstr ""
+msgstr "U heeft geen toestemming om waarden aan te passen."
 
 #: templates/livesettings/site_settings.html:24
 msgid "Documentation"
-msgstr ""
+msgstr "Documentatie"
 
 #: templates/livesettings/site_settings.html:24
 msgid "Log out"
-msgstr ""
+msgstr "Uitloggen"
 
 #: templates/livesettings/site_settings.html:27
 msgid "Home"
@@ -6927,7 +6957,7 @@ msgstr ""
 
 #: templates/livesettings/site_settings.html:94
 msgid "Uncollapse all"
-msgstr ""
+msgstr "Alles uitvouwen"
 
 #: templates/main_page/headline.html:6
 #, python-format
@@ -6940,17 +6970,17 @@ msgstr ""
 
 #: templates/main_page/headline.html:22
 msgid "Search tips:"
-msgstr ""
+msgstr "Zoektips:"
 
 #: templates/main_page/headline.html:25
 msgid "reset author"
-msgstr ""
+msgstr "herstel schrijver"
 
 #: templates/main_page/headline.html:27 templates/main_page/headline.html:30
 #: templates/main_page/nothing_found.html:18
 #: templates/main_page/nothing_found.html:21
 msgid " or "
-msgstr ""
+msgstr "of"
 
 #: templates/main_page/headline.html:28
 msgid "reset tags"
@@ -6958,7 +6988,7 @@ msgstr ""
 
 #: templates/main_page/headline.html:31 templates/main_page/headline.html:34
 msgid "start over"
-msgstr ""
+msgstr "opnieuw"
 
 #: templates/main_page/headline.html:36
 msgid " - to expand, or dig in by adding more tags and revising the query."
@@ -6966,7 +6996,7 @@ msgstr ""
 
 #: templates/main_page/headline.html:39
 msgid "Search tip:"
-msgstr ""
+msgstr "Zoektip:"
 
 #: templates/main_page/headline.html:39
 msgid "add tags and a query to focus your search"
@@ -6974,7 +7004,7 @@ msgstr ""
 
 #: templates/main_page/nothing_found.html:13
 msgid "You can expand your search by "
-msgstr ""
+msgstr "U kunt uw zoekopdracht uitbreiden door"
 
 #: templates/main_page/nothing_found.html:16
 msgid "resetting author"
@@ -6987,7 +7017,7 @@ msgstr ""
 #: templates/main_page/nothing_found.html:22
 #: templates/main_page/nothing_found.html:25
 msgid "starting over"
-msgstr ""
+msgstr "opnieuw"
 
 #: templates/main_page/questions_loop.html:9
 msgid "Did not find what you were looking for?"
@@ -6999,15 +7029,15 @@ msgstr ""
 
 #: templates/main_page/tab_bar.html:7
 msgid "RSS"
-msgstr ""
+msgstr "RSS"
 
 #: templates/main_page/tag_search.html:2
 msgid "Tag search"
-msgstr ""
+msgstr "Label zoeken"
 
 #: templates/main_page/tag_search.html:5
 msgid "search"
-msgstr ""
+msgstr "zoeken"
 
 #: templates/meta/bottom_scripts.html:7
 #, python-format
@@ -7043,27 +7073,27 @@ msgstr ""
 
 #: templates/moderation/manage_reject_reasons_dialog.html:11
 msgid "1) Enter a brief description of why you are rejecting the post."
-msgstr ""
+msgstr "1) Voer een korte beschrijving in van waarom u het bericht afwijst."
 
 #: templates/moderation/manage_reject_reasons_dialog.html:14
 msgid "2) Please enter details here. This text will be sent to the user."
-msgstr ""
+msgstr "2) Voer hier de details in. Deze tekst wordt naar de gebruiker verzonden."
 
 #: templates/moderation/manage_reject_reasons_dialog.html:18
 msgid "Save reason"
-msgstr ""
+msgstr "Bewaar reden"
 
 #: templates/moderation/manage_reject_reasons_dialog.html:37
 msgid "Edit this reason"
-msgstr ""
+msgstr "Bewerk deze reden"
 
 #: templates/moderation/manage_reject_reasons_dialog.html:38
 msgid "Delete this reason"
-msgstr ""
+msgstr "Verwijder deze reden"
 
 #: templates/moderation/manage_reject_reasons_dialog.html:39
 msgid "Add a new reason"
-msgstr ""
+msgstr "Voeg een nieuwe reden toe"
 
 #: templates/moderation/queue.html:4 templates/moderation/queue.html.py:7
 msgid "Moderation queue"
@@ -7071,27 +7101,27 @@ msgstr ""
 
 #: templates/moderation/queue.html:10
 msgid "Select:"
-msgstr ""
+msgstr "Selecteer:"
 
 #: templates/moderation/queue.html:12 templates/user_inbox/responses.html:13
 msgid "none"
-msgstr ""
+msgstr "geen"
 
 #: templates/moderation/queue.html:14
 msgid "approve posts"
-msgstr ""
+msgstr "berichten goedkeuren"
 
 #: templates/moderation/queue.html:15
 msgid "approve posts and users"
-msgstr ""
+msgstr "berichten en gebruikers goedkeuren"
 
 #: templates/moderation/queue.html:18
 msgid "decline and explain why"
-msgstr ""
+msgstr "afwijzen en uitleggen waarom"
 
 #: templates/moderation/queue.html:28
 msgid "add/manage reject reasons"
-msgstr ""
+msgstr "toevoegen en beheren van afwijsredenen"
 
 #: templates/moderation/queue.html:32
 msgid "block spammers"
@@ -7103,7 +7133,7 @@ msgstr ""
 
 #: templates/question/answer_card.html:22
 msgid "This response is published"
-msgstr ""
+msgstr "Deze reactie is gepubliceerd"
 
 #: templates/question/answer_controls.html:11
 msgid "remove offensive flag"
@@ -7133,40 +7163,40 @@ msgstr ""
 #: templates/question/answer_controls.html:33
 #: templates/question/question_controls.html:34
 msgid "undelete"
-msgstr ""
+msgstr "verwijdering ongedaan maken"
 
 #: templates/question/answer_controls.html:44
 msgid "unpublish"
-msgstr ""
+msgstr "publicering intrekken"
 
 #: templates/question/answer_controls.html:49
 msgid "publish"
-msgstr ""
+msgstr "publiceren"
 
 #: templates/question/answer_controls.html:56
 msgid "permanent link"
-msgstr ""
+msgstr "permanente koppeling"
 
 #: templates/question/answer_controls.html:57
 #: templates/widgets/markdown_help.html:20
 msgid "link"
-msgstr ""
+msgstr "link"
 
 #: templates/question/answer_tab_bar.html:7
 msgid "Sort by »"
-msgstr ""
+msgstr "Sorteren op »"
 
 #: templates/question/answer_vote_buttons.html:10
 msgid "(click again to undo)"
-msgstr ""
+msgstr "(klik opnieuw om het ongedaan te maken)"
 
 #: templates/question/closed_question_info.html:2
 msgid "Closed for the following reason"
-msgstr ""
+msgstr "Gesloten om de volgende redenen"
 
 #: templates/question/closed_question_info.html:3
 msgid "by"
-msgstr ""
+msgstr "door"
 
 #: templates/question/closed_question_info.html:5
 #, python-format
@@ -7175,7 +7205,7 @@ msgstr ""
 
 #: templates/question/content.html:19
 msgid "See the accepted answer"
-msgstr ""
+msgstr "Bekijk het geaccepteerde antwoord"
 
 #: templates/question/lang_switch_message.html:1
 #, python-format
@@ -7190,28 +7220,28 @@ msgstr ""
 
 #: templates/question/question_controls.html:26
 msgid "reopen"
-msgstr ""
+msgstr "heropenen"
 
 #: templates/question/question_controls.html:28
 msgid "close"
-msgstr ""
+msgstr "sluiten"
 
 #: templates/question/question_controls.html:30
 msgid "merge"
-msgstr ""
+msgstr "samenvoegen"
 
 #: templates/question/sidebar.html:11
 msgid "Unfollow"
-msgstr ""
+msgstr "Volgen stopzetten"
 
 #: templates/question/sidebar.html:12 templates/question/sidebar.html.py:14
 #: templates/question/sidebar.html:20
 msgid "Follow"
-msgstr ""
+msgstr "Volgen"
 
 #: templates/question/sidebar.html:13 templates/question/sidebar.html.py:18
 msgid "Following"
-msgstr ""
+msgstr "Aan het volgen"
 
 #: templates/question/sidebar.html:27
 #, python-format
@@ -7230,19 +7260,19 @@ msgstr ""
 
 #: templates/question/sidebar.html:46
 msgid "Invite"
-msgstr ""
+msgstr "Uitnodigen"
 
 #: templates/question/sidebar.html:51 templates/question/sidebar.html.py:57
-#: templates/user_profile/user_email_subscriptions.html:126
+#: templates/user_profile/user_email_subscriptions.html:145
 #: templates/widgets/tag_selector.html:20
 #: templates/widgets/tag_selector.html:37
 #: templates/widgets/tag_selector.html:56
 msgid "add"
-msgstr ""
+msgstr "toevoegen"
 
 #: templates/question/sidebar.html:53 templates/question/sidebar.html.py:59
 msgid "- or -"
-msgstr ""
+msgstr "- of -"
 
 #: templates/question/sidebar.html:71
 msgid "share with everyone"
@@ -7250,15 +7280,15 @@ msgstr ""
 
 #: templates/question/sidebar.html:84
 msgid "Individual users"
-msgstr ""
+msgstr "individuele gebruikers"
 
 #: templates/question/sidebar.html:89
 msgid "You"
-msgstr ""
+msgstr "Jij"
 
 #: templates/question/sidebar.html:96 templates/question/sidebar.html:116
 msgid "and"
-msgstr ""
+msgstr "en"
 
 #: templates/question/sidebar.html:121
 #, python-format
@@ -7267,7 +7297,7 @@ msgstr ""
 
 #: templates/question/sidebar.html:127
 msgid "Public thread"
-msgstr ""
+msgstr "Openbare discussie"
 
 #: templates/question/sidebar.html:128
 #, python-format
@@ -7277,23 +7307,23 @@ msgstr ""
 
 #: templates/question/sidebar.html:136
 msgid "Stats"
-msgstr ""
+msgstr "Statistieken"
 
 #: templates/question/sidebar.html:138
 msgid "Asked"
-msgstr ""
+msgstr "Gevraagd"
 
 #: templates/question/sidebar.html:141
 msgid "Seen"
-msgstr ""
+msgstr "Bekeken"
 
 #: templates/question/sidebar.html:141
 msgid "times"
-msgstr ""
+msgstr "keer"
 
 #: templates/question/sidebar.html:144
 msgid "Last updated"
-msgstr ""
+msgstr "Laatst bijgewertkt"
 
 #: templates/tags/form_bulk_tag_subscription.html:4
 msgid "Tag subscriptions"
@@ -7310,19 +7340,19 @@ msgstr ""
 
 #: templates/tags/header.html:20
 msgid "by name"
-msgstr ""
+msgstr "op naam"
 
 #: templates/tags/header.html:26
 msgid "by popularity"
-msgstr ""
+msgstr "op populariteit"
 
 #: templates/tags/header.html:34 templates/tags/header.html.py:35
 msgid "suggested"
-msgstr ""
+msgstr "voorgestelde"
 
 #: templates/tags/header.html:42 templates/tags/header.html.py:43
 msgid "manage subscriptions"
-msgstr ""
+msgstr "aanmeldingen beheren"
 
 #: templates/tags/list_bulk_tag_subscription.html:4
 msgid "Manage Tag subscriptions"
@@ -7334,23 +7364,23 @@ msgstr ""
 
 #: templates/tags/list_bulk_tag_subscription.html:8
 msgid "Create New"
-msgstr ""
+msgstr "Nieuwe maken"
 
 #: templates/tags/list_bulk_tag_subscription.html:11
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: templates/tags/list_bulk_tag_subscription.html:17
 msgid "Action"
-msgstr ""
+msgstr "Actie"
 
 #: templates/user_inbox/base.html:13
 msgid "Sections:"
-msgstr ""
+msgstr "Secties:"
 
 #: templates/user_inbox/base.html:18
 msgid "messages"
-msgstr ""
+msgstr "berichten"
 
 #: templates/user_inbox/base.html:23
 #, python-format
@@ -7372,11 +7402,11 @@ msgstr ""
 
 #: templates/user_inbox/group_join_requests.html:26
 msgid "Approve"
-msgstr ""
+msgstr "Goedkeuren"
 
 #: templates/user_inbox/group_join_requests.html:41
 msgid "Deny"
-msgstr ""
+msgstr "Weigeren"
 
 #: templates/user_inbox/messages.html:9
 #: templates/user_profile/user_tabs.html:13
@@ -7386,7 +7416,7 @@ msgstr ""
 #: templates/user_inbox/responses.html:4
 #: templates/user_profile/user_tabs.html:10
 msgid "notifications"
-msgstr ""
+msgstr "meldingen"
 
 #: templates/user_inbox/responses.html:9
 msgid "mark seen"
@@ -7394,7 +7424,7 @@ msgstr ""
 
 #: templates/user_inbox/responses.html:11
 msgid "select:"
-msgstr ""
+msgstr "selecteer:"
 
 #: templates/user_profile/twitter_sharing_controls.html:8
 #, python-format
@@ -7415,7 +7445,7 @@ msgstr ""
 
 #: templates/user_profile/twitter_sharing_controls.html:28
 msgid "use another account"
-msgstr ""
+msgstr "gebruik een ander account"
 
 #: templates/user_profile/twitter_sharing_controls.html:32
 msgid "Auto-tweeting is off"
@@ -7425,6 +7455,50 @@ msgstr ""
 msgid "Start tweeting"
 msgstr ""
 
+#: templates/user_profile/unsubscribe.html:2
+msgid "Unsubscribe"
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:5
+#, python-format
+msgid "Want to unsubcribe %(verified_email)s from %(app_name)s?"
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:7
+msgid "Successfully unsubscribed."
+msgstr "Succesvol afgemeld."
+
+#: templates/user_profile/unsubscribe.html:11
+msgid "Yes, unsubscribe"
+msgstr "Ja, afmelden"
+
+#: templates/user_profile/unsubscribe.html:16
+msgid "Bad unsubscribe link."
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:17
+#, python-format
+msgid ""
+"Expected format is %(link_url)s?key=&lt;unsubscribe "
+"key&gt;&amp;email=&lt;email address&gt;"
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:20
+msgid "The unsubscribe key sent with the link had expired."
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:23
+msgid "Resend unsubscribe link"
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:26
+msgid "Unsubscribe link resent. Please check your email."
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:28
+msgid "Sorry, there was an unexpected error."
+msgstr ""
+
 #: templates/user_profile/user.html:13
 #, python-format
 msgid "%(username)s's profile"
@@ -7432,16 +7506,16 @@ msgstr ""
 
 #: templates/user_profile/user_edit.html:4
 msgid "Edit user profile"
-msgstr ""
+msgstr "Gebruikersprofiel bewerken "
 
 #: templates/user_profile/user_edit.html:7
 msgid "edit profile"
-msgstr ""
+msgstr "profiel bewerken "
 
 #: templates/user_profile/user_edit.html:18
 #: templates/user_profile/user_info.html:19
 msgid "change picture"
-msgstr ""
+msgstr "verander afbeelding"
 
 #: templates/user_profile/user_edit.html:24
 msgid "Screen Name"
@@ -7449,16 +7523,16 @@ msgstr ""
 
 #: templates/user_profile/user_edit.html:44
 msgid "(cannot be changed)"
-msgstr ""
+msgstr "(kan niet gewijzigd worden)"
 
 #: templates/user_profile/user_edit.html:89
-#: templates/user_profile/user_email_subscriptions.html:108
+#: templates/user_profile/user_email_subscriptions.html:127
 msgid "Update"
-msgstr ""
+msgstr "Bijwerken"
 
 #: templates/user_profile/user_email_subscriptions.html:5
 msgid "subscriptions"
-msgstr ""
+msgstr "aanmeldingen"
 
 #: templates/user_profile/user_email_subscriptions.html:9
 msgid ""
@@ -7472,11 +7546,11 @@ msgstr ""
 msgid "Note: language settings also apply to the email subscriptions"
 msgstr ""
 
-#: templates/user_profile/user_email_subscriptions.html:109
+#: templates/user_profile/user_email_subscriptions.html:128
 msgid "Stop Email"
-msgstr ""
+msgstr "Beeindig e-mail"
 
-#: templates/user_profile/user_email_subscriptions.html:115
+#: templates/user_profile/user_email_subscriptions.html:134
 msgid "Subscribed Tags"
 msgstr ""
 
@@ -7488,22 +7562,22 @@ msgstr ""
 
 #: templates/user_profile/user_info.html:36
 msgid "unfollow"
-msgstr ""
+msgstr "niet meer volgen"
 
 #: templates/user_profile/user_info.html:37
 #: templates/user_profile/user_info.html:40
 #: templates/user_profile/user_info.html:46
 msgid "follow"
-msgstr ""
+msgstr "volg"
 
 #: templates/user_profile/user_info.html:39
 #: templates/user_profile/user_info.html:44
 msgid "following"
-msgstr ""
+msgstr "volgend"
 
 #: templates/user_profile/user_info.html:57
 msgid "update profile"
-msgstr ""
+msgstr "profiel bijwerken"
 
 #: templates/user_profile/user_info.html:61
 msgid "manage login methods"
@@ -7511,23 +7585,23 @@ msgstr ""
 
 #: templates/user_profile/user_info.html:74
 msgid "real name"
-msgstr ""
+msgstr "echte naam"
 
 #: templates/user_profile/user_info.html:80
 msgid "email"
-msgstr ""
+msgstr "e-mail"
 
 #: templates/user_profile/user_info.html:86
 msgid "groups"
-msgstr ""
+msgstr "groepen"
 
 #: templates/user_profile/user_info.html:97
 msgid "add group"
-msgstr ""
+msgstr "groep toevoegen"
 
 #: templates/user_profile/user_info.html:103
 msgid "member since"
-msgstr ""
+msgstr "lid sinds"
 
 #: templates/user_profile/user_info.html:108
 msgid "last seen"
@@ -7535,20 +7609,20 @@ msgstr ""
 
 #: templates/user_profile/user_info.html:114
 msgid "website"
-msgstr ""
+msgstr "website"
 
 #: templates/user_profile/user_info.html:132
 msgid "location"
-msgstr ""
+msgstr "locatie"
 
 #: templates/user_profile/user_info.html:139
 msgid "age"
-msgstr ""
+msgstr "leeftijd"
 
 #: templates/user_profile/user_info.html:140
 #, python-format
 msgid "%(age)s years old"
-msgstr ""
+msgstr "%(age)s jaar"
 
 #: templates/user_profile/user_info.html:145
 msgid "todays unused votes"
@@ -7561,7 +7635,7 @@ msgstr ""
 #: templates/user_profile/user_languages.html:3
 #: templates/user_profile/user_tabs.html:18
 msgid "languages"
-msgstr ""
+msgstr "talen"
 
 #: templates/user_profile/user_languages.html:12
 msgid "View and subscribe to posts in these languages"
@@ -7569,11 +7643,11 @@ msgstr ""
 
 #: templates/user_profile/user_languages.html:14
 msgid "Subscribe to posts in these languages"
-msgstr ""
+msgstr "Abonneer je op berichten in de volgende talen"
 
 #: templates/user_profile/user_languages.html:17
 msgid "My primary language is"
-msgstr ""
+msgstr "Mijn primaire taal is"
 
 #: templates/user_profile/user_moderate.html:4
 #: templates/user_profile/user_tabs.html:48
@@ -7587,7 +7661,7 @@ msgstr ""
 
 #: templates/user_profile/user_moderate.html:20
 msgid "Change status"
-msgstr ""
+msgstr "Verander status"
 
 #: templates/user_profile/user_moderate.html:22
 msgid "Block user and delete all content"
@@ -7613,7 +7687,7 @@ msgstr ""
 
 #: templates/user_profile/user_moderate.html:43
 msgid "Add"
-msgstr ""
+msgstr "Toevoegen"
 
 #: templates/user_profile/user_moderate.html:47
 #, python-format
@@ -7628,11 +7702,11 @@ msgstr ""
 
 #: templates/user_profile/user_moderate.html:50
 msgid "Message sent"
-msgstr ""
+msgstr "Bericht verstuurd"
 
 #: templates/user_profile/user_moderate.html:68
 msgid "Send message"
-msgstr ""
+msgstr "Bericht versturen"
 
 #: templates/user_profile/user_moderate.html:78
 msgid ""
@@ -7664,7 +7738,7 @@ msgstr ""
 #: templates/user_profile/user_network.html:5
 #: templates/user_profile/user_tabs.html:27
 msgid "network"
-msgstr ""
+msgstr "netwerk"
 
 #: templates/user_profile/user_network.html:10
 #, python-format
@@ -7694,12 +7768,12 @@ msgstr ""
 #: templates/user_profile/user_recent.html:5
 #: templates/user_profile/user_tabs.html:39
 msgid "activity"
-msgstr ""
+msgstr "activiteit"
 
 #: templates/user_profile/user_recent.html:25
 #: templates/user_profile/user_recent.html:30
 msgid "source"
-msgstr ""
+msgstr "bron"
 
 #: templates/user_profile/user_reputation.html:10
 msgid "Your karma change log."
@@ -7713,7 +7787,7 @@ msgstr ""
 #: templates/user_profile/user_stats.html:6
 #: templates/user_profile/user_tabs.html:6
 msgid "overview"
-msgstr ""
+msgstr "overzicht"
 
 #: templates/user_profile/user_stats.html:28
 #, python-format
@@ -7738,7 +7812,7 @@ msgstr[1] ""
 
 #: templates/user_profile/user_stats.html:88
 msgid "Answer to:"
-msgstr ""
+msgstr "Beantwoord aan;"
 
 #: templates/user_profile/user_tabs.html:22
 msgid "email alerts"
@@ -7747,7 +7821,7 @@ msgstr ""
 #: templates/user_profile/user_tabs.html:43
 #: templates/user_profile/user_votes.html:5
 msgid "votes"
-msgstr ""
+msgstr "stemmen"
 
 #: templates/widgets/answer_edit_tips.html:8
 #: templates/widgets/question_edit_tips.html:10
@@ -7765,7 +7839,7 @@ msgstr ""
 
 #: templates/widgets/contributors.html:3
 msgid "Contributors"
-msgstr ""
+msgstr "Bijdragers"
 
 #: templates/widgets/footer.html:33
 #, python-format
@@ -7774,19 +7848,19 @@ msgstr ""
 
 #: templates/widgets/footer.html:38
 msgid "about"
-msgstr ""
+msgstr "over"
 
 #: templates/widgets/footer.html:40 templates/widgets/user_navigation.html:20
 msgid "help"
-msgstr ""
+msgstr "hulp"
 
 #: templates/widgets/footer.html:42
 msgid "privacy policy"
-msgstr ""
+msgstr "privacybeleid"
 
 #: templates/widgets/footer.html:43
 msgid "terms of service"
-msgstr ""
+msgstr "voorwaarden"
 
 #: templates/widgets/footer.html:55
 msgid "give feedback"
@@ -7794,23 +7868,23 @@ msgstr ""
 
 #: templates/widgets/group_info.html:3
 msgid "Group info"
-msgstr ""
+msgstr "Groeps informatie"
 
 #: templates/widgets/group_info.html:26
 msgid "edit description"
-msgstr ""
+msgstr "beschrijving bewerken"
 
 #: templates/widgets/group_info.html:30
 msgid "change logo"
-msgstr ""
+msgstr "logo veranderen"
 
 #: templates/widgets/group_info.html:32
 msgid "delete logo"
-msgstr ""
+msgstr "logo verwijderen"
 
 #: templates/widgets/group_info.html:36
 msgid "add logo"
-msgstr ""
+msgstr "logo toevoegen"
 
 #: templates/widgets/group_info.html:46
 msgid "moderate emailed content"
@@ -7818,7 +7892,7 @@ msgstr ""
 
 #: templates/widgets/group_info.html:63
 msgid "How users join this group?"
-msgstr ""
+msgstr "Hoe worden gebruikers lid van deze groep?"
 
 #: templates/widgets/group_info.html:85
 msgid "Can moderate site"
@@ -7887,11 +7961,11 @@ msgstr ""
 #: templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "text"
-msgstr ""
+msgstr "tekst"
 
 #: templates/widgets/markdown_help.html:24
 msgid "image"
-msgstr ""
+msgstr "afbeelding"
 
 #: templates/widgets/markdown_help.html:28
 msgid "numbered list:"
@@ -7899,11 +7973,11 @@ msgstr ""
 
 #: templates/widgets/markdown_help.html:29
 msgid "One"
-msgstr ""
+msgstr "Één"
 
 #: templates/widgets/markdown_help.html:30
 msgid "Two"
-msgstr ""
+msgstr "Twee"
 
 #: templates/widgets/markdown_help.html:33
 msgid "basic HTML tags are also supported"
@@ -7915,11 +7989,11 @@ msgstr ""
 
 #: templates/widgets/meta_nav.html:13
 msgid "people & groups"
-msgstr ""
+msgstr "mensen & groepen"
 
 #: templates/widgets/meta_nav.html:21
 msgid "users"
-msgstr ""
+msgstr "gebruikers"
 
 #: templates/widgets/meta_nav.html:28
 msgid "badges"
@@ -7941,7 +8015,7 @@ msgstr ""
 
 #: templates/widgets/proxy_author_fields.html:14
 msgid "User name"
-msgstr ""
+msgstr "Gebruikersnaam"
 
 #: templates/widgets/question_edit_tips.html:7
 msgid ""
@@ -7971,11 +8045,11 @@ msgstr ""
 
 #: templates/widgets/search_bar.html:20
 msgid "search or ask your question"
-msgstr ""
+msgstr "zoek of stel je vraag"
 
 #: templates/widgets/tag_selector.html:4
 msgid "Interesting tags"
-msgstr ""
+msgstr "Interessante labels"
 
 #: templates/widgets/tag_selector.html:22
 msgid "Ignored tags"
@@ -8030,7 +8104,7 @@ msgstr ""
 
 #: templates/widgets/user_navigation.html:17
 msgid "settings"
-msgstr ""
+msgstr "instellingen"
 
 #: templates/widgets/user_navigation.html:18
 msgid "widgets"
@@ -8058,67 +8132,68 @@ msgstr ""
 
 #: templates/widgets/user_perms.html:19
 msgid "Currently, you can:"
-msgstr ""
+msgstr "Op dit moment kunt u:"
 
 #: templates/widgets/user_perms.html:21
 msgid "Make new posts"
-msgstr ""
+msgstr "Maak nieuwe berichten"
 
 #: templatetags/extra_filters_jinja.py:369
 msgid "no"
-msgstr ""
+msgstr "nee"
 
 #: templatetags/extra_filters_jinja.py:403
 msgid "Visitor"
-msgstr ""
+msgstr "Bezoeker"
 
-#: utils/decorators.py:105
+#: utils/decorators.py:104
 msgid "Oops, apologies - there was some error"
-msgstr ""
+msgstr "Oeps, excuses - er ging iets fout"
 
-#: utils/decorators.py:123
+#: utils/decorators.py:122
 msgid "Please login to post"
 msgstr ""
 
-#: utils/decorators.py:219
+#: utils/decorators.py:201 views/commands.py:641 views/commands.py:675
+#: views/users.py:672 views/writers.py:342 views/writers.py:806
 msgid "Spam was detected on your post, sorry for if this is a mistake"
 msgstr ""
 
-#: utils/decorators.py:243
+#: utils/decorators.py:225
 msgid "This function is limited to moderators and administrators"
 msgstr ""
 
-#: utils/decorators.py:256
+#: utils/decorators.py:238
 msgid "This function is limited to administrators"
 msgstr ""
 
 #: utils/forms.py:68
 msgid "this field is required"
-msgstr ""
+msgstr "dit veld is verplicht"
 
 #: utils/forms.py:105
 msgid "user name is required"
-msgstr ""
+msgstr "gebruikersnaam is vereist"
 
 #: utils/forms.py:106
 msgid "sorry, this name is taken, please choose another"
-msgstr ""
+msgstr "sorry, deze naam is al in gebruik, kies een andere"
 
 #: utils/forms.py:107
 msgid "sorry, this name is not allowed, please choose another"
-msgstr ""
+msgstr "deze naam is niet toegestaan, kies een ander"
 
 #: utils/forms.py:108
 msgid "sorry, there is no user with this name"
-msgstr ""
+msgstr "sorry, er is geen gebruiker met deze naam"
 
 #: utils/forms.py:109
 msgid "sorry, we have a serious error - user name is taken by several users"
-msgstr ""
+msgstr "sorry, we hebben een ernstige fout - gebruikersnaam wordt gebruikt door meerdere gebruikers"
 
 #: utils/forms.py:110
 msgid "user name can only consist of letters, empty space and underscore"
-msgstr ""
+msgstr "gebruikersnaam kan alleen bestaan uit letters, spaties en liggend streepjes."
 
 #: utils/forms.py:111
 msgid "please use at least some alphabetic characters in the user name"
@@ -8126,11 +8201,11 @@ msgstr ""
 
 #: utils/forms.py:112
 msgid "symbol \"@\" is not allowed"
-msgstr ""
+msgstr "symbool \"@\" is niet toegestaan"
 
 #: utils/forms.py:215
 msgid "this email address is not authorized"
-msgstr ""
+msgstr "dit e-mail adres is niet toegestaan"
 
 #: utils/forms.py:245
 msgid "Your email <i>(never shared)</i>"
@@ -8138,27 +8213,27 @@ msgstr ""
 
 #: utils/forms.py:247
 msgid "email address is required"
-msgstr ""
+msgstr "e-mail adres is vereist"
 
 #: utils/forms.py:248
 msgid "please enter a valid email address"
-msgstr ""
+msgstr "type een geldig e-mail adres"
 
 #: utils/forms.py:249
 msgid "this email is already used by someone else, please choose another"
-msgstr ""
+msgstr "dit e-mail adres is al geregistreerd, gebruik een ander e-mail adres"
 
 #: utils/forms.py:294
 msgid "please, retype your password"
-msgstr ""
+msgstr "geef uw wachtwoord opnieuw in"
 
 #: utils/functions.py:140
 msgid "2 days ago"
-msgstr ""
+msgstr "2 dagen geleden"
 
 #: utils/functions.py:142
 msgid "yesterday"
-msgstr ""
+msgstr "gisteren"
 
 #: utils/functions.py:145
 #, python-format
@@ -8176,7 +8251,7 @@ msgstr[1] ""
 
 #: utils/html.py:303
 msgid "please login"
-msgstr ""
+msgstr "log in aub"
 
 #: views/avatar_views.py:178
 msgid "Avatar uploaded and set as primary"
@@ -8184,94 +8259,94 @@ msgstr ""
 
 #: views/avatar_views.py:183
 msgid "Please choose file to upload"
-msgstr ""
+msgstr "Selecteer een bestand om te uploaden"
 
-#: views/commands.py:64
+#: views/commands.py:65
 msgid "Sorry, anonymous users cannot vote"
-msgstr ""
+msgstr "Sorry, anonieme gebruikers kunnen niet stemmen"
 
-#: views/commands.py:81
+#: views/commands.py:82
 msgid "Sorry you ran out of votes for today"
 msgstr ""
 
-#: views/commands.py:87
+#: views/commands.py:88
 #, python-format
 msgid "You have %(votes_left)s votes left for today"
 msgstr ""
 
-#: views/commands.py:155
+#: views/commands.py:156
 msgid "Sorry, something is not right here..."
-msgstr ""
+msgstr "Sorry, iets gaat hier niet goed..."
 
-#: views/commands.py:159
+#: views/commands.py:160
 msgid "Sorry, but anonymous users cannot perform this action."
-msgstr ""
+msgstr "Sorry, anonieme gebruikers kunnen deze actie niet uitvoeren."
 
-#: views/commands.py:166 views/commands.py:177
+#: views/commands.py:167 views/commands.py:178
 msgid "Request mode is not supported. Please try again."
 msgstr ""
 
-#: views/commands.py:219 views/commands.py:605 views/commands.py:621
-#: views/commands.py:658
+#: views/commands.py:220 views/commands.py:617 views/commands.py:633
+#: views/commands.py:682
 #, python-format
 msgid "anonymous users cannot %(perform_action)s"
 msgstr ""
 
-#: views/commands.py:413
+#: views/commands.py:425
 msgid "Sorry, could not delete tag"
-msgstr ""
+msgstr "Sorry, kan label niet verwijderen"
 
-#: views/commands.py:486
+#: views/commands.py:498
 #, python-format
 msgid "Tag subscription was canceled (<a href=\"%(url)s\">undo</a>)."
 msgstr ""
 
-#: views/commands.py:495
+#: views/commands.py:507
 #, python-format
 msgid "Please sign in to subscribe for: %(tags)s"
-msgstr ""
+msgstr "Log in om te abonneren voor: %(tags)s"
 
-#: views/commands.py:514
+#: views/commands.py:526
 msgid "Create"
-msgstr ""
+msgstr "Aanmaken"
 
-#: views/commands.py:622 views/commands.py:659
+#: views/commands.py:634 views/commands.py:683
 msgid "make edits"
-msgstr ""
+msgstr "bewerkingen maken"
 
-#: views/commands.py:822
+#: views/commands.py:846
 msgid "Please sign in to vote"
-msgstr ""
+msgstr "Log in om te stemmen"
 
-#: views/commands.py:843
+#: views/commands.py:867
 msgid "Please sign in to delete/restore posts"
 msgstr ""
 
-#: views/commands.py:905
+#: views/commands.py:929
 #, python-format
 msgid "Group %(name)s does not exist"
-msgstr ""
+msgstr "Groep %(name)s bestaat niet"
 
-#: views/commands.py:1290 views/commands.py:1323
+#: views/commands.py:1314 views/commands.py:1347
 msgid "Sorry, looks like sharing request was invalid"
 msgstr ""
 
-#: views/commands.py:1346
+#: views/commands.py:1370
 #, python-format
 msgid "%(user)s, welcome to group %(group)s!"
 msgstr ""
 
-#: views/commands.py:1403 views/commands.py:1433
+#: views/commands.py:1427 views/commands.py:1457
 msgid "Sorry, only thread moderators can use this function"
 msgstr ""
 
-#: views/commands.py:1418
+#: views/commands.py:1442
 msgid "The answer is now unpublished"
-msgstr ""
+msgstr "Het antwoord is nu ingetrokken"
 
-#: views/commands.py:1422
+#: views/commands.py:1446
 msgid "The answer is now published"
-msgstr ""
+msgstr "Het antwoord is nu gepubliceerd"
 
 #: views/emails.py:35
 msgid ""
@@ -8282,7 +8357,7 @@ msgstr ""
 #: views/meta.py:78
 #, python-format
 msgid "About %(site)s"
-msgstr ""
+msgstr "Over %(site)s"
 
 #: views/meta.py:131
 msgid "Please sign in or register to send your feedback"
@@ -8290,11 +8365,11 @@ msgstr ""
 
 #: views/meta.py:148
 msgid "unknown"
-msgstr ""
+msgstr "onbekend"
 
 #: views/meta.py:165
 msgid "Thanks for the feedback!"
-msgstr ""
+msgstr "Bedankt voor de terugkoppeling!"
 
 #: views/meta.py:176
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
@@ -8302,11 +8377,11 @@ msgstr ""
 
 #: views/meta.py:180
 msgid "Privacy policy"
-msgstr ""
+msgstr "Privacybeleid"
 
 #: views/meta.py:267
 msgid "Suggested tags"
-msgstr ""
+msgstr "Voorgestelde labels"
 
 #: views/moderation.py:177
 msgid "post was flagged as offensive"
@@ -8326,7 +8401,7 @@ msgid_plural "%d users approved"
 msgstr[0] ""
 msgstr[1] ""
 
-#: views/moderation.py:293 views/moderation.py:369 views/users.py:274
+#: views/moderation.py:293 views/moderation.py:369 views/users.py:277
 #, python-format
 msgid "%d post deleted"
 msgid_plural "%d posts deleted"
@@ -8365,141 +8440,141 @@ msgstr ""
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
-msgstr ""
+msgstr "De reactie die u zoekt is verwijderd en is niet meer toegankelijk"
 
-#: views/users.py:256
+#: views/users.py:259
 msgid "User status changed"
-msgstr ""
+msgstr "Status van gebruiker is gewijzigd"
 
-#: views/users.py:332
+#: views/users.py:335
 msgid "moderate user"
 msgstr ""
 
-#: views/users.py:597
+#: views/users.py:600
 msgid "user profile overview"
-msgstr ""
+msgstr "gebruikersprofiel overzicht"
 
-#: views/users.py:761
+#: views/users.py:770
 msgid "profile - recent activity"
-msgstr ""
+msgstr "profiel - recente activiteit"
 
-#: views/users.py:792
+#: views/users.py:801
 msgid "profile - moderation"
 msgstr ""
 
-#: views/users.py:841
+#: views/users.py:850
 msgid "profile - messages"
-msgstr ""
+msgstr "profiel - berichten"
 
-#: views/users.py:929
+#: views/users.py:938
 msgid "profile - responses"
-msgstr ""
+msgstr "profiel - reacties"
 
-#: views/users.py:943
+#: views/users.py:952
 msgid "profile - network"
-msgstr ""
+msgstr "profiel - netwerk"
 
-#: views/users.py:972
+#: views/users.py:981
 msgid "profile - votes"
-msgstr ""
+msgstr "profiel -stemmen"
 
-#: views/users.py:993
+#: views/users.py:1022
 msgid "Profile - User's Karma"
 msgstr ""
 
-#: views/users.py:1030
+#: views/users.py:1059
 msgid "profile - favorites"
-msgstr ""
+msgstr "profiel - favorieten"
 
-#: views/users.py:1111 views/users.py:1115
+#: views/users.py:1190 views/users.py:1194
 msgid "changes saved"
-msgstr ""
+msgstr "wijzigingen bewaard"
 
-#: views/users.py:1121
+#: views/users.py:1200
 msgid "email updates canceled"
-msgstr ""
+msgstr "e-mail updates geannuleerd"
 
-#: views/users.py:1139
+#: views/users.py:1218
 msgid "profile - email subscriptions"
-msgstr ""
+msgstr "profiel - e-mail abonnementen"
 
-#: views/users.py:1162
+#: views/users.py:1241
 #, python-format
 msgid "profile - %(section)s"
 msgstr ""
 
-#: views/writers.py:64
+#: views/writers.py:65
 msgid "Sorry, anonymous users cannot upload files"
-msgstr ""
+msgstr "Sorry, anonieme gebruikers kunnen geen bestanden uploaden"
 
-#: views/writers.py:82
+#: views/writers.py:83
 #, python-format
 msgid "allowed file types are '%(file_types)s'"
 msgstr ""
 
-#: views/writers.py:95
+#: views/writers.py:96
 #, python-format
 msgid "maximum upload file size is %(file_size)sK"
-msgstr ""
+msgstr "maximale upload grootte is %(file_size)sK"
 
-#: views/writers.py:103
+#: views/writers.py:104
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you."
-msgstr ""
+msgstr "Fout bij het uploaden van het bestand. neem AUB contact op met de site beheerder. Dank u wel."
 
-#: views/writers.py:198 views/writers.py:599
+#: views/writers.py:199 views/writers.py:605
 msgid "Please log in to make posts"
-msgstr ""
+msgstr "Logt u aub in om een bericht aan te maken."
 
-#: views/writers.py:742
+#: views/writers.py:748
 msgid "This content is forbidden"
-msgstr ""
+msgstr "Deze inhoud is niet toegestaan"
 
-#: views/writers.py:752
+#: views/writers.py:758
 msgid "Post not found"
-msgstr ""
+msgstr "Bericht niet gevonden"
 
-#: views/writers.py:760
+#: views/writers.py:766
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:790
+#: views/writers.py:795
 msgid "Sorry, anonymous users cannot edit comments"
-msgstr ""
+msgstr "Sorry, anonieme gebruikers kunnen geen commentaar bewerken"
 
-#: views/writers.py:848
+#: views/writers.py:859
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:878
+#: views/writers.py:889
 msgid "sorry, we seem to have some technical difficulties"
 msgstr ""
 
-#: views/writers.py:891
+#: views/writers.py:902
 #, python-format
 msgid ""
 "Sorry, only logged in users can convert comments to answers. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:922
+#: views/writers.py:933
 #, python-format
 msgid ""
 "Sorry, only logged in users can convert answers to comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:947
+#: views/writers.py:958
 msgid "Error - could not find the destination post"
 msgstr ""
 
-#: views/writers.py:971
+#: views/writers.py:982
 #, python-format
 msgid ""
 "Cannot convert, because text has more characters than %(max_chars)s - "
