@@ -1010,7 +1010,8 @@ def user_reputation(request, user, context):
 
     def format_graph_data(raw_data, user):
         # prepare data for the graph - last values go in first
-        rep_list = ['[%s,%s]' % (calendar.timegm(datetime.datetime.now().timetuple()) * 1000, user.reputation)]
+        final_rep = user.get_localized_profile().reputation + const.MIN_REPUTATION
+        rep_list = ['[%s,%s]' % (calendar.timegm(datetime.datetime.now().timetuple()) * 1000, final_rep)]
         for rep in raw_data:
             rep_list.append('[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, rep.reputation))
 
