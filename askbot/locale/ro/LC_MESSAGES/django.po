@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-16 03:00-0500\n"
-"PO-Revision-Date: 2016-06-16 08:09+0000\n"
+"POT-Creation-Date: 2016-10-04 14:06-0500\n"
+"PO-Revision-Date: 2016-10-04 19:18+0000\n"
 "Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/askbot/askbot/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -36,19 +36,31 @@ msgstr ""
 msgid "Latest %(question)s feed"
 msgstr ""
 
-#: forms.py:167
+#: forms.py:100
+msgid "Wildcard tag must have only one '*' symbol"
+msgstr ""
+
+#: forms.py:102
+msgid "Wildcard tag must have at least one symbol"
+msgstr ""
+
+#: forms.py:108
+msgid "Wildcard tag must end with an '*' symbol"
+msgstr ""
+
+#: forms.py:190
 msgid "select country"
 msgstr "alegeți o țară"
 
-#: forms.py:169
+#: forms.py:192
 msgid "Country"
 msgstr "Țară"
 
-#: forms.py:176
+#: forms.py:199
 msgid "Country field is required"
 msgstr "Câmpul cu țara este obligatoriu"
 
-#: forms.py:206
+#: forms.py:229
 #, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
@@ -56,7 +68,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: forms.py:217
+#: forms.py:240
 #, python-format
 msgid "must be < %d word"
 msgid_plural "must be < %d words"
@@ -64,20 +76,20 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: forms.py:240 templates/widgets/ask_form.html:46
+#: forms.py:263 templates/widgets/ask_form.html:46
 msgid "Select language"
 msgstr ""
 
-#: forms.py:268
+#: forms.py:291
 msgid "minor edit (don't send alerts)"
 msgstr ""
 
-#: forms.py:295 templates/widgets/markdown_help.html:20
+#: forms.py:318 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "title"
 msgstr "titlu"
 
-#: forms.py:308
+#: forms.py:331
 #, python-format
 msgid "must have > %d non-punctuation character"
 msgid_plural "must have > %d non-punctuation characters"
@@ -85,22 +97,22 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: forms.py:320
+#: forms.py:343
 #, python-format
 msgid ""
 "The %(question)s is too long, maximum allowed size is %(length)d characters"
 msgstr ""
 
-#: forms.py:327
+#: forms.py:350
 #, python-format
 msgid "The %(question)s is too long, maximum allowed size is %(length)d bytes"
 msgstr ""
 
-#: forms.py:357
+#: forms.py:380
 msgid "post"
 msgstr ""
 
-#: forms.py:364
+#: forms.py:387
 #, python-format
 msgid "%(post)s content must be > %(count)d character"
 msgid_plural "%(post)s content must be > %(count)d characters"
@@ -108,7 +120,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: forms.py:412
+#: forms.py:436
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
@@ -116,18 +128,18 @@ msgstr[0] "fiecare etichetă trebuie să fie mai scurtă de %(max_chars)d caract
 msgstr[1] "fiecare etichetă trebuie să fie mai scurtă de %(max_chars)d caractere"
 msgstr[2] "fiecare etichetă trebuie să fie mai scurtă de %(max_chars)d de caractere"
 
-#: forms.py:459
+#: forms.py:483
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of"
 " them."
 msgstr ""
 
-#: forms.py:462 forms.py:1134 models/widgets.py:27
+#: forms.py:486 forms.py:1157 models/widgets.py:27
 #: templates/widgets/meta_nav.html:6 templates/widgets/tags_field.html:10
 msgid "tags"
 msgstr "etichete"
 
-#: forms.py:464
+#: forms.py:488
 #, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
@@ -139,7 +151,7 @@ msgstr[0] "Etichetele sunt cuvinte cheie scurte, fără spații. Pot fi folosite
 msgstr[1] "Etichetele sunt cuvinte cheie scurte, fără spații. Pot fi folosite până la %(max_tags)d etichete."
 msgstr[2] "Etichetele sunt cuvinte cheie scurte, fără spații. Pot fi folosite până la %(max_tags)d etichete."
 
-#: forms.py:491
+#: forms.py:514
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
@@ -147,256 +159,256 @@ msgstr[0] "vă rugăm să folosiți %(tag_count)d etichetă sau mai puțin"
 msgstr[1] "vă rugăm să folosiți %(tag_count)d etichete sau mai puțin"
 msgstr[2] "vă rugăm să folosiți %(tag_count)d de etichete sau mai puțin"
 
-#: forms.py:499
+#: forms.py:522
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
 msgstr "Este nevoie de cel puțin una din etichetele următoare: %(tags)s"
 
-#: forms.py:527
+#: forms.py:550
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr "wiki al comunității (nu se primesc puncte de reputație și mesajul poate fi modificat de mai multe persoane)"
 
-#: forms.py:570
+#: forms.py:593
 msgid "update summary:"
 msgstr "sumar actualizare:"
 
-#: forms.py:572
+#: forms.py:595
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style...), this field is optional"
 msgstr ""
 
-#: forms.py:696
+#: forms.py:719
 msgid "Enter number of points to add or subtract"
 msgstr "Introduceți numărul de puncte pentru a fi adăugate sau retrase"
 
-#: forms.py:699
+#: forms.py:722
 msgid "Comment"
 msgstr ""
 
-#: forms.py:711 const/__init__.py:497
+#: forms.py:734 const/__init__.py:497
 msgid "approved"
 msgstr "aprobat"
 
-#: forms.py:712 const/__init__.py:498
+#: forms.py:735 const/__init__.py:498
 msgid "watched"
 msgstr "urmărit"
 
-#: forms.py:713 const/__init__.py:499
+#: forms.py:736 const/__init__.py:499
 msgid "suspended"
 msgstr "suspendat"
 
-#: forms.py:714 const/__init__.py:500
+#: forms.py:737 const/__init__.py:500
 msgid "blocked"
 msgstr "blocat"
 
-#: forms.py:716 const/__init__.py:495
+#: forms.py:739 const/__init__.py:495
 msgid "administrator"
 msgstr "administrator"
 
-#: forms.py:717 const/__init__.py:496
+#: forms.py:740 const/__init__.py:496
 msgid "moderator"
 msgstr "moderator"
 
-#: forms.py:736
+#: forms.py:759
 msgid "Change status to"
 msgstr "Schimbă starea în"
 
-#: forms.py:764
+#: forms.py:787
 msgid "which one?"
 msgstr "care?"
 
-#: forms.py:794
+#: forms.py:817
 msgid "Cannot change own status"
 msgstr "Nu se poate schimba propria stare"
 
-#: forms.py:800
+#: forms.py:823
 msgid "Cannot turn other user to moderator"
 msgstr "Nu s-a putut schimba alt utilizator în moderator"
 
-#: forms.py:807
+#: forms.py:830
 msgid "Cannot change status of another moderator"
 msgstr "Nu se poate schimba starea altui utilizator"
 
-#: forms.py:813
+#: forms.py:836
 msgid "Cannot change status to admin"
 msgstr "Nu se poate schimba starea la admin"
 
-#: forms.py:819
+#: forms.py:842
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr "Dacă doriți să modificați statusul %(username)s alegeți ceva expresiv."
 
-#: forms.py:833
+#: forms.py:856
 msgid "Subject line"
 msgstr "Linie subiect"
 
-#: forms.py:838
+#: forms.py:861
 msgid "Message text"
 msgstr "Text mesaj"
 
-#: forms.py:845
+#: forms.py:868
 msgid "Your name (optional):"
 msgstr "Nume (opțional):"
 
-#: forms.py:846
+#: forms.py:869
 msgid "Email:"
 msgstr "Email:"
 
-#: forms.py:848
+#: forms.py:871
 msgid "Your message:"
 msgstr "Mesaj:"
 
-#: forms.py:852
+#: forms.py:875
 msgid "I don't want to give my email or receive a response:"
 msgstr "Nu doresc să dau adresa de email sau să primesc un răspuns:"
 
-#: forms.py:866
+#: forms.py:889
 msgid "Message is required"
 msgstr ""
 
-#: forms.py:872 models/__init__.py:2543
+#: forms.py:895 models/__init__.py:2566
 msgid "Anonymous"
 msgstr "Anonim"
 
-#: forms.py:882
+#: forms.py:905
 msgid "Either provide email address or mark \"I dont want to give email below\""
 msgstr ""
 
-#: forms.py:915
+#: forms.py:938
 msgid "keep private within your groups"
 msgstr ""
 
-#: forms.py:954 templates/ask.html:41 templates/question.html:413
+#: forms.py:977 templates/ask.html:41 templates/question.html:421
 msgid "User name:"
 msgstr ""
 
-#: forms.py:956
+#: forms.py:979
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
 msgstr ""
 
-#: forms.py:963 templates/question.html:414
+#: forms.py:986 templates/question.html:422
 msgid "Email address:"
 msgstr ""
 
-#: forms.py:1013
+#: forms.py:1036
 msgid "User name is required with the email"
 msgstr ""
 
-#: forms.py:1018
+#: forms.py:1041
 msgid "Email is required if user name is added"
 msgstr ""
 
-#: forms.py:1048
+#: forms.py:1071
 msgid "Add details (optional)"
 msgstr ""
 
-#: forms.py:1050
+#: forms.py:1073
 msgid "Add details"
 msgstr ""
 
-#: forms.py:1055
+#: forms.py:1078
 msgid "post anonymously"
 msgstr ""
 
-#: forms.py:1076
+#: forms.py:1099
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
 msgstr ""
 
-#: forms.py:1085
+#: forms.py:1108
 msgid "ask anonymously"
 msgstr "întreabă anonim"
 
-#: forms.py:1358
+#: forms.py:1381
 msgid "Details"
 msgstr ""
 
-#: forms.py:1364
+#: forms.py:1387
 msgid "remove anonymity"
 msgstr ""
 
-#: forms.py:1449
+#: forms.py:1472
 msgid "Real name"
 msgstr "Nume real"
 
-#: forms.py:1456
+#: forms.py:1479
 msgid "Website"
 msgstr "Pagină web"
 
-#: forms.py:1463
+#: forms.py:1486
 msgid "City"
 msgstr "Oraș"
 
-#: forms.py:1472
+#: forms.py:1495
 msgid "Show country"
 msgstr "Arată țara"
 
-#: forms.py:1477
+#: forms.py:1500
 msgid "Show tag choices"
 msgstr ""
 
-#: forms.py:1482
+#: forms.py:1505
 msgid "Date of birth"
 msgstr "Data nașterii"
 
-#: forms.py:1484
+#: forms.py:1507
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "nu va fi afișată, ci folosită doar pentru calcularea vârstei, format AAAA-LL-ZZ"
 
-#: forms.py:1492
+#: forms.py:1515
 msgid "Profile"
 msgstr "Profil"
 
-#: forms.py:1502
+#: forms.py:1525
 msgid "Screen name"
 msgstr "Nume afișat"
 
-#: forms.py:1540 forms.py:1544
+#: forms.py:1563 forms.py:1567
 msgid "this email has already been registered, please use another one"
 msgstr "acest email este deja înregistrat, utilizați altul"
 
-#: forms.py:1553
+#: forms.py:1576
 msgid "Choose email tag filter"
 msgstr "Alegeți filtru email etichete"
 
-#: forms.py:1609
+#: forms.py:1632
 msgid "Individually selected"
 msgstr "Alese individual"
 
-#: forms.py:1610
+#: forms.py:1633
 msgid "Entire forum (tag filtered)"
 msgstr "Toate întrebările (filtrate pe tag)"
 
-#: forms.py:1611
+#: forms.py:1634
 msgid "Comments and posts mentioning me"
 msgstr "Comentarii și răspunsuri în care sunt menționat eu"
 
-#: forms.py:1695
+#: forms.py:1718
 msgid "please choose one of the options above"
 msgstr "alegeți una dintre opțiunile de mai sus"
 
-#: forms.py:1698
+#: forms.py:1721
 msgid "okay, let's try!"
 msgstr "Bine, să încercăm!"
 
-#: forms.py:1701
+#: forms.py:1724
 #, python-format
 msgid "no %(sitename)s email please, thanks"
 msgstr ""
 
-#: forms.py:1749 templates/reopen.html:7
+#: forms.py:1777 templates/reopen.html:7
 msgid "Title"
 msgstr "Titlu"
 
-#: forms.py:1752 templates/groups.html:32 templates/email/preview_email.html:9
+#: forms.py:1780 templates/groups.html:32 templates/email/preview_email.html:9
 msgid "Description"
 msgstr ""
 
-#: forms.py:1771 templates/tags.html:3 templates/main_page/sidebar.html:23
+#: forms.py:1799 templates/tags.html:3 templates/main_page/sidebar.html:23
 #: templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
 #: templates/widgets/tag_category_selector.html:2
@@ -419,12 +431,13 @@ msgctxt "urls"
 msgid "question"
 msgstr ""
 
-#: urls.py:78 urls.py:396 urls.py:402 urls.py:411 urls.py:420
+#: urls.py:78 urls.py:404 urls.py:410 urls.py:419 urls.py:428
 msgctxt "urls"
 msgid "tags/"
 msgstr ""
 
-#: urls.py:83 urls.py:89 urls.py:98 urls.py:119 urls.py:128 urls.py:135
+#: urls.py:83 urls.py:89 urls.py:98 urls.py:119 urls.py:128 urls.py:136
+#: urls.py:143
 msgctxt "urls"
 msgid "users/"
 msgstr ""
@@ -434,133 +447,138 @@ msgctxt "urls"
 msgid "by-group/"
 msgstr ""
 
-#: urls.py:98 urls.py:196 urls.py:303 urls.py:422 urls.py:642
+#: urls.py:98 urls.py:204 urls.py:311 urls.py:430 urls.py:655
 msgctxt "urls"
 msgid "edit/"
 msgstr ""
 
-#: urls.py:120 urls.py:396 urls.py:403 urls.py:412 urls.py:421
+#: urls.py:120 urls.py:404 urls.py:411 urls.py:420 urls.py:429
 msgctxt "urls"
 msgid "subscriptions/"
 msgstr ""
 
 #: urls.py:129
 msgctxt "urls"
+msgid "unsubscribe/"
+msgstr ""
+
+#: urls.py:137
+msgctxt "urls"
 msgid "select_languages/"
 msgstr ""
 
-#: urls.py:140
+#: urls.py:148
 msgctxt "urls"
 msgid "groups/"
 msgstr ""
 
-#: urls.py:145 urls.py:150
+#: urls.py:153 urls.py:158
 msgctxt "urls"
 msgid "badges/"
 msgstr ""
 
-#: urls.py:163
+#: urls.py:171
 msgctxt "urls"
 msgid "feedback/"
 msgstr ""
 
-#: urls.py:185
+#: urls.py:193
 msgctxt "urls"
 msgid "about/"
 msgstr ""
 
-#: urls.py:186
+#: urls.py:194
 msgctxt "urls"
 msgid "faq/"
 msgstr ""
 
-#: urls.py:187
+#: urls.py:195
 msgctxt "urls"
 msgid "privacy/"
 msgstr ""
 
-#: urls.py:189
+#: urls.py:197
 msgctxt "urls"
 msgid "terms/"
 msgstr ""
 
-#: urls.py:194
+#: urls.py:202
 msgctxt "urls"
 msgid "help/"
 msgstr ""
 
-#: urls.py:196 urls.py:201
+#: urls.py:204 urls.py:209
 msgctxt "urls"
 msgid "answers/"
 msgstr ""
 
-#: urls.py:201 urls.py:338
+#: urls.py:209 urls.py:346
 msgctxt "urls"
 msgid "revisions/"
 msgstr ""
 
-#: urls.py:233
+#: urls.py:241
 msgctxt "urls"
 msgid "moderation-queue/"
 msgstr ""
 
-#: urls.py:298 urls.py:601 urls.py:609 urls.py:617 urls.py:625
+#: urls.py:306 urls.py:614 urls.py:622 urls.py:630 urls.py:638
 msgctxt "urls"
 msgid "ask/"
 msgstr ""
 
-#: urls.py:308
+#: urls.py:316
 msgctxt "urls"
 msgid "retag/"
 msgstr ""
 
-#: urls.py:313
+#: urls.py:321
 msgctxt "urls"
 msgid "close/"
 msgstr ""
 
-#: urls.py:318
+#: urls.py:326
 msgctxt "urls"
 msgid "reopen/"
 msgstr ""
 
-#: urls.py:323
+#: urls.py:331
 msgctxt "urls"
 msgid "answer/"
 msgstr ""
 
-#: urls.py:404 urls.py:650
+#: urls.py:412 urls.py:663
 msgctxt "urls"
 msgid "delete/"
 msgstr ""
 
-#: urls.py:413 urls.py:634
+#: urls.py:421 urls.py:647
 msgctxt "urls"
 msgid "create/"
 msgstr ""
 
-#: urls.py:428
+#: urls.py:436
 msgctxt "urls"
 msgid "suggested-tags/"
 msgstr ""
 
-#: urls.py:594 urls.py:600 urls.py:608 urls.py:616 urls.py:624 urls.py:633
-#: urls.py:641 urls.py:649 urls.py:656
+#: urls.py:607 urls.py:613 urls.py:621 urls.py:629 urls.py:637 urls.py:646
+#: urls.py:654 urls.py:662 urls.py:669
 msgctxt "urls"
 msgid "widgets/"
 msgstr ""
 
-#: urls.py:626 deps/django_authopenid/urls.py:27
+#: urls.py:639 deps/django_authopenid/urls.py:27
 msgctxt "urls"
 msgid "complete/"
 msgstr ""
 
-#: urls.py:687
+#: urls.py:700
 msgctxt "urls"
 msgid "upload/"
 msgstr ""
 
-#: urls.py:718
+#: urls.py:731
 msgctxt "urls"
 msgid "account/"
 msgstr ""
@@ -634,7 +652,7 @@ msgstr ""
 msgid "Please use space to separate the entries, do not use the @ symbol!"
 msgstr ""
 
-#: conf/access_control.py:124 conf/login_providers.py:228
+#: conf/access_control.py:124
 msgid "disable"
 msgstr ""
 
@@ -1054,7 +1072,7 @@ msgstr ""
 msgid "DANGER: makes impossible account recovery by email."
 msgstr ""
 
-#: conf/email.py:337 conf/login_providers.py:279
+#: conf/email.py:337 conf/login_providers.py:273
 msgid "Must be not be required"
 msgstr ""
 
@@ -1601,7 +1619,7 @@ msgstr ""
 #: conf/forum_data_rules.py:350
 msgid ""
 "If enabled, users will have a third set of tag selections - \"subscribed\" "
-"(by email) in additon to \"interesting\" and \"ignored\""
+"(by email) in addition to \"interesting\" and \"ignored\""
 msgstr ""
 
 #: conf/forum_data_rules.py:358
@@ -2076,46 +2094,36 @@ msgstr ""
 msgid "OpenStackID service endpoint url"
 msgstr ""
 
-#: conf/login_providers.py:233
+#: conf/login_providers.py:227
 msgid "local password"
 msgstr ""
 
-#: conf/login_providers.py:238
+#: conf/login_providers.py:232
 #, python-format
 msgid "Activate %(provider)s login"
 msgstr ""
 
-#: conf/login_providers.py:243
+#: conf/login_providers.py:237
 #, python-format
 msgid ""
 "Note: to really enable %(provider)s login some additional parameters will "
 "need to be set in the \"External keys\" section"
 msgstr ""
 
-#: conf/login_providers.py:263
+#: conf/login_providers.py:257
 msgid "MediaWiki login button image"
 msgstr ""
 
-#: conf/login_providers.py:273
+#: conf/login_providers.py:267
 msgid "MediaWiki - enable one click registration"
 msgstr ""
 
-#: conf/login_providers.py:275
+#: conf/login_providers.py:269
 msgid "Allows skipping the registration page after the wiki authentication."
 msgstr ""
 
-#: conf/login_providers.py:278
+#: conf/login_providers.py:272
 msgid "Must be enabled"
-msgstr ""
-
-#: conf/login_providers.py:294
-msgid "Google login"
-msgstr ""
-
-#: conf/login_providers.py:296
-msgid ""
-"To enable Google-Plus login, OAuth keys are required in the \"External "
-"keys\" section"
 msgstr ""
 
 #: conf/markup.py:15
@@ -3129,7 +3137,7 @@ msgid ""
 msgstr ""
 
 #: conf/words.py:124
-msgid "Instruction for the catogory selector"
+msgid "Instruction for the category selector"
 msgstr ""
 
 #: conf/words.py:125
@@ -4135,100 +4143,100 @@ msgctxt "urls"
 msgid "verify-email/"
 msgstr ""
 
-#: deps/django_authopenid/util.py:437
+#: deps/django_authopenid/util.py:431
 #, python-format
 msgid "%(site)s user name and password"
 msgstr ""
 
-#: deps/django_authopenid/util.py:443 templates/authopenid/signin.html:100
+#: deps/django_authopenid/util.py:437 templates/authopenid/signin.html:100
 #: templates/authopenid/widget_signin.html:90
 msgid "Create a password-protected account"
 msgstr "Creați un cont protejat prin parolă"
 
-#: deps/django_authopenid/util.py:444
+#: deps/django_authopenid/util.py:438
 msgid "Change your password"
 msgstr "Schimbați parola"
 
-#: deps/django_authopenid/util.py:456 deps/django_authopenid/util.py:808
+#: deps/django_authopenid/util.py:450 deps/django_authopenid/util.py:792
 #: templates/widgets/login_link.html:15
 #, python-format
 msgid "Sign in via %(login_name)s"
 msgstr ""
 
-#: deps/django_authopenid/util.py:458
+#: deps/django_authopenid/util.py:452
 #, python-format
 msgid "%(login_name)s username"
 msgstr ""
 
-#: deps/django_authopenid/util.py:604
+#: deps/django_authopenid/util.py:588
 msgid "Sign in with Yahoo"
 msgstr "Autentificare cu Yahoo"
 
-#: deps/django_authopenid/util.py:611
+#: deps/django_authopenid/util.py:595
 msgid "AOL screen name"
 msgstr "nume utilizator AOL"
 
-#: deps/django_authopenid/util.py:620
+#: deps/django_authopenid/util.py:604
 msgid "Sign in with LaunchPad"
 msgstr ""
 
-#: deps/django_authopenid/util.py:627
+#: deps/django_authopenid/util.py:611
 msgid "OpenID url"
 msgstr "URL OpenID"
 
-#: deps/django_authopenid/util.py:665
+#: deps/django_authopenid/util.py:649
 msgid "Flickr user name"
 msgstr "nume utilizator Flickr"
 
-#: deps/django_authopenid/util.py:673
+#: deps/django_authopenid/util.py:657
 msgid "Technorati user name"
 msgstr "nume utilizator Technorati"
 
-#: deps/django_authopenid/util.py:681
+#: deps/django_authopenid/util.py:665
 msgid "WordPress blog name"
 msgstr "nume blog WordPress"
 
-#: deps/django_authopenid/util.py:689
+#: deps/django_authopenid/util.py:673
 msgid "Blogger blog name"
 msgstr "nume blog Blogger"
 
-#: deps/django_authopenid/util.py:697
+#: deps/django_authopenid/util.py:681
 msgid "LiveJournal blog name"
 msgstr "nume blog LiveJournal"
 
-#: deps/django_authopenid/util.py:705
+#: deps/django_authopenid/util.py:689
 msgid "ClaimID user name"
 msgstr "nume utilizator ClaimID"
 
-#: deps/django_authopenid/util.py:713
+#: deps/django_authopenid/util.py:697
 msgid "Vidoop user name"
 msgstr "nume utilizator Vidoop"
 
-#: deps/django_authopenid/util.py:721
+#: deps/django_authopenid/util.py:705
 msgid "Verisign user name"
 msgstr "nume utilizator Verisign"
 
-#: deps/django_authopenid/util.py:775
+#: deps/django_authopenid/util.py:759
 #, python-format
 msgid "Change your %(provider)s password"
 msgstr "Modificați parola pentru %(provider)s"
 
-#: deps/django_authopenid/util.py:779
+#: deps/django_authopenid/util.py:763
 #, python-format
 msgid "Click to see if your %(provider)s signin still works for %(site_name)s"
 msgstr "Efectuați clic pentru a verifica dacă autentificarea pentru %(provider)s încă funcționează pe %(site_name)s"
 
-#: deps/django_authopenid/util.py:788
+#: deps/django_authopenid/util.py:772
 #, python-format
 msgid "Create password for %(provider)s"
 msgstr "Creați parolă pentru %(provider)s"
 
-#: deps/django_authopenid/util.py:792
+#: deps/django_authopenid/util.py:776
 #, python-format
 msgid "Connect your %(provider)s account to %(site_name)s"
 msgstr "Conectați contul %(provider)s la %(site_name)s"
 
-#: deps/django_authopenid/util.py:801
+#: deps/django_authopenid/util.py:785
 #, python-format
 msgid "Signin with %(provider)s user name and password"
 msgstr "Autentificați-vă cu numele de utilizator și parola %(provider)s"
@@ -4515,8 +4523,8 @@ msgstr ""
 msgid "Sent to author of questions without accepted answers"
 msgstr ""
 
-#: mail/messages.py:646 mail/messages.py:663 mail/messages.py:714
-#: mail/messages.py:739
+#: mail/messages.py:646 mail/messages.py:663 mail/messages.py:727
+#: mail/messages.py:752
 msgid "At least one user and one question are required to generate a preview"
 msgstr ""
 
@@ -4537,41 +4545,49 @@ msgid "Sent when user validates email or recovers account"
 msgstr ""
 
 #: mail/messages.py:711
+msgid "Unsubscribe link"
+msgstr ""
+
+#: mail/messages.py:712
+msgid "Sent when email key expired, but user is identified"
+msgstr ""
+
+#: mail/messages.py:724
 msgid "Approved post notification"
 msgstr ""
 
-#: mail/messages.py:712 mail/messages.py:737
+#: mail/messages.py:725 mail/messages.py:750
 msgid "Sent when post revision is approved by the moderator"
 msgstr ""
 
-#: mail/messages.py:736
+#: mail/messages.py:749
 msgid "Respondable approved post notification"
 msgstr ""
 
-#: mail/messages.py:767
+#: mail/messages.py:780
 msgid "To add to your post EDIT ABOVE THIS LINE"
 msgstr ""
 
-#: mail/messages.py:780
+#: mail/messages.py:793
 msgid "Private message notification"
 msgstr ""
 
-#: mail/messages.py:781
+#: mail/messages.py:794
 msgid "Sent when a private message is sent to the user"
 msgstr ""
 
-#: mail/messages.py:783
+#: mail/messages.py:796
 msgid ""
 "At least one user and one personal message are required to generate a "
 "preview"
 msgstr ""
 
-#: mail/messages.py:808
+#: mail/messages.py:821
 msgid "Feedback email"
 msgstr ""
 
-#: mail/messages.py:809
-msgid "Sent when users submits feedback form"
+#: mail/messages.py:822
+msgid "Sent when user submits feedback form"
 msgstr ""
 
 #: middleware/forum_mode.py:64
@@ -4579,101 +4595,101 @@ msgstr ""
 msgid "Please log in to use %s"
 msgstr ""
 
-#: models/__init__.py:703
+#: models/__init__.py:726
 msgid "perform this action"
 msgstr ""
 
-#: models/__init__.py:709
+#: models/__init__.py:732
 #, python-format
 msgid ""
 "Sorry, you cannot %(perform_action)s because the site is temporarily read "
 "only"
 msgstr ""
 
-#: models/__init__.py:716
+#: models/__init__.py:739
 #, python-format
 msgid ""
 "Sorry, you cannot %(perform_action)s because %(domain)s emails have been "
 "blacklisted."
 msgstr ""
 
-#: models/__init__.py:720
+#: models/__init__.py:743
 #, python-format
 msgid "Please <a href=\"%(url)s\">change your email</a>."
 msgstr ""
 
-#: models/__init__.py:728 models/__init__.py:1524 views/writers.py:210
+#: models/__init__.py:751 models/__init__.py:1547 views/writers.py:211
 msgid "Sorry, but you have only read access"
 msgstr ""
 
-#: models/__init__.py:736
+#: models/__init__.py:759
 msgid "your account is disabled"
 msgstr ""
 
-#: models/__init__.py:743 models/__init__.py:814
+#: models/__init__.py:766 models/__init__.py:837
 msgid "your account is blocked"
 msgstr ""
 
-#: models/__init__.py:751 models/__init__.py:759 models/__init__.py:810
+#: models/__init__.py:774 models/__init__.py:782 models/__init__.py:833
 msgid "your account is suspended"
 msgstr ""
 
-#: models/__init__.py:780
+#: models/__init__.py:803
 #, python-format
 msgid "Sorry, only moderators and site administrators can %(perform_action)s"
 msgstr ""
 
-#: models/__init__.py:787
+#: models/__init__.py:810
 #, python-format
 msgid ""
 "Sorry, only administrators, moderators or users with reputation > "
 "%(min_rep)s can %(perform_action)s"
 msgstr ""
 
-#: models/__init__.py:880
+#: models/__init__.py:903
 msgid "Sorry, you cannot vote for your own posts"
 msgstr ""
 
-#: models/__init__.py:887 templates/faq_static.html:32
+#: models/__init__.py:910 templates/faq_static.html:32
 #: templates/user_profile/user_votes.html:14
 msgid "upvote"
 msgstr "vot pozitiv"
 
-#: models/__init__.py:890 templates/faq_static.html:42
+#: models/__init__.py:913 templates/faq_static.html:42
 #: templates/user_profile/user_votes.html:16
 msgid "downvote"
 msgstr "vot negativ"
 
-#: models/__init__.py:904
+#: models/__init__.py:927
 msgid "upload files"
 msgstr ""
 
-#: models/__init__.py:914
+#: models/__init__.py:937
 msgid "join or leave groups"
 msgstr ""
 
-#: models/__init__.py:927 views/commands.py:220
+#: models/__init__.py:950 views/commands.py:221
 msgid "mark or unmark tags"
 msgstr ""
 
-#: models/__init__.py:935
+#: models/__init__.py:958
 msgid "merge duplicate questions"
 msgstr ""
 
-#: models/__init__.py:948
+#: models/__init__.py:971
 msgid "Could not post, because your karma is insufficient to publish links"
 msgstr ""
 
-#: models/__init__.py:971
+#: models/__init__.py:994
 #, python-format
 msgid "Sorry, %(you_already_gave_an_answer)s, please edit it instead."
 msgstr ""
 
-#: models/__init__.py:996 models/__init__.py:1082
+#: models/__init__.py:1019 models/__init__.py:1105
 msgid "Sorry, commenting closed entries is not allowed"
 msgstr ""
 
-#: models/__init__.py:1007
+#: models/__init__.py:1030
 #, python-format
 msgid ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
@@ -4685,39 +4701,39 @@ msgstr[0] "Comentariile (cu excepția ultimului) pot fi modificate numai într-u
 msgstr[1] "Comentariile (cu excepția ultimului) pot fi modificate numai într-un interval de %(minutes)s minute de la postare"
 msgstr[2] "Comentariile (cu excepția ultimului) pot fi modificate numai într-un interval de %(minutes)s de minute de la postare"
 
-#: models/__init__.py:1023
+#: models/__init__.py:1046
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr "Doar cel care a adăugat mesajul și moderatorii pot modifica comentariile"
 
-#: models/__init__.py:1036
+#: models/__init__.py:1059
 msgid "repost items"
 msgstr ""
 
-#: models/__init__.py:1071
+#: models/__init__.py:1094
 msgid "post comments"
 msgstr ""
 
-#: models/__init__.py:1100
+#: models/__init__.py:1123
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
 msgstr "Această postare a fost ștearsă și poate fi văzută numai de către proprietari, administratorii site-ului și moderatori"
 
-#: models/__init__.py:1112
+#: models/__init__.py:1135
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted"
 " posts"
 msgstr "Numai moderatorii, administratorii site-ului și proprietarii postării pot modifica postările șterse"
 
-#: models/__init__.py:1128
+#: models/__init__.py:1151
 msgid "edit wiki posts"
 msgstr ""
 
-#: models/__init__.py:1131
+#: models/__init__.py:1154
 msgid "edit posts"
 msgstr ""
 
-#: models/__init__.py:1171
+#: models/__init__.py:1194
 #, python-format
 msgid ""
 "Sorry, posts like this are editable only within %(minutes)s minute from "
@@ -4729,12 +4745,12 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: models/__init__.py:1223
+#: models/__init__.py:1246
 #, python-format
 msgid "At least %d karma point is required to delete own questions"
 msgstr ""
 
-#: models/__init__.py:1237
+#: models/__init__.py:1260
 #, python-format
 msgid ""
 "Sorry, cannot %(delete_your_question)s since it has an %(upvoted_answers)s "
@@ -4746,50 +4762,50 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: models/__init__.py:1259
+#: models/__init__.py:1282
 msgid "delete posts"
 msgstr ""
 
-#: models/__init__.py:1287
+#: models/__init__.py:1310
 msgid "reopen questions"
 msgstr ""
 
-#: models/__init__.py:1301
+#: models/__init__.py:1324
 msgid "You have flagged this post before and cannot do it more than once"
 msgstr ""
 
-#: models/__init__.py:1313
+#: models/__init__.py:1336
 msgid "flag posts as offensive"
 msgstr ""
 
-#: models/__init__.py:1325
+#: models/__init__.py:1348
 #, python-format
 msgid ""
 "Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
 "offensive flags per day."
 msgstr ""
 
-#: models/__init__.py:1347
+#: models/__init__.py:1370
 msgid "cannot remove non-existing flag"
 msgstr ""
 
-#: models/__init__.py:1356
+#: models/__init__.py:1379
 msgid "remove flags"
 msgstr ""
 
-#: models/__init__.py:1365
+#: models/__init__.py:1388
 msgid "you don't have the permission to remove all flags"
 msgstr ""
 
-#: models/__init__.py:1366
+#: models/__init__.py:1389
 msgid "no flags for this entry"
 msgstr ""
 
-#: models/__init__.py:1405
+#: models/__init__.py:1428
 msgid "delete comments"
 msgstr ""
 
-#: models/__init__.py:1422
+#: models/__init__.py:1445
 #, python-format
 msgid ""
 "Sorry, comments (except the last one) are deletable only within %(minutes)s "
@@ -4801,24 +4817,24 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: models/__init__.py:1440
+#: models/__init__.py:1463
 msgid "sorry, but older votes cannot be revoked"
 msgstr ""
 
-#: models/__init__.py:2350 utils/functions.py:136
+#: models/__init__.py:2373 utils/functions.py:136
 #, python-format
 msgid "on %(date)s"
 msgstr "în %(date)s"
 
-#: models/__init__.py:2352
+#: models/__init__.py:2375
 msgid "in two days"
 msgstr ""
 
-#: models/__init__.py:2354
+#: models/__init__.py:2377
 msgid "tomorrow"
 msgstr ""
 
-#: models/__init__.py:2356
+#: models/__init__.py:2379
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
@@ -4826,7 +4842,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: models/__init__.py:2358
+#: models/__init__.py:2381
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
@@ -4834,7 +4850,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: models/__init__.py:2359
+#: models/__init__.py:2382
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
@@ -4842,43 +4858,43 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: models/__init__.py:2361
+#: models/__init__.py:2384
 #, python-format
 msgid ""
 "New users must wait %(days)s to %(answer_own_questions)s.  You can post an "
 "answer %(left)s"
 msgstr ""
 
-#: models/__init__.py:2647
+#: models/__init__.py:2670
 msgid "Registered User"
 msgstr "Utilizator înregistrat"
 
-#: models/__init__.py:2649
+#: models/__init__.py:2672
 msgid "Administrator"
 msgstr ""
 
-#: models/__init__.py:2651
+#: models/__init__.py:2674
 msgid "Moderator"
 msgstr ""
 
-#: models/__init__.py:2653
+#: models/__init__.py:2676
 msgid "Suspended User"
 msgstr "Utilizator suspendat"
 
-#: models/__init__.py:2655
+#: models/__init__.py:2678
 msgid "Blocked User"
 msgstr "Utilizator blocat"
 
-#: models/__init__.py:2657
+#: models/__init__.py:2680
 msgid "New User"
 msgstr ""
 
-#: models/__init__.py:2871
+#: models/__init__.py:2906
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr "%(username)s are %(reputation)s puncte de reputație"
 
-#: models/__init__.py:2884
+#: models/__init__.py:2919
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
@@ -4886,7 +4902,7 @@ msgstr[0] "o insignă de aur"
 msgstr[1] "%(count) insigne de aur"
 msgstr[2] "%(count) de insigne de aur"
 
-#: models/__init__.py:2891
+#: models/__init__.py:2926
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
@@ -4894,7 +4910,7 @@ msgstr[0] "o insignă de argint"
 msgstr[1] "%(count)d insigne de argint"
 msgstr[2] "%(count)d de insigne de argint"
 
-#: models/__init__.py:2898
+#: models/__init__.py:2933
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
@@ -4902,17 +4918,17 @@ msgstr[0] "o insignă de bronz"
 msgstr[1] "%(count)d insigne de bronz"
 msgstr[2] "%(count)d de insigne de bronz"
 
-#: models/__init__.py:2909
+#: models/__init__.py:2944
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr "%(item1)s și %(item2)s"
 
-#: models/__init__.py:2911
+#: models/__init__.py:2946
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr "%(user)s are %(badges)s"
 
-#: models/__init__.py:3059
+#: models/__init__.py:3094
 #, python-format
 msgid "At least %d karma point is required to post links"
 msgid_plural "At least %d karma points is required to post links"
@@ -4920,14 +4936,14 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: models/__init__.py:3691
+#: models/__init__.py:3741
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr "Felicitări, ați obținut o insignă „%(badge_name)s”. Verificați <a href=\"%(user_profile)s\">profilul propriu</a>."
 
-#: models/__init__.py:3997 views/commands.py:482
+#: models/__init__.py:4025 views/commands.py:494
 msgid "Your tag subscription was saved, thanks!"
 msgstr "Abonarea la etichetă a fost salvată!"
 
@@ -5228,15 +5244,15 @@ msgstr "autentificare/"
 
 #: templates/404.html:3 templates/404.html.py:5
 msgid "Page not found"
-msgstr "Pagina nu a fost găsită"
+msgstr ""
 
 #: templates/404.html:7
 msgid "Sorry, could not find the page you requested."
-msgstr "Ne pare rău, pagina cerută nu a putut fi găsită."
+msgstr ""
 
 #: templates/404.html:8
 msgid "This might have happened for the following reasons:"
-msgstr "Acest lucru s-a întâmplat probabil din următoarele motive:"
+msgstr ""
 
 #: templates/404.html:11
 msgid "This page has been deleted"
@@ -5244,33 +5260,33 @@ msgstr ""
 
 #: templates/404.html:12
 msgid "url has error - please check it;"
-msgstr "legătura conține erori - verificați;"
+msgstr ""
 
 #: templates/404.html:13
 msgid ""
 "the page you tried to visit is protected or you don't have sufficient "
 "points, see"
-msgstr "pagina pe care ați încercat să o vizitați este protejată și nu aveți suficiente puncte, vezi"
+msgstr ""
 
 #: templates/404.html:14 templates/widgets/footer.html:39
 msgid "faq"
-msgstr "întrebări frecvente"
+msgstr ""
 
 #: templates/404.html:16
 msgid "if you believe this error 404 should not have occured, please"
-msgstr "în cazul în care considerați că acestă eroare 404 nu ar trebui să apară, vă rugăm"
+msgstr ""
 
 #: templates/404.html:17
 msgid "report this problem"
-msgstr "raportați acestă problemă"
+msgstr ""
 
 #: templates/500.html:3 templates/500.html.py:5
 msgid "Internal server error"
-msgstr "Eroare server internă"
+msgstr ""
 
 #: templates/500.html:7
 msgid "system error log is recorded, error will be fixed as soon as possible"
-msgstr "eroarea a fost înregistrată și va fi rezolvată cât de curând posibil"
+msgstr ""
 
 #: templates/500.html:8
 msgid "please report the error to the site administrators"
@@ -5280,11 +5296,11 @@ msgstr ""
 #: templates/question_retag.html:5 templates/revisions.html:7
 #: templates/group_messaging/home.html:9
 msgid "back"
-msgstr "înapoi"
+msgstr ""
 
 #: templates/answer_edit.html:42 templates/question_edit.html:57
 msgid "Save edit"
-msgstr "Salvează modificările"
+msgstr ""
 
 #: templates/answer_edit.html:46 templates/close.html:17
 #: templates/feedback.html:49 templates/question_edit.html:58
@@ -5295,7 +5311,7 @@ msgstr "Salvează modificările"
 #: templates/moderation/manage_reject_reasons_dialog.html:19
 #: templates/user_profile/user_edit.html:90
 msgid "Cancel"
-msgstr "Anulează"
+msgstr ""
 
 #: templates/answer_edit.html:85 templates/answer_edit.html.py:88
 #: templates/ask.html:60 templates/ask.html.py:63
@@ -5303,45 +5319,45 @@ msgstr "Anulează"
 #: templates/editors/rich_text.html:18 templates/question/javascript.html:129
 #: templates/question/javascript.html:132
 msgid "hide preview"
-msgstr "ascunde previzualizarea"
+msgstr ""
 
 #: templates/answer_edit.html:88 templates/ask.html:63
 #: templates/question_edit.html:106 templates/question/javascript.html:132
 msgid "show preview"
-msgstr "arată previzualizarea"
+msgstr ""
 
 #: templates/badge.html:5 templates/badge.html.py:9
 #: templates/user_profile/user_recent.html:18
 #: templates/user_profile/user_stats.html:77
 #, python-format
 msgid "%(name)s"
-msgstr "%(name)s"
+msgstr ""
 
 #: templates/badge.html:5
 msgid "Badge"
-msgstr "Insignă"
+msgstr ""
 
 #: templates/badge.html:7
 #, python-format
 msgid "Badge \"%(name)s\""
-msgstr "Insigna „%(name)s”"
+msgstr ""
 
 #: templates/badge.html:9 templates/user_profile/user_recent.html:16
 #: templates/user_profile/user_stats.html:75
 #, python-format
 msgid "%(description)s"
-msgstr "%(description)s"
+msgstr ""
 
 #: templates/badge.html:14
 msgid "user received this badge:"
 msgid_plural "users received this badge:"
-msgstr[0] "utilizator care a primit această insignă:"
-msgstr[1] "utilizatorii care au primit acestă insignă:"
-msgstr[2] "utilizatorii care au primit acestă insignă:"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: templates/badges.html:3 templates/badges.html.py:5
 msgid "Badges"
-msgstr "Insigne"
+msgstr ""
 
 #: templates/badges.html:9
 msgid ""
@@ -5355,7 +5371,7 @@ msgstr ""
 
 #: templates/badges.html:32
 msgid "gold badge: the highest honor and is very rare"
-msgstr "insignă de aur: cea mai înaltă onoare ... și foarte rară"
+msgstr ""
 
 #: templates/badges.html:35
 msgid ""
@@ -5366,11 +5382,11 @@ msgstr ""
 #: templates/badges.html:41 templates/badges.html.py:45
 msgid ""
 "silver badge: occasionally awarded for the very high quality contributions"
-msgstr "insignă de argint: acordată ocazional pentru contribuții de cea mai bună calitate"
+msgstr ""
 
 #: templates/badges.html:48 templates/badges.html.py:52
 msgid "bronze badge: often given as a special honor"
-msgstr "insignă de argint: acordată adesea pentru a onora pe cineva într-un mod special"
+msgstr ""
 
 #: templates/base.html:16
 #, python-format
@@ -5379,11 +5395,11 @@ msgstr ""
 
 #: templates/close.html:12
 msgid "Reasons"
-msgstr "Motive"
+msgstr ""
 
 #: templates/close.html:16
 msgid "OK to close"
-msgstr "Ok pentru închidere"
+msgstr ""
 
 #: templates/faq_static.html:3 templates/faq_static.html.py:5
 #: views/meta.py:112
@@ -5392,11 +5408,11 @@ msgstr "Întrebări frecvente"
 
 #: templates/faq_static.html:5
 msgid "Frequently Asked Questions "
-msgstr "Întrebări frecvente "
+msgstr ""
 
 #: templates/faq_static.html:6
 msgid "What kinds of questions can I ask here?"
-msgstr "Ce fel de întrebări pot întreba aici?"
+msgstr ""
 
 #: templates/faq_static.html:7
 msgid ""
@@ -5418,11 +5434,11 @@ msgstr ""
 msgid ""
 "Please avoid asking questions that are not relevant to this community, too "
 "subjective and argumentative."
-msgstr "Vă rugăm să evitați a pune întrebări care nu sunt relevante pentru această comunitate, prea subiective și argumentative."
+msgstr ""
 
 #: templates/faq_static.html:13
 msgid "What should I avoid in my answers?"
-msgstr "Ce ar trebui să evit în răspunsurile mele?"
+msgstr ""
 
 #: templates/faq_static.html:14
 msgid ""
@@ -5434,15 +5450,15 @@ msgstr ""
 
 #: templates/faq_static.html:15
 msgid "Who moderates this community?"
-msgstr "Cine moderează această comunitate?"
+msgstr ""
 
 #: templates/faq_static.html:16
 msgid "The short answer is: <strong>you</strong>."
-msgstr "Răspunsul scurt este: <strong>dumneavoastră</strong>."
+msgstr ""
 
 #: templates/faq_static.html:17
 msgid "This website is moderated by the users."
-msgstr "Acest site web este moderat de utilizatori."
+msgstr ""
 
 #: templates/faq_static.html:18
 msgid ""
@@ -5474,23 +5490,23 @@ msgid ""
 "points that can be accumulated for a question or answer per day. The table "
 "below explains reputation point requirements for each type of moderation "
 "task."
-msgstr "De exemplu, dacă puneți o întrebare interesantă sau dacă oferiți un răspuns util, veți fi apreciat cu voturi pozitive. Pe de altă parte, dacă răspunsul este greșit, va fi votat negativ. Fiecare vot pozitiv va genera puncte <strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> points, fiecare vot negativ va șterge puncte <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong>. Există o limită a punctelor <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> pe care le puteți acumula pentru o întrebare sau un răspuns în decursul unei zile. Tabelul de mai jos explică necesarul de puncte de reputație necesare pentru fiecare tip de sarcină de moderare."
+msgstr ""
 
 #: templates/faq_static.html:37
 msgid "add comments"
-msgstr "adaugă comentarii"
+msgstr ""
 
 #: templates/faq_static.html:46
 msgid " accept own answer to own questions"
-msgstr " comentarii și răspunsuri pentru întrebările altora"
+msgstr ""
 
 #: templates/faq_static.html:50
 msgid "retag other's questions"
-msgstr "reetichetează întrebările altora"
+msgstr ""
 
 #: templates/faq_static.html:55
 msgid "edit community wiki questions"
-msgstr "modifică întrebările wiki-ului comunității"
+msgstr ""
 
 #: templates/faq_static.html:60
 msgid "edit any answer"
@@ -5524,7 +5540,7 @@ msgstr ""
 
 #: templates/faq_static.html:70
 msgid "To register, do I need to create new password?"
-msgstr "Pentru a mă înregistra trebuie să creez o parolă nouă?"
+msgstr ""
 
 #: templates/faq_static.html:71
 msgid ""
@@ -5534,30 +5550,30 @@ msgstr ""
 
 #: templates/faq_static.html:72
 msgid "\"Login now!\""
-msgstr "\"Autentifică acum!\""
+msgstr ""
 
 #: templates/faq_static.html:74
 msgid "Why other people can edit my questions/answers?"
-msgstr "De ce alții pot modifica întrebările/răspunsurile mele?"
+msgstr ""
 
 #: templates/faq_static.html:75
 msgid "Goal of this site is..."
-msgstr "Scopul acestui site este..."
+msgstr ""
 
 #: templates/faq_static.html:75
 msgid ""
 "So questions and answers can be edited like wiki pages by experienced users "
 "of this site and this improves the overall quality of the knowledge base "
 "content."
-msgstr "Întrebările și răspunsurile pot fi modifica asemănător paginilor wiki de către utilizatori cu experineță în acest fel îmbunătățindu-se calitatea bazei de cunoștințe."
+msgstr ""
 
 #: templates/faq_static.html:76
 msgid "If this approach is not for you, we respect your choice."
-msgstr "Dacă această abordare nu este pe placul dumneavoastră, vă respectăm alegerea."
+msgstr ""
 
 #: templates/faq_static.html:78
 msgid "Still have questions?"
-msgstr "Aveți și alte întrebări?"
+msgstr ""
 
 #: templates/faq_static.html:79
 #, python-format
@@ -5568,11 +5584,11 @@ msgstr ""
 
 #: templates/feedback.html:4
 msgid "Feedback"
-msgstr "Sugestii"
+msgstr ""
 
 #: templates/feedback.html:6
 msgid "Give us your feedback!"
-msgstr "Trimite sugestia ta!"
+msgstr ""
 
 #: templates/feedback.html:19
 msgid "(to hear from us please enter a valid email or check the box below)"
@@ -5580,11 +5596,11 @@ msgstr ""
 
 #: templates/feedback.html:26 templates/feedback.html.py:35
 msgid "(this field is required)"
-msgstr "(acest câmp este obligatoriu)"
+msgstr ""
 
 #: templates/feedback.html:48
 msgid "Send Feedback"
-msgstr "Trimite sugestia"
+msgstr ""
 
 #: templates/groups.html:3 templates/groups.html.py:6
 #: templates/question/sidebar.html:109
@@ -5741,13 +5757,13 @@ msgstr ""
 
 #: templates/import_data.html:2 templates/import_data.html.py:4
 msgid "Import StackExchange data"
-msgstr "Importă date StackExchange"
+msgstr ""
 
 #: templates/import_data.html:13
 msgid ""
 "<em>Warning:</em> if your database is not empty, please back it up\n"
 "        before attempting this operation."
-msgstr "<em>Avertisment:</em> dacă baza de date nu este goală, creați o copie de siguranță\n        înainte de a începe această operație."
+msgstr ""
 
 #: templates/import_data.html:16
 msgid ""
@@ -5755,17 +5771,17 @@ msgid ""
 "        the data import completes. This process may take several minutes.\n"
 "        Please note that feedback will be printed in plain text.\n"
 "        "
-msgstr "Încărcați fișierul dump .zip stackexchange, apoi așteptați până ce\n        se termină importul datelor. Procesul poate dura câteva minute.\n        Rețineți că feedback-ul va fi afișat în text simplu.\n        "
+msgstr ""
 
 #: templates/import_data.html:25
 msgid "Import data"
-msgstr "Import date"
+msgstr ""
 
 #: templates/import_data.html:27
 msgid ""
 "In the case you experience any difficulties in using this import tool,\n"
 "        please try importing your data via command line: <code>python manage.py load_stackexchange path/to/your-data.zip</code>"
-msgstr "În cazul în care întâmpinați dificultăți în utilizarea acestei unelte pentru import,\n        încercați să importați datele utilizând linia de comandă : <code>python manage.py load_stackexchange calea/către/datele-dumneavoastră.zip</code>"
+msgstr ""
 
 #: templates/list_suggested_tags.html:11
 msgid "Tag"
@@ -5807,7 +5823,7 @@ msgstr ""
 #: templates/list_suggested_tags.html:70 templates/tags/content.html:5
 #: templates/tags/content.html.py:30
 msgid "Nothing found"
-msgstr "Nu a fost găsit nimic"
+msgstr ""
 
 #: templates/macros.html:5
 #, python-format
@@ -5816,26 +5832,26 @@ msgstr ""
 
 #: templates/macros.html:48
 msgid "current number of votes"
-msgstr "număr actual de voturi"
+msgstr ""
 
 #: templates/macros.html:61
 msgid "anonymous user"
-msgstr "utilizator anonim"
+msgstr ""
 
 #: templates/macros.html:80
 msgid "posted"
-msgstr "adăugat"
+msgstr ""
 
 #: templates/macros.html:86
 msgid "this post is marked as community wiki"
-msgstr "acest text este marca drep un wiki al comunității"
+msgstr ""
 
 #: templates/macros.html:90
 #, python-format
 msgid ""
 "This post is a wiki.\n"
 "        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
-msgstr "Acesta este o pagină wiki.\n       Oricine cu o reputație mai mare decât %(wiki_min_rep)s este binevenit să o imbunătățească."
+msgstr ""
 
 #: templates/macros.html:239 templates/macros.html.py:245
 msgid "Leave this group"
@@ -5865,7 +5881,7 @@ msgid "Ask to join"
 msgstr ""
 
 #: templates/macros.html:337 templates/macros.html.py:348
-#: templates/question.html:412
+#: templates/question.html:420
 msgid "add a comment"
 msgstr ""
 
@@ -5879,7 +5895,7 @@ msgstr ""
 
 #: templates/macros.html:376
 msgid "delete this comment"
-msgstr "șterge acest comentariu"
+msgstr ""
 
 #: templates/macros.html:379 templates/question/answer_card.html:25
 #: templates/question/question_card.html:34
@@ -5892,7 +5908,7 @@ msgstr ""
 #: templates/question/question_controls.html:1
 #: templates/user_profile/user_info.html:171
 msgid "edit"
-msgstr "modifică"
+msgstr ""
 
 #: templates/macros.html:404
 msgid "convert to answer"
@@ -5910,16 +5926,16 @@ msgstr "imagine gravatat %(username)s"
 #: templates/macros.html:593
 #, python-format
 msgid "%(username)s's website is %(url)s"
-msgstr "Pagina web pentru %(username)s este %(url)s"
+msgstr ""
 
 #: templates/macros.html:614 templates/macros.html.py:615
 #: templates/macros.html:676 templates/macros.html.py:677
 msgid "previous"
-msgstr "precedentă"
+msgstr ""
 
 #: templates/macros.html:633 templates/macros.html.py:688
 msgid "current page"
-msgstr "pagiona curentă"
+msgstr ""
 
 #: templates/macros.html:639 templates/macros.html.py:652
 #: templates/macros.html:690 templates/macros.html.py:697
@@ -5929,7 +5945,7 @@ msgstr ""
 
 #: templates/macros.html:661 templates/macros.html.py:701
 msgid "next page"
-msgstr "pagina următoare"
+msgstr ""
 
 #: templates/macros.html:662
 msgid "next"
@@ -5938,7 +5954,7 @@ msgstr ""
 #: templates/macros.html:713
 #, python-format
 msgid "responses for %(username)s"
-msgstr "răspunsuri pentru %(username)s"
+msgstr ""
 
 #: templates/macros.html:715
 #, python-format
@@ -5951,21 +5967,21 @@ msgstr[2] ""
 #: templates/macros.html:727 templates/macros.html.py:728
 #, python-format
 msgid "%(new)s new flagged posts and %(seen)s previous"
-msgstr "%(new)s postări noi marcate și %(seen)s anterioare"
+msgstr ""
 
 #: templates/macros.html:730 templates/macros.html.py:731
 #, python-format
 msgid "%(new)s new flagged posts"
-msgstr "%(new)s postări noi marcate"
+msgstr ""
 
 #: templates/macros.html:736 templates/macros.html.py:737
 #, python-format
 msgid "%(seen)s flagged posts"
-msgstr "%(seen)s (de) postări marcate"
+msgstr ""
 
 #: templates/main_page.html:15
 msgid "Questions"
-msgstr "Întrebări"
+msgstr ""
 
 #: templates/question_edit.html:46
 msgid "Change language"
@@ -5977,23 +5993,23 @@ msgstr ""
 
 #: templates/question_retag.html:21
 msgid "Retag"
-msgstr "Reetichetează"
+msgstr ""
 
 #: templates/question_retag.html:28
 msgid "Why use and modify tags?"
-msgstr "De ce să folosiți și să modificați etichetele?"
+msgstr ""
 
 #: templates/question_retag.html:30
 msgid "Tags help to keep the content better organized and searchable"
-msgstr "Etichetele ajută la organizarea și căutarea conținutului"
+msgstr ""
 
 #: templates/question_retag.html:32
 msgid "tag editors receive special awards from the community"
-msgstr "cei care modifică etichetele primesc recompense speciale din partea comunității"
+msgstr ""
 
 #: templates/question_retag.html:63
 msgid "up to 5 tags, less than 20 characters each"
-msgstr "până la 5 etichete, mai puțin de 20 de caractere pentru fiecare"
+msgstr ""
 
 #: templates/reopen.html:12
 #, python-format
@@ -6004,36 +6020,36 @@ msgstr ""
 
 #: templates/reopen.html:17
 msgid "Close reason:"
-msgstr "Motiv închidere:"
+msgstr ""
 
 #: templates/reopen.html:20
 msgid "When:"
-msgstr "Când:"
+msgstr ""
 
 #: templates/revisions.html:4 templates/revisions.html.py:7
 msgid "Revision history"
-msgstr "Istoric revizii"
+msgstr ""
 
 #: templates/revisions.html:23
 msgid "click to hide/show revision"
-msgstr "clic pentru a arătă/a ascunde revizia"
+msgstr ""
 
 #: templates/revisions.html:29
 #, python-format
 msgid "revision %(number)s"
-msgstr "revizia %(number)s"
+msgstr ""
 
 #: templates/subscribe_for_tags.html:3 templates/subscribe_for_tags.html:5
 msgid "Subscribe for tags"
-msgstr "Abonare etichete"
+msgstr ""
 
 #: templates/subscribe_for_tags.html:6
 msgid "Please, subscribe for the following tags:"
-msgstr "Abonați-vă la următoarele etichete:"
+msgstr ""
 
 #: templates/subscribe_for_tags.html:11
 msgid "Subscribe"
-msgstr "Abonare"
+msgstr ""
 
 #: templates/users.html:8 templates/users.html.py:18
 #: templates/tags/list_bulk_tag_subscription.html:13
@@ -6057,21 +6073,21 @@ msgstr ""
 #: templates/users.html:33 templates/main_page/tab_bar.html:12
 #: templates/tags/header.html:14
 msgid "Sort by &raquo;"
-msgstr "Ordonează după &raquo;"
+msgstr ""
 
 #: templates/users.html:41 templates/user_profile/user_info.html:24
 #: templates/user_profile/user_reputation.html:4
 #: templates/user_profile/user_tabs.html:32
 msgid "karma"
-msgstr "reputație"
+msgstr ""
 
 #: templates/users.html:48
 msgid "recent"
-msgstr "recent"
+msgstr ""
 
 #: templates/users.html:60
 msgid "by username"
-msgstr "după nume de utilizator"
+msgstr ""
 
 #: templates/users.html:66
 #, python-format
@@ -6202,7 +6218,7 @@ msgstr ""
 #: templates/authopenid/signin.html:5
 #: templates/authopenid/widget_signin.html:5
 msgid "User login"
-msgstr "Autentificare autilizator"
+msgstr ""
 
 #: templates/authopenid/signin.html:17
 #: templates/authopenid/widget_signin.html:22
@@ -6277,18 +6293,18 @@ msgstr ""
 #: templates/authopenid/signin.html:115
 #: templates/authopenid/widget_signin.html:99
 msgid "New password"
-msgstr "Parolă nouă"
+msgstr ""
 
 #: templates/authopenid/signin.html:125
 #: templates/authopenid/widget_signin.html:108
 msgid "Please, retype"
-msgstr "introduceți din nou"
+msgstr ""
 
 #: templates/authopenid/signin.html:130
 #: templates/authopenid/widget_signin.html:118
 #: templates/livesettings/site_settings.html:24
 msgid "Change password"
-msgstr "Schimbă parola"
+msgstr ""
 
 #: templates/authopenid/signin.html:144
 #: templates/authopenid/widget_signin.html:132
@@ -6311,7 +6327,7 @@ msgstr ""
 #: templates/question/question_controls.html:34
 #: templates/user_inbox/responses.html:10
 msgid "delete"
-msgstr "șterge"
+msgstr ""
 
 #: templates/authopenid/signin.html:165
 #: templates/authopenid/widget_signin.html:153
@@ -6415,7 +6431,7 @@ msgstr ""
 
 #: templates/avatar/confirm_delete.html:2
 msgid "delete avatar"
-msgstr "șterge avatar"
+msgstr ""
 
 #: templates/avatar/confirm_delete.html:4
 msgid "Please select the avatars that you would like to delete."
@@ -6472,7 +6488,7 @@ msgstr ""
 
 #: templates/editors/rich_text.html:16
 msgid "Toggle the real time Markdown editor preview"
-msgstr "Comută previzualizare în timp real pentru textul Markdown"
+msgstr ""
 
 #: templates/email/change_settings_info.html:4
 #, python-format
@@ -6488,7 +6504,13 @@ msgid ""
 "href=\"%(url)s\">your user profile</a>."
 msgstr ""
 
-#: templates/email/change_settings_info.html:9
+#: templates/email/change_settings_info.html:10
+#: templates/email/unsubscribe_link/body.html:5
+#, python-format
+msgid "To unsubscribe, visit <a href=\"%(unsubscribe_url)s\">this page</a>"
+msgstr ""
+
+#: templates/email/change_settings_info.html:12
 #, python-format
 msgid ""
 "If you believe that this message was sent in an error, please email about it"
@@ -6743,6 +6765,11 @@ msgid ""
 "%(question_count)s %(unanswered_questions_phrase)s about %(tag_summary)s"
 msgstr ""
 
+#: templates/email/unsubscribe_link/subject.txt:1
+#, python-format
+msgid "Link to unsubscribe from %(site_name)s"
+msgstr ""
+
 #: templates/email/welcome/subject.txt:1
 #: templates/email/welcome_respondable/subject.txt:1
 #, python-format
@@ -6787,7 +6814,7 @@ msgid "Actions"
 msgstr ""
 
 #: templates/embed/list_widgets.html:23 templates/embed/list_widgets.html:34
-#: templates/tags/list_bulk_tag_subscription.html:49 views/commands.py:546
+#: templates/tags/list_bulk_tag_subscription.html:49 views/commands.py:558
 msgid "Edit"
 msgstr ""
 
@@ -6817,7 +6844,7 @@ msgstr ""
 #: templates/tags/form_bulk_tag_subscription.html:10
 #: templates/user_profile/user_languages.html:19
 msgid "Save"
-msgstr "Salvează"
+msgstr ""
 
 #: templates/embed/widgets.html:3 templates/embed/widgets.html.py:5
 msgid "Widgets"
@@ -6870,7 +6897,7 @@ msgstr ""
 #: templates/group_messaging/senders_list.html:5
 #: templates/user_inbox/base.html:5
 msgid "inbox"
-msgstr "inbox"
+msgstr ""
 
 #: templates/group_messaging/senders_list.html:9
 msgid "sent"
@@ -6897,7 +6924,7 @@ msgstr ""
 
 #: templates/livesettings/_admin_site_views.html:4
 msgid "Sites"
-msgstr "Pagini web"
+msgstr ""
 
 #: templates/livesettings/group_settings.html:4
 msgid "Settings"
@@ -6907,52 +6934,52 @@ msgstr ""
 #: templates/livesettings/site_settings.html:51
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
-msgstr[0] "Corectați eroarea de mai jos."
-msgstr[1] "Corectați erorile de mai jos."
-msgstr[2] "Corectați erorile de mai jos."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: templates/livesettings/group_settings.html:16
 #, python-format
 msgid "Settings included in %(name)s."
-msgstr "Configurări incluse în %(name)s."
+msgstr ""
 
 #: templates/livesettings/group_settings.html:50
 #: templates/livesettings/site_settings.html:98
 msgid "You don't have permission to edit values."
-msgstr "Nu aveți permisiunea de a edita valorile."
+msgstr ""
 
 #: templates/livesettings/site_settings.html:24
 msgid "Documentation"
-msgstr "Documentație"
+msgstr ""
 
 #: templates/livesettings/site_settings.html:24
 msgid "Log out"
-msgstr "Ieșire"
+msgstr ""
 
 #: templates/livesettings/site_settings.html:27
 msgid "Home"
-msgstr "Acasă"
+msgstr ""
 
 #: templates/livesettings/site_settings.html:28
 msgid "Edit Site Settings"
-msgstr "Editați configurările site-ului"
+msgstr ""
 
 #: templates/livesettings/site_settings.html:44
 msgid "Livesettings are disabled for this site."
-msgstr "Configurările live sunt dezactivate pentru acest site."
+msgstr ""
 
 #: templates/livesettings/site_settings.html:45
 msgid "All configuration options must be edited in the site settings.py file"
-msgstr "Toate opțiunile de configurare trebuie editate în fișierul site-ului settings.py"
+msgstr ""
 
 #: templates/livesettings/site_settings.html:67
 #, python-format
 msgid "Group settings: %(name)s"
-msgstr "Configurări grup: %(name)s"
+msgstr ""
 
 #: templates/livesettings/site_settings.html:94
 msgid "Uncollapse all"
-msgstr "Restrânge tot"
+msgstr ""
 
 #: templates/main_page/headline.html:6
 #, python-format
@@ -6965,7 +6992,7 @@ msgstr ""
 
 #: templates/main_page/headline.html:22
 msgid "Search tips:"
-msgstr "Indicii de căutare:"
+msgstr ""
 
 #: templates/main_page/headline.html:25
 msgid "reset author"
@@ -6975,31 +7002,31 @@ msgstr ""
 #: templates/main_page/nothing_found.html:18
 #: templates/main_page/nothing_found.html:21
 msgid " or "
-msgstr " sau "
+msgstr ""
 
 #: templates/main_page/headline.html:28
 msgid "reset tags"
-msgstr "resetare etichete"
+msgstr ""
 
 #: templates/main_page/headline.html:31 templates/main_page/headline.html:34
 msgid "start over"
-msgstr "începeți din nou"
+msgstr ""
 
 #: templates/main_page/headline.html:36
 msgid " - to expand, or dig in by adding more tags and revising the query."
-msgstr " pentru a lărgi sau a filtra prin adăugarea mai multor etichete sau a textului de căutat."
+msgstr ""
 
 #: templates/main_page/headline.html:39
 msgid "Search tip:"
-msgstr "Indiciu de căutare:"
+msgstr ""
 
 #: templates/main_page/headline.html:39
 msgid "add tags and a query to focus your search"
-msgstr "adăugarea de etichete și a mai multe cuvinte cheie pentru căutare"
+msgstr ""
 
 #: templates/main_page/nothing_found.html:13
 msgid "You can expand your search by "
-msgstr "Puteți extinde căutarea prin "
+msgstr ""
 
 #: templates/main_page/nothing_found.html:16
 msgid "resetting author"
@@ -7016,7 +7043,7 @@ msgstr ""
 
 #: templates/main_page/questions_loop.html:9
 msgid "Did not find what you were looking for?"
-msgstr "Nu ați găsit ceea ce căutați?"
+msgstr ""
 
 #: templates/main_page/tab_bar.html:6
 msgid "subscribe to the feed"
@@ -7032,7 +7059,7 @@ msgstr ""
 
 #: templates/main_page/tag_search.html:5
 msgid "search"
-msgstr "caută"
+msgstr ""
 
 #: templates/meta/bottom_scripts.html:7
 #, python-format
@@ -7102,7 +7129,7 @@ msgstr ""
 
 #: templates/moderation/queue.html:12 templates/user_inbox/responses.html:13
 msgid "none"
-msgstr "niciunul"
+msgstr ""
 
 #: templates/moderation/queue.html:14
 msgid "approve posts"
@@ -7148,19 +7175,19 @@ msgstr ""
 #: templates/question/question_controls.html:20
 msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
-msgstr "raportează ca ofensatoare (de ex. conține spam, reclame, texte rău-voitoare, etc.)"
+msgstr ""
 
 #: templates/question/answer_controls.html:20
 #: templates/question/answer_controls.html:28
 #: templates/question/question_controls.html:15
 #: templates/question/question_controls.html:22
 msgid "flag offensive"
-msgstr "marchează ofensiv"
+msgstr ""
 
 #: templates/question/answer_controls.html:33
 #: templates/question/question_controls.html:34
 msgid "undelete"
-msgstr "recuperează"
+msgstr ""
 
 #: templates/question/answer_controls.html:44
 msgid "unpublish"
@@ -7172,12 +7199,12 @@ msgstr ""
 
 #: templates/question/answer_controls.html:56
 msgid "permanent link"
-msgstr "legătură permanentă"
+msgstr ""
 
 #: templates/question/answer_controls.html:57
 #: templates/widgets/markdown_help.html:20
 msgid "link"
-msgstr "legătură"
+msgstr ""
 
 #: templates/question/answer_tab_bar.html:7
 msgid "Sort by »"
@@ -7198,7 +7225,7 @@ msgstr ""
 #: templates/question/closed_question_info.html:5
 #, python-format
 msgid "close date %(closed_at)s"
-msgstr "data închiderii %(closed_at)s"
+msgstr ""
 
 #: templates/question/content.html:19
 msgid "See the accepted answer"
@@ -7213,15 +7240,15 @@ msgstr ""
 
 #: templates/question/question_controls.html:2
 msgid "retag"
-msgstr "reetichetează"
+msgstr ""
 
 #: templates/question/question_controls.html:26
 msgid "reopen"
-msgstr "redeschide"
+msgstr ""
 
 #: templates/question/question_controls.html:28
 msgid "close"
-msgstr "închide"
+msgstr ""
 
 #: templates/question/question_controls.html:30
 msgid "merge"
@@ -7261,7 +7288,7 @@ msgid "Invite"
 msgstr ""
 
 #: templates/question/sidebar.html:51 templates/question/sidebar.html.py:57
-#: templates/user_profile/user_email_subscriptions.html:126
+#: templates/user_profile/user_email_subscriptions.html:145
 #: templates/widgets/tag_selector.html:20
 #: templates/widgets/tag_selector.html:37
 #: templates/widgets/tag_selector.html:56
@@ -7317,7 +7344,7 @@ msgstr ""
 
 #: templates/question/sidebar.html:141
 msgid "times"
-msgstr "ori"
+msgstr ""
 
 #: templates/question/sidebar.html:144
 msgid "Last updated"
@@ -7338,11 +7365,11 @@ msgstr ""
 
 #: templates/tags/header.html:20
 msgid "by name"
-msgstr "după nume"
+msgstr ""
 
 #: templates/tags/header.html:26
 msgid "by popularity"
-msgstr "după popularitate"
+msgstr ""
 
 #: templates/tags/header.html:34 templates/tags/header.html.py:35
 msgid "suggested"
@@ -7374,7 +7401,7 @@ msgstr ""
 
 #: templates/user_inbox/base.html:13
 msgid "Sections:"
-msgstr "Secțiuni:"
+msgstr ""
 
 #: templates/user_inbox/base.html:18
 msgid "messages"
@@ -7453,40 +7480,84 @@ msgstr ""
 msgid "Start tweeting"
 msgstr ""
 
+#: templates/user_profile/unsubscribe.html:2
+msgid "Unsubscribe"
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:5
+#, python-format
+msgid "Want to unsubcribe %(verified_email)s from %(app_name)s?"
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:7
+msgid "Successfully unsubscribed."
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:11
+msgid "Yes, unsubscribe"
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:16
+msgid "Bad unsubscribe link."
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:17
+#, python-format
+msgid ""
+"Expected format is %(link_url)s?key=&lt;unsubscribe "
+"key&gt;&amp;email=&lt;email address&gt;"
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:20
+msgid "The unsubscribe key sent with the link had expired."
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:23
+msgid "Resend unsubscribe link"
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:26
+msgid "Unsubscribe link resent. Please check your email."
+msgstr ""
+
+#: templates/user_profile/unsubscribe.html:28
+msgid "Sorry, there was an unexpected error."
+msgstr ""
+
 #: templates/user_profile/user.html:13
 #, python-format
 msgid "%(username)s's profile"
-msgstr "Profilul pentru %(username)s"
+msgstr ""
 
 #: templates/user_profile/user_edit.html:4
 msgid "Edit user profile"
-msgstr "Modifică profilul de utilizator"
+msgstr ""
 
 #: templates/user_profile/user_edit.html:7
 msgid "edit profile"
-msgstr "modifică profil"
+msgstr ""
 
 #: templates/user_profile/user_edit.html:18
 #: templates/user_profile/user_info.html:19
 msgid "change picture"
-msgstr "schimbă poza"
+msgstr ""
 
 #: templates/user_profile/user_edit.html:24
 msgid "Screen Name"
-msgstr "Nume afișat"
+msgstr ""
 
 #: templates/user_profile/user_edit.html:44
 msgid "(cannot be changed)"
 msgstr ""
 
 #: templates/user_profile/user_edit.html:89
-#: templates/user_profile/user_email_subscriptions.html:108
+#: templates/user_profile/user_email_subscriptions.html:127
 msgid "Update"
-msgstr "Actualizează"
+msgstr ""
 
 #: templates/user_profile/user_email_subscriptions.html:5
 msgid "subscriptions"
-msgstr "abonamente"
+msgstr ""
 
 #: templates/user_profile/user_email_subscriptions.html:9
 msgid ""
@@ -7500,11 +7571,11 @@ msgstr ""
 msgid "Note: language settings also apply to the email subscriptions"
 msgstr ""
 
-#: templates/user_profile/user_email_subscriptions.html:109
+#: templates/user_profile/user_email_subscriptions.html:128
 msgid "Stop Email"
 msgstr ""
 
-#: templates/user_profile/user_email_subscriptions.html:115
+#: templates/user_profile/user_email_subscriptions.html:134
 msgid "Subscribed Tags"
 msgstr ""
 
@@ -7531,15 +7602,15 @@ msgstr ""
 
 #: templates/user_profile/user_info.html:57
 msgid "update profile"
-msgstr "actualizează profil"
+msgstr ""
 
 #: templates/user_profile/user_info.html:61
 msgid "manage login methods"
-msgstr "administrează metodele de autentificare"
+msgstr ""
 
 #: templates/user_profile/user_info.html:74
 msgid "real name"
-msgstr "nume real"
+msgstr ""
 
 #: templates/user_profile/user_info.html:80
 msgid "email"
@@ -7559,7 +7630,7 @@ msgstr ""
 
 #: templates/user_profile/user_info.html:108
 msgid "last seen"
-msgstr "văzut ultima dată"
+msgstr ""
 
 #: templates/user_profile/user_info.html:114
 msgid "website"
@@ -7567,11 +7638,11 @@ msgstr ""
 
 #: templates/user_profile/user_info.html:132
 msgid "location"
-msgstr "locație"
+msgstr ""
 
 #: templates/user_profile/user_info.html:139
 msgid "age"
-msgstr "vârstă"
+msgstr ""
 
 #: templates/user_profile/user_info.html:140
 #, python-format
@@ -7580,11 +7651,11 @@ msgstr ""
 
 #: templates/user_profile/user_info.html:145
 msgid "todays unused votes"
-msgstr "voturi nefolosite azi"
+msgstr ""
 
 #: templates/user_profile/user_info.html:146
 msgid "votes left"
-msgstr "voturi rămase"
+msgstr ""
 
 #: templates/user_profile/user_languages.html:3
 #: templates/user_profile/user_tabs.html:18
@@ -7606,12 +7677,12 @@ msgstr ""
 #: templates/user_profile/user_moderate.html:4
 #: templates/user_profile/user_tabs.html:48
 msgid "moderation"
-msgstr "moderare"
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:8
 #, python-format
 msgid "%(username)s's current status is \"%(status)s\""
-msgstr "starea curentă a utilizatorului %(username)s este „%(status)s”"
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:20
 msgid "Change status"
@@ -7624,43 +7695,43 @@ msgstr ""
 #: templates/user_profile/user_moderate.html:29
 #, python-format
 msgid "Your current reputation is %(reputation)s points"
-msgstr "Reputația curentă este %(reputation)s puncte"
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:31
 #, python-format
 msgid "User's current reputation is %(reputation)s points"
-msgstr "Reputația curentă a utilizatorului este %(reputation)s puncte"
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:35
 msgid "User reputation changed"
-msgstr "Reputația utilizatorului a fost schimbată"
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:42
 msgid "Subtract"
-msgstr "Scade"
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:43
 msgid "Add"
-msgstr "Adaugă"
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:47
 #, python-format
 msgid "Send message to %(username)s"
-msgstr "Trimite mesaj către %(username)s"
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:48
 msgid ""
 "An email will be sent to the user with 'reply-to' field set to your email "
 "address. Please make sure that your address is entered correctly."
-msgstr "Un mesaj email va fi trimis către utilizator cu câmpul „reply-to” definit la adresa proprie de email. Verificați că adresa proprie este introdusă corect."
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:50
 msgid "Message sent"
-msgstr "Mesaj trimis"
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:68
 msgid "Send message"
-msgstr "Trimite mesaj"
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:78
 msgid ""
@@ -7681,7 +7752,7 @@ msgstr ""
 
 #: templates/user_profile/user_moderate.html:87
 msgid "Suspended users can only edit or delete their own posts."
-msgstr "Utilizatorii suspendați pot numai edita sau șterge propriile scrieri."
+msgstr ""
 
 #: templates/user_profile/user_moderate.html:90
 msgid ""
@@ -7724,7 +7795,7 @@ msgstr ""
 #: templates/user_profile/user_recent.html:5
 #: templates/user_profile/user_tabs.html:39
 msgid "activity"
-msgstr "activitate"
+msgstr ""
 
 #: templates/user_profile/user_recent.html:25
 #: templates/user_profile/user_recent.html:30
@@ -7733,45 +7804,45 @@ msgstr ""
 
 #: templates/user_profile/user_reputation.html:10
 msgid "Your karma change log."
-msgstr "Schimbările în reputație."
+msgstr ""
 
 #: templates/user_profile/user_reputation.html:12
 #, python-format
 msgid "%(user_name)s's karma change log"
-msgstr "schimbăr în reputația utilizatorului %(user_name)s"
+msgstr ""
 
 #: templates/user_profile/user_stats.html:6
 #: templates/user_profile/user_tabs.html:6
 msgid "overview"
-msgstr "privire de ansamblu"
+msgstr ""
 
 #: templates/user_profile/user_stats.html:28
 #, python-format
 msgid "<span class=\"count\">%(cnt)s</span> Vote"
 msgid_plural "<span class=\"count\">%(cnt)s</span> Votes "
-msgstr[0] "<span class=\"count\">%(cnt)s</span> vot"
-msgstr[1] "<span class=\"count\">%(cnt)s</span> voturi"
-msgstr[2] "<span class=\"count\">%(cnt)s</span> de voturi"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: templates/user_profile/user_stats.html:36
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Tag"
 msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
-msgstr[0] "<span class=\"count\">%(counter)s</span> etichetă"
-msgstr[1] "<span class=\"count\">%(counter)s</span> etichete"
-msgstr[2] "<span class=\"count\">%(counter)s</span> de etichete"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: templates/user_profile/user_stats.html:69
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Badge"
 msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
-msgstr[0] "<span class=\"count\">%(counter)s</span> insignă"
-msgstr[1] "<span class=\"count\">%(counter)s</span> insigne"
-msgstr[2] "<span class=\"count\">%(counter)s</span> de insigne"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: templates/user_profile/user_stats.html:88
 msgid "Answer to:"
-msgstr "Răspundeți pentru:"
+msgstr ""
 
 #: templates/user_profile/user_tabs.html:22
 msgid "email alerts"
@@ -7780,7 +7851,7 @@ msgstr ""
 #: templates/user_profile/user_tabs.html:43
 #: templates/user_profile/user_votes.html:5
 msgid "votes"
-msgstr "voturi"
+msgstr ""
 
 #: templates/widgets/answer_edit_tips.html:8
 #: templates/widgets/question_edit_tips.html:10
@@ -7790,7 +7861,7 @@ msgstr ""
 #: templates/widgets/answer_edit_tips.html:9
 #: templates/widgets/question_edit_tips.html:11
 msgid "be clear and concise"
-msgstr "fiți clari și conciși"
+msgstr ""
 
 #: templates/widgets/ask_form.html:56
 msgid "Login/Signup to Post"
@@ -7798,7 +7869,7 @@ msgstr ""
 
 #: templates/widgets/contributors.html:3
 msgid "Contributors"
-msgstr "Contribuitori"
+msgstr ""
 
 #: templates/widgets/footer.html:33
 #, python-format
@@ -7807,7 +7878,7 @@ msgstr ""
 
 #: templates/widgets/footer.html:38
 msgid "about"
-msgstr "despre"
+msgstr ""
 
 #: templates/widgets/footer.html:40 templates/widgets/user_navigation.html:20
 msgid "help"
@@ -7815,7 +7886,7 @@ msgstr ""
 
 #: templates/widgets/footer.html:42
 msgid "privacy policy"
-msgstr "politica de confidențialitate"
+msgstr ""
 
 #: templates/widgets/footer.html:43
 msgid "terms of service"
@@ -7823,7 +7894,7 @@ msgstr ""
 
 #: templates/widgets/footer.html:55
 msgid "give feedback"
-msgstr "oferă o sugestie"
+msgstr ""
 
 #: templates/widgets/group_info.html:3
 msgid "Group info"
@@ -7895,7 +7966,7 @@ msgstr ""
 #: templates/widgets/logo.html:6
 #, python-format
 msgid "%(site)s logo"
-msgstr "siglă %(site)s"
+msgstr ""
 
 #: templates/widgets/markdown_help.html:2
 msgid "Markdown basics"
@@ -7903,32 +7974,32 @@ msgstr ""
 
 #: templates/widgets/markdown_help.html:6
 msgid "*italic*"
-msgstr "*înclinat*"
+msgstr ""
 
 #: templates/widgets/markdown_help.html:9
 msgid "**bold**"
-msgstr "**îngroșat**"
+msgstr ""
 
 #: templates/widgets/markdown_help.html:13
 msgid "*italic* or _italic_"
-msgstr "*înclinat* sau __înclinat__"
+msgstr ""
 
 #: templates/widgets/markdown_help.html:16
 msgid "**bold** or __bold__"
-msgstr "**îngroșat** sau __îngroșat__"
+msgstr ""
 
 #: templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "text"
-msgstr "text"
+msgstr ""
 
 #: templates/widgets/markdown_help.html:24
 msgid "image"
-msgstr "imagine"
+msgstr ""
 
 #: templates/widgets/markdown_help.html:28
 msgid "numbered list:"
-msgstr "listă numerotată:"
+msgstr ""
 
 #: templates/widgets/markdown_help.html:29
 msgid "One"
@@ -7940,11 +8011,11 @@ msgstr ""
 
 #: templates/widgets/markdown_help.html:33
 msgid "basic HTML tags are also supported"
-msgstr "de asemenea sunt suportate tag-uri HTML simple"
+msgstr ""
 
 #: templates/widgets/markdown_help.html:38
 msgid "learn more about Markdown"
-msgstr "află mai multe despre Markdown"
+msgstr ""
 
 #: templates/widgets/meta_nav.html:13
 msgid "people & groups"
@@ -7956,7 +8027,7 @@ msgstr ""
 
 #: templates/widgets/meta_nav.html:28
 msgid "badges"
-msgstr "insigne"
+msgstr ""
 
 #: templates/widgets/moderated_image.html:1
 msgid "image awaiting moderation"
@@ -7985,16 +8056,16 @@ msgstr ""
 #: templates/widgets/question_summary.html:12
 msgid "view"
 msgid_plural "views"
-msgstr[0] "afișare"
-msgstr[1] "afișări"
-msgstr[2] "de afișări"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: templates/widgets/question_summary.html:41
 msgid "vote"
 msgid_plural "votes"
-msgstr[0] "vot"
-msgstr[1] "voturi"
-msgstr[2] "de voturi"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: templates/widgets/scope_nav.html:10
 msgid "ALL"
@@ -8010,11 +8081,11 @@ msgstr ""
 
 #: templates/widgets/tag_selector.html:4
 msgid "Interesting tags"
-msgstr "Etichete interesante"
+msgstr ""
 
 #: templates/widgets/tag_selector.html:22
 msgid "Ignored tags"
-msgstr "Etichete ignorate"
+msgstr ""
 
 #: templates/widgets/tag_selector.html:40
 msgid "Subscribed tags"
@@ -8034,7 +8105,7 @@ msgstr ""
 
 #: templates/widgets/tags_field.html:15
 msgid "(required)"
-msgstr "(obligatoriu)"
+msgstr ""
 
 #: templates/widgets/three_column_category_selector.html:7
 #: templates/widgets/three_column_category_selector.html:10
@@ -8053,11 +8124,11 @@ msgstr ""
 
 #: templates/widgets/user_long_score_and_badge_summary.html:10
 msgid "karma:"
-msgstr "reputație:"
+msgstr ""
 
 #: templates/widgets/user_long_score_and_badge_summary.html:15
 msgid "badges:"
-msgstr "insigne:"
+msgstr ""
 
 #: templates/widgets/user_navigation.html:11
 msgid "sign out"
@@ -8065,7 +8136,7 @@ msgstr ""
 
 #: templates/widgets/user_navigation.html:17
 msgid "settings"
-msgstr "configurări"
+msgstr ""
 
 #: templates/widgets/user_navigation.html:18
 msgid "widgets"
@@ -8107,23 +8178,24 @@ msgstr ""
 msgid "Visitor"
 msgstr ""
 
-#: utils/decorators.py:105
+#: utils/decorators.py:104
 msgid "Oops, apologies - there was some error"
 msgstr "Oops, ne cerem scuze - a apărut o eroare"
 
-#: utils/decorators.py:123
+#: utils/decorators.py:122
 msgid "Please login to post"
 msgstr ""
 
-#: utils/decorators.py:219
+#: utils/decorators.py:201 views/commands.py:641 views/commands.py:675
+#: views/users.py:672 views/writers.py:342 views/writers.py:806
 msgid "Spam was detected on your post, sorry for if this is a mistake"
 msgstr ""
 
-#: utils/decorators.py:243
+#: utils/decorators.py:225
 msgid "This function is limited to moderators and administrators"
 msgstr ""
 
-#: utils/decorators.py:256
+#: utils/decorators.py:238
 msgid "This function is limited to administrators"
 msgstr ""
 
@@ -8223,90 +8295,90 @@ msgstr ""
 msgid "Please choose file to upload"
 msgstr ""
 
-#: views/commands.py:64
+#: views/commands.py:65
 msgid "Sorry, anonymous users cannot vote"
 msgstr ""
 
-#: views/commands.py:81
+#: views/commands.py:82
 msgid "Sorry you ran out of votes for today"
 msgstr "Ne pare rău, dar nu mai aveți voturi pentru azi... și mâine este o zi"
 
-#: views/commands.py:87
+#: views/commands.py:88
 #, python-format
 msgid "You have %(votes_left)s votes left for today"
 msgstr "Mai ai %(votes_left)s voturi pentru azi"
 
-#: views/commands.py:155
+#: views/commands.py:156
 msgid "Sorry, something is not right here..."
 msgstr "Ne pare rău dar ceva nu este în regulă aici..."
 
-#: views/commands.py:159
+#: views/commands.py:160
 msgid "Sorry, but anonymous users cannot perform this action."
 msgstr ""
 
-#: views/commands.py:166 views/commands.py:177
+#: views/commands.py:167 views/commands.py:178
 msgid "Request mode is not supported. Please try again."
 msgstr ""
 
-#: views/commands.py:219 views/commands.py:605 views/commands.py:621
-#: views/commands.py:658
+#: views/commands.py:220 views/commands.py:617 views/commands.py:633
+#: views/commands.py:682
 #, python-format
 msgid "anonymous users cannot %(perform_action)s"
 msgstr ""
 
-#: views/commands.py:413
+#: views/commands.py:425
 msgid "Sorry, could not delete tag"
 msgstr ""
 
-#: views/commands.py:486
+#: views/commands.py:498
 #, python-format
 msgid "Tag subscription was canceled (<a href=\"%(url)s\">undo</a>)."
 msgstr "Abonomanetul la etichetă a fost anulat (<a href=\"%(url)s\">refă</a>)."
 
-#: views/commands.py:495
+#: views/commands.py:507
 #, python-format
 msgid "Please sign in to subscribe for: %(tags)s"
 msgstr "Vă rugăm să vă autentificați pentru a vă abona la: %(tags)s"
 
-#: views/commands.py:514
+#: views/commands.py:526
 msgid "Create"
 msgstr ""
 
-#: views/commands.py:622 views/commands.py:659
+#: views/commands.py:634 views/commands.py:683
 msgid "make edits"
 msgstr ""
 
-#: views/commands.py:822
+#: views/commands.py:846
 msgid "Please sign in to vote"
 msgstr ""
 
-#: views/commands.py:843
+#: views/commands.py:867
 msgid "Please sign in to delete/restore posts"
 msgstr ""
 
-#: views/commands.py:905
+#: views/commands.py:929
 #, python-format
 msgid "Group %(name)s does not exist"
 msgstr ""
 
-#: views/commands.py:1290 views/commands.py:1323
+#: views/commands.py:1314 views/commands.py:1347
 msgid "Sorry, looks like sharing request was invalid"
 msgstr ""
 
-#: views/commands.py:1346
+#: views/commands.py:1370
 #, python-format
 msgid "%(user)s, welcome to group %(group)s!"
 msgstr ""
 
-#: views/commands.py:1403 views/commands.py:1433
+#: views/commands.py:1427 views/commands.py:1457
 msgid "Sorry, only thread moderators can use this function"
 msgstr ""
 
-#: views/commands.py:1418
+#: views/commands.py:1442
 msgid "The answer is now unpublished"
 msgstr ""
 
-#: views/commands.py:1422
+#: views/commands.py:1446
 msgid "The answer is now published"
 msgstr ""
 
@@ -8365,7 +8437,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: views/moderation.py:293 views/moderation.py:369 views/users.py:274
+#: views/moderation.py:293 views/moderation.py:369 views/users.py:277
 #, python-format
 msgid "%d post deleted"
 msgid_plural "%d posts deleted"
@@ -8410,139 +8482,139 @@ msgid ""
 "accessible"
 msgstr "Ne pare rău, comentariul pe care îl căutați a fost șters nu mai este accesibil"
 
-#: views/users.py:256
+#: views/users.py:259
 msgid "User status changed"
 msgstr "Starea utilizatorului a fost schimbată"
 
-#: views/users.py:332
+#: views/users.py:335
 msgid "moderate user"
 msgstr "moderează utilizator"
 
-#: views/users.py:597
+#: views/users.py:600
 msgid "user profile overview"
 msgstr "privire de ansamblu profil utilizator"
 
-#: views/users.py:761
+#: views/users.py:770
 msgid "profile - recent activity"
 msgstr "profil - activitate recentă"
 
-#: views/users.py:792
+#: views/users.py:801
 msgid "profile - moderation"
 msgstr ""
 
-#: views/users.py:841
+#: views/users.py:850
 msgid "profile - messages"
 msgstr ""
 
-#: views/users.py:929
+#: views/users.py:938
 msgid "profile - responses"
 msgstr "profil - răspunsuri"
 
-#: views/users.py:943
+#: views/users.py:952
 msgid "profile - network"
 msgstr ""
 
-#: views/users.py:972
+#: views/users.py:981
 msgid "profile - votes"
 msgstr "profil - voturi"
 
-#: views/users.py:993
+#: views/users.py:1022
 msgid "Profile - User's Karma"
 msgstr ""
 
-#: views/users.py:1030
+#: views/users.py:1059
 msgid "profile - favorites"
 msgstr ""
 
-#: views/users.py:1111 views/users.py:1115
+#: views/users.py:1190 views/users.py:1194
 msgid "changes saved"
 msgstr "schimbările au fost salvate"
 
-#: views/users.py:1121
+#: views/users.py:1200
 msgid "email updates canceled"
 msgstr "actualizările email au fost anulate"
 
-#: views/users.py:1139
+#: views/users.py:1218
 msgid "profile - email subscriptions"
 msgstr "profil - abonamente email"
 
-#: views/users.py:1162
+#: views/users.py:1241
 #, python-format
 msgid "profile - %(section)s"
 msgstr ""
 
-#: views/writers.py:64
+#: views/writers.py:65
 msgid "Sorry, anonymous users cannot upload files"
 msgstr "Utilizatorii anonimi nu pot încărca fișiere"
 
-#: views/writers.py:82
+#: views/writers.py:83
 #, python-format
 msgid "allowed file types are '%(file_types)s'"
 msgstr "tipurile de fișiere permise sunt „%(file_types)s”"
 
-#: views/writers.py:95
+#: views/writers.py:96
 #, python-format
 msgid "maximum upload file size is %(file_size)sK"
 msgstr "mărimea maximă a fișierului încărcat este %(file_size)sK"
 
-#: views/writers.py:103
+#: views/writers.py:104
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you."
 msgstr "Eroare la încărcarea fișierului. Vă rugăm să contactați administratorii siteului. Vă mulțumim."
 
-#: views/writers.py:198 views/writers.py:599
+#: views/writers.py:199 views/writers.py:605
 msgid "Please log in to make posts"
 msgstr ""
 
-#: views/writers.py:742
+#: views/writers.py:748
 msgid "This content is forbidden"
 msgstr ""
 
-#: views/writers.py:752
+#: views/writers.py:758
 msgid "Post not found"
 msgstr ""
 
-#: views/writers.py:760
+#: views/writers.py:766
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "Nu sunteți autentificat și nu puteți adăuga comentarii . Vă rugăm să vă <a href=\"%(sign_in_url)s\">autentificați</a>."
 
-#: views/writers.py:790
+#: views/writers.py:795
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr "Utilizatorii anonimi nu pot modifica comentariile"
 
-#: views/writers.py:848
+#: views/writers.py:859
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "Nu sunteți autentificat și nu puteți șterge comentarii . Vă rugăm să vă <a href=\"%(sign_in_url)s\">autentificați</a>."
 
-#: views/writers.py:878
+#: views/writers.py:889
 msgid "sorry, we seem to have some technical difficulties"
 msgstr "ne pare rău dar se pare că avem unele dificultăți tehnice"
 
-#: views/writers.py:891
+#: views/writers.py:902
 #, python-format
 msgid ""
 "Sorry, only logged in users can convert comments to answers. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:922
+#: views/writers.py:933
 #, python-format
 msgid ""
 "Sorry, only logged in users can convert answers to comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:947
+#: views/writers.py:958
 msgid "Error - could not find the destination post"
 msgstr ""
 
-#: views/writers.py:971
+#: views/writers.py:982
 #, python-format
 msgid ""
 "Cannot convert, because text has more characters than %(max_chars)s - "
