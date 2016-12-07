@@ -3813,6 +3813,32 @@ def moderate_group_joining(sender, instance=None, created=False, **kwargs):
                 content_object = group
             )
 
+#this signal handler below is
+#needed to work around the issue in the django admin
+#where auth_user table editing affects group memberships
+GROUP_MEMBERSHIP_LEVELS = dict()
+def group_membership_changed(**kwargs):
+    sender = kwargs['sender']
+    user = kwargs['instance']
+    action = kwargs['action']
+    reverse = kwargs['reverse']
+    model = kwargs['model']
+    pk_set = kwargs['pk_set']
+
+    if reverse:
+        raise NotImplementedError()
+
+    #store group memberships info
+    #and then delete group memberships
+    if action == 'pre_clear':
+        #get membership info, if exists, save
+        memberships = GroupMembership.objects.filter(user=user)
+        for gm in memberships:
+            GROUP_MEMBERSHIP_LEVELS[(user.id, gm.group.id)] = gm.level
+            gm.authusergroups_ptr.delete()
+            gm.delete()
+
+
 def tweet_new_post(sender, user=None, question=None, answer=None, form_data=None, **kwargs):
     """seends out tweets about the new post"""
     from askbot.tasks import tweet_new_post_task
@@ -3832,6 +3858,12 @@ django_signals.post_save.connect(record_answer_accepted, sender=Post)
 django_signals.post_save.connect(record_vote, sender=Vote)
 django_signals.post_save.connect(record_favorite_question, sender=FavoriteQuestion)
 django_signals.post_save.connect(moderate_group_joining, sender=GroupMembership)
+django_signals.m2m_changed.connect(
+    group_membership_changed,
+    sender=User.groups.through,
+    dispatch_uid='record_group_membership_change_on_group_change'
+)
+
 
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
