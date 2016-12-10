@@ -88,7 +88,7 @@ settings.register(
         default='',
         localized=True,
         help_text=_(
-                    'Use this area to enter content at the BOTTOM of the sidebar'
+                    'Use this area to enter content at the BOTTOM of the sidebar '
                     'in HTML format.   When using this option '
                     '(as well as the sidebar header), please '
                     'use the HTML validation service to make sure that '
