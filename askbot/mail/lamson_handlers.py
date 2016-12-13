@@ -1,5 +1,6 @@
 import datetime
 import functools
+import getpass
 import re
 import sys
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -17,10 +18,26 @@ from askbot.conf import settings as askbot_settings
 from askbot.utils.html import site_url
 from askbot.mail import DEBUG_EMAIL
 
+# jo 18/6/2015: python logging to back up lamson output which isn't always reliable?
+import logging
+debug_logger = logging.getLogger('debug_logger')
+if debug_logger.handlers == []:
+    from logging.handlers import RotatingFileHandler
+    loglevel = logging.DEBUG
+    handler = RotatingFileHandler('/var/log/knowledgepoint/knowledgepoint.debug.log')
+    handler.setLevel(loglevel)
+    handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)-8s PID:%(process)-6d %(pathname)s:%(funcName)s:%(lineno)d %(message)s'))
+    debug_logger.addHandler(handler)
+    debug_logger.setLevel(loglevel)
+#debug_logger.debug(u"debug_logger has these handlers: '%s'" % debug_logger.handlers)
+#debug_logger.debug(u"debug_logger has these handlers: '%s'" % [h.baseFilename for h in debug_logger.handlers])
+debug_logger.debug('Lamson is running as %s, with DEBUG_EMAIL=%s', getpass.getuser(), DEBUG_EMAIL)
+
 sys.stderr.write(
     (
-        u'%s Lamson is running with DEBUG_EMAIL=%s\n' % (
+        u'%s Lamson is running as %s with DEBUG_EMAIL=%s\n' % (
             datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            getpass.getuser(),
             DEBUG_EMAIL
         )
     ).encode('utf-8')
@@ -253,8 +270,9 @@ def VALIDATE_EMAIL(
     """
     reply_code = reply_address_object.address
 
+    msg = u'Received email validation from %s for user %s\n' % (from_address, reply_address_object.user)
+    debug_logger.debug(msg)
     if DEBUG_EMAIL:
-        msg = u'Received email validation from %s for user %s\n' % (from_address, reply_address_object.user)
         sys.stderr.write(msg.encode('utf-8'))
 
     try:
@@ -262,11 +280,23 @@ def VALIDATE_EMAIL(
 
         user = reply_address_object.user
 
+        msg = u"Found signature '%s'\n" % signature
+        if DEBUG_EMAIL:
+            sys.stderr.write(msg.encode('utf-8'))
+
         if signature != user.email_signature:
             user.email_signature = signature
 
+        msg = u"Marking email_isvalid=True for user %s\n" % reply_address_object.user
+        debug_logger.debug(msg)
+        if DEBUG_EMAIL:
+            sys.stderr.write(msg.encode('utf-8'))
         user.email_isvalid = True
         user.save()
+        msg = u"Sending 'email_validated' signal for user %s\n" % reply_address_object.user
+        debug_logger.debug(msg)
+        if DEBUG_EMAIL:
+            sys.stderr.write(msg.encode('utf-8'))
         email_validated.send(None, user=user)
 
         data = {

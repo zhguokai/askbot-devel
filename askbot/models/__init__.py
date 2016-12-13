@@ -3926,12 +3926,15 @@ def join_preapproved_groups(user, **kwargs):
     """User will be joined all groups for which he/she
     is preapproved via preapproved email addresses or
     preapproved email domains"""
+    debug_logger = logging.getLogger('debug_logger')
     if askbot_settings.GROUPS_ENABLED == False:
         return
 
     groups = Group.objects.exclude_personal()
+    debug_logger.debug(u"Checking if user '%s' can be added to any of groups='%s'", user, groups)
     for group in groups:
         if group.email_is_preapproved(user.email):
+            debug_logger.debug(u"Adding user '%s' to group '%s'", user, group)
             user.join_group(group, force=True)
 
 
