@@ -4,7 +4,7 @@
 # 
 # Translators:
 # heartsmagic <adresimeyaz@gmail.com>, 2014
-# Caner Başaran <basaran.caner@gmail.com>, 2015
+# Caner Başaran <basaran.caner@protonmail.com>, 2015
 # Cihad GÜNDOĞDU <cihadgundogdu@gmail.com>, 2012
 # Cihad GÜNDOĞDU <cihadgundogdu@gmail.com>, 2012
 # Emre AYTAÇ <eaytac@gmail.com>, 2014
@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-30 10:32-0500\n"
-"PO-Revision-Date: 2016-11-08 16:23+0000\n"
+"PO-Revision-Date: 2016-12-14 08:29+0000\n"
 "Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/askbot/askbot/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -71,8 +71,8 @@ msgstr[0] "Üzgünüz, bu etiket mevcut değil"
 msgstr[1] "Üzgünüz, bu etiketler mevcut değil"
 
 #: media/js/live_search.js:315
-msgid "search or ask your question"
-msgstr "sorunuzu sorun veya arayın"
+msgid "Search or ask your question"
+msgstr "Arama yapın ya da sorunuzu sorun"
 
 #: media/js/post.js:28
 msgid "loading..."
