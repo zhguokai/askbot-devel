@@ -857,24 +857,12 @@ for the purposes of the AJAX comment editor #}
 {%- endmacro -%}
 
 {%- macro moderation_items_link(user, moderation_items) -%}
-    {% if moderation_items %}
+    {% set item_count = moderation_items['seen_count'] + moderation_items['new_count'] %}
+    {% if moderation_items and item_count > 0 %}
         <a id="ab-responses" href="{% url moderation_queue %}">
-        {% if moderation_items['new_count'] > 0 %}
             <img src="{{'/images/dialog-warning.png'|media}}"
-            {% if moderation_items['seen_count'] > 0 %}
-                alt="{% trans new=moderation_items['new_count'], seen=moderation_items['seen_count']%}{{new}} new flagged posts and {{seen}} previous{% endtrans %}"
-                title="{% trans new=moderation_items['new_count'], seen=moderation_items['seen_count']%}{{new}} new flagged posts and {{seen}} previous{% endtrans %}"
-            {% else %}
-                alt="{% trans new=moderation_items['new_count'] %}{{new}} new flagged posts{% endtrans %}"
-                title="{% trans new=moderation_items['new_count'] %}{{new}} new flagged posts{% endtrans %}"
-            {% endif %}
+                title="{% trans %}{{ item_count }} posts to approve{% endtrans %}"
             />
-        {% elif moderation_items['seen_count'] > 0 %}
-            <img src={{'/images/dialog-warning-off.png'|media}} 
-                alt="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}" 
-                title="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}" 
-            />
-        {% endif %}
         </a>
     {% endif %}
 {%- endmacro -%}
