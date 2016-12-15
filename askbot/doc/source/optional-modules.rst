@@ -353,3 +353,62 @@ If the system where lamson is hosted also acts as an email server or you simply 
 any email that was sent to anyaddress@sobdomain1.example.com or anyaddress@sobdomain2.example.com or info@example.com will be forwarded to the smtp server listening on port 8825. The pattern parameter is treated as a regular expression that is matched against  the ``To`` header of the email message and the ``host`` and ``port`` are the host and port of the smtp server that the message should be forwarded to.
 
 If you want to run the lamson daemon on a port other than 25 you can use a mail proxy server such as ``nginx`` that will listen on port 25 and forward any SMTP requests to lamson. Using nginx you can also setup more complex email handling rules, such as for example if the same server where askbot is installed acts as an email server for other domains you can configure nginx to forward any emails directed to your askbot installation to lamson and any other emails to the mail server you're using, such as ``postfix``. For more information on how to use nginx for this please consult the nginx mail module documentation `nginx mail module documentation <http://wiki.nginx.org/MailCoreModule>`_ .
+
+
+S3 Integration
+=============
+The media files are stored locally by default. If you're hosting askbot on AWS you might want to take advantage of S3 buckets instead. The usage of S3 buckets becomes particularly important when you deploy Askbot on an AutoScaling group; in this configuration, you might notice some avatars go missing. This problem occurs since ASG might be firing off a new instance and it does not have access to the older avatar files that were stored in the old instance. Saving the media files on S3 would resolve this problem. The goood news is enabling S3 integration is fairly simple in Askbot.
+
+Please first install the following packages::
+    
+        pip install boto
+        pip install django-storages
+    
+Create a new Python calss, ``s3utils.py`` in the same directory as your ``settings.py`` file. And define the class as the following::
+
+    from storages.backends.s3boto import S3BotoStorage
+    MediaRootS3BotoStorage  = lambda: S3BotoStorage(location='media') 
+    
+Then replace the following line in your ``settings.py``::
+    
+    MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'askbot', 'upfiles')
+
+with::
+    
+    #set encoding to unicode for reading environment variables
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+    
+    #AWS params used for S3 bucket integration.
+    #They have to be set as an enviroment variable. Otherwise local storage will be used.
+    #These options apply to a local deployment only
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('STORAGE_BUCKET_NAME')
+    AWS_ACCESS_KEY_ID = os.environ.get('ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('SECRET_ACCESS_KEY')
+ 
+    # S3 path to the directory that holds uploaded media
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+    MEDIA_ROOT = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, 'media')
+    
+In addition, replace the following::
+    
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    
+with::
+    
+    DEFAULT_FILE_STORAGE = 's3utils.MediaRootS3BotoStorage'
+    
+Last but not least, we would need to update the ``INSTALLED_APPS`` field to let Django know that the storage modules have been installed::
+    
+        INSTALLED_APPS = (
+          ...,
+          'storages',
+     )
+    
+Now the only thing left to do is to specify the AWS parameters from command line::
+    
+    $ export STORAGE_BUCKET_NAME=BUCKET_NAEM #set to the bucket name you've created in AWS
+    $ export ACCESS_KEY_ID=XXXXXXXXXXXXXXXX
+    $ export SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXX
+    
+Then deploy Askbot. You should now be using the S3 storage instead of local storage.
