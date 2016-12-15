@@ -857,13 +857,15 @@ for the purposes of the AJAX comment editor #}
 {%- endmacro -%}
 
 {%- macro moderation_items_link(user, moderation_items) -%}
-    {% set item_count = moderation_items['seen_count'] + moderation_items['new_count'] %}
-    {% if moderation_items and item_count > 0 %}
-        <a id="ab-responses" href="{% url moderation_queue %}">
-            <img src="{{'/images/dialog-warning.png'|media}}"
-                title="{% trans %}{{ item_count }} posts to approve{% endtrans %}"
-            />
-        </a>
+    {% if moderation_items %}
+           {% set item_count = moderation_items.get('seen_count', 0) + moderation_items.get('new_count', 0) %}
+           {% if item_count > 0 %}
+               <a id="ab-responses" href="{% url moderation_queue %}">
+                   <img src="{{'/images/dialog-warning.png'|media}}"
+                       title="{% trans %}{{ item_count }} posts to approve{% endtrans %}"
+                   />
+               </a>
+           {% endif %}
     {% endif %}
 {%- endmacro -%}
 
