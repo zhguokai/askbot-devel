@@ -242,3 +242,15 @@ def admins_or_mods_only(view_func):
         return view_func(request, *args, **kwargs)
     return decorator
 
+
+def admins_only(view_func):
+    @functools.wraps(view_func)
+    def decorator(request, *args, **kwargs):
+        if request.user.is_anonymous():
+            raise django_exceptions.PermissionDenied()
+        if not request.user.is_administrator():
+            raise django_exceptions.PermissionDenied(
+            _('This function is limited to moderators and administrators')
+        )
+        return view_func(request, *args, **kwargs)
+    return decorator
