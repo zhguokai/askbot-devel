@@ -97,7 +97,8 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                         'group_slug': group_slug})
         return HttpResponseRedirect(new_url)
 
-    users = models.User.objects.exclude(status = 'b')
+    secret_list = getattr(django_settings, 'ASKBOT_SECRET_USERNAMES', list())
+    users = models.User.objects.exclude(status = 'b').exclude(username__in=secret_list)
     group = None
     group_email_moderation_enabled = False
     user_acceptance_level = 'closed'
@@ -1122,6 +1123,10 @@ def user(request, id, slug=None, tab_name=None):
     in the code in any way
     """
     profile_owner = get_object_or_404(models.User, id = id)
+
+    secret_list = getattr(django_settings, 'ASKBOT_SECRET_USERNAMES', list())
+    if request.user != profile_owner and profile_owner.username in secret_list:
+        raise Http404
 
     if not tab_name:
         tab_name = request.GET.get('sort', 'stats')
