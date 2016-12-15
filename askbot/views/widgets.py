@@ -41,7 +41,7 @@ def _get_form(key):
     except KeyError:
         raise Http404
 
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def widgets(request):
     site = Site.objects.get_current()
     ask_widgets = models.AskWidget.objects.filter(site=site)
@@ -163,7 +163,7 @@ def ask_widget_complete(request):
     return render(request, 'embed/ask_widget_complete.html', data)
 
 
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def list_widgets(request, model):
     model_class = _get_model(model)
     site = Site.objects.get_current()
@@ -174,7 +174,7 @@ def list_widgets(request, model):
            }
     return render(request, 'embed/list_widgets.html', data)
 
-@decorators.admins_only
+@decorators.admins_or_mods_only
 @csrf.csrf_protect
 def create_widget(request, model):
     form_class = _get_form(model)
@@ -194,7 +194,7 @@ def create_widget(request, model):
             'widget_name': model}
     return render(request, 'embed/widget_form.html', data)
 
-@decorators.admins_only
+@decorators.admins_or_mods_only
 @csrf.csrf_protect
 def edit_widget(request, model, widget_id):
     model_class = _get_model(model)
@@ -234,7 +234,7 @@ def edit_widget(request, model, widget_id):
             'widget_name': model}
     return render(request, 'embed/widget_form.html', data)
 
-@decorators.admins_only
+@decorators.admins_or_mods_only
 @csrf.csrf_protect
 def delete_widget(request, model, widget_id):
     model_class = _get_model(model)

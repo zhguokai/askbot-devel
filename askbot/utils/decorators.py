@@ -230,7 +230,7 @@ def check_spam(field):
 
     return decorator
 
-def admins_only(view_func):
+def admins_or_mods_only(view_func):
     @functools.wraps(view_func)
     def decorator(request, *args, **kwargs):
         if request.user.is_anonymous():

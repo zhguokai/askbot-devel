@@ -30,7 +30,7 @@ from askbot.models import BadgeData, Award, User, Tag
 from askbot.models import badges as badge_data
 from askbot.models import get_feed_url
 from askbot.skins.loaders import render_text_into_skin
-from askbot.utils.decorators import admins_only
+from askbot.utils.decorators import admins_or_mods_only
 from askbot.utils.forms import get_next_url
 from askbot.utils import functions
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
@@ -204,7 +204,7 @@ def badge(request, id):
     }
     return render(request, 'badge.html', data)
 
-@admins_only
+@admins_or_mods_only
 def list_suggested_tags(request):
     """moderators and administrators can list tags that are
     in the moderation queue, apply suggested tag to questions

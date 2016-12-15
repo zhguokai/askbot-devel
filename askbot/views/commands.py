@@ -750,7 +750,7 @@ def subscribe_for_tags(request):
         request.session['subscribe_for_tags'] = (pure_tag_names, wildcards)
         return HttpResponseRedirect(url_utils.get_login_url())
 
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def list_bulk_tag_subscription(request):
     if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED is False:
         raise Http404
@@ -759,7 +759,7 @@ def list_bulk_tag_subscription(request):
     return render(request, 'tags/list_bulk_tag_subscription.html', data)
 
 @csrf.csrf_protect
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def create_bulk_tag_subscription(request):
     if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED is False:
         raise Http404
@@ -789,7 +789,7 @@ def create_bulk_tag_subscription(request):
 
     return render(request, 'tags/form_bulk_tag_subscription.html', data)
 
-@decorators.admins_only
+@decorators.admins_or_mods_only
 @csrf.csrf_protect
 def edit_bulk_tag_subscription(request, pk):
     if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED is False:
@@ -849,7 +849,7 @@ def edit_bulk_tag_subscription(request, pk):
 
     return render(request, 'tags/form_bulk_tag_subscription.html', data)
 
-@decorators.admins_only
+@decorators.admins_or_mods_only
 @decorators.post_only
 @csrf.csrf_protect
 def delete_bulk_tag_subscription(request):
@@ -1067,7 +1067,7 @@ def read_message(request):#marks message a read
 @csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def edit_group_membership(request):
     #todo: this call may need to go.
     #it used to be the one creating groups
@@ -1120,7 +1120,7 @@ def edit_group_membership(request):
 @csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def save_group_logo_url(request):
     """saves urls for the group logo"""
     form = forms.GroupLogoURLForm(request.POST)
@@ -1136,7 +1136,7 @@ def save_group_logo_url(request):
 @csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def add_group(request):
     group_name = request.POST.get('group')
     if group_name:
@@ -1155,7 +1155,7 @@ def add_group(request):
 @csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def delete_group_logo(request):
     group_id = IntegerField().clean(int(request.POST['group_id']))
     group = models.Group.objects.get(id = group_id)
@@ -1166,7 +1166,7 @@ def delete_group_logo(request):
 @csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def delete_post_reject_reason(request):
     reason_id = IntegerField().clean(int(request.POST['reason_id']))
     reason = models.PostFlagReason.objects.get(id = reason_id)
@@ -1176,7 +1176,7 @@ def delete_post_reject_reason(request):
 @csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def toggle_group_profile_property(request):
     #todo: this might be changed to more general "toggle object property"
     post_data = simplejson.loads(request.raw_post_data)
@@ -1198,7 +1198,7 @@ def toggle_group_profile_property(request):
 @csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def set_group_openness(request):
     group_id = IntegerField().clean(int(request.POST['group_id']))
     value = IntegerField().clean(int(request.POST['value']))
@@ -1209,7 +1209,7 @@ def set_group_openness(request):
 
 @csrf.csrf_protect
 @decorators.ajax_only
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def edit_object_property_text(request):
     model_name = CharField().clean(request.REQUEST['model_name'])
     object_id = IntegerField().clean(request.REQUEST['object_id'])
@@ -1269,7 +1269,7 @@ def join_or_leave_group(request):
 @csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def save_post_reject_reason(request):
     """saves post reject reason and returns the reason id
     if reason_id is not given in the input - a new reason is created,
@@ -1300,7 +1300,7 @@ def save_post_reject_reason(request):
 @csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
-@decorators.admins_only
+@decorators.admins_or_mods_only
 def moderate_suggested_tag(request):
     """accepts or rejects a suggested tag
     if thread id is given, then tag is
