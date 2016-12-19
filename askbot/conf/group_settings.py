@@ -51,7 +51,7 @@ settings.register(
         'GROUP_EMAIL_ADDRESSES_ENABLED',
         default=False,
         description=_('Enable group email addresses'),
-        help_text=_('If selected, users can post to groups by email'
+        help_text=_('If selected, users can post to groups by email '
                     '"group-name@domain.com"')
     )
 )
