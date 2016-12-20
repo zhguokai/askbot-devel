@@ -1160,7 +1160,7 @@ def user_unsubscribe(request):
             #we use email too, in case the key changed
             user = models.User.objects.get(email=email)
         except models.User.DoesNotExist:
-            user = models.User.objects.get(key=key)
+            user = models.User.objects.get(askbot_profile__email_key=key)
         except models.User.DoesNotExist:
             result = 'bad_input'
         except models.User.MultipleObjectsReturned:

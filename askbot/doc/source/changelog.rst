@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+0.10.2 (Dec 21, 2016)
+---------------------
+* Bug fixes for the previous version
+
 0.10.1 (Nov 16, 2016)
 ---------------------
 * Added settings `ASKBOT_ALLOWED_HTML_ELEMENTS` and
