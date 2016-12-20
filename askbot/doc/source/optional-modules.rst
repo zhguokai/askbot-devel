@@ -5,55 +5,7 @@ Optional modules
 Askbot supports a number of optional modules, enabling certain features, not available 
 in askbot by default.
 
-.. _sphinx-search:
-
-Sphinx search
-=============
-Askbot supports Sphinx search - and at this point only for MySQL.
-Tested with sphinx 0.9.8.
-May be a little outdated, please give your feedback if that is the case.
-
-To enable:
-
-* install `sphinx search package <http://sphinxsearch.com/>`_
-* if necessary to support Chinese language, instead take `sphinx for Chinese <http://code.google.com/p/sphinx-for-chinese/>`_
-* prepare configuration file by running command ``python manage.py get_askbot_sphinx_config > sphinx.conf``
-* if necessary, modify the ``.conf`` file (may be needed for language other than English
-* place the ``sphinx.conf`` file to an appropriate location, like /etc/sphinx/
-
-Install django-sphinx python module (and follow all instructions)
-
-    pip install django-sphinx
-
-In ``settings.py`` add::
-
-    SPHINX_API_VERSION = 0x113 #according to django sphinx doc
-    USE_SPHINX_SEARCH = True
-    ASKBOT_SPHINX_SEARCH_INDEX = 'askbot'
-
-.. note::
-    Value of SPHINX_API_VERSION may depend on the version of 
-    python sphinx api installed with the django-sphinx application,
-    please refer to the django-sphinx documentation.
-
-Initialize the sphinx index (may need to log in as root)::
-
-    indexer askbot --config /etc/sphinx/sphinx.conf
-
-Start the sphinx search daemon::
-
-    /usr/local/bin/searchd --config /etc/sphinx/sphinx.conf &
-
-Also, add the line above to the file /etc/rc.d/rc.local or equivalent to start the daemon
-when the server reboots.
-
-Set up a periodic re-indexing job (using cron)::
-
-    indexer askbot --rotate --config /etc/sphinx/sphinx.conf
-
-Finally, add lin
-
-.. _embedding-video:
+.. _haystack:
 
 Haystack search
 =============
@@ -75,22 +27,6 @@ Solr and  Multilingual Support
 -------------------------
 
 There is more documentation about solr and multilingual support  please visit :ref:`this link <solr>`
-
-Embedding video
-===============
-
-Want to share videos in askbot posts? It is possible, but you will have to install a forked 
-version of ``markdown2`` module, here is how::
-
-    pip uninstall markdown2
-    pip install -e git+git://github.com/andryuha/python-markdown2.git#egg=markdown2
-
-Also, for this to work you'll need to have :ref:`pip` and :ref:`git` installed on your system.
-
-Finally, please go to your forum :ref:`live settings <live-settings>` --> 
-"Settings for askbot data entry and display" and check "Enable embedding video".
-
-Limitation: at the moment only YouTube and Veoh are supported.
 
 .. _ldap:
 
@@ -183,26 +119,7 @@ The easiest way to debug - insert ``import pdb; pdb.set_trace()`` line into func
 `askbot.deps.django_authopenid.backends.ldap_authenticate`,
 start the ``runserver`` and step through.
 
-Uploaded avatars
-================
-
-To enable uploadable avatars (in addition to :ref:`gravatars <gravatar>`), 
-please install application ``django-avatar``, with the following command::
-    
-    pip install django-avatar
-
-Then add ``avatar`` to the list of ``INSTALLED_APPS`` in your ``settings.py`` file 
-and run (to install database table used by the avatar app):
-
-    python manage.py syncdb
-
-Also, settings ``MEDIA_ROOT`` and ``MEDIA_URL`` will need to be added to your ``settings.py`` file.
-
-.. note::
-
-    Version of the ``avatar`` application available at pypi may not
-    be up to date, so please take the development version from the 
-    github repository
+.. _custom_profile:
 
 Custom section in the user profile
 ==================================
@@ -247,8 +164,10 @@ instance.
 Also, the method must accept one additional argument -
 an instance of the ``django.contrib.auth.models.User`` object.
 
-Wordpress Integration 
-=====================
+.. _wordpress_auth:
+
+Wordpress authentication
+========================
 
 To enable authentication for self hosted wordpress sites(wordpress.com blogs will work with openid login). To enable it follow the following steps:
 
@@ -260,6 +179,7 @@ To enable authentication for self hosted wordpress sites(wordpress.com blogs wil
 
 After doing this steps you should be able to login with your self hosted wordpress site user/password combination.
 
+.. _celery:
 
 Celery for background jobs
 ==========================
