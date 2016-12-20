@@ -1,8 +1,12 @@
 Changes in Askbot
 =================
 
+0.8.2 (Dec 21, 2016)
+--------------------
+* Bug fixes for the previous version
+
 0.8.1 (Nov 16, 2016)
----------------------
+--------------------
 * Applied Akismet check (if enabled) to editing of all content
 * Updated Facebook API to v2.2.
 * Tag names with diacritic characters are allowed
