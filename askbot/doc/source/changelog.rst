@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+0.9.3 (Dec 21, 2016)
+--------------------
+* Bug fixes for the previous version
+
 0.9.2 (Nov 16, 2016)
 ---------------------
 * Applied Akismet check (if enabled) to editing of all content
