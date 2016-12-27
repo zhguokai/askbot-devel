@@ -33,8 +33,7 @@ class RssIndividualQuestionFeed(Feed):
     """
 
     def title(self):
-        return askbot_settings.APP_TITLE + _(' - ') + \
-                _('Individual %(question)s feed') % {'question': askbot_settings.WORDS_QUESTION_SINGULAR}
+        return askbot_settings.APP_TITLE + _(' - ') + _('RSS feed')
 
     def feed_copyright(self):
         return askbot_settings.APP_COPYRIGHT
@@ -106,8 +105,7 @@ class RssLastestQuestionsFeed(Feed):
     """
 
     def title(self):
-        return askbot_settings.APP_TITLE + _(' - ') + \
-                _('Latest %(question)s feed') % {'question': askbot_settings.WORDS_QUESTION_SINGULAR}
+        return askbot_settings.APP_TITLE + _(' - ') + _('RSS feed')
 
     def feed_copyright(self):
         return askbot_settings.APP_COPYRIGHT
