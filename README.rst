@@ -23,7 +23,7 @@ Your pull requests are very welcome, **but please read the few paragraphs below*
 
 **Obvious bug fixes will be merged quickly**, however less obvious cases should include a clear description of how to reproduce the bug. Complex cases must be accompanied with the new unit tests.
 
-Everyone likes good geatures, but **feature PR's may be not accepted, unless discussed beforehand in the "Issues" section or by email support@askbot.com or at the Askbot support forum**. Of course you can do anything you want in your fork, but please don't make an assumption that your giant PR will be used, due to limited bandwidth for testing and to avoid "easter eggs" feature overload.
+Everyone likes good geatures, but **feature PR's may be not accepted, unless discussed beforehand in the "Issues" section or by email support@askbot.com or at the Askbot support forum**. Of course you can do anything you want in your fork, but please don't make an assumption that your giant glorious PR will be used, due to limited bandwidth for testing and to avoid "easter eggs" and the feature overload.
 
 **Please always use feature branches for the PR's**, multiple feature/bugfix PR's are harder to understand and less likely to be accepted.
 
