@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-04 14:06-0500\n"
+"POT-Creation-Date: 2016-12-27 09:03-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3916,7 +3916,7 @@ msgstr ""
 
 #: const/message_keys.py:17
 msgid "by relevance"
-msgstr ""
+msgstr "relevance"
 
 #: const/message_keys.py:18
 msgid "click to see the oldest questions"
@@ -3924,7 +3924,7 @@ msgstr ""
 
 #: const/message_keys.py:19
 msgid "by date"
-msgstr ""
+msgstr "date"
 
 #: const/message_keys.py:20
 msgid "click to see the newest questions"
@@ -3936,7 +3936,7 @@ msgstr ""
 
 #: const/message_keys.py:22
 msgid "by activity"
-msgstr ""
+msgstr "activity"
 
 #: const/message_keys.py:23
 msgid "click to see the most recently updated questions"
@@ -3948,7 +3948,7 @@ msgstr ""
 
 #: const/message_keys.py:25
 msgid "by answers"
-msgstr ""
+msgstr "answers"
 
 #: const/message_keys.py:26
 msgid "click to see the most answered questions"
@@ -3960,7 +3960,7 @@ msgstr ""
 
 #: const/message_keys.py:28
 msgid "by votes"
-msgstr ""
+msgstr "votes"
 
 #: const/message_keys.py:29
 msgid "click to see most voted questions"
@@ -4428,153 +4428,153 @@ msgstr ""
 msgid "Sent to newly registered user when replying by email is disabled"
 msgstr ""
 
-#: mail/messages.py:397 mail/messages.py:417
+#: mail/messages.py:397 mail/messages.py:421
 msgid "At least one user is required generate a preview"
 msgstr ""
 
-#: mail/messages.py:414
+#: mail/messages.py:418
 msgid "Respondable \"welcome\" message"
 msgstr ""
 
-#: mail/messages.py:415
+#: mail/messages.py:419
 msgid "Sent to newly registered user when replying by email is enabled"
 msgstr ""
 
-#: mail/messages.py:449
+#: mail/messages.py:454
 msgid "Reply to the user response to the \"welcome\" message"
 msgstr ""
 
-#: mail/messages.py:450
+#: mail/messages.py:455
 msgid "Sent to newly registered user who replied to the welcome message"
 msgstr ""
 
-#: mail/messages.py:452 mail/messages.py:484 mail/messages.py:512
-#: mail/messages.py:562
+#: mail/messages.py:457 mail/messages.py:489 mail/messages.py:517
+#: mail/messages.py:567
 msgid "At least one user on the site is necessary to generate the preview"
 msgstr ""
 
-#: mail/messages.py:478
+#: mail/messages.py:483
 msgid "Request to reply to get a sample of email the signature"
 msgstr ""
 
-#: mail/messages.py:480
+#: mail/messages.py:485
 msgid ""
 "Sent when the system does not have a record of email signature for the user"
 msgstr ""
 
-#: mail/messages.py:506
+#: mail/messages.py:511
 msgid "Insufficient karma to post by email"
 msgstr ""
 
-#: mail/messages.py:508
+#: mail/messages.py:513
 msgid "Sent when user does not have enough karma upon posting by email"
 msgstr ""
 
-#: mail/messages.py:537
+#: mail/messages.py:542
 msgid "Post was rejected"
 msgstr ""
 
-#: mail/messages.py:539
+#: mail/messages.py:544
 msgid "Sent when post was rejected by a moderator with a reason given"
 msgstr ""
 
-#: mail/messages.py:557
+#: mail/messages.py:562
 msgid "Moderation queue has items"
 msgstr ""
 
-#: mail/messages.py:559
+#: mail/messages.py:564
 msgid "Sent to moderators when the moderation queue is not empty"
 msgstr ""
 
-#: mail/messages.py:583
+#: mail/messages.py:588
 msgid "Batch email alert"
 msgstr ""
 
-#: mail/messages.py:584
+#: mail/messages.py:589
 msgid "Contains daily of weekly batches of email updates"
 msgstr ""
 
-#: mail/messages.py:586
+#: mail/messages.py:591
 msgid ""
 "At least one user on the site and two questions are necessary to generate "
 "the preview"
 msgstr ""
 
-#: mail/messages.py:614 management/commands/send_email_alerts.py:484
+#: mail/messages.py:619 management/commands/send_email_alerts.py:484
 msgid "new question"
 msgstr ""
 
-#: mail/messages.py:643
+#: mail/messages.py:648
 msgid "Accept answers reminder"
 msgstr ""
 
-#: mail/messages.py:644
+#: mail/messages.py:649
 msgid "Sent to author of questions without accepted answers"
 msgstr ""
 
-#: mail/messages.py:646 mail/messages.py:663 mail/messages.py:727
-#: mail/messages.py:752
+#: mail/messages.py:651 mail/messages.py:668 mail/messages.py:732
+#: mail/messages.py:757
 msgid "At least one user and one question are required to generate a preview"
 msgstr ""
 
-#: mail/messages.py:660
+#: mail/messages.py:665
 msgid "Unanswered questions reminder"
 msgstr ""
 
-#: mail/messages.py:661
+#: mail/messages.py:666
 msgid "Sent to users when there are unanswered questions"
 msgstr ""
 
-#: mail/messages.py:691
+#: mail/messages.py:696
 msgid "Email validation"
 msgstr ""
 
-#: mail/messages.py:692
+#: mail/messages.py:697
 msgid "Sent when user validates email or recovers account"
 msgstr ""
 
-#: mail/messages.py:711
+#: mail/messages.py:716
 msgid "Unsubscribe link"
 msgstr ""
 
-#: mail/messages.py:712
+#: mail/messages.py:717
 msgid "Sent when email key expired, but user is identified"
 msgstr ""
 
-#: mail/messages.py:724
+#: mail/messages.py:729
 msgid "Approved post notification"
 msgstr ""
 
-#: mail/messages.py:725 mail/messages.py:750
+#: mail/messages.py:730 mail/messages.py:755
 msgid "Sent when post revision is approved by the moderator"
 msgstr ""
 
-#: mail/messages.py:749
+#: mail/messages.py:754
 msgid "Respondable approved post notification"
 msgstr ""
 
-#: mail/messages.py:780
+#: mail/messages.py:785
 msgid "To add to your post EDIT ABOVE THIS LINE"
 msgstr ""
 
-#: mail/messages.py:793
+#: mail/messages.py:798
 msgid "Private message notification"
 msgstr ""
 
-#: mail/messages.py:794
+#: mail/messages.py:799
 msgid "Sent when a private message is sent to the user"
 msgstr ""
 
-#: mail/messages.py:796
+#: mail/messages.py:801
 msgid ""
 "At least one user and one personal message are required to generate a preview"
 msgstr ""
 
-#: mail/messages.py:821
+#: mail/messages.py:826
 msgid "Feedback email"
 msgstr ""
 
-#: mail/messages.py:822
+#: mail/messages.py:827
 msgid "Sent when user submits feedback form"
 msgstr ""
 
@@ -5079,39 +5079,39 @@ msgstr ""
 msgid "more"
 msgstr ""
 
-#: models/post.py:1800
+#: models/post.py:1803
 msgid "Sorry, this content is not available"
 msgstr ""
 
-#: models/post.py:1802 models/post.py:1815 models/post.py:1818
+#: models/post.py:1805 models/post.py:1818 models/post.py:1821
 msgid "Sorry, this content is no longer available"
 msgstr ""
 
-#: models/post.py:1831 models/post.py:1834
+#: models/post.py:1834 models/post.py:1837
 msgid "Sorry, this comment is no longer available"
 msgstr ""
 
-#: models/post.py:1853
+#: models/post.py:1856
 msgid "This post is temporarily not available"
 msgstr ""
 
-#: models/post.py:2295
+#: models/post.py:2298
 msgid "Suggested edit"
 msgstr ""
 
-#: models/post.py:2422
+#: models/post.py:2425
 #, python-format
 msgid ""
 "Thank you for your post to %(site)s. It will be published after the "
 "moderators review."
 msgstr ""
 
-#: models/post.py:2426
+#: models/post.py:2429
 #, python-format
 msgid "your post to %(site)s"
 msgstr ""
 
-#: models/post.py:2433
+#: models/post.py:2436
 msgid ""
 "Your post was placed on the moderation queue and will be published after the "
 "moderator approval."
@@ -7381,11 +7381,6 @@ msgid "forum responses (<span class=\"response-count\">%(re_count)s</span>)"
 msgstr ""
 
 #: templates/user_inbox/base.html:30
-#, python-format
-msgid "flagged items (<span class=\"mod-memo-count\">%(flags_count)s</span>)"
-msgstr ""
-
-#: templates/user_inbox/base.html:37
 msgid "group join requests"
 msgstr ""
 
@@ -8037,7 +8032,7 @@ msgid "FOLLOWED"
 msgstr ""
 
 #: templates/widgets/search_bar.html:20
-msgid "search or ask your question"
+msgid "Search or ask your question"
 msgstr ""
 
 #: templates/widgets/tag_selector.html:4
@@ -8147,16 +8142,16 @@ msgstr ""
 msgid "Please login to post"
 msgstr ""
 
-#: utils/decorators.py:201 views/commands.py:641 views/commands.py:675
+#: utils/decorators.py:206 views/commands.py:641 views/commands.py:675
 #: views/users.py:672 views/writers.py:342 views/writers.py:806
 msgid "Spam was detected on your post, sorry for if this is a mistake"
 msgstr ""
 
-#: utils/decorators.py:225
+#: utils/decorators.py:230
 msgid "This function is limited to moderators and administrators"
 msgstr ""
 
-#: utils/decorators.py:238
+#: utils/decorators.py:243
 msgid "This function is limited to administrators"
 msgstr ""
 
