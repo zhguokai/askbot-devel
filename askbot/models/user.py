@@ -27,6 +27,9 @@ class MockUser(object):
 
     def get_avatar_url(self, size):
         return ''
+    
+    def get_full_name(self):
+        return ''
 
     def get_profile_url(self):
         return ''
