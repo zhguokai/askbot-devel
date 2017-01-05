@@ -20,7 +20,7 @@ class Command(BaseCommand):
         languages = options['language'] or (django_settings.LANGUAGE_CODE,)
         for l in languages:
             translation.activate(l)
-            message = 'Rebuilding {} thread summary cache'.format(l.upper())
+            message = 'Rebuilding {0} thread summary cache'.format(l.upper())
             count = Thread.objects.count()
             for thread in ProgressBar(Thread.objects.iterator(),
                                       count, message):

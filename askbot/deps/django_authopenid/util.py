@@ -50,7 +50,7 @@ def email_is_blacklisted(email):
     patterns = patterns.strip().split()
     for pattern in patterns:
         try:
-            regex = re.compile(r'{}'.format(pattern))
+            regex = re.compile(r'{0}'.format(pattern))
         except:
             pass
         else:
