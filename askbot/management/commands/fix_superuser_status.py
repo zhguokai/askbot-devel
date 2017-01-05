@@ -17,4 +17,4 @@ class Command(NoArgsCommand):
                   .exclude(pk__is_superuser=True)
                   .update(status='a'))
 
-        self.stdout.write('Fixed the status of {} users.'.format(fixed))
+        self.stdout.write('Fixed the status of {0} users.'.format(fixed))
