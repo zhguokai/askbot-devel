@@ -27,4 +27,4 @@ class Command(NoArgsCommand):
         fixed += profiles.update(status='a')
         rebuild_profile_caches(profiles)
 
-        self.stdout.write('Fixed the status of {} users.'.format(fixed))
+        self.stdout.write('Fixed the status of {0} users.'.format(fixed))
