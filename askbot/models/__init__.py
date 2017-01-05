@@ -350,7 +350,7 @@ def user_get_absolute_url(self):
 def user_get_unsubscribe_url(self):
     url = reverse('user_unsubscribe')
     email_key = self.get_or_create_email_key()
-    return '{}?key={}&email={}'.format(url, self.email_key, self.email)
+    return '{0}?key={0}&email={0}'.format(url, self.email_key, self.email)
 
 
 def user_get_subscriptions_url(self):
