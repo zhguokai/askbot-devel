@@ -2050,12 +2050,25 @@ TinyMCE.onInitHook = function () {
     }
 };
 
+/* By default TinyMCE saves data from Editor to the real field (textarea) within callback bound to form's
+  onSubmit event. Unfortunatelly form validation plugin is also called from onSubmit event
+  handler - but before TinyMCE has saved it's data! Because of that we have to trigger TinyMCE save
+  within onchange callback to have validation plugin work properly */
+TinyMCE.onChangeHook = function (editor) {
+    tinyMCE.triggerSave();
+    $("#" + editor.id).valid();
+};
+
 /* 3 dummy functions to match WMD api */
 TinyMCE.prototype.setEnabledButtons = function () {};
 
 TinyMCE.prototype.start = function () {
-    //copy the options, because we need to modify them
-    var opts = $.extend({}, this._config);
+    //copy the options, because w}e need to modify them
+    var baseOpts = {
+        'onchange': TinyMCE.onChangeHook,
+        'oninit': TinyMCE.onInitHook
+    };
+    var opts = $.extend(baseOpts, this._config);
     var me = this;
     var extraOpts = {
         'mode': 'exact',
@@ -3274,7 +3287,7 @@ QASwapper.prototype.startSwapping = function () {
  * An element that encloses an editor and everything inside it.
  * By default editor is hidden and user sees a box with a prompt
  * suggesting to make a post.
- * When user clicks, editor becomes accessible.
+ * Prompt serves as a trigger to open the editor upon clicking.
  */
 var FoldedEditor = function () {
     WrappedElement.call(this);
@@ -3326,20 +3339,17 @@ FoldedEditor.prototype.getOpenHandler = function () {
 
             /* external trigger is a clickable target
             * placed outside of the this._element
-            * that will cause the editor to unfold
+            * that will cause the editor to unfold.
+            * Remove it upon unfolding.
             */
             if (externalTrigger) {
-                var label = me.makeElement('label');
-                label.html(externalTrigger.html());
-                //set what the label is for
-                label.attr('for', me.getEditorInputId());
-                externalTrigger.replaceWith(label);
+                externalTrigger.remove();
             }
         }
     };
 };
 
-FoldedEditor.prototype.setExternalTrigger = function (element) {
+FoldedEditor.prototype.setTrigger = function (element) {
     this._externalTrigger = element;
 };
 
@@ -3363,7 +3373,7 @@ FoldedEditor.prototype.decorate = function (element) {
     editor.setTextareaName('text');
 
     var placeHolder = element.find('.editor-placeholder');
-    editor.setText(placeHolder.data('draftAnswer'));
+    editor.setText(placeHolder.data('draftText'));
     placeHolder.append(editor.getElement());
     //editor.start();
 

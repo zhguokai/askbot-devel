@@ -1,6 +1,8 @@
 <div class="form-group">
     {% if post_form.text.errors %}
         <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
+    {% else %}
+        <label for="editor">{{ post_form.text.label }}</label>
     {% endif %}
     {% if settings.EDITOR_TYPE == 'markdown' %}
         <div class="wmd-container">

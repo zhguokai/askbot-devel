@@ -25,6 +25,7 @@
     <script type="text/javascript" src="{{ '/js/utils/toggle.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/js/utils/expander_toggle.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/utils/show_trigger.js'|media }}"></script>
     {% endcompress %}
     {% if settings.EDITOR_TYPE == 'markdown' %}
         {% include "meta/markdown_javascript.html" %}
@@ -42,9 +43,8 @@
         (function() {
             var bodyTriggerLink = $('.question-body-trigger');
             if (bodyTriggerLink.length === 1) {
-                var foldedEditor = new FoldedEditor();
-                foldedEditor.setExternalTrigger(bodyTriggerLink);
-                foldedEditor.decorate($('.folded-editor'));
+                var trigger = new ShowTrigger();
+                trigger.decorate(bodyTriggerLink);
             }
         })();
         $(document).ready(function(){

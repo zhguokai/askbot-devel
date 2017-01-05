@@ -12,15 +12,13 @@
     </div>
 
     {% if editor_is_folded %}
-        <a class="question-body-trigger"><label for="editor">{{ form.text.label }}</label></a>
-    {% else %}
-        <label for="editor">{{ form.text.label }}</label>
-    {% endif %}
-    <div class="folded-editor{% if editor_is_folded == False %} unfolded{% endif %}">
-        <div class="editor-proper">
+        <a class="question-body-trigger" data-target=".folded-editor">{{ form.text.label }}</a>
+        <div class="folded-editor folded">
             {{ macros.edit_post(form, settings) }}
         </div>
-    </div>
+    {% else %}
+        {{ macros.edit_post(form, settings) }}
+    {% endif %}
 
     {% include "widgets/tags_field.html" %}
     

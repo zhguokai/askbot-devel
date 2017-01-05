@@ -88,7 +88,6 @@ textarea,
 #askFormBar .questionTitleInput,
 .wmd-container,
 .js-simple-editor,
-.folded-editor,
 .mock-editor {
   border: #cce6ec 3px solid;
   height: 22px;
@@ -1968,7 +1967,7 @@ ul.js-related-tags li {
   margin-top: 3px;
   margin-right: 7px;
 }
-.folded-editor, .mock-editor {
+.mock-editor {
   box-shadow: inset 0 0 3px 1px #aaa;
   -moz-box-shadow: inset 0 0 3px 1px #aaa;
   -webkit-box-shadow: inset 0 0 3px 1px #aaa;
@@ -1977,30 +1976,21 @@ ul.js-related-tags li {
   outline: none;
   width: 100%;
 }
-.folded-editor .editor-proper, .mock-editor .editor-proper {
+.mock-editor .editor-proper {
   display: none;
 }
-.folded-editor.unfolded, .mock-editor.unfolded {
+.mock-editor.unfolded {
   cursor: default;
   box-shadow: 0 0 0 0;
   -moz-box-shadow: 0 0 0 0;
   -webkit-box-shadow: 0 0 0 0;
 }
-.folded-editor p.prompt, .mock-editor p.prompt {
+.mock-editor p.prompt {
   margin: 5px 4px;
   display: block;
 }
-.ask-page .folded-editor {
-  border: none;
-  padding: 0;
-  height: 0;
-}
-.folded-editor.unfolded {
-  border: none;
-  height: auto;
-}
-.folded-editor.unfolded .editor-proper {
-  display: block;
+.folded-editor.folded {
+  display: none;
 }
 a.question-body-trigger {
   color: #525252;

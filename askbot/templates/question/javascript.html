@@ -30,6 +30,7 @@
 <script type="text/javascript" src="{{ '/js/utils/expander_toggle.js'|media }}"></script>
 <script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
 <script type="text/javascript" src="{{ '/js/utils/editable.js'|media }}"></script>
+<script type="text/javascript" src="{{ '/js/utils/show_trigger.js'|media }}"></script>
 {% endcompress %}
 <script type="text/javascript">
     // define reputation needs for comments
@@ -141,10 +142,10 @@
         );
     }
     (function() {
-        var editorBox = $('.folded-editor');
-        if (editorBox.length) {
-            var foldedEditor = new FoldedEditor();
-            foldedEditor.decorate(editorBox);
+        var answerTrigger = $('.new-answer-trigger');
+        if (answerTrigger.length) {
+            var trigger = new ShowTrigger();
+            trigger.decorate(answerTrigger);
         }
     })();
 </script>

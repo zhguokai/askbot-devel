@@ -296,7 +296,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'force_p_newlines': False,
     'forced_root_block': '',
     'mode' : 'textareas',
-    'oninit': "TinyMCE.onInitHook",
     'plugins': 'askbot_imageuploader,askbot_attachment',
     'theme_advanced_toolbar_location' : 'top',
     'theme_advanced_toolbar_align': 'left',
