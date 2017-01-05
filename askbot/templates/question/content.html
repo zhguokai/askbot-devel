@@ -39,11 +39,19 @@
     {% endif %}
 {% endif %}
 
-{# buttons below cannot be cached yet #}
-{% if new_answer_allowed %}
-    {% include "question/new_answer_form.html" %}
-{% else %}
-    <div style="margin-top: 15px">
+<div style="clear:both"></div>
+{# buttons and form below cannot be cached #}
+{% if not (thread.closed or settings.READ_ONLY_MODE_ENABLED) %}
+    {% if new_answer_allowed %}{# show answer input or not #}
+        {% if request.user.is_authenticated() or settings.ALLOW_POSTING_BEFORE_LOGGING_IN %}
+            {% include "question/new_answer_form.html" %}
+        {% else %}
+            <a class="button submit"
+                href="{{settings.LOGIN_URL}}?next={% url question question.id %}"
+                >{{ settings.WORDS_LOGIN_SIGNUP_TO_ANSWER|escape }}</a>
+        {% endif %}
+    {% else %}
+        {# TODO: make this button open in-place answer editor, if answer is on the same page #}
         <a
             class="button submit"
             href="{% url "edit_answer" previous_answer.id %}"
@@ -53,13 +61,5 @@
             {# hidden because we still need js from the tinymce widget #}
             {% include "question/new_answer_form.html" %}
         </div>
-    </div>
-{% endif %}
-{% if question.closed == False and request.user.pk == question.author_id %}{# this is outside the form on purpose #}
-<input 
-  type="button"
-  class="submit answer-own-question"
-  id="fmanswer_button"
-  value="{{ settings.WORDS_ANSWER_YOUR_OWN_QUESTION|escape }}"
-/>
+    {% endif %}
 {% endif %}
