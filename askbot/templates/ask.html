@@ -25,9 +25,14 @@
     <script type="text/javascript" src="{{ '/js/utils/toggle.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/js/utils/expander_toggle.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/forms/form.js'|media }}"</script>
+    <script type="text/javascript" src="{{ '/js/forms/ask_form.js'|media }}"></script>
     {% endcompress %}
     {% if settings.EDITOR_TYPE == 'markdown' %}
         {% include "meta/markdown_javascript.html" %}
+    {% elif settings.EDITOR_TYPE == 'tinymce' and editor_is_folded %}
+        {# if unfolded, this is loaded by the form media #}
+        {% include "editors/tinymce_scripts.html" %}
     {% endif %}
     {% include "meta/editor_data.html" %}
     {% if mandatory_tags %}
@@ -69,7 +74,6 @@
 
             {{ macros.tag_autocomplete_js(id = '#id_tags') }}
 
-            setupFormValidation($("#fmask"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
             lanai.highlightSyntax();
 
             if (askbot['data']['userIsAuthenticated']) {

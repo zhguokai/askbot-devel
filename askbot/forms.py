@@ -315,8 +315,7 @@ class TitleField(forms.CharField):
                             attrs={'size': 70, 'autocomplete': 'off'}
                         )
         self.max_length = 255
-        self.label = _('title')
-        self.help_text = askbot_settings.WORDS_PLEASE_ENTER_YOUR_QUESTION
+        self.label = askbot_settings.WORDS_PLEASE_ENTER_YOUR_QUESTION
         self.initial = ''
 
     def clean(self, value):
