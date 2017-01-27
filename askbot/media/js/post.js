@@ -2048,6 +2048,7 @@ TinyMCE.onInitHook = function () {
             tinyMCE.execCommand('mceSpellCheck', true);
         }, 1);
     }
+    $('.mceStatusbar').remove();
 };
 
 /* 3 dummy functions to match WMD api */
@@ -2063,7 +2064,6 @@ TinyMCE.prototype.start = function () {
     };
     opts = $.extend(opts, extraOpts);
     tinyMCE.init(opts);
-    $('.mceStatusbar').remove();
     if (this._text) {
         this.setText(this._text);
     }
@@ -3293,9 +3293,7 @@ FoldedEditor.prototype.onAfterOpenHandler = function () {
     var editor = this.getEditor();
     if (editor) {
         editor.start();
-        setTimeout(function () { 
-            editor.focus(); 
-        }, 500);
+        editor.focus(function(){ editor.putCursorAtEnd()});
     }
 };
 

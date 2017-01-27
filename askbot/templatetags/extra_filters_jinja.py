@@ -137,7 +137,7 @@ def transurl(url):
         raise ValueError(
             u'string %s is not good for url - must be ascii' % url
         )
-    if getattr(django_settings, 'ASKBOT_TRANSLATE_URL', False):
+    if django_settings.ASKBOT_TRANSLATE_URL:
         return urllib.quote(_(url).encode('utf-8'))
     return url
 

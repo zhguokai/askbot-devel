@@ -38,21 +38,6 @@ EMAIL_PORT=''
 EMAIL_USE_TLS=False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-#incoming mail settings
-#after filling out these settings - please
-#go to the site's live settings and enable the feature
-#"Email settings" -> "allow asking by email"
-#
-#   WARNING: command post_emailed_questions DELETES all
-#            emails from the mailbox each time
-#            do not use your personal mail box here!!!
-#
-IMAP_HOST = ''
-IMAP_HOST_USER = ''
-IMAP_HOST_PASSWORD = ''
-IMAP_PORT = ''
-IMAP_USE_TLS = False
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -69,7 +54,6 @@ SITE_ID = 1
 USE_I18N = True
 LANGUAGE_CODE = 'en'
 LANGUAGES = (('en', 'English'),)
-ASKBOT_LANGUAGE_MODE = 'single-lang' #'single-lang', 'url-lang' or 'user-lang'
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -140,26 +124,6 @@ COMPRESS_PRECOMPILERS = (
 
 
 ROOT_URLCONF = os.path.basename(os.path.dirname(__file__)) + '.urls'
-
-
-#UPLOAD SETTINGS
-FILE_UPLOAD_TEMP_DIR = os.path.join(
-                                os.path.dirname(__file__),
-                                'tmp'
-                            ).replace('\\','/')
-
-FILE_UPLOAD_HANDLERS = (
-    'django.core.files.uploadhandler.MemoryFileUploadHandler',
-    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
-)
-ASKBOT_ALLOWED_UPLOAD_FILE_TYPES = ('.jpg', '.jpeg', '.gif', '.bmp', '.png', '.tiff')
-ASKBOT_MAX_UPLOAD_FILE_SIZE = 1024 * 1024 #result in bytes
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-
-
-#TEMPLATE_DIRS = (,) #template have no effect in askbot, use the variable below
-#ASKBOT_EXTRA_SKINS_DIR = #path to your private skin collection
-#take a look here http://askbot.org/en/question/207/
 
 
 INSTALLED_APPS = (
@@ -234,14 +198,12 @@ logging.basicConfig(
 #   ASKBOT_URL = 'forum/'
 #
 ASKBOT_URL = '' #no leading slash, default = '' empty string
-ASKBOT_TRANSLATE_URL = True #translate specific URLs
 _ = lambda v:v #fake translation function for the login url
-LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
+LOGIN_URL = '/%s%s%s' % (ASKBOT_URL, _('account/'), _('signin/'))
 LOGIN_REDIRECT_URL = ASKBOT_URL #adjust if needed
 #note - it is important that upload dir url is NOT translated!!!
 #also, this url must not have the leading slash
 ALLOW_UNICODE_SLUGS = False
-ASKBOT_USE_STACKEXCHANGE_URLS = False #mimic url scheme of stackexchange
 
 #Celery Settings
 BROKER_TRANSPORT = "djkombu.transport.DatabaseTransport"
@@ -249,10 +211,6 @@ CELERY_ALWAYS_EAGER = True
 
 import djcelery
 djcelery.setup_loader()
-
-CSRF_COOKIE_NAME = 'askbot_csrf'
-#enter domain name here - e.g. example.com
-#CSRF_COOKIE_DOMAIN = ''
 
 STATICFILES_DIRS = (
     ('default/media', os.path.join(ASKBOT_ROOT, 'media')),
@@ -277,33 +235,6 @@ ENABLE_HAYSTACK_SEARCH = False
 #                        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
 #            }
 #}
-
-TINYMCE_COMPRESSOR = True
-TINYMCE_SPELLCHECKER = False
-TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, 'default/media/tinymce/')
-TINYMCE_JS_URL = STATIC_URL + 'default/media/tinymce/tiny_mce.js'
-TINYMCE_DEFAULT_CONFIG = {
-    'plugins': 'askbot_imageuploader,askbot_attachment',
-    'convert_urls': False,
-    'theme': 'advanced',
-    'force_br_newlines': True,
-    'force_p_newlines': False,
-    'forced_root_block': '',
-    'mode' : 'textareas',
-    'oninit': "TinyMCE.onInitHook",
-    'theme_advanced_toolbar_location' : 'top',
-    'theme_advanced_toolbar_align': 'left',
-    'theme_advanced_buttons1': 'bold,italic,underline,|,bullist,numlist,|,undo,redo,|,link,unlink,askbot_imageuploader,askbot_attachment',
-    'theme_advanced_buttons2': '',
-    'theme_advanced_buttons3' : '',
-    'theme_advanced_path': False,
-    'theme_advanced_resizing': True,
-    'theme_advanced_resize_horizontal': False,
-    'theme_advanced_statusbar_location': 'bottom',
-    'editor_deselector': 'mceNoEditor',
-    'width': '100%',
-    'height': '250'
-}
 
 #delayed notifications, time in seconds, 15 mins by default
 NOTIFICATION_DELAY_TIME = 60 * 15

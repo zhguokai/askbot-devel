@@ -608,7 +608,7 @@ class BatchEmailAlert(BaseEmail):
             'recipient_user': user,
             'admin_email': askbot_settings.ADMIN_EMAIL,
             'site_name': askbot_settings.APP_SHORT_NAME,
-            'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+            'is_multilingual': askbot.is_multilingual()
         })
         return context
 

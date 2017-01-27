@@ -443,13 +443,6 @@ class PageLoadTestCase(AskbotTestCase):
                 data={'sort':'user', 'page':1},
             )
         self.try_url(
-                'edit_user',
-                template='authopenid/signin.html',
-                kwargs={'id':4},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
-                status_code=status_code,
-                follow=True,
-            )
-        self.try_url(
                 'faq',
                 template='faq_static.html',
                 status_code=status_code,
