@@ -353,19 +353,6 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         EMAIL,
-        'ALLOW_ASKING_BY_EMAIL',
-        default = False,
-        description=_('Allow posting questions by email'),
-        help_text=_(
-            'Before enabling this setting - please fill out IMAP settings '
-            'in the settings.py file'
-        )
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        EMAIL,
         'REPLACE_SPACE_WITH_DASH_IN_EMAILED_TAGS',
         default = True,
         description = _('Replace space in emailed tags with dash'),
@@ -381,7 +368,7 @@ settings.register(
          EMAIL,
         'REPLY_BY_EMAIL',
         default = False,
-        description=_('Enable posting answers and comments by email'),
+        description=_('Enable posting and replying by email'),
         #TODO give a better explanation depending on lamson startup procedure
         help_text=_(
             'To enable this feature make sure lamson is running'

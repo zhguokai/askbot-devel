@@ -7,6 +7,7 @@ question: why not run these from askbot/__init__.py?
 
 the main function is run_startup_tests
 """
+from askbot.conf.static_settings import settings as django_settings
 import askbot
 import django
 import os
@@ -15,7 +16,6 @@ import re
 import sys
 import urllib
 from django.db import connection
-from django.conf import settings as django_settings
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.utils import timezone
@@ -571,7 +571,7 @@ def test_staticfiles():
                 "('default/media', os.path.join(ASKBOT_ROOT, 'media')),"
             )
 
-    extra_skins_dir = getattr(django_settings, 'ASKBOT_EXTRA_SKINS_DIR', None)
+    extra_skins_dir = django_settings.ASKBOT_EXTRA_SKINS_DIR
     if extra_skins_dir is not None:
         if not os.path.isdir(extra_skins_dir):
             errors.append(
@@ -608,7 +608,7 @@ def test_staticfiles():
         'compressor.finders.CompressorFinder',
     )
 
-    finders = getattr(django_settings, 'STATICFILES_FINDERS', None)
+    finders = django_settings.STATICFILES_FINDERS
 
     missing_finders = list()
     for finder in required_finders:
@@ -699,7 +699,7 @@ def test_haystack():
                 message += """HAYSTACK_CONNECTIONS = {
                     'default': {
                     'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
-                        }
+                     
                     }"""
                 errors.append(message)
 
@@ -721,7 +721,7 @@ def test_haystack():
 
 def test_custom_user_profile_tab():
     setting_name = 'ASKBOT_CUSTOM_USER_PROFILE_TAB'
-    tab_settings = getattr(django_settings, setting_name, None)
+    tab_settings = getattr(django_settings, setting_name)
     if tab_settings:
         if not isinstance(tab_settings, dict):
             print "Setting %s must be a dictionary!!!" % setting_name
@@ -1015,7 +1015,7 @@ ASKBOT_LANGUAGE_MODE = 'single-lang' or just delete the setting""")
     if legacy_multilang in (True, False):
         print_errors(errors)
 
-    mode = getattr(django_settings, 'ASKBOT_LANGUAGE_MODE', None)
+    mode = django_settings.ASKBOT_LANGUAGE_MODE
     if mode and mode not in ('single-lang', 'url-lang', 'user-lang'):
         errors.append("""ASKBOT_LANGUAGE_MODE must be one of:
 'single-lang', 'url-lang', 'user-lang'""")
@@ -1028,7 +1028,7 @@ ASKBOT_LANGUAGE_MODE = 'single-lang' or just delete the setting""")
                 "if you want a multilingual setup"
             )
 
-    trans_url = getattr(django_settings, 'ASKBOT_TRANSLATE_URL', False)
+    trans_url = django_settings.ASKBOT_TRANSLATE_URL
     if mode in ('url-lang', 'user-lang') and trans_url == True:
         errors.append(
             'Please set ASKBOT_TRANSLATE_URL to False, the "True" option '
@@ -1044,7 +1044,7 @@ def test_messages_framework():
 
 def test_service_url_prefix():
     errors = list()
-    prefix = getattr(django_settings, 'ASKBOT_SERVICE_URL_PREFIX', '')
+    prefix = django_settings.ASKBOT_SERVICE_URL_PREFIX
     message = 'Service url prefix must have > 1 letters and must end with /'
     if prefix:
         if len(prefix) == 1 or (not prefix.endswith('/')):
@@ -1149,7 +1149,7 @@ def run_startup_tests():
 
 def run():
     try:
-        if getattr(django_settings, 'ASKBOT_SELF_TEST', True):
+        if django_settings.ASKBOT_SELF_TEST:
             run_startup_tests()
     except AskbotConfigError, error:
         print error

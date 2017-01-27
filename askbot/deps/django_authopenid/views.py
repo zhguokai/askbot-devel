@@ -363,25 +363,25 @@ def complete_cas_signin(request):
     #<----
     #settings ASKBOT_CAS_USER_FILTER, ASKBOT_CAS_GET_USERNAME, ASKBOT_CAS_GET_EMAIL
     #are temporary, to be replaced by ability to specify custom auth backend.
-    user_filter_path = getattr(django_settings, 'ASKBOT_CAS_USER_FILTER', None)
+    user_filter_path = django_settings.ASKBOT_CAS_USER_FILTER
     if user_filter_path:
         user_filter_func = load_module(user_filter_path)
         if user_filter_func(username) == False:
             #de-authenticate the user
             user = None
-            deny_msg = getattr(django_settings, 'ASKBOT_CAS_USER_FILTER_DENIED_MSG', None)
+            deny_msg = django_settings.CAS_USER_FILTER_DENIED_MSG
             if deny_msg:
                 request.user.message_set.create(message=deny_msg)
                 return HttpResponseRedirect(next_url)
 
-    get_username_func_path = getattr(django_settings, 'ASKBOT_CAS_GET_USERNAME', None)
+    get_username_func_path = django_settings.ASKBOT_CAS_GET_USERNAME
     if get_username_func_path:
         get_username_func = load_module(get_username_func_path)
         request.session['username'] = get_username_func(username) or username
     else:
         request.session['username'] = username
 
-    get_email_func_path = getattr(django_settings, 'ASKBOT_CAS_GET_EMAIL', None)
+    get_email_func_path = django_settings.ASKBOT_CAS_GET_EMAIL
     if get_email_func_path:
         get_email_func = load_module(get_email_func_path)
         request.session['email'] = get_email_func(username)

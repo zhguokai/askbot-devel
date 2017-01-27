@@ -299,7 +299,7 @@ def moderate_post_edits(request):
         num_posts = 0
         num_ips = 0
 
-        moderate_ips = getattr(django_settings, 'ASKBOT_IP_MODERATION_ENABLED', False)
+        moderate_ips = django_settings.ASKBOT_IP_MODERATION_ENABLED
         # If we block by IPs we always block users and posts
         # so we use a "spider" algorithm to find posts, users and IPs to block.
         # once we find users, posts and IPs, we block all of them summarily.
@@ -318,7 +318,7 @@ def moderate_post_edits(request):
             #to make sure to not block the admin and
             #in case REMOTE_ADDR is a proxy server - not
             #block access to the site
-            good_ips = set(getattr(django_settings, 'ASKBOT_WHITELISTED_IPS', ()))
+            good_ips = set(django_settings.ASKBOT_WHITELISTED_IPS)
             good_ips.add(request.META['REMOTE_ADDR'])
             ips = ips - good_ips
 

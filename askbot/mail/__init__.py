@@ -2,7 +2,7 @@
 these automatically catch email-related exceptions
 """
 from django.conf import settings as django_settings
-DEBUG_EMAIL = getattr(django_settings, 'ASKBOT_DEBUG_INCOMING_EMAIL', False)
+DEBUG_EMAIL = django_settings.ASKBOT_DEBUG_INCOMING_EMAIL
 
 import logging
 import os
@@ -140,7 +140,7 @@ def mail_moderators(
     send_mail(
         subject_line=subject_line,
         body_text=body_text,
-        from_email=getattr(django_settings, 'DEFAULT_FROM_EMAIL', ''),
+        from_email=django_settings.DEFAULT_FROM_EMAIL,
         recipient_list=recipient_list,
         raise_on_failure=raise_on_failure,
         headers=headers
