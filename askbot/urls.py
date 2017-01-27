@@ -21,7 +21,7 @@ from askbot.utils.url_utils import service_url
 
 admin.autodiscover()
 #update_media_revision()#needs to be run once, so put it here
-if getattr(settings, "ASKBOT_TRANSLATE_URL", False):
+if settings.ASKBOT_TRANSLATE_URL:
     from django.utils.translation import pgettext
 else:
     pgettext = lambda context, value: value
@@ -34,22 +34,8 @@ sitemaps = {
     'questions': QuestionsSitemap
 }
 
-#prefix is optional, recommended when a variable url prefix
-#is used to subdivide the forum into namespaces
-#in this case it is safer to use a special prefix to all urls
-#except those that are namespaced
-PREFIX = getattr(settings, 'ASKBOT_SERVICE_URL_PREFIX', '')
-
-MAIN_PAGE_BASE_URL = getattr(
-                        settings,
-                        'ASKBOT_MAIN_PAGE_BASE_URL',
-                        pgettext('urls', 'questions')
-                    ).strip('/') + '/'
-QUESTION_PAGE_BASE_URL = getattr(
-                        settings,
-                        'ASKBOT_QUESTION_PAGE_BASE_URL',
-                        pgettext('urls', 'question')
-                    ).strip('/') + '/'
+MAIN_PAGE_BASE_URL = settings.ASKBOT_MAIN_PAGE_BASE_URL
+QUESTION_PAGE_BASE_URL = settings.ASKBOT_QUESTION_PAGE_BASE_URL
 
 APP_PATH = os.path.dirname(__file__)
 urlpatterns = patterns('',

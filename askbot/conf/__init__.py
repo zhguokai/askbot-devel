@@ -35,7 +35,6 @@ import askbot.conf.words
 #import main settings object
 from askbot.conf.settings_wrapper import settings
 
-from django.conf import settings as django_settings
 def should_show_sort_by_relevance():
     """True if configuration support sorting
     questions by search relevance
@@ -58,7 +57,8 @@ def get_tag_email_filter_strategy_choices():
         return const.TAG_EMAIL_FILTER_SIMPLE_STRATEGY_CHOICES
 
 def gravatar_enabled():
-    from askbot.conf import settings as askbot_settings
+    from django.conf import settings as django_settings
     if 'avatar' in django_settings.INSTALLED_APPS:
+        from askbot.conf import settings as askbot_settings
         return askbot_settings.ENABLE_GRAVATAR
     return True

@@ -40,8 +40,9 @@ def get_available_skins(selected=None):
     selected skin is guaranteed to be the first item in the dictionary
     """
     skins = SortedDict()
-    if hasattr(django_settings, 'ASKBOT_EXTRA_SKINS_DIR'):
-        skins.update(get_skins_from_dir(django_settings.ASKBOT_EXTRA_SKINS_DIR))
+    extra_skins_dir = getattr(django_settings, 'ASKBOT_EXTRA_SKINS_DIR', None)
+    if extra_skins_dir:
+        skins.update(get_skins_from_dir(extra_skins_dir))
 
     if 'default' in skins:
         raise ValueError('"default" is not an acceptable name for a custom skin')

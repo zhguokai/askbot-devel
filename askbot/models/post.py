@@ -409,13 +409,7 @@ class MockPost(object):
         return False
 
 
-POST_RENDERERS_MAP = getattr(django_settings, 'ASKBOT_POST_RENDERERS', {
-    'plain-text': 'askbot.utils.markup.plain_text_input_converter',
-    'markdown': 'askbot.utils.markup.markdown_input_converter',
-    'tinymce': 'askbot.utils.markup.tinymce_input_converter',
-})
-
-
+POST_RENDERERS_MAP = django_settings.ASKBOT_POST_RENDERERS
 def get_post_renderer_type(post_type):
     have_simple_comment = (
         post_type == 'comment' and

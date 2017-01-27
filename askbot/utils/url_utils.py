@@ -24,7 +24,7 @@ def service_url(*args, **kwargs):
     if pattern[0] == '^':
         pattern = pattern[1:]
 
-    prefix = getattr(settings, 'ASKBOT_SERVICE_URL_PREFIX', '')
+    prefix = settings.ASKBOT_SERVICE_URL_PREFIX
     pattern = '^' + prefix + pattern
     new_args = list(args)
     new_args[0] = pattern
