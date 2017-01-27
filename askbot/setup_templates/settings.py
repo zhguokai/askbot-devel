@@ -69,8 +69,6 @@ SITE_ID = 1
 USE_I18N = True
 LANGUAGE_CODE = 'en'
 LANGUAGES = (('en', 'English'),)
-ASKBOT_LANGUAGE_MODE = 'single-lang' #'single-lang', 'url-lang' or 'user-lang'
-
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -135,25 +133,6 @@ COMPRESS_PRECOMPILERS = (
 
 ROOT_URLCONF = os.path.basename(os.path.dirname(__file__)) + '.urls'
 
-
-#UPLOAD SETTINGS
-FILE_UPLOAD_TEMP_DIR = os.path.join(
-                                os.path.dirname(__file__),
-                                'tmp'
-                            ).replace('\\','/')
-
-FILE_UPLOAD_HANDLERS = (
-    'django.core.files.uploadhandler.MemoryFileUploadHandler',
-    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
-)
-ASKBOT_ALLOWED_UPLOAD_FILE_TYPES = ('.jpg', '.jpeg', '.gif', '.bmp', '.png', '.tiff')
-ASKBOT_MAX_UPLOAD_FILE_SIZE = 1024 * 1024 #result in bytes
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-
-
-#TEMPLATE_DIRS = (,) #template have no effect in askbot, use the variable below
-#ASKBOT_EXTRA_SKINS_DIR = #path to your private skin collection
-#take a look here http://askbot.org/en/question/207/
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
@@ -240,14 +219,12 @@ logging.basicConfig(
 #   ASKBOT_URL = 'forum/'
 #
 ASKBOT_URL = '' #no leading slash, default = '' empty string
-ASKBOT_TRANSLATE_URL = True #translate specific URLs
 _ = lambda v:v #fake translation function for the login url
 LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
 LOGIN_REDIRECT_URL = ASKBOT_URL #adjust if needed
 #note - it is important that upload dir url is NOT translated!!!
 #also, this url must not have the leading slash
 ALLOW_UNICODE_SLUGS = False
-ASKBOT_USE_STACKEXCHANGE_URLS = False #mimic url scheme of stackexchange
 
 #Celery Settings
 BROKER_TRANSPORT = "djkombu.transport.DatabaseTransport"
@@ -255,10 +232,6 @@ CELERY_ALWAYS_EAGER = True
 
 import djcelery
 djcelery.setup_loader()
-
-CSRF_COOKIE_NAME = 'askbot_csrf'
-#enter domain name here - e.g. example.com
-#CSRF_COOKIE_DOMAIN = ''
 
 STATICFILES_DIRS = (
     ('default/media', os.path.join(ASKBOT_ROOT, 'media')),

@@ -69,13 +69,6 @@ def askbot_setup():
             )
 
     parser.add_option(
-                "--domain",
-                dest = "domain_name",
-                default = None,
-                help = "the domain name of the instance"
-            )
-
-    parser.add_option(
                 "--append-settings",
                 dest = "local_settings",
                 default = '',

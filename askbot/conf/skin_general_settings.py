@@ -60,8 +60,12 @@ settings.register(
 )
 
 #cannot use HAS_ASKBOT_LOCALE_MIDDLEWARE due to circular import error
-if not askbot.is_multilingual() and \
-        'askbot.middleware.locale.LocaleMiddleware' in django_settings.MIDDLEWARE_CLASSES:
+LANG_MODE = getattr(django_settings, 'ASKBOT_LANGUAGE_MODE', 'single-lang')
+HAS_ASKBOT_LOCALE_MIDDLEWARE = (
+    'askbot.middleware.locale.LocaleMiddleware' in
+    django_settings.MIDDLEWARE_CLASSES
+)
+if LANG_MODE == 'single-lang' and HAS_ASKBOT_LOCALE_MIDDLEWARE:
     settings.register(
         values.StringValue(
             GENERAL_SKIN_SETTINGS,

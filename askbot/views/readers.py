@@ -596,7 +596,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if drafts.count() > 0:
             initial['text'] = drafts[0].get_text()
 
-    custom_answer_form_path = getattr(django_settings, 'ASKBOT_NEW_ANSWER_FORM', None)
+    custom_answer_form_path = django_settings.ASKBOT_NEW_ANSWER_FORM
     if custom_answer_form_path:
         answer_form_class = load_module(custom_answer_form_path)
     else:
