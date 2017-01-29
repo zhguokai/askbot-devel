@@ -38,7 +38,12 @@ Form.prototype.setLabelText = function (fieldName, labelText) {
 
 Form.prototype.setLabelElement = function (fieldName, label) {
     this._labels = this._labels || {};
-    this._labels[fieldName] = labelText;
+    this._labels[fieldName] = label;
+};
+
+Form.prototype.setInputElement = function (fieldName, input) {
+    this._inputs = this._inputs || {};
+    this._inputs[fieldName] = input;
 };
 
 Form.prototype.decorateField = function (fieldName) {

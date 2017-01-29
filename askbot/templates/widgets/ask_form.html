@@ -3,7 +3,7 @@
     data-validated-fields="title,text"
     data-title-validator="askbot.validators.titleValidator"
     data-text-validator="askbot.validators.questionDetailsValidator"
-    data-title-label="{{ form.title.help_text|escape }}"
+    data-title-label="{{ form.title.label|escape }}"
     data-text-label="{{ form.text.label|escape }}"
     >{% csrf_token %}
     <div class="form-item form-group ask-form-bar">
@@ -31,7 +31,7 @@
 
     {% if editor_is_folded %}
         <a class="question-body-trigger"><label for="editor">{{ text_label }}</label></a>
-        <div class="folded-editor{% if editor_is_folded == False %} unfolded{% endif %}">
+        <div class="folded-editor">
             <div class="editor-proper">
                 <div class="editor-placeholder"></div>
             </div>
