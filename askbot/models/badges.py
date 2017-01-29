@@ -915,7 +915,7 @@ def get_badges_dict(e_to_b):
 
 
 def extend_badge_events(e_to_b):
-    mod_path = getattr(django_settings, 'ASKBOT_CUSTOM_BADGES', None)
+    mod_path = django_settings.ASKBOT_CUSTOM_BADGES
     if mod_path:
         extra_e_to_b = load_module(mod_path)
         events = set(extra_e_to_b.keys())

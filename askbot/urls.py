@@ -21,7 +21,7 @@ from askbot.utils.url_utils import service_url
 
 admin.autodiscover()
 #update_media_revision()#needs to be run once, so put it here
-if getattr(settings, "ASKBOT_TRANSLATE_URL", False):
+if settings.ASKBOT_TRANSLATE_URL:
     from django.utils.translation import pgettext
 else:
     pgettext = lambda context, value: value
@@ -34,22 +34,8 @@ sitemaps = {
     'questions': QuestionsSitemap
 }
 
-#prefix is optional, recommended when a variable url prefix
-#is used to subdivide the forum into namespaces
-#in this case it is safer to use a special prefix to all urls
-#except those that are namespaced
-PREFIX = getattr(settings, 'ASKBOT_SERVICE_URL_PREFIX', '')
-
-MAIN_PAGE_BASE_URL = getattr(
-                        settings,
-                        'ASKBOT_MAIN_PAGE_BASE_URL',
-                        pgettext('urls', 'questions')
-                    ).strip('/') + '/'
-QUESTION_PAGE_BASE_URL = getattr(
-                        settings,
-                        'ASKBOT_QUESTION_PAGE_BASE_URL',
-                        pgettext('urls', 'question')
-                    ).strip('/') + '/'
+MAIN_PAGE_BASE_URL = settings.ASKBOT_MAIN_PAGE_BASE_URL
+QUESTION_PAGE_BASE_URL = settings.ASKBOT_QUESTION_PAGE_BASE_URL
 
 APP_PATH = os.path.dirname(__file__)
 urlpatterns = patterns('',
@@ -190,22 +176,22 @@ urlpatterns = patterns('',
     service_url(r'^translate-url/', views.commands.translate_url, name='translate_url'),
     service_url(r'^reorder-badges/', views.commands.reorder_badges, name='reorder_badges'),
     service_url(r'^import-data/$', views.writers.import_data, name='import_data'),
-    service_url(r'^%s$' % pgettext('urls', 'about/'), views.meta.about, name='about'),
-    service_url(r'^%s$' % pgettext('urls', 'faq/'), views.meta.faq, name='faq'),
-    service_url(r'^%s$' % pgettext('urls', 'privacy/'), views.meta.privacy, name='privacy'),
-    service_url(
+    url(r'^%s$' % pgettext('urls', 'about/'), views.meta.about, name='about'),
+    url(r'^%s$' % pgettext('urls', 'faq/'), views.meta.faq, name='faq'),
+    url(r'^%s$' % pgettext('urls', 'privacy/'), views.meta.privacy, name='privacy'),
+    url(
         r'^%s$' % pgettext('urls', 'terms/'),
         views.meta.markdown_flatpage,
         kwargs={'setting_name': 'TERMS', 'page_class': 'terms-page'},
         name='terms'
     ),
-    service_url(r'^%s$' % pgettext('urls', 'help/'), views.meta.help, name='help'),
+    url(r'^%s$' % pgettext('urls', 'help/'), views.meta.help, name='help'),
     service_url(
         r'^%s(?P<id>\d+)/%s$' % (pgettext('urls', 'answers/'), pgettext('urls', 'edit/')),
         views.writers.edit_answer,
         name='edit_answer'
     ),
-    service_url(
+    url(
         r'^%s(?P<id>\d+)/%s$' % (pgettext('urls', 'answers/'), pgettext('urls', 'revisions/')),
         views.readers.revisions,
         kwargs = {'post_type': 'answer'},
@@ -302,12 +288,12 @@ urlpatterns = patterns('',
         views.readers.get_post_html,
         name='get_post_html'
     ),
-    service_url(
+    url(
         r'^%s%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'ask/')),
         views.writers.ask,
         name='ask'
     ),
-    service_url(
+    url(
         r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'edit/')),
         views.writers.edit_question,
         name='edit_question'
@@ -317,12 +303,12 @@ urlpatterns = patterns('',
         views.writers.retag_question,
         name='retag_question'
     ),
-    service_url(
+    url(
         r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'close/')),
         views.commands.close,
         name='close'
     ),
-    service_url(
+    url(
         r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'reopen/')),
         views.commands.reopen,
         name='reopen'
@@ -342,7 +328,7 @@ urlpatterns = patterns('',
         views.commands.vote,
         name='vote'
     ),
-    service_url(
+    url(
         r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'revisions/')),
         views.readers.revisions,
         kwargs = {'post_type': 'question'},
@@ -718,16 +704,16 @@ urlpatterns = patterns('',
     service_url(r'^preview-emails/$', views.emails.list_emails, name='list_emails'),
     service_url(r'^preview-emails/(?P<slug>.+)/$', views.emails.preview_email, name='preview_email'),
 
-    service_url('^api/v1/info/$', views.api_v1.info, name='api_v1_info'),
-    service_url('^api/v1/users/$', views.api_v1.users, name='api_v1_users'),
-    service_url('^api/v1/users/(?P<user_id>\d+)/$', views.api_v1.user, name='api_v1_user'),
-    service_url('^api/v1/questions/$', views.api_v1.questions, name='api_v1_questions'),
-    service_url('^api/v1/questions/(?P<question_id>\d+)/$', views.api_v1.question, name='api_v1_question'),
+    url('^api/v1/info/$', views.api_v1.info, name='api_v1_info'),
+    url('^api/v1/users/$', views.api_v1.users, name='api_v1_users'),
+    url('^api/v1/users/(?P<user_id>\d+)/$', views.api_v1.user, name='api_v1_user'),
+    url('^api/v1/questions/$', views.api_v1.questions, name='api_v1_questions'),
+    url('^api/v1/questions/(?P<question_id>\d+)/$', views.api_v1.question, name='api_v1_question'),
 )
 
 if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
     urlpatterns += (
-        service_url(
+        url(
             r'^%s' % pgettext('urls', 'account/'),
             include('askbot.deps.django_authopenid.urls')
         ),

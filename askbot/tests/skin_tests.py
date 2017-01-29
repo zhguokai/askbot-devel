@@ -14,7 +14,7 @@ class SkinTests(TestCase):
     def setUp(self):
         #create dummy skin
         self.temp_dir = tempfile.mkdtemp()
-        self.skins_dir_backup = getattr(django_settings, 'ASKBOT_EXTRA_SKINS_DIR', None)
+        self.skins_dir_backup = django_settings.ASKBOT_EXTRA_SKINS_DIR
         setattr(django_settings, 'ASKBOT_EXTRA_SKINS_DIR', self.temp_dir)
         skin_image_dir = os.path.join(
                             self.temp_dir,
@@ -39,10 +39,7 @@ class SkinTests(TestCase):
                         )
         shutil.rmtree(self.temp_dir)
         askbot_settings.update('ASKBOT_DEFAULT_SKIN', 'default')
-        if self.skins_dir_backup is None:
-            del(django_settings.ASKBOT_EXTRA_SKINS_DIR)
-        else:
-            django_settings.ASKBOT_EXTRA_SKINS_DIR = self.skins_dir_backup
+        django_settings.ASKBOT_EXTRA_SKINS_DIR = self.skins_dir_backup
 
     def assert_default_logo_in_skin(self, skin_name):
         url = skin_utils.get_media_url(askbot_settings.SITE_LOGO_URL)
