@@ -131,13 +131,7 @@ askbot.validators = askbot.validators || {};
 
 askbot.validators.titleValidator = function (text) {
     text = $.trim(text);
-    if (text === '') {
-        throw interpolate(
-                gettext('enter %(question)s title'),
-                {'question': askbot.messages.questionSingular},
-                true
-            );
-    } else if (text.length < askbot.settings.minTitleLength) {
+    if (text.length < askbot.settings.minTitleLength) {
         throw interpolate(
                         ngettext(
                             '%(question)s must have > %(length)s character',
@@ -157,6 +151,8 @@ askbot.validators.questionDetailsValidator = function (text) {
     text = $.trim(text);
     var minLength = askbot.settings.minQuestionBodyLength;
     if (minLength && (text.length < minLength)) {
+        /* todo - for tinymce text extract text from html 
+            otherwise html tags will be counted and user misled */
         throw interpolate(
                     ngettext(
                         'details must have > %s character',
@@ -2049,6 +2045,11 @@ TinyMCE.onInitHook = function () {
         }, 1);
     }
     $('.mceStatusbar').remove();
+};
+
+TinyMCE.onChangeHook = function (editor) {
+    tinyMCE.triggerSave();
+    $(tinyMCE.get(editor.id).getElement()).change();
 };
 
 /* 3 dummy functions to match WMD api */

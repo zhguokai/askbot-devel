@@ -4,6 +4,11 @@
  */
 var Form = function () {
     WrappedElement.call(this);
+    /* all dicts have key of field name */
+    this._errors = {};
+    this._errorElements = {};
+    this._validators = {};
+    this._inputs = {};
 };
 inherits(Form, WrappedElement);
 
@@ -15,49 +20,63 @@ Form.prototype.formHasErrors = function () {
     var fields = this._fieldNames;
     for (var i=0; i<fields.length; i++) {
         var field = fields[i];
-        if (this.fieldHasErrors(field) {
+        if (this.fieldHasErrors(field)) {
             return true;
         }
     };
     return false;
 };
 
+Form.prototype.validateForm = function () {
+    var fields = this._fieldNames;
+    for (var i=0; i<fields.length; i++) {
+        this.validateField(fields[i]);
+    }
+};
+
 Form.prototype.getFormValidationHandler = function () {
     var me = this;
     return function () {
+        me.validateForm();
         if (me.formHasErrors()) {
             return false;
         }
     };
 };
 
-Form.prototype.setLabelText = function (fieldName, labelText) {
-    this._labelTexts = this._labelTexts || {};
-    this._labelTexts[fieldName] = labelText;
+Form.prototype.setFieldError = function (fieldName, errorMsg) {
+    var error = this._errorElements[fieldName];
+    error.html(errorMsg);
+    this._errors[fieldName] = true;
 };
 
-Form.prototype.setLabelElement = function (fieldName, label) {
-    this._labels = this._labels || {};
-    this._labels[fieldName] = label;
+Form.prototype.clearFieldError = function (fieldName) {
+    var error = this._errorElements[fieldName];
+    error.html('');
+    this._errors[fieldName] = false;
 };
 
-Form.prototype.setInputElement = function (fieldName, input) {
-    this._inputs = this._inputs || {};
-    this._inputs[fieldName] = input;
-};
+Form.prototype.validateField = function (fieldName) {
+    var input = this._inputs[fieldName];
+    var validator = this._validators[fieldName];
+    var val = input.val();
+    try {
+        validator(val);
+        this.clearFieldError(fieldName);
+    } catch (error) {
+        this.setFieldError(fieldName, error);
+    }
+}
 
 Form.prototype.decorateField = function (fieldName) {
     //get validator
-    var element = $(this.element);
+    var element = $(this._element);
     var validator = element.data(fieldName + 'Validator');
     validator = getObjectByPath(validator);
+    this._validators[fieldName] = validator;
 
-    var labelText = element.data(fieldName + 'Label');
-    this.setLabelText(fieldName, labelText);
-
-
-    var label = element.find('label[for="' + fieldName + '"]');
-    this.setLabelElement(fieldName, label);
+    var error = element.find('.js-' + fieldName + '-error');
+    this._errorElements[fieldName] = error;
 
     var input = element.find('input[name="' + fieldName + '"]');
     if (input.length == 0) {
@@ -66,17 +85,12 @@ Form.prototype.decorateField = function (fieldName) {
     if (input.length == 0) {
         input = element.find('select[name="' + fieldName + '"]');
     };
-    this.setInputElement(fieldName, input);
+    this._inputs[fieldName] = input;
 
     var me = this;
     input.change(function () {
-        var val = input.val();
-        try {
-            validator(val);
-            me.clearFieldError(fieldName);
-        } catch error {
-            me.setFieldError(fieldName, error);
-        }
+        me.validateField(fieldName);
+        return false;
     });
 };
 
@@ -84,6 +98,7 @@ Form.prototype.decorate = function (element) {
     this._element = element;
     //look for validated fields
     var fieldNames = $(element).data('validatedFields');
+    fieldNames = $.trim(fieldNames).split(',');
 
     for (var i=0; i<fieldNames.length; i++) {
         var fieldName = $.trim(fieldNames[i]);

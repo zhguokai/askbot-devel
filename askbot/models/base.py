@@ -64,6 +64,11 @@ class DraftContent(models.Model):
         app_label = 'askbot'
 
     def get_text(self):
+        # Todo: test convert the text and if 
+        # resulting html has no content - clear the text
+        # this will strip bogus content that might be created
+        # by the rich text editors and remove the flashing
+        # bogus html upon loading of the editors.
         if self.text.strip() == '<br data-mce-bogus="1">':
             return ''
         return self.text
