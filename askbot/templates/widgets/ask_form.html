@@ -19,16 +19,15 @@
 
     {% set text_field_id = form.text.field.widget.attrs.id %}
     {% if editor_is_folded %}
-        <a class="question-body-trigger">
+        <a class="js-question-body-trigger">{{ form.text.label }}</a>
+        <div class="folded-editor">
             <label for="{{ text_field_id }}" 
-                class="js-text-label">{{ text_label }}</label>
+                class="js-text-label">{{ form.text.label }}</label>
             <div class="js-text-error js-error">
                 {% if form.text.errors %}
                     {{ form.text.errors }}
                 {% endif %}
             </div>
-        </a>
-        <div class="folded-editor">
             <div class="editor-proper">
                 <div class="editor-placeholder"></div>
             </div>

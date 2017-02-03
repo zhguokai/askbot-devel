@@ -1,7 +1,9 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.html import strip_tags
 from askbot.conf import settings as askbot_settings
+from askbot.utils.markup import convert_text
 
 class BaseQuerySetManager(models.Manager):
     """a base class that allows chainable qustom filters
@@ -69,6 +71,8 @@ class DraftContent(models.Model):
         # this will strip bogus content that might be created
         # by the rich text editors and remove the flashing
         # bogus html upon loading of the editors.
-        if self.text.strip() == '<br data-mce-bogus="1">':
+        test_html = convert_text(self.text)
+        test_text = strip_tags(test_html).strip()
+        if test_text == '':
             return ''
         return self.text

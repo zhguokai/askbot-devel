@@ -2013,8 +2013,8 @@ ul.js-related-tags li {
   -moz-box-shadow: 0 0 0 0;
   -webkit-box-shadow: 0 0 0 0;
 }
-.folded-editor p.prompt,
-.mock-editor p.prompt {
+.folded-editor .js-folded-editor-trigger,
+.mock-editor .js-folded-editor-trigger {
   margin: 5px 4px;
   display: block;
 }
@@ -2022,15 +2022,17 @@ ul.js-related-tags li {
   border: none;
   padding: 0;
   height: 0;
+  overflow: hidden;
 }
 .folded-editor.unfolded {
   border: none;
   height: auto;
+  overflow: initial;
 }
 .folded-editor.unfolded .editor-proper {
   display: block;
 }
-a.question-body-trigger {
+a.js-question-body-trigger {
   color: #525252;
   display: block;
   margin-bottom: 8px;
@@ -2291,6 +2293,9 @@ tr.mceLast {
   background-position: 4px 0;
   margin-bottom: -5px !important;
   padding-left: 24px !important;
+}
+.question-page .js-text-error {
+  margin-bottom: 4px;
 }
 .question-page h1 {
   display: inline-block;

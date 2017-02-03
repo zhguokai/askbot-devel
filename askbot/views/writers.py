@@ -668,6 +668,9 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
                 )
                 return HttpResponseRedirect(url_utils.get_login_url())
 
+    #TODO: look into an issue here is that backend form validation errors
+    # won't be displayed, we are fully relying on the prevalidation
+    # in the js
     return HttpResponseRedirect(question.get_absolute_url())
 
 def __generate_comments_json(obj, user, avatar_size):

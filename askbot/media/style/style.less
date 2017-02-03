@@ -2148,7 +2148,7 @@ ul.js-related-tags li {
         -moz-box-shadow: 0 0 0 0;
         -webkit-box-shadow: 0 0 0 0;
     }
-    p.prompt {
+    .js-folded-editor-trigger {
         margin: 5px 4px;
         display: block;
     }
@@ -2157,16 +2157,18 @@ ul.js-related-tags li {
     border: none;
     padding: 0;
     height: 0;
+    overflow: hidden;
 }
 .folded-editor.unfolded {
     border: none;
     height: auto;
+    overflow: initial;
     .editor-proper {
         display: block;
     }
 }
 
-a.question-body-trigger {
+a.js-question-body-trigger {
     color: #525252;
     display: block;
     margin-bottom: 8px;
@@ -2440,6 +2442,10 @@ tr.mceLast {
 }
 
 .question-page {
+
+    .js-text-error {
+        margin-bottom: 4px;
+    }
 
     h1 {
         display: inline-block;

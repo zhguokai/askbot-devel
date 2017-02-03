@@ -165,9 +165,15 @@ askbot.validators.questionDetailsValidator = function (text) {
 };
 
 askbot.validators.answerValidator = function (text) {
-    text = $.trim(text);
     var minLength = askbot.settings.minAnswerBodyLength;
-    if (minLength && (text.length < minLength)) {
+    var textLength
+    text = $.trim(text);
+    if (askbot.settings.editorType == 'tinymce') {
+        textLength = $('<p>' + text + '</p>').text().length;
+    } else {
+        textLength = text.length;
+    }
+    if (minLength && (textLength < minLength)) {
         throw interpolate(
                 ngettext(
                     '%(answer)s must be > %(length)s character',
@@ -1399,7 +1405,7 @@ var questionRetagger = (function () {
                     showMessage(tagsList, json.message);
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 showMessage(tagsList, gettext('sorry, something is not right here'));
                 cancelRetag();
             }
@@ -2603,7 +2609,7 @@ EditCommentForm.prototype.getSaveHandler = function () {
                 me.detach();
                 commentsElement.trigger('askbot.afterCommentSubmitSuccess');
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 me._comment.getElement().show();
                 showMessage(me._comment.getElement(), xhr.responseText, 'after');
                 me._comment.setDraftStatus(false);
@@ -3250,7 +3256,7 @@ QASwapper.prototype.decorate = function (element) {
 
 QASwapper.prototype.startSwapping = function () {
     /* jshint loopfunc:true */
-    while (true) {
+    for (;;) {
         var title = prompt(gettext('Please enter question title (>10 characters)'));
         if (title.length >= 10) {
             var data = {new_title: title, answer_id: this._ans_id};
@@ -3269,114 +3275,6 @@ QASwapper.prototype.startSwapping = function () {
     }
     /* jshint loopfunc:false */
 };
-
-/**
- * @constructor
- * An element that encloses an editor and everything inside it.
- * By default editor is hidden and user sees a box with a prompt
- * suggesting to make a post.
- * When user clicks, editor becomes accessible.
- */
-var FoldedEditor = function () {
-    WrappedElement.call(this);
-};
-inherits(FoldedEditor, WrappedElement);
-
-FoldedEditor.prototype.getEditor = function () {
-    return this._editor;
-};
-
-FoldedEditor.prototype.getEditorInputId = function () {
-    return this._element.find('textarea').attr('id');
-};
-
-FoldedEditor.prototype.onAfterOpenHandler = function () {
-    var editor = this.getEditor();
-    if (editor) {
-        editor.start();
-        editor.focus(function(){ editor.putCursorAtEnd()});
-    }
-};
-
-FoldedEditor.prototype.getOpenHandler = function () {
-    var editorBox = this._editorBox;
-    var promptBox = this._prompt;
-    var externalTrigger = this._externalTrigger;
-    var me = this;
-    return function () {
-        if (askbot.data.userIsReadOnly === true) {
-            notify.show(gettext('Sorry, you have only read access'));
-        } else {
-            promptBox.hide();
-            editorBox.show();
-            var element = me.getElement();
-            element.addClass('unfolded');
-
-            /* make the editor one shot - once it unfolds it's
-            * not accepting any events
-            */
-            element.unbind('click');
-            element.unbind('focus');
-
-            /* this function will open the editor
-            * and focus cursor on the editor
-            */
-            me.onAfterOpenHandler();
-
-            /* external trigger is a clickable target
-            * placed outside of the this._element
-            * that will cause the editor to unfold
-            */
-            if (externalTrigger) {
-                var label = me.makeElement('label');
-                label.html(externalTrigger.html());
-                //set what the label is for
-                label.attr('for', me.getEditorInputId());
-                externalTrigger.replaceWith(label);
-            }
-        }
-    };
-};
-
-FoldedEditor.prototype.setExternalTrigger = function (element) {
-    this._externalTrigger = element;
-};
-
-FoldedEditor.prototype.decorate = function (element) {
-    this._element = element;
-    this._prompt = element.find('.prompt');
-    this._editorBox = element.find('.editor-proper');
-
-    var editorType = askbot.settings.editorType;
-    var editor;
-
-    if (editorType === 'tinymce') {
-        editor = new TinyMCE();
-        editor.setId('editor');
-    } else if (editorType === 'markdown') {
-        editor = new WMD({'minLines': 10});
-        editor.setIdSeed('');
-    } else {
-        throw 'wrong editor type "' + editorType + '"'
-    }
-    editor.setTextareaName('text');
-
-    var placeHolder = element.find('.editor-placeholder');
-    editor.setText(placeHolder.data('draftAnswer'));
-    placeHolder.append(editor.getElement());
-    //editor.start();
-
-    this._editor = editor;
-
-    var openHandler = this.getOpenHandler();
-    element.click(openHandler);
-    element.focus(openHandler);
-    if (this._externalTrigger) {
-        this._externalTrigger.click(openHandler);
-    }
-};
-
-
 
 /**
  * @constructor
@@ -5045,7 +4943,7 @@ CategorySelectorLoader.prototype.getSaveHandler = function () {
                     showMessage(me.getElement(), json.message);
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr) {
                 showMessage(tagsDiv, 'sorry, something is not right here');
                 cancelRetag();
             }

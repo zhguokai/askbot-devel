@@ -181,6 +181,7 @@ def get_text_from_html(html_text):
     retains links and references to images and line breaks.
     """
     soup = BeautifulSoup(html_text, 'html5lib')
+    return soup.text
 
     #replace <a> links with plain text
     links = soup.find_all('a')

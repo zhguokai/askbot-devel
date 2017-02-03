@@ -379,9 +379,14 @@ class EditorField(forms.CharField):
         self.post_term_name = _('post')
 
     def clean(self, value):
-        if value is None:
-            value = ''
-        if len(value) < self.min_length:
+        value = value or ''
+
+        if askbot_settings.EDITOR_TYPE == 'tinymce':
+            text_length = len(strip_tags(value).strip())
+        else:
+            text_length = len(value.strip())
+
+        if text_length < self.min_length:
             msg = ungettext_lazy(
                 '%(post)s content must be > %(count)d character',
                 '%(post)s content must be > %(count)d characters',
@@ -1274,18 +1279,6 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
 
         if should_use_recaptcha(user):
             self.fields['recaptcha'] = AskbotReCaptchaField()
-
-    def has_data(self):
-        """True if form is bound or has inital data"""
-        if self.is_bound:
-            return True
-
-        initial_text = self.initial.get('text', '')
-        if askbot_settings.EDITOR_TYPE == 'tinymce':
-            stripped_text = strip_tags(initial_text).strip()
-        else:
-            stripped_text = initial_text.strip()
-        return len(stripped_text) > 0
 
     #People can override this function to save their additional fields to db
     def save(self, question, user, ip_addr=None):
