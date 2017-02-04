@@ -23,7 +23,7 @@ Your pull requests are very welcome, **but please read the few paragraphs below*
 
 **Obvious bug fixes will be merged quickly**, however less obvious cases should include a clear description of how to reproduce the bug. Complex cases must be accompanied with the new unit tests.
 
-**Before suggesting PR's for new features - please first discuss them in the "Issues section"**. We really appreciate your efforts, but PR's may not be accepted and it might be disappointing - so please communicate. The bandwidth for the testing is valuable and limited and we would like to avoid "easter eggs" and the feature overload.
+**Before suggesting PR's for new features - please first discuss those features in the "Issues section"**. We really appreciate your efforts, but PR's may not be accepted and it might be disappointing - so please communicate. The bandwidth for the testing is valuable and limited and we would like to avoid "easter eggs" and the feature overload.
 
 **Please always use feature branches for the PR's**, multiple feature/bugfix PR's are harder to understand and less likely to be accepted.
 
