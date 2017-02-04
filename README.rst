@@ -23,11 +23,11 @@ Your pull requests are very welcome, **but please read the few paragraphs below*
 
 **Obvious bug fixes will be merged quickly**, however less obvious cases should include a clear description of how to reproduce the bug. Complex cases must be accompanied with the new unit tests.
 
-Everyone likes good geatures, but **feature PR's may be not accepted, unless discussed beforehand in the "Issues" section or by email support@askbot.com or at the Askbot support forum**. Of course you can do anything you want in your fork, but please don't make an assumption that your giant glorious PR will be used, due to limited bandwidth for testing and to avoid "easter eggs" and the feature overload.
+**Before suggesting PR's for new features - please first discuss them in the "Issues section"**. We really appreciate your efforts, but PR's may not be accepted and it might be disappointing - so please communicate. The bandwidth for the testing is valuable and limited and we would like to avoid "easter eggs" and the feature overload.
 
 **Please always use feature branches for the PR's**, multiple feature/bugfix PR's are harder to understand and less likely to be accepted.
 
-**Translators: DO NOT use git to contribute translations!!!** instead - translate at https://www.transifex.com/projects/p/askbot/.
+**Translators: please translate at the Transifex, not via github!!!** https://www.transifex.com/projects/p/askbot/.
 
 All documentation is in the directory askbot/doc
 
