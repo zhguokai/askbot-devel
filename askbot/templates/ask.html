@@ -25,9 +25,15 @@
     <script type="text/javascript" src="{{ '/js/utils/toggle.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/js/utils/expander_toggle.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/editors/folded_editor.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/forms/form.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/forms/ask_form.js'|media }}"></script>
     {% endcompress %}
     {% if settings.EDITOR_TYPE == 'markdown' %}
         {% include "meta/markdown_javascript.html" %}
+    {% elif settings.EDITOR_TYPE == 'tinymce' and editor_is_folded %}
+        {# if unfolded, this is loaded by the form media #}
+        {% include "editors/tinymce_scripts.html" %}
     {% endif %}
     {% include "meta/editor_data.html" %}
     {% if mandatory_tags %}
@@ -40,12 +46,12 @@
         askbot['urls']['saveDraftQuestion'] = '{% url save_draft_question %}';
         askbot['messages']['userNamePrompt'] = '{% trans %}User name:{% endtrans %}';
         (function() {
-            var bodyTriggerLink = $('.question-body-trigger');
-            if (bodyTriggerLink.length === 1) {
-                var foldedEditor = new FoldedEditor();
-                foldedEditor.setExternalTrigger(bodyTriggerLink);
-                foldedEditor.decorate($('.folded-editor'));
+            var form = $('.js-ask-form');
+            if (form.length == 1) {
+                var askForm = new AskForm();
+                askForm.decorate(form);
             }
+            
         })();
         $(document).ready(function(){
             //set current module button style
@@ -69,7 +75,6 @@
 
             {{ macros.tag_autocomplete_js(id = '#id_tags') }}
 
-            setupFormValidation($("#fmask"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
             lanai.highlightSyntax();
 
             if (askbot['data']['userIsAuthenticated']) {

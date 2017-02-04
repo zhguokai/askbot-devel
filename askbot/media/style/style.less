@@ -1940,7 +1940,7 @@ ul.js-related-tags li {
     font-size:24px;
 }
 
-#fmask{
+.js-ask-form {
     margin-bottom:30px;
     width:100%;
 }
@@ -2152,7 +2152,7 @@ ul.js-related-tags li {
         -moz-box-shadow: 0 0 0 0;
         -webkit-box-shadow: 0 0 0 0;
     }
-    p.prompt {
+    .js-folded-editor-trigger {
         margin: 5px 4px;
         display: block;
     }
@@ -2161,16 +2161,18 @@ ul.js-related-tags li {
     border: none;
     padding: 0;
     height: 0;
+    overflow: hidden;
 }
 .folded-editor.unfolded {
     border: none;
     height: auto;
+    overflow: initial;
     .editor-proper {
         display: block;
     }
 }
 
-a.question-body-trigger {
+a.js-question-body-trigger {
     color: #525252;
     display: block;
     margin-bottom: 8px;
@@ -2444,6 +2446,10 @@ tr.mceLast {
 }
 
 .question-page {
+
+    .js-text-error {
+        margin-bottom: 4px;
+    }
 
     h1 {
         display: inline-block;
@@ -4058,6 +4064,10 @@ ul.errorlist {
     color: #900;
     font-weight: normal;
     vertical-align: bottom;
+}
+
+.ask-page .js-error ul.errorlist {
+    font-size: 16px;
 }
 
 label + .form-error {

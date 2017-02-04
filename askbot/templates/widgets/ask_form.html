@@ -1,26 +1,47 @@
 {% import "macros.html" as macros %}
-<form id="fmask" action="{% url "ask" %}" method="post" >{% csrf_token %}
+<form class="js-ask-form" action="{% url "ask" %}" method="post"
+    data-validated-fields="title,text"
+    data-title-validator="askbot.validators.titleValidator"
+    data-text-validator="askbot.validators.questionDetailsValidator"
+    >{% csrf_token %}
     <div class="form-item form-group ask-form-bar">
-        <label for="id_title">{{ form.title.help_text }}</label>
-        {% if form.title.errors %}
-            <span class="form-error">{{ form.title.errors }}</span>
-        {% endif %}
+        <label for="id_title">{{ form.title.label }}</label>
+        <div class="js-title-error js-error">
+            {% if form.title.errors %}
+                {{ form.title.errors }}
+            {% endif %}
+        </div>
         <div id="askFormBar" class="search-bar">
             <input id="id_title" class="questionTitleInput" name="title" autocomplete="off"
                 value="{% if form.initial.title %}{{form.initial.title|escape}}{% endif %}"/>
         </div>
     </div>
 
+    {% set text_field_id = form.text.field.widget.attrs.id %}
     {% if editor_is_folded %}
-        <a class="question-body-trigger"><label for="editor">{{ form.text.label }}</label></a>
-    {% else %}
-        <label for="editor">{{ form.text.label }}</label>
-    {% endif %}
-    <div class="folded-editor{% if editor_is_folded == False %} unfolded{% endif %}">
-        <div class="editor-proper">
-            {{ macros.edit_post(form, settings) }}
+        <a class="js-question-body-trigger">{{ form.text.label }}</a>
+        <div class="folded-editor">
+            <label for="{{ text_field_id }}" 
+                class="js-text-label">{{ form.text.label }}</label>
+            <div class="js-text-error js-error">
+                {% if form.text.errors %}
+                    {{ form.text.errors }}
+                {% endif %}
+            </div>
+            <div class="editor-proper">
+                <div class="editor-placeholder"></div>
+            </div>
         </div>
-    </div>
+    {% else %}
+        <label for="{{ text_field_id }}"
+            class="js-text-label">{{ form.text.label }}</label>
+        <div class="js-text-error js-error">
+            {% if form.text.errors %}
+                {{ form.text.errors }}
+            {% endif %}
+        </div>
+        {{ macros.edit_post(form, settings) }}
+    {% endif %}
 
     {% include "widgets/tags_field.html" %}
     
