@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.html import strip_tags
 from askbot.conf import settings as askbot_settings
+from askbot.utils.markup import convert_text
 
 class BaseQuerySetManager(models.Manager):
     """Base class for chainable custom filters on the query sets.
@@ -63,6 +65,13 @@ class DraftContent(models.Model):
         app_label = 'askbot'
 
     def get_text(self):
-        if self.text.strip() == '<br data-mce-bogus="1">':
+        # Todo: test convert the text and if 
+        # resulting html has no content - clear the text
+        # this will strip bogus content that might be created
+        # by the rich text editors and remove the flashing
+        # bogus html upon loading of the editors.
+        test_html = convert_text(self.text)
+        test_text = strip_tags(test_html).strip()
+        if test_text == '':
             return ''
         return self.text

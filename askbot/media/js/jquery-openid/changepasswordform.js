@@ -68,9 +68,6 @@ ChangePasswordForm.prototype.getSubmitHandler = function () {
                     me.clearErrors();
                     me.showErrors(data.errors);
                 }
-            },
-            error: function (data) {
-                debugger;
             }
         });
         return false;
