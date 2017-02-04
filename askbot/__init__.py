@@ -51,9 +51,6 @@ REQUIREMENTS = {
     #'stopforumspam': 'stopforumspam'
 }
 
-if platform.system() != 'Windows':
-    REQUIREMENTS['lamson'] = 'Lamson<=1.3.4'
-
 #necessary for interoperability of django and coffin
 try:
     from askbot import patches
