@@ -1,6 +1,6 @@
-===================
-Askbot - Q&A forum
-===================
+====================================
+Askbot - a Django Q&A forum platform
+====================================
 
 This is Askbot project - open source Q&A system, like StackOverflow, Yahoo Answers and some others.
 Askbot is based on code of CNPROG, originally created by Mike Chen 
