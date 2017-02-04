@@ -1085,6 +1085,10 @@ def run_startup_tests():
     try_import('requirements', 'requirements-parser')
     test_modules()
 
+    if 'test' in sys.argv:
+        try_import('lamson', 'Lamson', True)
+        try_import('django_lamson', 'django-lamson', True)
+
     #todo: refactor this when another test arrives
     test_versions()
     test_lang_mode()
