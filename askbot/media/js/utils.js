@@ -117,8 +117,6 @@ var copyAltToTitle = function (sel) {
 var runMathJax = function () {
     if (typeof MathJax != 'undefined') {
         MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
-    } else {
-        console.log('Could not load mathjax');
     }
 };
 

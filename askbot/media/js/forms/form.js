@@ -23,7 +23,7 @@ Form.prototype.formHasErrors = function () {
         if (this.fieldHasErrors(field)) {
             return true;
         }
-    };
+    }
     return false;
 };
 
@@ -81,10 +81,10 @@ Form.prototype.decorateField = function (fieldName) {
     var input = element.find('input[name="' + fieldName + '"]');
     if (input.length == 0) {
         input = element.find('textarea[name="' + fieldName + '"]');
-    };
+    }
     if (input.length == 0) {
         input = element.find('select[name="' + fieldName + '"]');
-    };
+    }
     this._inputs[fieldName] = input;
 
     var me = this;

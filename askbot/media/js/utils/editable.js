@@ -157,7 +157,7 @@ Editable.prototype.saveText = function () {
     this.setState('display');
     
     var data = this._saveTextUrlParams;
-    var editorText = this._editor.getText();
+    editorText = this._editor.getText();
     data[this._saveTextParamName] = editorText;
     var validatedParamName = this._validatedTextParamName;
 
@@ -212,6 +212,7 @@ Editable.prototype.decorate = function(element){
             <button id="js-edit-btn-<something>">{% trans %}edit{% endtrans %}</button>
         </div>
     */
+    var parsed, editor;
     this._element = element;
     //validate that id starts with "js-" and is longer than 3 chars
     var id = element.attr('id');
@@ -241,7 +242,7 @@ Editable.prototype.decorate = function(element){
     //parse these two urls and separate url and the params
     var getTextUrl = element.data('getTextUrl');
     if (getTextUrl) {
-        var parsed = parseUrl(element.data('getTextUrl'));
+        parsed = parseUrl(element.data('getTextUrl'));
         this._getTextUrl = parsed[0];
         this._getTextUrlParams = parsed[1];
     } else {
@@ -249,7 +250,7 @@ Editable.prototype.decorate = function(element){
         this._getTextUrlParams = undefined;
     }
 
-    var parsed = parseUrl(element.data('saveTextUrl'));
+    parsed = parseUrl(element.data('saveTextUrl'));
     this._saveTextUrl = parsed[0];
     this._saveTextUrlParams = parsed[1];
 
@@ -273,7 +274,7 @@ Editable.prototype.decorate = function(element){
     var minLines = element.data('minLines') || 1;
     this._editorType = editorType;
     if (editorType === 'markdown') {
-        var editor = new WMD({'minLines': minLines});
+        editor = new WMD({'minLines': minLines});
         if (this._useCompactEditor) {
             editor.setEnabledButtons('bold italic link code ol ul');
         }
@@ -281,18 +282,18 @@ Editable.prototype.decorate = function(element){
         editor.setPreviewerEnabled(preview);
     } else if (editorType === 'tinymce') {
         if (this._useCompactEditor) {
-            var editor = new TinyMCE({//override defaults
+            editor = new TinyMCE({//override defaults
                 theme_advanced_buttons1: 'bold, italic, |, link, |, numlist, bullist',
                 theme_advanced_buttons2: '',
                 theme_advanced_path: false,
                 plugins: ''
             });
         } else {
-            var editor = new TinyMCE();
+            editor = new TinyMCE();
         }
         editor.setId('tinyMCE-' + this._id);
     } else {
-        var editor = new SimpleEditor({'minLines': minLines});
+        editor = new SimpleEditor({'minLines': minLines});
     }
     this._editor = editor;
     editorBox.append(editor.getElement());
