@@ -246,6 +246,7 @@ AutoCompleter.prototype.setEventHandlers = function () {
                     return false;
                 } else {
                     self.activate();
+                    break;
                 }
             default:
                 self.activate();

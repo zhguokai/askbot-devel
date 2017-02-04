@@ -129,8 +129,7 @@ GroupDropdown.prototype._add_group_handler = function () {
                 notify.show(data.message);
                 return false;
             }
-        },
-        error: function () {console.log('error');}
+        }
     });
 };
 

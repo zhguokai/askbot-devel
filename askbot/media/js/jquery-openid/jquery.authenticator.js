@@ -139,13 +139,14 @@ $.fn.authenticator = function () {
         var username = $('#id_username');
         var password = $('#id_password');
         var ok = true;
+        var text;
 
         if (username.val().length < 1) {
             username.focus();
             if (askbot.settings.useLdapForPasswordLogin) {
-                var text = gettext('enter username');
+                text = gettext('enter username');
             } else {
-                var text = gettext('enter username or email');
+                text = gettext('enter username or email');
             }
             setError(username, text);
             ok = false;
@@ -235,8 +236,7 @@ $.fn.authenticator = function () {
             password_input_fields.hide();
         }
         reset_password_input_fields();
-        if (askbot.data.userIsAuthenticated === false) {
-        } else {
+        if (askbot.data.userIsAuthenticated !== false) {
             if (existing_login_methods !== null) {
                 existing_login_methods_div.hide();
                 insert_login_list_enabler();

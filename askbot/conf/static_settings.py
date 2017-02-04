@@ -53,6 +53,7 @@ class TinyMCESettings(AppConf):
         'forced_root_block': '',
         'mode' : 'textareas',
         'oninit': 'TinyMCE.onInitHook',
+        'onchange_callback': 'TinyMCE.onChangeHook',
         'plugins': 'askbot_imageuploader,askbot_attachment',
         'theme_advanced_toolbar_location' : 'top',
         'theme_advanced_toolbar_align': 'left',

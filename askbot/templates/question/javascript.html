@@ -30,6 +30,9 @@
 <script type="text/javascript" src="{{ '/js/utils/expander_toggle.js'|media }}"></script>
 <script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
 <script type="text/javascript" src="{{ '/js/utils/editable.js'|media }}"></script>
+<script type="text/javascript" src="{{ '/js/forms/form.js'|media }}"></script>
+<script type="text/javascript" src="{{ '/js/editors/folded_editor.js'|media }}"></script>
+<script type="text/javascript" src="{{ '/js/forms/answer_form.js'|media }}"></script>
 {% endcompress %}
 <script type="text/javascript">
     // define reputation needs for comments
@@ -134,17 +137,10 @@
             $('#previewer').toggle();
             $('#pre-collapse').text(txt);
         });
-        setupFormValidation(
-            $("#fmanswer"),
-            CPValidator.getAnswerFormRules(),
-            CPValidator.getAnswerFormMessages()
-        );
-    }
-    (function() {
-        var editorBox = $('.folded-editor');
-        if (editorBox.length) {
-            var foldedEditor = new FoldedEditor();
-            foldedEditor.decorate(editorBox);
+        var formElement = $('.js-answer-form');
+        if (formElement.length) {
+            var answerForm = new AnswerForm();
+            answerForm.decorate(formElement);
         }
-    })();
+    }
 </script>

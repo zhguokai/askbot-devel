@@ -14,13 +14,16 @@
     {{ settings.WORDS_INSTRUCTION_TO_GIVE_ANSWER|safe }}
 </p>
 <div class="folded-editor" tabindex="6">
-    <p class="prompt"><a>{{ settings.WORDS_ADD_ANSWER|escape }}</a></p>
+    <p class="js-folded-editor-trigger"><a>{{ settings.WORDS_ADD_ANSWER|escape }}</a></p>
     <div class="editor-proper">
         <form id="fmanswer"
+            class="js-answer-form"
             action="{% url answer question.id %}"
             method="post"
+            data-validated-fields="text"
+            data-text-validator="askbot.validators.answerValidator"
             >{% csrf_token %}
-
+            <div class="js-error js-text-error"></div>
             {% set draft_answer=answer.text.value() %}
             <div class="form-group editor-placeholder"
                 {% if draft_answer %}data-draft-answer="{{ draft_answer|escape }}"{% endif %}>
