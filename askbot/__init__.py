@@ -12,7 +12,7 @@ VERSION = (0, 7, 58)
 #keys are module names used by python imports,
 #values - the package qualifier to use for pip
 REQUIREMENTS = {
-    'appconf': 'appconf',
+    'appconf': 'django-appconf',
     'akismet': 'akismet<=0.2.0',
     'avatar': 'django-avatar==2.0',
     'bs4': 'beautifulsoup4<=4.4.1',
