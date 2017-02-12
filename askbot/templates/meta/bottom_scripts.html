@@ -25,9 +25,11 @@
     {% if settings.MULTILINGUAL %}
         askbot['urls']['translateUrl'] = '{% url "translate_url" %}';
     {% endif %}
-    askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" %}';
-    askbot['urls']['ask'] = '{% url "ask" %}';
-	askbot['urls']['questions'] = '{% url "questions" %}';
+    {% if space_slug %}
+        askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" %}';
+        askbot['urls']['ask'] = '{% url "ask" space_slug %}';
+        askbot['urls']['questions'] = '{% url "questions" space_slug %}';
+    {% endif %}
     askbot['settings']['groupsEnabled'] = {{ settings.GROUPS_ENABLED|as_js_bool }};
     askbot['settings']['static_url'] = '{{ settings.STATIC_URL }}';
     askbot['settings']['minSearchWordLength'] = {{ min_search_word_length }};

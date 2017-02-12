@@ -12,6 +12,7 @@ import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot.utils.functions import strip_plus
+from askbot.models.space import get_space
 
 
 def extract_matching_token(text, regexes):
@@ -86,12 +87,13 @@ class SearchState(object):
 
     @classmethod
     def get_empty(cls):
-        return cls(scope=None, sort=None, query=None, tags=None, author=None, page=None, page_size=None, user_logged_in=None)
+        return cls(space=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, page_size=None, user_logged_in=None)
 
     def __init__(self,
-        scope=None, sort=None, query=None, tags=None,
+        space=None, scope=None, sort=None, query=None, tags=None,
         author=None, page=None, page_size=None, user_logged_in=False
     ):
+        self.space = get_space(space)
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
             if user_logged_in:
@@ -142,13 +144,11 @@ class SearchState(object):
         default_page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
         self.page_size = int(page_size) if page_size else default_page_size
 
-        self._questions_url = urlresolvers.reverse('questions')
-
     def __str__(self):
-        return self.query_string()
+        return self.full_url()
 
     def full_url(self):
-        return self._questions_url + self.query_string()
+        return '/' + self.space.slug + '/' + self.query_string()
 
     def ask_query_string(self): # TODO: test me
         """returns string to prepopulate title field on the "Ask your question" page"""
@@ -158,7 +158,7 @@ class SearchState(object):
         return '?' + urlencode({'title': ask_title})
 
     def full_ask_url(self):
-        return urlresolvers.reverse('ask') + self.ask_query_string()
+        return urlresolvers.reverse('ask', kwargs={'space': self.space.slug}) + self.ask_query_string()
 
     def unified_tags(self):
         "Returns tags both from tag selector and extracted from query"
@@ -227,10 +227,6 @@ class SearchState(object):
             ss.query_tags = ss.query_tags[:]
         if ss.query_users:
             ss.query_users = ss.query_users[:]
-        #ss.query_title = self.query_title
-
-        #ss._questions_url = self._questions_url
-
         return ss
 
     def add_tag(self, tag):

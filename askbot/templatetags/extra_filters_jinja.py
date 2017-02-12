@@ -390,6 +390,8 @@ def absolute_value(number):
 
 @register.filter
 def get_empty_search_state(unused):
+    #todo: get rid of this
+    return None
     from askbot.search.state_manager import SearchState
     return SearchState.get_empty()
 

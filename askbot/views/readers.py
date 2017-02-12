@@ -40,6 +40,7 @@ from askbot.forms import GetUserItemsForm
 from askbot.forms import ShowTagsForm
 from askbot.forms import ShowQuestionForm
 from askbot.models.post import MockPost
+from askbot.models.space import get_space, get_primary_space
 from askbot.models.tag import Tag
 from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.startup_procedures import domain_is_bad
@@ -67,7 +68,8 @@ from askbot.models import Post, Vote
 def index(request):#generates front page - shows listing of questions sorted in various ways
     """index view mapped to the root url of the Q&A site
     """
-    return HttpResponseRedirect(reverse('questions'))
+    space = get_primary_space().slug
+    return HttpResponseRedirect(reverse('questions', kwargs={'space': space}))
 
 def questions(request, **kwargs):
     """
@@ -77,6 +79,10 @@ def questions(request, **kwargs):
     #before = timezone.now()
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
+
+    space = get_space(kwargs['space'])
+    if not space:
+        raise Http404
 
     search_state = SearchState(
                     user_logged_in=request.user.is_authenticated(),
@@ -215,6 +221,7 @@ def questions(request, **kwargs):
         #to allow extra context processor to work
         ajax_data['tags'] = related_tags
         ajax_data['interesting_tag_names'] = None
+        ajax_data['space_slug'] = space.slug
         ajax_data['threads'] = page
         extra_context = context.get_extra(
                                     'ASKBOT_QUESTIONS_PAGE_EXTRA_CONTEXT',
@@ -230,7 +237,6 @@ def questions(request, **kwargs):
         return HttpResponse(simplejson.dumps(ajax_data), content_type='application/json')
 
     else: # non-AJAX branch
-
         template_data = {
             'active_tab': 'questions',
             'author_name' : meta_data.get('author_name',None),
@@ -252,6 +258,7 @@ def questions(request, **kwargs):
             'show_sort_by_relevance': conf.should_show_sort_by_relevance(),
             'search_tags' : search_state.tags,
             'sort': search_state.sort,
+            'space_slug': space.slug,
             'tab_id' : search_state.sort,
             'tags' : related_tags,
             'tag_list_type' : tag_list_type,

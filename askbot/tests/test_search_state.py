@@ -7,6 +7,7 @@ from django.core import urlresolvers
 class SearchStateTests(AskbotTestCase):
     def _ss(self, query=None, tags=None):
         return SearchState(
+            space='questions',
             scope=None,
             sort=None,
             query=query,
@@ -26,6 +27,7 @@ class SearchStateTests(AskbotTestCase):
 
     def test_buggy_selectors(self):
         ss = SearchState(
+            space='questions',
             scope='blah1',
             sort='blah2',
             query=None,
@@ -44,6 +46,7 @@ class SearchStateTests(AskbotTestCase):
 
     def test_all_valid_selectors(self):
         ss = SearchState(
+            space='questions',
             scope='unanswered',
             sort='age-desc',
             query=' alfa',
@@ -64,6 +67,7 @@ class SearchStateTests(AskbotTestCase):
 
     def test_edge_cases_1(self):
         ss = SearchState(
+            space='questions',
             scope='followed', # this is not a valid choice for non-logger users
             sort='age-desc',
             query=' alfa',
@@ -83,6 +87,7 @@ class SearchStateTests(AskbotTestCase):
         )
 
         ss = SearchState(
+            space='questions',
             scope='followed',
             sort='age-desc',
             query=' alfa',
@@ -106,6 +111,7 @@ class SearchStateTests(AskbotTestCase):
         askbot.conf.should_show_sort_by_relevance = lambda: True # monkey patch
 
         ss = SearchState(
+            space='questions',
             scope='all',
             sort='relevance-desc',
             query='hejho',
@@ -121,6 +127,7 @@ class SearchStateTests(AskbotTestCase):
         )
 
         ss = SearchState(
+            space='questions',
             scope='all',
             sort='relevance-desc', # this is not a valid choice for empty queries
             query=None,
@@ -138,6 +145,7 @@ class SearchStateTests(AskbotTestCase):
         askbot.conf.should_show_sort_by_relevance = lambda: False # monkey patch
 
         ss = SearchState(
+            space='questions',
             scope='all',
             sort='relevance-desc', # this is also invalid for db-s other than Postgresql
             query='hejho',
@@ -216,6 +224,7 @@ class SearchStateTests(AskbotTestCase):
         # 2. lists are cloned so that change in the copy doesn't affect the original
 
         ss = SearchState(
+            space='questions',
             scope='unanswered',
             sort='votes-desc',
             query='hejho #tag1 [tag: tag2] @user @user2 title:"what is this?"',
@@ -257,8 +266,8 @@ class SearchStateTests(AskbotTestCase):
         self.assertEqual(ss.query_title, 'what is this?')
         self.assertTrue(ss.query_title is ss2.query_title)
 
-        self.assertEqual(ss._questions_url, urlresolvers.reverse('questions'))
-        self.assertTrue(ss._questions_url is ss2._questions_url)
+        self.assertEqual(ss._base_url, urlresolvers.reverse('questions'))
+        self.assertTrue(ss._base_url is ss2._base_url)
 
     def test_deep_copy_2(self):
         # Regression test: a special case of deepcopy() when `tags` list is empty,
@@ -277,6 +286,7 @@ class SearchStateTests(AskbotTestCase):
 
     def test_prevent_dupped_tags(self):
         ss = SearchState(
+            space='questions',
             scope=None,
             sort=None,
             query=None,

@@ -286,7 +286,7 @@
         <{% if is_link %}a{% else %}span{% endif %}
             class="js-tag-name{% if css_class %} {{ css_class }}{% endif %}"
             rel="tag"
-            {% if is_link and not tag.endswith('*') %}
+            {% if search_state and is_link and not tag.endswith('*') %}
             href="{{ search_state.add_tag(tag).full_url() }}"
             {% endif %}
             data-tag-name="{{ tag|escape }}"

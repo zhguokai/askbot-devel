@@ -29,8 +29,8 @@ sitemaps = {
     'questions': QuestionsSitemap
 }
 
-MAIN_PAGE_BASE_URL = settings.ASKBOT_MAIN_PAGE_BASE_URL
-QUESTION_PAGE_BASE_URL = settings.ASKBOT_QUESTION_PAGE_BASE_URL
+MAIN_PAGE_BASE_URL = pgettext('urls', 'questions') + '/'
+QUESTION_PAGE_BASE_URL = pgettext('urls', 'question') + '/'
 
 APP_PATH = os.path.dirname(__file__)
 urlpatterns = patterns(
@@ -39,7 +39,7 @@ urlpatterns = patterns(
     # BEGIN Questions (main page) urls. All this urls work both normally and through ajax
     url(
         # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
-        (r'^%s' % MAIN_PAGE_BASE_URL.strip('/') +
+        (r'^%s' % r'(?P<space>\w+)' + 
             r'(%s)?' % r'/scope:(?P<scope>\w+)' +
             r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
             r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
@@ -285,7 +285,7 @@ urlpatterns = patterns(
         name='get_post_html'
     ),
     url(
-        r'^%s%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'ask/')),
+        r'^%s%s$' % (r'(?P<space>\w+)/', pgettext('urls', 'ask/')),
         views.writers.ask,
         name='ask'
     ),

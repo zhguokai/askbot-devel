@@ -18,7 +18,6 @@ class AskbotStaticSettings(AppConf):
     EXTRA_SKINS_DIR = None #None or path to directory with skins
     IP_MODERATION_ENABLED = False
     LANGUAGE_MODE = 'single-lang' # 'single-lang', 'url-lang' or 'user-lang'
-    MAIN_PAGE_BASE_URL = pgettext('urls', 'questions') + '/'
     MAX_UPLOAD_FILE_SIZE = 1024 * 1024 #result in bytes
     NEW_ANSWER_FORM = None # path to custom form class
     POST_RENDERERS = { # generators of html from source content
@@ -27,7 +26,6 @@ class AskbotStaticSettings(AppConf):
             'tinymce': 'askbot.utils.markup.tinymce_input_converter',
         }
 
-    QUESTION_PAGE_BASE_URL = pgettext('urls', 'question') + '/'
     SERVICE_URL_PREFIX = 's/' # prefix for non-UI urls
     SELF_TEST = True # if true - run startup self-test
     TRANSLATE_URL = True # set true to localize urls

@@ -60,6 +60,7 @@ from askbot.models.user_profile import (
                                 get_localized_profile_cache_key
                             )
 from askbot.models.reply_by_email import ReplyAddress
+from askbot.models.space import Space
 from askbot.models.badges import award_badges_signal, get_badge
 from askbot.models.repute import Award, Repute, Vote, BadgeData
 from askbot.models.widgets import AskWidget, QuestionWidget
@@ -4402,6 +4403,7 @@ __all__ = [
         'UserProfile',
 
         'ReplyAddress',
+        'Space',
 
         'ImportRun',
         'ImportedObjectInfo',

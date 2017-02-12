@@ -21,6 +21,7 @@ import askbot.conf.sidebar_question
 import askbot.conf.sidebar_profile
 import askbot.conf.leading_sidebar
 import askbot.conf.spam_and_moderation
+import askbot.conf.spaces
 import askbot.conf.user_settings
 import askbot.conf.group_settings
 import askbot.conf.feedback

@@ -1,3 +1,4 @@
+from askbot.conf import settings as askbot_settings
 import os
 import urlparse
 from django.core.urlresolvers import reverse
@@ -72,6 +73,13 @@ def urls_equal(url1, url2, ignore_trailing_slash=False):
 
     #test remaining items in the parsed url
     return purl1[3:] == purl2[3:]
+
+def get_home_url():
+    if askbot_settings.MAIN_PAGE_MODE == 'redirect':
+        from askbot.models.space import get_primary_space
+        space = get_primary_space()
+        return space.get_absolute_url()
+    return reverse('index')
 
 def get_login_url():
     """returns internal login url if
