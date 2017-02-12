@@ -49,8 +49,9 @@ settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_DESCRIPTION',
-        default=_('Open source question and answer forum written in '
-                  'Python and Django'),
+        default=_(
+            'Askbot is an open source question and '
+            'answer forum written in Python and Django'),
         description=_('Site description for the search engines')
     )
 )

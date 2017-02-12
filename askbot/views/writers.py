@@ -198,13 +198,15 @@ def import_data(request):
 @csrf.csrf_protect
 @decorators.check_authorization_to_post(ugettext_lazy('Please log in to make posts'))
 @decorators.check_spam('text')
-def ask(request):#view used to ask a new question
+def ask(request, space):#view used to ask a new question
     """a view to ask a new question
     gives space for q title, body, tags and checkbox for to post as wiki
 
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
+    space = get_object_or_404(models.Space, slug=space)
+
     if request.user.is_authenticated():
         if request.user.is_read_only():
             referer = request.META.get("HTTP_REFERER", reverse('questions'))
@@ -240,6 +242,7 @@ def ask(request):#view used to ask a new question
             if user:
                 try:
                     question = user.post_question(
+                        space=space,
                         title=title,
                         body_text=text,
                         tags=tagnames,
@@ -318,6 +321,7 @@ def ask(request):#view used to ask a new question
     data = {
         'active_tab': 'ask',
         'page_class': 'ask-page',
+        'space_slug': space.slug,
         'form' : form,
         'editor_is_folded': editor_is_folded,
         'mandatory_tags': models.tag.get_mandatory_tags(),

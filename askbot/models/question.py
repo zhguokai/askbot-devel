@@ -163,18 +163,21 @@ class ThreadManager(BaseQuerySetManager):
     def create(self, *args, **kwargs):
         raise NotImplementedError
 
-    def create_new(self, title, author, added_at, wiki, text, tagnames=None,
+    def create_new(self, title, author, added_at, wiki, text, 
+                   space=None, tagnames=None,
                    is_anonymous=False, is_private=False, group_id=None,
                    by_email=False, email_address=None, language=None,
                    ip_addr=None):
         """creates new thread"""
         # TODO: Some of this code will go to Post.objects.create_new
+        assert(space is not None)
 
         language = language or get_language()
         tagnames = clean_tagnames(tagnames)
 
         thread = super(ThreadManager, self).create(
-            title=title, tagnames=tagnames, last_activity_at=added_at,
+            title=title, space=space, tagnames=tagnames,
+            last_activity_at=added_at,
             last_activity_by=author, language_code=language)
 
         # TODO: code below looks like ``Post.objects.create_new()``
@@ -295,6 +298,7 @@ class ThreadManager(BaseQuerySetManager):
 
         # TODO: add a possibility to see deleted questions
         qs = self.filter(**primary_filter)
+        qs = self.filter(space=search_state.space)
 
         if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':
             qs = qs.filter(approved=True)
@@ -585,6 +589,7 @@ class ThreadToGroup(models.Model):
 
 class Thread(models.Model):
     title = models.CharField(max_length=300)
+    space = models.ForeignKey('Space', related_name='threads', null=True)
 
     tags = models.ManyToManyField('Tag', related_name='threads')
     groups = models.ManyToManyField(Group, through=ThreadToGroup,
@@ -1768,7 +1773,7 @@ class FavoriteQuestion(models.Model):
 
 
 class DraftQuestion(DraftContent):
-    """Provides space to solve unpublished draft
+    """Provides storage to solve unpublished draft
     questions. Contents is used to populate the Ask form.
     """
     author = models.ForeignKey(User)

@@ -2348,7 +2348,7 @@ class PostFlagReason(models.Model):
 
 
 class DraftAnswer(DraftContent):
-    """Provides space for draft answers,
+    """Provides storage for draft answers,
     note that unlike ``AnonymousAnswer`` the foreign key
     is going to ``Thread`` as it should.
     """

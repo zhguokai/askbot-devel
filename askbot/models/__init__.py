@@ -1962,6 +1962,7 @@ def user_restore_post(
 @reject_forbidden_phrases
 def user_post_question(
                     self,
+                    space=None,
                     title=None,
                     body_text='',
                     tags=None,
@@ -1993,6 +1994,7 @@ def user_post_question(
     #todo: split this into "create thread" + "add question", if text exists
     #or maybe just add a blank question post anyway
     thread = Thread.objects.create_new(
+                                    space=space,
                                     author=self,
                                     title=title,
                                     text=body_text,

@@ -1,0 +1,11 @@
+{% extends "one_column_body.html" %}
+{% block content %}
+    <div>{{ settings.SPACES_PAGE_DESCRIPTION }}</div>
+    <ul>
+        {% for space in spaces %}
+        <li>
+            <a href="{{ space.get_absolute_url() }}">{{ space.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

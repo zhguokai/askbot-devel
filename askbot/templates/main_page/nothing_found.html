@@ -19,13 +19,13 @@
             <a href="{{ search_state.remove_tags().full_url() }}">{% trans %}resetting tags{% endtrans %}</a>
         {% endif %}
         {% if search_state.query %}{% trans %} or {% endtrans %}
-            <a href="{% url questions space_name %}">{% trans %}starting over{% endtrans %}</a>
+            <a href="{% url questions space_slug %}">{% trans %}starting over{% endtrans %}</a>
         {% endif %}
     {% else %}
-        <a href="{% url questions space_name %}">{% trans %}starting over{% endtrans %}</a>
+        <a href="{% url questions space_slug %}">{% trans %}starting over{% endtrans %}</a>
     {% endif %}
 </p>
 {% endif %}
 <p class="evenMore" style="text-align:center">
-<a href="{% url ask %}">{{ settings.WORDS_PLEASE_FEEL_FREE_TO_ASK_YOUR_QUESTION|escape }}</a>
+<a href="{% url ask space_slug %}">{{ settings.WORDS_PLEASE_FEEL_FREE_TO_ASK_YOUR_QUESTION|escape }}</a>
 </p>

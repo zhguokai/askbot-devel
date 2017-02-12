@@ -40,7 +40,7 @@ from askbot.forms import GetUserItemsForm
 from askbot.forms import ShowTagsForm
 from askbot.forms import ShowQuestionForm
 from askbot.models.post import MockPost
-from askbot.models.space import get_space, get_primary_space
+from askbot.models.space import get_space, get_primary_space, Space
 from askbot.models.tag import Tag
 from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.startup_procedures import domain_is_bad
@@ -68,8 +68,17 @@ from askbot.models import Post, Vote
 def index(request):#generates front page - shows listing of questions sorted in various ways
     """index view mapped to the root url of the Q&A site
     """
-    space = get_primary_space().slug
-    return HttpResponseRedirect(reverse('questions', kwargs={'space': space}))
+    if askbot_settings.MAIN_PAGE_MODE == 'redirect':
+        space = get_primary_space().slug
+        space_url = reverse('questions', kwargs={'space': space})
+        return HttpResponseRedirect(space_url)
+
+    spaces = Space.objects.all().order_by('order_number')
+    template_data = {
+        'spaces': spaces,
+    }
+    return render(request, 'index_page.html', template_data)
+
 
 def questions(request, **kwargs):
     """
