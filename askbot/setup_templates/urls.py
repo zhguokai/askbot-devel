@@ -16,17 +16,7 @@ from django.contrib import admin
 
 admin.autodiscover()
 
-if askbot.is_multilingual():
-    from django.conf.urls.i18n import i18n_patterns
-    urlpatterns = i18n_patterns('',
-        (r'%s' % settings.ASKBOT_URL, include('askbot.urls'))
-    )
-else:
-    urlpatterns = patterns('',
-        (r'%s' % settings.ASKBOT_URL, include('askbot.urls'))
-    )
-
-urlpatterns += patterns('',
+urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     #(r'^cache/', include('keyedcache.urls')), - broken views disable for now
     #(r'^settings/', include('askbot.deps.livesettings.urls')),
@@ -39,6 +29,17 @@ urlpatterns += patterns('',
         {'document_root': settings.MEDIA_ROOT.replace('\\','/')},
     ),
 )
+
+if askbot.is_multilingual():
+    from django.conf.urls.i18n import i18n_patterns
+    urlpatterns += i18n_patterns('',
+        (r'%s' % settings.ASKBOT_URL, include('askbot.urls'))
+    )
+else:
+    urlpatterns += patterns('',
+        (r'%s' % settings.ASKBOT_URL, include('askbot.urls'))
+    )
+
 
 if 'rosetta' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
