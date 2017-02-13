@@ -71,7 +71,7 @@ class FavoriteQuestionInline(admin.TabularInline):
 
 class ThreadAdmin(admin.ModelAdmin):
     date_hierarchy = 'added_at'
-    list_display = ('title', 'added_at', 'last_activity_at', 'closed',
+    list_display = ('title', 'space', 'added_at', 'last_activity_at', 'closed',
                     'deleted', 'approved')
     list_filter = ('added_at', 'last_activity_at', 'closed', 'deleted',
                    'approved')
@@ -80,7 +80,7 @@ class ThreadAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': (
-                ('title', 'points'),
+                ('title', 'space', 'points'),
                 'tags',
                 ('followed_by'),
                 ('closed', 'closed_by', 'closed_at', 'close_reason'),
