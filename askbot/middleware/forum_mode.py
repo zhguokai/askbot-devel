@@ -16,7 +16,7 @@ PROTECTED_VIEW_MODULES = (
     'askbot.feed',
 )
 ALLOWED_VIEWS = (
-    'askbot.views.meta.media',
+    'askbot.views.meta.config_variable',
 )
 
 def is_view_protected(view_func):
