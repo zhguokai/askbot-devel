@@ -33,6 +33,9 @@ class Space(models.Model):
         )
         app_label = 'askbot'
 
+    def __unicode__(self):
+        return self.name
+
     def save(self):
         # Auto-populate slug
         self.slug = slugify(self.name)
