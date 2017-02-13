@@ -23,7 +23,7 @@ class Space(models.Model):
     name = models.CharField(max_length=128, unique=True)
     language_code = LanguageCodeField()
     slug = models.CharField(max_length=128, unique=True)
-    image = models.ImageField(upload_to='spaces')
+    image = models.ImageField(upload_to='spaces', null=True, blank=True)
     order_number = models.PositiveIntegerField(default=0)
 
     class Meta:

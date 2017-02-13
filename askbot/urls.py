@@ -38,20 +38,6 @@ urlpatterns = patterns(
     url(r'^$', views.readers.index, name='index'),
     # BEGIN Questions (main page) urls. All this urls work both normally and through ajax
     url(
-        # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
-        (r'^%s' % r'(?P<space>\w+)' + 
-            r'(%s)?' % r'/scope:(?P<scope>\w+)' +
-            r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
-            r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
-            r'(%s)?' % r'/author:(?P<author>\d+)' +
-            r'(%s)?' % r'/page:(?P<page>\d+)' +
-            r'(%s)?' % r'/page-size:(?P<page_size>\d+)' +
-            r'(%s)?' % r'/query:(?P<query>.+)' +  # INFO: query is last, b/c it can contain slash!!!
-        r'/$'),
-        views.readers.questions,
-        name='questions'
-    ),
-    url(
         r'^%s(?P<id>\d+)/' % QUESTION_PAGE_BASE_URL,
         views.readers.question,
         name='question'
@@ -705,6 +691,20 @@ urlpatterns = patterns(
     url('^api/v1/users/(?P<user_id>\d+)/$', views.api_v1.user, name='api_v1_user'),
     url('^api/v1/questions/$', views.api_v1.questions, name='api_v1_questions'),
     url('^api/v1/questions/(?P<question_id>\d+)/$', views.api_v1.question, name='api_v1_question'),
+    url(
+        # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
+        (r'^%s' % r'(?P<space>\w+)' + 
+            r'(%s)?' % r'/scope:(?P<scope>\w+)' +
+            r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
+            r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
+            r'(%s)?' % r'/author:(?P<author>\d+)' +
+            r'(%s)?' % r'/page:(?P<page>\d+)' +
+            r'(%s)?' % r'/page-size:(?P<page_size>\d+)' +
+            r'(%s)?' % r'/query:(?P<query>.+)' +  # INFO: query is last, b/c it can contain slash!!!
+        r'/$'),
+        views.readers.questions,
+        name='questions'
+    ),
 )
 
 if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:

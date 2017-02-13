@@ -267,6 +267,13 @@ class GroupAdmin(admin.ModelAdmin):
     search_fields = ('name', 'logo_url')
 
 
+class SpaceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'description', 
+                    'language_code', 'order_number')
+    list_display_links = ('id', 'name')
+    exclude=('slug',)
+
+
 admin.site.register(models.BadgeData, BadgeDataAdmin)
 admin.site.register(models.Group, GroupAdmin)
 admin.site.register(models.Post, PostAdmin)
@@ -282,3 +289,4 @@ admin.site.register(models.Thread, ThreadAdmin)
 admin.site.register(models.question.ThreadToGroup, ThreadToGroupAdmin)
 admin.site.register(models.QuestionView, QuestionViewAdmin)
 admin.site.register(models.ReplyAddress, ReplyAddressAdmin)
+admin.site.register(models.Space, SpaceAdmin)
