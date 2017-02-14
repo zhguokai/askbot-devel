@@ -63,7 +63,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #: media/js/live_search.js:315
-msgid "Search or ask your question"
+msgid "search or ask your question"
 msgstr ""
 
 #: media/js/post.js:28

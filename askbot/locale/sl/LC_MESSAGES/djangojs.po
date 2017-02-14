@@ -65,7 +65,7 @@ msgstr[2] "Žal te značke ne obstajajo"
 msgstr[3] "Žal te značke ne obstajajo"
 
 #: media/js/live_search.js:315
-msgid "Search or ask your question"
+msgid "search or ask your question"
 msgstr ""
 
 #: media/js/post.js:28

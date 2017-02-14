@@ -64,7 +64,7 @@ msgstr[0] "Lo sentimos, esta etiqueta no existe"
 msgstr[1] "Lo sentimos, estas etiquetas no existen"
 
 #: media/js/live_search.js:315
-msgid "Search or ask your question"
+msgid "search or ask your question"
 msgstr "buscar o haz tu pregunta"
 
 #: media/js/post.js:28

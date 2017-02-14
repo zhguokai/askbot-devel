@@ -69,7 +69,7 @@ msgstr[2] "К сожалению, эти ключевые слова не най
 msgstr[3] "К сожалению, эти ключевые слова не найдены"
 
 #: media/js/live_search.js:315
-msgid "Search or ask your question"
+msgid "search or ask your question"
 msgstr "найдите или задайте вопрос"
 
 #: media/js/post.js:28
