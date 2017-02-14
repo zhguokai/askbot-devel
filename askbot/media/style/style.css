@@ -5397,3 +5397,9 @@ body.lang-nb_NO .box .inputs #ab-tag-search,
 body.lang-nb_NO .box .inputs #ab-tag-search {
   width: 133px;
 }
+body.lang-nl .box .inputs #interestingTagInput,
+body.lang-nl .box .inputs #ignoredTagInput,
+body.lang-nl .box .inputs #subscribedTagInput,
+body.lang-nl .box .inputs #ab-tag-search {
+  width: 110px;
+}
