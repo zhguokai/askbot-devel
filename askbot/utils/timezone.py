@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.conf import settings as django_settings
+from pytz.exceptions import AmbiguousTimeError, NonExistentTimeError
 
 def make_aware(value, tz=None):
     """
@@ -19,7 +20,13 @@ def make_aware(value, tz=None):
         no_dst = tz.localize(value, False)
         if dst == no_dst:
             return dst
-        return tz.localize(value, is_dst=None)
+        try:
+            return tz.localize(value, is_dst=None)
+        except (AmbiguousTimeError, NonExistentTimeError):
+            return tz.localize(value, is_dst=False)
+        except NonExistentTimeError:
+            return tz.localize(value, is_dst=True)
+
 
     # Check that we won't overwrite the timezone of an aware datetime.
     if timezone.is_aware(value):
