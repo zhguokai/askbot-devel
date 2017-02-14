@@ -10,3 +10,4 @@ source_lang = en
 file_filter = askbot/locale/<lang>/LC_MESSAGES/djangojs.po
 source_file = askbot/locale/en/LC_MESSAGES/djangojs.po
 source_lang = en
+
