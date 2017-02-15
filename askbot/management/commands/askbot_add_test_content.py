@@ -19,6 +19,11 @@ NUM_COMMENTS = 20
 # karma. This can be calculated dynamically - max of MIN_REP_TO_... settings
 INITIAL_REPUTATION = 500
 
+if '--with-spam' in sys.argv:
+    BAD_STUFF = "<script>alert('hohoho')</script>"
+else:
+    BAD_STUFF = ''
+
 # Defining template inputs.
 USERNAME_TEMPLATE = "test_user_%s"
 PASSWORD_TEMPLATE = "test_password_%s"
@@ -52,8 +57,8 @@ class Command(NoArgsCommand):
             help='Do not prompt the user for input of any kind.'
         ),
         make_option(
-            '--nospam', action='store_true', dest='nospam', default=False,
-            help='Do not add XSS snippets'
+            '--with-spam', action='store_true', dest='with_spam', default=False,
+            help='Add XSS and snippets'
         )
     )
 
