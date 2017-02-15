@@ -828,11 +828,13 @@ def user_responses(request, user, context):
     section = request.GET.get('section', 'forum')
 
     if section == 'forum':
+        #this is for the on-screen notifications
         activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
         activity_types += (const.TYPE_ACTIVITY_MENTION,)
     elif section == 'join_requests':
         return show_group_join_requests(request, user, context)
     elif section == 'messages':
+        #this is for the private messaging feature
         if request.user != user:
             if askbot_settings.ADMIN_INBOX_ACCESS_ENABLED == False:
                 raise Http404
@@ -869,6 +871,9 @@ def user_responses(request, user, context):
     else:
         raise Http404
 
+    #code below takes care only of on-screen notifications about
+    #the forum activity - such as answers and comments from other users
+    #
     #2) load the activity notifications according to activity types
     #todo: insert pagination code here
     memo_set = request.user.get_notifications(activity_types)
@@ -930,14 +935,12 @@ def user_responses(request, user, context):
     #6) sort responses by time
     filtered_message_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
 
-    reject_reasons = models.PostFlagReason.objects.all().order_by('title')
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name' : 'inbox',
         'inbox_section': section,
         'page_title' : _('profile - responses'),
-        'post_reject_reasons': reject_reasons,
         'messages' : filtered_message_list,
     }
     context.update(data)
