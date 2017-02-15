@@ -219,7 +219,7 @@ urlpatterns = patterns(
         views.commands.moderate_group_join_request,
         name='moderate_group_join_request'
     ),
-    service_url(
+    url(
         r'^%s$' % pgettext('urls', 'moderation-queue/'),
         views.moderation.moderation_queue,
         name='moderation_queue'
