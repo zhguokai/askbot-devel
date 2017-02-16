@@ -1866,37 +1866,26 @@ class Post(models.Model):
             return self._comment__assert_is_visible_to(user)
         raise NotImplementedError
 
-    def get_updated_activity_data(self, created = False):
+    def get_updated_activity_type(self, created):
         if self.is_answer():
-            #todo: simplify this to always return latest revision for the second
-            #part
             if created:
-                return const.TYPE_ACTIVITY_ANSWER, self
-            else:
-                latest_revision = self.get_latest_revision()
-                return const.TYPE_ACTIVITY_UPDATE_ANSWER, latest_revision
+                return const.TYPE_ACTIVITY_ANSWER
+            return const.TYPE_ACTIVITY_UPDATE_ANSWER
         elif self.is_question():
             if created:
-                return const.TYPE_ACTIVITY_ASK_QUESTION, self
-            else:
-                latest_revision = self.get_latest_revision()
-                return const.TYPE_ACTIVITY_UPDATE_QUESTION, latest_revision
+                return const.TYPE_ACTIVITY_ASK_QUESTION
+            return const.TYPE_ACTIVITY_UPDATE_QUESTION
         elif self.is_comment():
             if self.parent.post_type == 'question':
-                return const.TYPE_ACTIVITY_COMMENT_QUESTION, self
+                return const.TYPE_ACTIVITY_COMMENT_QUESTION
             elif self.parent.post_type == 'answer':
-                return const.TYPE_ACTIVITY_COMMENT_ANSWER, self
+                return const.TYPE_ACTIVITY_COMMENT_ANSWER
+            #todo - what if there is other parent post
+            #we might support nested comments at some point
         elif self.is_tag_wiki():
-            if created:
-                return const.TYPE_ACTIVITY_CREATE_TAG_WIKI, self
-            else:
-                return const.TYPE_ACTIVITY_UPDATE_TAG_WIKI, self
+            return const.TYPE_ACTIVITY_UPDATE_TAG_WIKI
         elif self.is_reject_reason():
-            if created:
-                return const.TYPE_ACTIVITY_CREATE_REJECT_REASON, self
-            else:
-                return const.TYPE_ACTIVITY_UPDATE_REJECT_REASON, self
-
+            return const.TYPE_ACTIVITY_CREATE_REJECT_REASON
         raise NotImplementedError
 
     def get_tag_names(self):
