@@ -4104,8 +4104,11 @@ def group_membership_changed(**kwargs):
                     pass
                 else:
                     #restore group membership here
-                    level = GROUP_MEMBERSHIP_LEVELS.get(gm_key)
-                    GroupMembership.objects.create(user=user, group=group, level=level)
+                    level = GROUP_MEMBERSHIP_LEVELS.get(gm_key,
+                                                        GroupMembership.FULL)
+                    GroupMembership.objects.create(user=user,
+                                                   group=group,
+                                                   level=level)
 
             GROUP_MEMBERSHIP_LEVELS.pop(gm_key, None)
 
