@@ -815,7 +815,7 @@ class Post(models.Model):
         update_activity = Activity(
                         user = updated_by,
                         active_at = timestamp,
-                        content_object = self,
+                        content_object = self.current_revision,
                         activity_type = activity_type,
                         question = self.get_origin_post(),
                         summary = summary
@@ -2494,7 +2494,7 @@ class PostRevision(models.Model):
 
     def get_snippet(self, max_length = 120):
         """a little simpler than as Post.get_snippet"""
-        return html_utils.strip_tags(self.html)[:max_length] + '...'
+        return '<p>' + html_utils.strip_tags(self.html)[:max_length] + '</p>'
 
 
 class PostFlagReason(models.Model):
