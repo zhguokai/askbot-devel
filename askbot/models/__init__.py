@@ -4051,15 +4051,14 @@ def group_membership_changed(**kwargs):
                     #so we don't add anything here
                     pass
                 else:
-                    #restore group membership here
-                    level = GROUP_MEMBERSHIP_LEVELS.get(gm_key)
-                    if level is None:
-                        # The only way this happens is when
-                        # membership is changed in the admin interface
-                        # and we can assume that admin intends to 
-                        # make user a full member of group.
-                        level = GroupMembership.FULL
-                    GroupMembership.objects.create(user=user, group=group, level=level)
+                    # Restore group membership.
+                    # Default level is FULL - to handle the case
+                    # when group is added via admin interface.
+                    level = GROUP_MEMBERSHIP_LEVELS.get(gm_key,
+                                                        GroupMembership.FULL)
+                    GroupMembership.objects.create(user=user,
+                                                   group=group,
+                                                   level=level)
 
             GROUP_MEMBERSHIP_LEVELS.pop(gm_key, None)
 
