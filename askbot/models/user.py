@@ -59,17 +59,6 @@ class MockUser(object):
         return False
 
 
-class ResponseAndMentionActivityManager(models.Manager):
-    def get_queryset(self):
-        response_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
-        response_types += (const.TYPE_ACTIVITY_MENTION, )
-        return super(
-                    ResponseAndMentionActivityManager,
-                    self
-                ).get_queryset().filter(
-                    activity_type__in = response_types
-                )
-
 class ActivityQuerySet(models.query.QuerySet):
     """query set for the `Activity` model"""
     def get_all_origin_posts(self):
@@ -251,7 +240,6 @@ class Activity(models.Model):
     summary = models.TextField(default='')
 
     objects = ActivityManager()
-    responses_and_mentions = ResponseAndMentionActivityManager()
 
     def __unicode__(self):
         return u'[%s] was active at %s' % (self.user.username, self.active_at)

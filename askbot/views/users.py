@@ -763,11 +763,29 @@ def user_recent(request, user, context):
                 badge=content.badge,
             )
         else:
+            if hasattr(content, 'thread'):
+                # this is the old way, where events
+                # were tied to posts, rather then revisions
+                # old records might exist in the database
+                # that still satisfy this condition
+                event_title = content.thread.title
+                event_summary = content.summary
+            elif hasattr(content, 'post'):
+                # revision. In the future here we only
+                # user revisions here, because this reflects
+                # the activity better
+                event_title = content.post.thread.title
+                event_summary = content.get_snippet()
+            else:
+                # don't know what to do here...
+                event_title = ''
+                event_summary = ''
+                
             event = Event(
                 time=activity.active_at,
                 type=activity.activity_type,
-                title=content.thread.title,
-                summary=content.summary,
+                title=event_title,
+                summary=event_summary,
                 url=content.get_absolute_url()
             )
 
