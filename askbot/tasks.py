@@ -157,10 +157,8 @@ def record_post_update_celery_task(
                                 mentioned_users=newly_mentioned_users,
                                 exclude_list=[updated_by,]
                             )
-        #todo: take into account created == True case
-        #update_object is not used
-        (activity_type, update_object) = post.get_updated_activity_data(created)
 
+        activity_type = post.get_updated_activity_type(created)
         post.issue_update_notifications(
             updated_by=updated_by,
             notify_sets=notify_sets,
