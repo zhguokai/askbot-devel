@@ -52,6 +52,7 @@ from askbot import models
 from askbot import exceptions
 from askbot.models.badges import award_badges_signal
 from askbot.models.tag import format_personal_group_name
+from askbot.models.post import PostRevision
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
@@ -918,12 +919,17 @@ def user_responses(request, user, context):
         act_message = act.get_activity_type_display()
         act_type = 'edit'
 
+        if isinstance(obj, PostRevision):
+            url = obj.post.get_absolute_url()
+        else:
+            url = obj.get_absolute_url()
+
         response = {
             'id': memo.id,
             'timestamp': act.active_at,
             'user': act_user,
             'is_new': memo.is_new(),
-            'url': act.get_absolute_url(),
+            'url': url,
             'snippet': act.get_snippet(),
             'title': act.question.thread.title,
             'message_type': act_message,

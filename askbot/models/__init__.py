@@ -1748,15 +1748,15 @@ def user_delete_answer(
     logging.debug('updated answer count to %d' % answer.thread.answer_count)
 
     signals.after_post_removed.send(
-        sender = answer.__class__,
-        instance = answer,
-        deleted_by = self
+        sender=answer.__class__,
+        instance=answer,
+        deleted_by=self
     )
     award_badges_signal.send(None,
-                event = 'delete_post',
-                actor = self,
-                context_object = answer,
-                timestamp = timestamp
+                event='delete_post',
+                actor=self,
+                context_object=answer,
+                timestamp=timestamp
             )
 
 
@@ -3167,14 +3167,14 @@ def user_update_response_counts(user):
     ACTIVITY_TYPES += (const.TYPE_ACTIVITY_MENTION,)
 
     user.new_response_count = ActivityAuditStatus.objects.filter(
-                                    user = user,
-                                    status = ActivityAuditStatus.STATUS_NEW,
-                                    activity__activity_type__in = ACTIVITY_TYPES
+                                    user=user,
+                                    status=ActivityAuditStatus.STATUS_NEW,
+                                    activity__activity_type__in=ACTIVITY_TYPES
                                 ).count()
     user.seen_response_count = ActivityAuditStatus.objects.filter(
-                                    user = user,
-                                    status = ActivityAuditStatus.STATUS_SEEN,
-                                    activity__activity_type__in = ACTIVITY_TYPES
+                                    user=user,
+                                    status=ActivityAuditStatus.STATUS_SEEN,
+                                    activity__activity_type__in=ACTIVITY_TYPES
                                 ).count()
     user.save()
 
@@ -3768,9 +3768,19 @@ def record_cancel_vote(instance, **kwargs):
     activity.save()
 
 
+def delete_post_activities(instance, **kwargs):
+    """Deletes items connected to instance via generic relations
+    upon removal of objects from the database"""
+    from askbot import tasks
+    ctype = ContentType.objects.get_for_model(instance)
+    aa = Activity.objects.filter(object_id=instance.pk, content_type=ctype)
+    aa.delete()
+    instance.delete_update_notifications(False) #don't keep activities
+
+
 #todo: weird that there is no record delete answer or comment
 #is this even necessary to keep track of?
-def record_delete_question(instance, deleted_by, **kwargs):
+def record_delete_post(instance, deleted_by, **kwargs):
     """
     when user deleted the question
     """
@@ -3788,8 +3798,10 @@ def record_delete_question(instance, deleted_by, **kwargs):
                     activity_type=activity_type,
                     question = instance.get_origin_post()
                 )
-    #no need to set receiving user here
     activity.save()
+
+    #keep activity records, but delete notifications
+    instance.delete_update_notifications(True)
 
 def record_flag_offensive(instance, mark_by, **kwargs):
     """places flagged post on the moderation queue"""
@@ -4217,9 +4229,15 @@ django_signals.post_delete.connect(
     dispatch_uid='record_cancel_vote_on_vote_delete'
 )
 
+django_signals.pre_delete.connect(
+    delete_post_activities,
+    sender=Post,
+    dispatch_uid='delete_post_activities_on_post_pre_delete'
+)
+
 #change this to real m2m_changed with Django1.2
 signals.after_post_removed.connect(
-    record_delete_question,
+    record_delete_post,
     sender=Post,
     dispatch_uid='record_delete_question_on_delete_post'
 )
