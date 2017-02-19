@@ -22,6 +22,7 @@ import sys
 import traceback
 import uuid
 
+from django.contrib.contenttypes.models import ContentType
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
@@ -41,6 +42,7 @@ from askbot.mail.messages import (
                     )
 from askbot.models import (
     Activity,
+    ActivityAuditStatus,
     Post,
     PostRevision,
     User,
@@ -84,6 +86,33 @@ def tweet_new_post_task(post_id):
         token = simplejson.loads(post.author.twitter_access_token)
         twitter.tweet(tweet_text, access_token=token)
 
+
+@task(ignore_result=True)
+def delete_update_notifications_task(rev_ids, keep_activity):
+    """parameter is list of revision ids"""
+    ctype = ContentType.objects.get_for_model(PostRevision)
+    aa = Activity.objects.filter(content_type=ctype, object_id__in=rev_ids)
+    act_ids = aa.values_list('pk', flat=True)
+
+    # 2) Find notifications related to found activities
+    notifs = ActivityAuditStatus.objects.filter(activity__pk__in=act_ids)
+
+    # 3) Find recipients of notifications
+    user_ids = notifs.values_list('user', flat=True).distinct()
+    users = list(User.objects.filter(pk__in=user_ids))
+
+    # 4) Delete notifications by deleting activities
+    # so that the loop below updates the counts
+    if keep_activity:
+        # delete only notifications
+        notifs.delete()
+    else:
+        # delete activities and notifications
+        # b/c notifications have activity as FK records
+        aa.delete()
+
+    for user in users:
+        user.update_response_counts()
 
 @task(ignore_result=True)
 def notify_author_of_published_revision_celery_task(revision_id):
