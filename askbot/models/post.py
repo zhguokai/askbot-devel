@@ -868,6 +868,29 @@ class Post(models.Model):
             countdown=django_settings.NOTIFICATION_DELAY_TIME
         )
 
+    def delete_update_notifications(self, keep_activity):
+        """reverse of issue update notifications
+        With second argument `False` Activities and ActivityAuditStatus
+        records are deleted, with `True` only ActivityAuditStatus items
+        are deleted
+        """
+        # Find revisions of current post
+        # The reason is that notifications are bound to revisions
+        # not the posts themselves
+        self_rev_ids = set(self.revisions.values_list('pk', flat=True))
+
+        # Find revisions of child posts
+        child_posts = Post.objects.filter(parent=self)
+        child_post_ids = child_posts.values_list('pk', flat=True)
+        child_revs = PostRevision.objects.filter(post__pk__in=child_post_ids)
+        child_rev_ids = set(child_revs.values_list('pk', flat=True))
+
+        rev_ids = list(self_rev_ids | child_rev_ids)
+        
+        from askbot.tasks import delete_update_notifications_task
+        task_args = (rev_ids, keep_activity)
+        defer_celery_task(delete_update_notifications_task, args=task_args)
+
     def make_private(self, user, group_id=None):
         """makes post private within user's groups
         todo: this is a copy-paste in thread and post

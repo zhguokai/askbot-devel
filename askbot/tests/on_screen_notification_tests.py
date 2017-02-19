@@ -621,3 +621,17 @@ class OnScreenUpdateNotificationTests(TestCase):
             ]
         )
 
+    def test_new_answer_then_delete(self):
+        self.reset_response_counts()
+        time.sleep(1)
+        timestamp = datetime.datetime.now()
+        self.answer3 = models.Post.objects.create_new_answer(
+                            thread=self.thread,
+                            author=self.u11,
+                            added_at=timestamp,
+                            text='answer4'
+                        )
+        self.u11.delete_answer(self.answer3)
+        activities = get_re_notif_after(timestamp)
+        notifs = activities.values('activityauditstatus')
+        self.assertEqual(notifs.count(), 0)
