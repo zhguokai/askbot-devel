@@ -6,6 +6,11 @@ var setup_inbox = function () {
             var inbox = new ResponseNotifs();
             inbox.decorate(clearNotifs);
         }
+        var msgGroups = $('.js-message-group');
+        msgGroups.each(function(idx, elem) {
+            var msgGroup = new NotifsGroup();
+            msgGroup.decorate($(elem));
+        });
     }
 };
 
