@@ -17,7 +17,7 @@
     <div class="messages">
     {% for message in messages %}{# messages are grouped by question, using the "nested_messages" #}
         <div class="js-message-group">
-            <h2>"{{ message.title.strip()|escape}}"</h2>
+            <h2><input type="checkbox" />"{{ message.title.strip()|escape}}"</h2>
             <div class="message{% if message.is_new %} highlight new{% else %} seen{% endif %}"
                 data-message-id="{{ message.id }}"
             >
