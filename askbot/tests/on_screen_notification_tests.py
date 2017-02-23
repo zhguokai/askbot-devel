@@ -633,5 +633,7 @@ class OnScreenUpdateNotificationTests(TestCase):
                         )
         self.u11.delete_answer(self.answer3)
         activities = get_re_notif_after(timestamp)
-        notifs = activities.values('activityauditstatus')
+        act_ids = activities.values_list('pk', flat=True)
+        notifs = models.ActivityAuditStatus.objects.filter(
+                                                activity__pk__in=act_ids)
         self.assertEqual(notifs.count(), 0)
