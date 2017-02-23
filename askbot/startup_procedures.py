@@ -201,8 +201,8 @@ the list of MIDDLEWARE_CLASSES in your settings.py - these are not used any more
         middleware_text = format_as_text_tuple_entries(invalid_middleware)
         raise AskbotConfigError(error_message + middleware_text)
 
-
-def try_import(module_name, pypi_package_name, short_message=False):
+def try_import(module_name, pypi_package_name, show_requirements_message=True,
+    extra_message=None):
     """tries importing a module and advises to install
     A corresponding Python package in the case import fails"""
     try:
@@ -210,9 +210,11 @@ def try_import(module_name, pypi_package_name, short_message=False):
     except ImportError, error:
         message = 'Error: ' + unicode(error)
         message += '\n\nPlease run: >pip install %s' % pypi_package_name
-        if not short_message:
+        if show_requirements_message:
             message += '\n\nTo install all the dependencies at once, type:'
             message += '\npip install -r askbot_requirements.txt'
+        if extra_message:
+            message += '\n' + extra_message
         message += '\n\nType ^C to quit.'
         raise AskbotConfigError(message)
 
@@ -653,12 +655,12 @@ def test_avatar():
     """if "avatar" is in the installed apps,
     checks that the module is actually installed"""
     if 'avatar' in django_settings.INSTALLED_APPS:
-        try_import('avatar', 'django-avatar', short_message=True)
+        try_import('avatar', 'django-avatar', show_requirements_message=False)
 
 
 def test_haystack():
     if 'haystack' in django_settings.INSTALLED_APPS:
-        try_import('haystack', 'django-haystack', short_message=True)
+        try_import('haystack', 'django-haystack', show_requirements_message=False)
         if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
             errors = list()
             if not hasattr(django_settings, 'HAYSTACK_CONNECTIONS'):
@@ -681,7 +683,7 @@ def test_haystack():
 
             if getattr(django_settings, 'HAYSTACK_SIGNAL_PROCESSOR',
                        '').endswith('AskbotCelerySignalProcessor'):
-                try_import('celery_haystack', 'celery-haystack', short_message=True)
+                try_import('celery_haystack', 'celery-haystack', show_requirements_message=False)
 
             footer = 'Please refer to haystack documentation at https://django-haystack.readthedocs.org/en/latest/settings.html'
             print_errors(errors, footer=footer)
@@ -1010,8 +1012,11 @@ def run_startup_tests():
     test_modules()
 
     if 'test' in sys.argv:
-        try_import('lamson', 'Lamson', True)
-        try_import('django_lamson', 'django-lamson', True)
+        extra_message="""Lamson modules are required for running tests
+and for making posts by email"""
+        try_import('django_lamson', 'django-lamson',
+            show_requirements_message=False,
+            extra_message=extra_message)
 
     # TODO: refactor this when another test arrives
     test_versions()
