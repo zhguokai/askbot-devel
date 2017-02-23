@@ -959,7 +959,7 @@ class PostPrivatelyForm(forms.Form, FormWithHideableFields):
         )
 
     def clean_post_privately(self):
-        if self.allows_post_privately() == False:
+        if not self.allows_post_privately():
             self.cleaned_data['post_privately'] = False
         return self.cleaned_data['post_privately']
 
@@ -1066,7 +1066,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
     )
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        user = kwargs.get('user', None)
         super(AskForm, self).__init__(*args, **kwargs)
         #it's important that this field is set up dynamically
         self.fields['title'] = TitleField()
@@ -1362,7 +1362,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
     def __init__(self, *args, **kwargs):
         """populate EditQuestionForm with initial data"""
         self.question = kwargs.pop('question')
-        self.user = kwargs.pop('user')#preserve for superclass
+        self.user = kwargs.get('user')#preserve for superclass
         revision = kwargs.pop('revision')
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         #it is important to add this field dynamically
@@ -1427,7 +1427,7 @@ class EditAnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
 
     def __init__(self, answer, revision, *args, **kwargs):
         self.answer = answer
-        user = kwargs.pop('user', None)
+        user = kwargs.get('user', None)
         super(EditAnswerForm, self).__init__(*args, **kwargs)
         #it is important to add this field dynamically
         #label is empty on purpose
