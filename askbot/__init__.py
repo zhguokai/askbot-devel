@@ -45,7 +45,6 @@ REQUIREMENTS = {
     'regex': 'regex',
     'sanction': 'sanction==0.3.1',
     'simplejson': 'simplejson<=3.8.2',
-    'south': 'South>=0.7.1,<=1.0.2',
     'threaded_multihost': 'django-threaded-multihost<=1.4-1',
     'tinymce': 'django-tinymce==1.5.3',
     'unidecode': 'unidecode<=0.4.19',
