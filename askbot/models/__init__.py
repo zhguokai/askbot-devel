@@ -4202,14 +4202,6 @@ def record_spam_rejection(
         activity.save()
 
 
-from south.signals import ran_migration
-
-ran_migration.connect(
-    init_badge_data,
-    dispatch_uid='init_badge_data_on_post_syncdb'
-)
-
-
 # signals for User model save changes
 user_signals = [
     signals.GenericSignal(

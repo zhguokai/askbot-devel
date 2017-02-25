@@ -149,7 +149,6 @@ INSTALLED_APPS = (
     'askbot',
     'askbot.deps.django_authopenid',
     #'askbot.importers.stackexchange', #se loader
-    'south',
     'askbot.deps.livesettings',
     'keyedcache',
     'robots',
@@ -253,10 +252,6 @@ GROUP_MESSAGING = {
 COMPRESS_JS_FILTERS = []
 COMPRESS_PARSER = 'compressor.parser.HtmlParser'
 JINJA2_EXTENSIONS = ('compressor.contrib.jinja2ext.CompressorExtension',)
-
-# Use syncdb for tests instead of South migrations. Without this, some tests
-# fail spuriously in MySQL.
-SOUTH_TESTS_MIGRATE = False
 
 VERIFIER_EXPIRE_DAYS = 3
 AVATAR_AUTO_GENERATE_SIZES = (16, 32, 48, 128)
