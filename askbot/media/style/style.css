@@ -3217,7 +3217,7 @@ tr.mceLast {
 .user-profile-page.inbox-forum h2,
 .user-profile-page.inbox-flags h2 {
   line-height: 24px;
-  padding-bottom: 6px;
+  padding: 6px;
 }
 .user-profile-page.inbox-forum .message,
 .user-profile-page.inbox-flags .message {
@@ -5396,4 +5396,10 @@ body.lang-nb_NO .box .inputs #subscribedTagInput,
 body.lang-nb_NO .box .inputs #ab-tag-search,
 body.lang-nb_NO .box .inputs #ab-tag-search {
   width: 133px;
+}
+body.lang-nl .box .inputs #interestingTagInput,
+body.lang-nl .box .inputs #ignoredTagInput,
+body.lang-nl .box .inputs #subscribedTagInput,
+body.lang-nl .box .inputs #ab-tag-search {
+  width: 110px;
 }

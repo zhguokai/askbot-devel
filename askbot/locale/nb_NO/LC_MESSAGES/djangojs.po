@@ -61,7 +61,7 @@ msgstr[0] "Beklager, denne merkelappen eksisterer ikke"
 msgstr[1] "Beklager, disse merkelappene eksisterer ikke"
 
 #: media/js/live_search.js:315
-msgid "Search or ask your question"
+msgid "search or ask your question"
 msgstr "søk eller spør ditt spørsmål"
 
 #: media/js/post.js:28

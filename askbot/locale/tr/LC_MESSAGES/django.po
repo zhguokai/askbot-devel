@@ -22,9 +22,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-18 12:37-0600\n"
-"PO-Revision-Date: 2016-12-19 06:44+0000\n"
-"Last-Translator: Gökhan Gurbetoğlu <ggurbet@gmail.com>\n"
+"POT-Creation-Date: 2016-12-10 09:15-0600\n"
+"PO-Revision-Date: 2016-12-14 08:56+0000\n"
+"Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/askbot/askbot/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,564 +39,6 @@ msgstr "Soru"
 #: admin.py:156
 msgid "Specific to question"
 msgstr "Soruya özel"
-
-#: exceptions.py:15
-msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr "Üzgünüz, fakat giriş yapmamış ziyaretçiler bu işleve erişemez"
-
-#: feed.py:37 feed.py:125
-msgid " - "
-msgstr " - "
-
-#: feed.py:38
-#, python-format
-msgid "Individual %(question)s feed"
-msgstr "Bağımsız %(question)s beslemesi"
-
-#: feed.py:126
-#, python-format
-msgid "Latest %(question)s feed"
-msgstr "Yeni %(question)s beslemesi"
-
-#: forms.py:105
-msgid "Wildcard tag must have only one '*' symbol"
-msgstr "Joker karakter etiketinde yalnızca bir '*' simgesi olmalıdır"
-
-#: forms.py:107
-msgid "Wildcard tag must have at least one symbol"
-msgstr "Joker karakter etiketinde en az bir simge olmalıdır"
-
-#: forms.py:113
-msgid "Wildcard tag must end with an '*' symbol"
-msgstr "Joker karakter etiketi, '*' simgesi ile bitmelidir"
-
-#: forms.py:194
-msgid "select country"
-msgstr "ülke seçin"
-
-#: forms.py:196
-msgid "Country"
-msgstr "Ülke"
-
-#: forms.py:203
-msgid "Country field is required"
-msgstr "Ülke bilgisi gereklidir"
-
-#: forms.py:230
-#, python-format
-msgid "must be > %d word"
-msgid_plural "must be > %d words"
-msgstr[0] "%d kelimeden uzun olmalı"
-msgstr[1] "%d kelimeden uzun olmalı"
-
-#: forms.py:238
-#, python-format
-msgid "must be < %d word"
-msgid_plural "must be < %d words"
-msgstr[0] "< %d kelime olmalı"
-msgstr[1] "%d kelimeden kısa olmalı"
-
-#: forms.py:258 templates/widgets/ask_form.html:46
-msgid "Select language"
-msgstr "Dili seç"
-
-#: forms.py:284
-msgid "minor edit (don't send alerts)"
-msgstr "küçük düzenlemeler (uyarıları gönderme)"
-
-#: forms.py:310 templates/widgets/markdown_help.html:20
-#: templates/widgets/markdown_help.html:24
-msgid "title"
-msgstr "başlık"
-
-#: forms.py:323
-#, python-format
-msgid "must have > %d non-punctuation character"
-msgid_plural "must have > %d non-punctuation characters"
-msgstr[0] "noktalama işareti olmayan karakterler %d adetten fazla olmalı"
-msgstr[1] "noktalama işareti olmayan karakterler %d adetten fazla olmalı"
-
-#: forms.py:335
-#, python-format
-msgid ""
-"The %(question)s is too long, maximum allowed size is %(length)d characters"
-msgstr "%(question)s çok uzun, izin verilen azami boyut %(length)d karakter"
-
-#: forms.py:342
-#, python-format
-msgid "The %(question)s is too long, maximum allowed size is %(length)d bytes"
-msgstr "%(question)s çok uzun, izin verilen azami boyut %(length)d bayt"
-
-#: forms.py:372
-msgid "post"
-msgstr "gönder"
-
-#: forms.py:379
-#, python-format
-msgid "%(post)s content must be > %(count)d character"
-msgid_plural "%(post)s content must be > %(count)d characters"
-msgstr[0] "%(post)s içeriği %(count)d karakterden uzun olmalı"
-msgstr[1] "%(post)s içeriği %(count)d karakterden uzun olmalı"
-
-#: forms.py:427
-#, python-format
-msgid "each tag must be shorter than %(max_chars)d character"
-msgid_plural "each tag must be shorter than %(max_chars)d characters"
-msgstr[0] "Etiketler %(max_chars)d karakterden kısa olmak zorundadır"
-msgstr[1] "Etiketler %(max_chars)d karakterden kısa olmak zorundadır"
-
-#: forms.py:471
-msgid ""
-"We ran out of space for recording the tags. Please shorten or delete some of"
-" them."
-msgstr "Etiketleri kaydetmek için yeterli alanımız mevcut değil. Lütfen bazılarını silin ya da kısaltın."
-
-#: forms.py:473 forms.py:1101 models/widgets.py:27
-#: templates/widgets/meta_nav.html:6 templates/widgets/tags_field.html:10
-msgid "tags"
-msgstr "etiketler"
-
-#: forms.py:475
-#, python-format
-msgid ""
-"Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
-"be used."
-msgid_plural ""
-"Tags are short keywords, with no spaces within. Up to %(max_tags)d tags can "
-"be used."
-msgstr[0] "Etiketler boşluk içermeyen kısa kelimelerdir. Azami %(max_tags)d etiket kullanılabilir."
-msgstr[1] "Etiketler boşluk içermeyen kısa kelimelerdir. Azami %(max_tags)d etiket kullanılabilir."
-
-#: forms.py:500
-#, python-format
-msgid "please use %(tag_count)d tag or less"
-msgid_plural "please use %(tag_count)d tags or less"
-msgstr[0] "Lütfen %(tag_count)d kadar veya daha az etiket kullanın"
-msgstr[1] "Lütfen %(tag_count)d kadar veya daha az etiket kullanın"
-
-#: forms.py:508
-#, python-format
-msgid "At least one of the following tags is required : %(tags)s"
-msgstr "Şu etiketlerden en az bir tanesi gereklidir : %(tags)s"
-
-#: forms.py:536
-msgid "community wiki (karma is not awarded & many others can edit wiki post)"
-msgstr "topluluk vikisi (karma puanı verilmez ve yazılan viki metinleri başkaları tarafından değiştirilebilir)"
-
-#: forms.py:578
-msgid "update summary:"
-msgstr "güncelleme özeti:"
-
-#: forms.py:580
-msgid ""
-"enter a brief summary of your revision (e.g. fixed spelling, grammar, "
-"improved style...), this field is optional"
-msgstr "yaptığınız düzeltmenin kısa bir özetini yazın (örneğin yazım yanlışı, dil bilgisi, iyileştirilmiş biçim...), bu alan isteğe bağlıdır"
-
-#: forms.py:693
-msgid "Enter number of points to add or subtract"
-msgstr "Eklenecek ya da çıkartılacak puanı girin"
-
-#: forms.py:694
-msgid "Comment"
-msgstr "Yorum"
-
-#: forms.py:706 const/__init__.py:497
-msgid "approved"
-msgstr "onaylanmış"
-
-#: forms.py:707 const/__init__.py:498
-msgid "watched"
-msgstr "izlenen"
-
-#: forms.py:708 const/__init__.py:499
-msgid "suspended"
-msgstr "askıya alınmış"
-
-#: forms.py:709 const/__init__.py:500
-msgid "blocked"
-msgstr "engellenmiş"
-
-#: forms.py:712 const/__init__.py:495
-msgid "administrator"
-msgstr "site yöneticisi"
-
-#: forms.py:713 const/__init__.py:496
-msgid "moderator"
-msgstr "moderatör"
-
-#: forms.py:732
-msgid "Change status to"
-msgstr "Durumu şuna değiştir"
-
-#: forms.py:761
-msgid "which one?"
-msgstr "hangisi?"
-
-#: forms.py:789
-msgid "Cannot change own status"
-msgstr "Kendi durumunuzu değiştiremezsiniz"
-
-#: forms.py:795
-msgid "Cannot turn other user to moderator"
-msgstr "Başka bir kullanıcıyı moderatör yapamazsınız"
-
-#: forms.py:801
-msgid "Cannot change status of another moderator"
-msgstr "Başka bir moderatörün durumunu değiştiremezsiniz"
-
-#: forms.py:806
-msgid "Cannot change status to admin"
-msgstr "Durumu site yöneticisi yapamazsınız"
-
-#: forms.py:811
-#, python-format
-msgid ""
-"If you wish to change %(username)s's status, please make a meaningful "
-"selection."
-msgstr "%(username)s kullanıcısının durumunu değiştirmek istiyorsanız lütfen anlamlı bir seçim yapınız."
-
-#: forms.py:825
-msgid "Subject line"
-msgstr "Konu satırı"
-
-#: forms.py:828
-msgid "Message text"
-msgstr "İleti metni"
-
-#: forms.py:833
-msgid "Your name (optional):"
-msgstr "Adınız (isteğe bağlı):"
-
-#: forms.py:834
-msgid "Email:"
-msgstr "E-posta:"
-
-#: forms.py:835
-msgid "Your message:"
-msgstr "İletiniz:"
-
-#: forms.py:838
-msgid "I don't want to give my email or receive a response:"
-msgstr "E-posta adresimi vermek ya da cevap almak istemiyorum:"
-
-#: forms.py:851
-msgid "Message is required"
-msgstr "İleti alanı zorunludur"
-
-#: forms.py:857 models/__init__.py:2504
-msgid "Anonymous"
-msgstr "Misafir"
-
-#: forms.py:867
-msgid "Either provide email address or mark \"I dont want to give email below\""
-msgstr "Lütfen e-posta adresinizi belirtiniz veya \"e-posta adresimi vermek istemiyorum\" alanını işaretleyiniz."
-
-#: forms.py:900
-msgid "keep private within your groups"
-msgstr "gruplar içerisinde gizli tut"
-
-#: forms.py:938 templates/ask.html:41 templates/question.html:421
-msgid "User name:"
-msgstr "Kullanıcı adı:"
-
-#: forms.py:939
-msgid "Enter name to post on behalf of someone else. Can create new accounts."
-msgstr "Başka birinin yerine göndermek için isim girin. Yeni hesaplar oluşturabilirsiniz."
-
-#: forms.py:943 templates/question.html:422
-msgid "Email address:"
-msgstr "E-posta adresi:"
-
-#: forms.py:990
-msgid "User name is required with the email"
-msgstr "Kullanıcı adı ile birlikte e-posta da gereklidir"
-
-#: forms.py:995
-msgid "Email is required if user name is added"
-msgstr "Kullanıcı adı eklenecekse eğer e-posta da gereklidir"
-
-#: forms.py:1024
-msgid "Add details (optional)"
-msgstr "Ayrıntıları ekleyin (isteğe bağlı)"
-
-#: forms.py:1026
-msgid "Add details"
-msgstr "Ayrıntı ekleyin"
-
-#: forms.py:1031
-msgid "post anonymously"
-msgstr "isimsiz olarak gönder"
-
-#: forms.py:1050
-msgid ""
-"Subject line is expected in the format: [tag1, tag2, tag3,...] question "
-"title"
-msgstr "Konu satırının şu biçimde olması beklenir: [tag1, tag2, tag3,...] soru başlığı"
-
-#: forms.py:1060
-msgid "ask anonymously"
-msgstr "isimsiz olarak sor"
-
-#: forms.py:1312
-msgid "Details"
-msgstr "Detaylar"
-
-#: forms.py:1319
-msgid "remove anonymity"
-msgstr "anonimliği kaldır"
-
-#: forms.py:1396
-msgid "Real name"
-msgstr "Gerçek isim"
-
-#: forms.py:1400
-msgid "Website"
-msgstr "İnternet sitesi"
-
-#: forms.py:1404
-msgid "City"
-msgstr "Şehir"
-
-#: forms.py:1409
-msgid "Show country"
-msgstr "Ülkeyi göster"
-
-#: forms.py:1412
-msgid "Show tag choices"
-msgstr "Etiket seçimlerini göster"
-
-#: forms.py:1415
-msgid "Date of birth"
-msgstr "Doğum tarihi"
-
-#: forms.py:1417
-msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr "gösterilmeyecek, yaş hesaplanmasında kulanılacak, şu şekilde giriniz: YYYY-AA-GG"
-
-#: forms.py:1423
-msgid "Profile"
-msgstr "Profil"
-
-#: forms.py:1431
-msgid "Screen name"
-msgstr "Görünen isim"
-
-#: forms.py:1469 forms.py:1472
-msgid "this email has already been registered, please use another one"
-msgstr "bu e-posta adresi sistemimizde zaten kayıtlı, lütfen başka bir adres kullanın"
-
-#: forms.py:1479
-msgid "Choose email tag filter"
-msgstr "E-posta etiketi için süzgeç seçIn"
-
-#: forms.py:1533
-msgid "Individually selected"
-msgstr "Tek tek seçilmiş"
-
-#: forms.py:1534
-msgid "Entire forum (tag filtered)"
-msgstr "Tüm forum (etiket ile süzülmüş)"
-
-#: forms.py:1535
-msgid "Comments and posts mentioning me"
-msgstr "Benden bahseden iletiler ve yorumlar"
-
-#: forms.py:1618
-msgid "please choose one of the options above"
-msgstr "lütfen yukarıdaki seçeneklerden birini seçin "
-
-#: forms.py:1621
-msgid "okay, let's try!"
-msgstr "tamam, bir deneyelim!"
-
-#: forms.py:1622
-#, python-format
-msgid "no %(sitename)s email please, thanks"
-msgstr "%(sitename)s e-postası istemiyorum, teşekkürler"
-
-#: forms.py:1676 templates/reopen.html:7
-msgid "Title"
-msgstr "Başlık"
-
-#: forms.py:1677 templates/groups.html:32 templates/email/preview_email.html:9
-msgid "Description"
-msgstr "Açıklama"
-
-#: forms.py:1703 templates/tags.html:3 templates/main_page/sidebar.html:23
-#: templates/tags/header.html:9
-#: templates/tags/list_bulk_tag_subscription.html:12
-#: templates/widgets/tag_category_selector.html:2
-#: templates/widgets/tags_field.html:4 templates/widgets/tags_field.html:14
-#: templates/widgets/tags_field.html:18
-msgid "Tags"
-msgstr "Etiketler"
-
-#: tasks.py:127
-msgid "make an edit by email"
-msgstr "e-posta ile düzenleme yap"
-
-#: urls.py:39
-msgctxt "urls"
-msgid "questions"
-msgstr "sorular"
-
-#: urls.py:41
-msgctxt "urls"
-msgid "question"
-msgstr "soru"
-
-#: urls.py:68 urls.py:394 urls.py:400 urls.py:409 urls.py:418
-msgctxt "urls"
-msgid "tags/"
-msgstr "etiketler/"
-
-#: urls.py:73 urls.py:79 urls.py:88 urls.py:109 urls.py:118 urls.py:126
-#: urls.py:133
-msgctxt "urls"
-msgid "users/"
-msgstr "kullanıcılar/"
-
-#: urls.py:80
-msgctxt "urls"
-msgid "by-group/"
-msgstr "gruba-göre/"
-
-#: urls.py:88 urls.py:194 urls.py:301 urls.py:420 urls.py:645
-msgctxt "urls"
-msgid "edit/"
-msgstr "düzenle/"
-
-#: urls.py:110 urls.py:394 urls.py:401 urls.py:410 urls.py:419
-msgctxt "urls"
-msgid "subscriptions/"
-msgstr "abonelikler/"
-
-#: urls.py:119
-msgctxt "urls"
-msgid "unsubscribe/"
-msgstr "abonelik_iptali/"
-
-#: urls.py:127
-msgctxt "urls"
-msgid "select_languages/"
-msgstr "dil_secin/"
-
-#: urls.py:138
-msgctxt "urls"
-msgid "groups/"
-msgstr "gruplar/"
-
-#: urls.py:143 urls.py:148
-msgctxt "urls"
-msgid "badges/"
-msgstr "rozetler/"
-
-#: urls.py:161
-msgctxt "urls"
-msgid "feedback/"
-msgstr "geribildirim/"
-
-#: urls.py:183
-msgctxt "urls"
-msgid "about/"
-msgstr "hakkinda/"
-
-#: urls.py:184
-msgctxt "urls"
-msgid "faq/"
-msgstr "sss/"
-
-#: urls.py:185
-msgctxt "urls"
-msgid "privacy/"
-msgstr "gizlilik/"
-
-#: urls.py:187
-msgctxt "urls"
-msgid "terms/"
-msgstr "sartlar/"
-
-#: urls.py:192
-msgctxt "urls"
-msgid "help/"
-msgstr "yardim/"
-
-#: urls.py:194 urls.py:199
-msgctxt "urls"
-msgid "answers/"
-msgstr "cevaplar/"
-
-#: urls.py:199 urls.py:336
-msgctxt "urls"
-msgid "revisions/"
-msgstr "düzeltmeler/"
-
-#: urls.py:231
-msgctxt "urls"
-msgid "moderation-queue/"
-msgstr "yonetim-kuyrugu/"
-
-#: urls.py:296 urls.py:604 urls.py:612 urls.py:620 urls.py:628
-msgctxt "urls"
-msgid "ask/"
-msgstr "sor/"
-
-#: urls.py:306
-msgctxt "urls"
-msgid "retag/"
-msgstr "yeniden_etiketle/"
-
-#: urls.py:311
-msgctxt "urls"
-msgid "close/"
-msgstr "kapat/"
-
-#: urls.py:316
-msgctxt "urls"
-msgid "reopen/"
-msgstr "yeniden_ac/"
-
-#: urls.py:321
-msgctxt "urls"
-msgid "answer/"
-msgstr "cevapla/"
-
-#: urls.py:402 urls.py:653
-msgctxt "urls"
-msgid "delete/"
-msgstr "sil/"
-
-#: urls.py:411 urls.py:637
-msgctxt "urls"
-msgid "create/"
-msgstr "olustur/"
-
-#: urls.py:426
-msgctxt "urls"
-msgid "suggested-tags/"
-msgstr "onerilen-etiketler/"
-
-#: urls.py:597 urls.py:603 urls.py:611 urls.py:619 urls.py:627 urls.py:636
-#: urls.py:644 urls.py:652 urls.py:659
-msgctxt "urls"
-msgid "widgets/"
-msgstr "gerecler/"
-
-#: urls.py:629 deps/django_authopenid/urls.py:27
-msgctxt "urls"
-msgid "complete/"
-msgstr "tamamlandi/"
-
-#: urls.py:690
-msgctxt "urls"
-msgid "upload/"
-msgstr "karsiya_yukle/"
-
-#: urls.py:721
-msgctxt "urls"
-msgid "account/"
-msgstr "hesap/"
 
 #: conf/access_control.py:12
 msgid "Access control settings"
@@ -754,7 +196,7 @@ msgstr "Disiplinli"
 
 #: conf/badges.py:78
 msgid "minimum upvotes for deleted post"
-msgstr "silinmiş gönderiler için en az artı oy"
+msgstr "silinmiş gönderiler için en az olumlu oy"
 
 #: conf/badges.py:82 models/badges.py:662
 msgid "Editor"
@@ -766,7 +208,7 @@ msgstr "Aydın Görevi"
 
 #: conf/badges.py:88 conf/badges.py:154 conf/badges.py:162
 msgid "minimum upvotes"
-msgstr "en az artı oy"
+msgstr "en az olumlu oy"
 
 #: conf/badges.py:94 models/badges.py:767
 msgid "Enthusiast"
@@ -802,7 +244,7 @@ msgstr "İyi cevap"
 
 #: conf/badges.py:122 conf/badges.py:138 conf/badges.py:179 conf/badges.py:245
 msgid "minimum upvotes for the answer"
-msgstr "cevaplar için en az artı oy"
+msgstr "cevaplar için en az olumlu oy"
 
 #: conf/badges.py:128 conf/words.py:411 conf/words.py:412
 msgid "Good Question"
@@ -810,7 +252,7 @@ msgstr "İyi soru"
 
 #: conf/badges.py:130 conf/badges.py:146 conf/badges.py:171
 msgid "minimum upvotes for the question"
-msgstr "sorular için en az artı oy"
+msgstr "sorular için en az olumlu oy"
 
 #: conf/badges.py:136 conf/words.py:422 conf/words.py:423
 msgid "Great Answer"
@@ -854,7 +296,7 @@ msgstr "Çevre baskısı"
 
 #: conf/badges.py:197
 msgid "minimum downvotes for deleted post"
-msgstr "silinmiş gönderiler için en az eksi oy"
+msgstr "silinmiş gönderiler için en az olumsuz oy"
 
 #: conf/badges.py:203 conf/words.py:444 conf/words.py:445
 msgid "Popular Question"
@@ -874,7 +316,7 @@ msgstr "Kendi öğrenen"
 
 #: conf/badges.py:217
 msgid "minimum answer upvotes"
-msgstr "cevaba en az artı oy"
+msgstr "cevaba en az olumlu oy"
 
 #: conf/badges.py:223 conf/words.py:477 conf/words.py:478
 msgid "Stellar Question"
@@ -910,9 +352,9 @@ msgstr "E-posta konu satırı için ön ek"
 
 #: conf/email.py:28
 msgid ""
-"This setting takes default from the django setting EMAIL_SUBJECT_PREFIX. A "
-"value entered here will override the default."
-msgstr ""
+"This setting takes default from the django settingEMAIL_SUBJECT_PREFIX. A "
+"value entered here will overridethe default."
+msgstr "Bu ayar, öntanımlı değerini EMAIL_SUBJECT_PREFIX adlı django ayarından alır. Buraya girilen değer öntanımlı değerin yerine geçer."
 
 #: conf/email.py:47
 msgid "Site administrator email address"
@@ -1373,9 +815,9 @@ msgstr "İç geri bildirim formu e-posta alıcıları"
 
 #: conf/feedback.py:84
 msgid ""
-"Comma separated list of email addresses. If left empty, feedback mails are "
+"Comma separated list of email addresses. If left empty,feedback mails are "
 "sent to admins and moderators."
-msgstr ""
+msgstr "E-posta adreslerinin virgülle ayrılmış listesi. Eğer boş bırakılırsa, geribildirim postaları yöneticilere ve denetçilere gönderilir."
 
 #: conf/flatpages.py:12
 msgid "Messages and pages - about, privacy policy, etc."
@@ -1527,19 +969,19 @@ msgstr "<b style=\"color:red;\">Daraltılmış kipi kullanmak için lütfen asga
 
 #: conf/forum_data_rules.py:156
 msgid "Maximum length of tag (number of characters)"
-msgstr "En büyük etiket uzunluğu (karakter sayısı)"
+msgstr "Etiketin azami uzunluğu (karakter sayısı)"
 
 #: conf/forum_data_rules.py:165
 msgid "Minimum length of title (number of characters)"
-msgstr "En küçük başlık uzunluğu (karakter sayısı)"
+msgstr "Etiketin azami uzunluğu (karakter sayısı)"
 
 #: conf/forum_data_rules.py:175
 msgid "Minimum length of question body (number of characters)"
-msgstr "En küçük soru gövdesi uzunluğu (karakter sayısı)"
+msgstr "Etiketin azami uzunluğu (karakter sayısı)"
 
 #: conf/forum_data_rules.py:186
 msgid "Minimum length of answer body (number of characters)"
-msgstr "En küçük cevap gövdesi uzunluğu (karakter sayısı)"
+msgstr "Etiketin azami uzunluğu (karakter sayısı)"
 
 #: conf/forum_data_rules.py:196
 msgid "Show comment updates on the main page"
@@ -1547,7 +989,7 @@ msgstr "Yorum güncellemelerini ana sayfada göster"
 
 #: conf/forum_data_rules.py:206
 msgid "Minimum length of comment (number of characters)"
-msgstr "En küçük yorum uzunluğu (karakter olarak)"
+msgstr "Asgari yorum uzunluğu (karakter olarak)"
 
 #: conf/forum_data_rules.py:217
 msgid "Limit one answer per question per user"
@@ -1634,7 +1076,7 @@ msgstr "Abone olunan etiketler için ayrı set kullan"
 msgid ""
 "If enabled, users will have a third set of tag selections - \"subscribed\" "
 "(by email) in addition to \"interesting\" and \"ignored\""
-msgstr "Etkinleştirildiğinde, kullanıcılar \"ilginç\" ve \"yoksayılan\"ın yanı sıra (e-posta ile) \"abone olunan\" adlı üçüncü bir etiket seçimleri kümesine sahip olacaklar."
+msgstr "Etkinse, kullanıcılar üçüncü bir etiket seçimleri kümesine sahip olacaklar - \"ilginç\" ve \"yoksayılan\" yanı sıra \"abone olunan\" (e-posta ile)"
 
 #: conf/forum_data_rules.py:357
 msgid "Always, for all users"
@@ -1795,8 +1237,8 @@ msgid "Enable group email addresses"
 msgstr "Grup e-posta adreslerini etkinleştir"
 
 #: conf/group_settings.py:54
-msgid "If selected, users can post to groups by email \"group-name@domain.com\""
-msgstr ""
+msgid "If selected, users can post to groups by email\"group-name@domain.com\""
+msgstr "Eğer seçilirse, kullanıcılar gruplara \"grup-adi@etkialani.com\" e-posta adresiyle gönderebilirler"
 
 #: conf/karma_and_badges_visibility.py:12
 msgid "Karma & Badge visibility"
@@ -1882,7 +1324,7 @@ msgstr "Base DN genellikle kuruluşunuzun alan adını aynalar, örneğin siteni
 
 #: conf/ldap.py:96
 msgid "User search filter template"
-msgstr "Kullanıcı arama süzgeci şablonu"
+msgstr "Kullanıcı tanımlı arama filtresi şablonları"
 
 #: conf/ldap.py:99
 msgid ""
@@ -1962,10 +1404,10 @@ msgstr "Sol kenar çubuğu için HTML"
 
 #: conf/leading_sidebar.py:32
 msgid ""
-"Use this area to enter content at the LEFT sidebar in HTML format.  When "
+"Use this area to enter content at the LEFT sidebarin HTML format.  When "
 "using this option, please use the HTML validation service to make sure that "
 "your input is valid and works well in all browsers."
-msgstr ""
+msgstr "SOL kenar çubuğuna HTML biçiminde içerik girmek için bu alanı kullanın. Bu seçeneği kullanırken girdinizin geçerli ve tüm tarayıcılarda iyi çalıştığından emin olmak için lütfen HTML geçerlilik hizmetini kullanın."
 
 #: conf/license.py:12
 msgid "Content License"
@@ -2229,11 +1671,11 @@ msgstr "Onaylı kullanıcılar denetimi ve recaptcha'yı atlayabilir"
 
 #: conf/minimum_reputation.py:32
 msgid "Upvote"
-msgstr "Artı oy"
+msgstr "Beğendim"
 
 #: conf/minimum_reputation.py:41
 msgid "Downvote"
-msgstr "Eksi oy"
+msgstr "Beğenmedim"
 
 #: conf/minimum_reputation.py:50
 msgid "Answer own question immediately"
@@ -2341,7 +1783,7 @@ msgstr "işaretli gönderileri ve izlenen kullanıcıları incele"
 
 #: conf/moderation.py:20
 msgid "pre-moderate watched users and audit flagged posts"
-msgstr "izlenen kullanıcıları ön denetimden geçir ve işaretli gönderileri incele"
+msgstr "izlenen kullanıcıları ön moderasyondan geçir ve işaretli gönderileri incele"
 
 #: conf/moderation.py:29
 msgid "Content moderation method"
@@ -2351,7 +1793,7 @@ msgstr "İçerik denetim yöntemi"
 msgid ""
 "Audit is made after the posts are published, pre-moderation prevents "
 "publishing before moderator's decision."
-msgstr "İnceleme gönderiler yayınlandıktan sonra gerçekleşir, ön denetleme de moderatör onayı olmadan yayınlamayı önler."
+msgstr "İnceleme gönderiler yayınlandıktan sonra gerçekleşir, ön moderasyon da moderatör onayı olmadan yayınlamayı önler."
 
 #: conf/moderation.py:41
 msgid "Reject all posts with these phrases"
@@ -2361,7 +1803,7 @@ msgstr "Şu ifadeleri içeren tüm gönderileri reddet"
 msgid ""
 "Enter one phrase per line (case-insensitive). Posts with these phrases will "
 "be rejected without moderation."
-msgstr "Satır başına bir ifade girin (büyük-küçük harf duyarsız). Bu ifadeleri içeren gönderiler denetleme yapılmaksızın reddedilecek."
+msgstr "Satır başına bir ifade girin (büyük-küçük harf duyarsız). Bu ifadeleri içeren gönderiler moderasyon yapılmaksızın reddedilecek."
 
 #: conf/moderation.py:55
 msgid "Enable image moderation"
@@ -2432,7 +1874,7 @@ msgstr "Kullanıcı başına azami günlük itibar kazanım limiti"
 
 #: conf/reputation_changes.py:32
 msgid "Gain for receiving an upvote"
-msgstr "Bir artı oyun itibar getirisi"
+msgstr "Bir olumlu oyun itibar getirisi"
 
 #: conf/reputation_changes.py:41
 msgid "Gain for the author of accepted answer"
@@ -2444,7 +1886,7 @@ msgstr "En iyi cevap için kazanılan puan"
 
 #: conf/reputation_changes.py:59
 msgid "Loss for giving a downvote"
-msgstr "Eksi oy vermenin götürüsü"
+msgstr "Olumsuz oy vermenin götürüsü"
 
 #: conf/reputation_changes.py:69
 msgid "Loss for owner of post that was flagged offensive"
@@ -2452,7 +1894,7 @@ msgstr "Saldırgan olarak işaretlenen gönderinin yazarından götürüsü"
 
 #: conf/reputation_changes.py:79
 msgid "Loss for owner of post that was downvoted"
-msgstr "Eksi oylanan gönderinin yazarından götürüsü"
+msgstr "Olumsuz oylanan gönderinin yazarından götürüsü"
 
 #: conf/reputation_changes.py:89
 msgid "Loss for owner of post that was flagged 3 times per same revision"
@@ -2521,8 +1963,8 @@ msgstr "Etiket seçiciyi yan çubukta göster."
 #: conf/sidebar_main.py:66
 msgid ""
 "Uncheck this if you want to hide the options for choosing interesting and "
-"ignored tags"
-msgstr ""
+"ignored tags "
+msgstr "Seçtiğiniz ve görmezden geldiğiniz etiketleri gizlemek istiyorsanız bu seçimi kaldırınız"
 
 #: conf/sidebar_main.py:76
 msgid "Show tag list/cloud in sidebar"
@@ -2530,8 +1972,8 @@ msgstr "Etiket listesini/bulutunu yan çubukta göster."
 
 #: conf/sidebar_main.py:77
 msgid ""
-"Uncheck this if you want to hide the tag cloud or tag list from the sidebar"
-msgstr ""
+"Uncheck this if you want to hide the tag cloud or tag list from the sidebar "
+msgstr "Etiket listesini veya etiket bulutunu yan çubuktan gizlemek istiyorsanız bu seçimi kaldırın"
 
 #: conf/sidebar_main.py:87 conf/sidebar_question.py:134
 msgid "Custom sidebar footer"
@@ -2539,11 +1981,11 @@ msgstr "Özel alt bilgi çubuğu"
 
 #: conf/sidebar_main.py:91
 msgid ""
-"Use this area to enter content at the BOTTOM of the sidebar in HTML format."
+"Use this area to enter content at the BOTTOM of the sidebarin HTML format."
 "   When using this option (as well as the sidebar header), please use the "
 "HTML validation service to make sure that your input is valid and works well"
 " in all browsers."
-msgstr ""
+msgstr "Bu alanı panelin altına eklemek istediğiniz içeriği HTML biçiminde eklemek için kullanın. Bu seçeneği kullanırken (araç çubuğu üst bilgisiyle birlikte) girdinizin tüm tarayıcılar için geçerli ve çalışır olduğunu doğrulamak için HTML doğrulama servisini kullanın."
 
 #: conf/sidebar_profile.py:12
 msgid "User profile sidebar"
@@ -2709,8 +2151,8 @@ msgid "Q&amp;A site logo"
 msgstr "S&amp;C site logosu"
 
 #: conf/skin_general_settings.py:53
-msgid "To change the logo, select new file, then submit this whole form."
-msgstr ""
+msgid "To change the logo, select new file, then submitthis whole form."
+msgstr "Logoyu değiştirmek için, yeni bir dosya seçin ve bu formun tümünü gönderin."
 
 #: conf/skin_general_settings.py:69
 msgid "Select Language"
@@ -3035,18 +2477,18 @@ msgid ""
 "modules.html#uploaded-avatars\">this page</a>."
 msgstr "Avatarlar için gravatar.com sitesinin kullanımına izin vermek istiyorsanız bu seçeneği işaretleyin. Bu özelliğin tamamen kullanılabilir hale gelmesi 10 dakikayı bulabilir. Ayrıca avatar yüklemeyi de etkinleştirmelisiniz. Daha fazla bilgi için, lütfen <a href=\"http://askbot.org/doc/optional-modules.html#uploaded-avatars\">bu sayfayı</a> ziyaret ediniz."
 
-#: conf/user_settings.py:176
+#: conf/user_settings.py:171
 msgid "Default Gravatar icon type"
 msgstr "Varsayılan Gravatar simge türü"
 
-#: conf/user_settings.py:178
+#: conf/user_settings.py:173
 msgid ""
 "This option allows you to set the default avatar type for email addresses "
 "without associated gravatar images.  For more information, please visit <a "
 "href=\"http://en.gravatar.com/site/implement/images/\">this page</a>."
 msgstr "Bu seçenek ilgili gravatar simgesinden bağımsız olarak e-posta adresininz için avatar ayarlamanıza imkan verir. Daha fazla bilgi için <a href=\"http://en.gravatar.com/site/implement/images/\">bu adrese</a> bakabilirsiniz."
 
-#: conf/user_settings.py:191
+#: conf/user_settings.py:183
 msgid "Name for the Anonymous user"
 msgstr "Misafir kullanıcı için isim"
 
@@ -3094,7 +2536,7 @@ msgstr "Site terimler sözlüğü"
 
 #: conf/words.py:22 conf/words.py:23 templates/ask.html:4
 msgid "Ask Your Question"
-msgstr "Sorunuzu Sorun"
+msgstr "Kendi Sorunuzu Sorun"
 
 #: conf/words.py:24 conf/words.py:45 conf/words.py:56 conf/words.py:67
 #: conf/words.py:136
@@ -3189,7 +2631,7 @@ msgstr "soruldu"
 
 #: conf/words.py:195 conf/words.py:196
 msgid "Asked first question"
-msgstr "İlk sorusunu sordu"
+msgstr "Sorulan ilk soru"
 
 #: conf/words.py:205 conf/words.py:206
 msgid "Asked by me"
@@ -3197,11 +2639,11 @@ msgstr "Tarafımdan sorulan"
 
 #: conf/words.py:215 conf/words.py:216
 msgid "Asked a question"
-msgstr "Bir soru sordu"
+msgstr "Bir soru sor"
 
 #: conf/words.py:225 conf/words.py:226
 msgid "Answered a question"
-msgstr "Bir soru cevapladı"
+msgstr "Bir soru cevaplandı"
 
 #: conf/words.py:235 conf/words.py:236
 msgid "Answered by me"
@@ -3209,15 +2651,15 @@ msgstr "Tarafımdan cevaplanan"
 
 #: conf/words.py:246 conf/words.py:247
 msgid "accepted an answer"
-msgstr "bir cevap kabul etti"
+msgstr "bir cevap onaylandı"
 
 #: conf/words.py:256 conf/words.py:257
 msgid "Gave accepted answer"
-msgstr "Kabul edilen cevap verdi"
+msgstr "Onaylanan cevaba bak"
 
 #: conf/words.py:266 conf/words.py:267
 msgid "answered"
-msgstr "cevapladı"
+msgstr "cevaplandı"
 
 #: conf/words.py:276
 msgid ""
@@ -3289,11 +2731,11 @@ msgstr "Soru olumlu oy aldı"
 
 #: conf/words.py:358 conf/words.py:359
 msgid "Answer voted up"
-msgstr "cevap artı oylandı"
+msgstr "Cevap olumlu oy aldı"
 
 #: conf/words.py:368 conf/words.py:369
 msgid "upvoted answer"
-msgstr "artı oylanmış cevap"
+msgstr "cevaba olumlu oy verildi"
 
 #: conf/words.py:380 conf/words.py:391 conf/words.py:402 conf/words.py:413
 #: conf/words.py:424 conf/words.py:435 conf/words.py:446 conf/words.py:457
@@ -3303,15 +2745,15 @@ msgstr "Rozet adı"
 
 #: conf/words.py:499 conf/words.py:500
 msgid "upvoted answers"
-msgstr "artı oylanmış cevaplar"
+msgstr "sorulara olumlu oy verildi"
 
 #: conf/words.py:509 conf/words.py:510
 msgid "Show only questions from"
-msgstr "Sadece şu soruları göster:"
+msgstr "Sadece şu soruları göster"
 
 #: conf/words.py:519 conf/words.py:520
 msgid "Please ask your question here"
-msgstr "Sorunuzu burada sorun"
+msgstr "Siz de sorun!!"
 
 #: conf/words.py:530
 msgid "Sorry, this question has been deleted and is no longer accessible"
@@ -3339,7 +2781,7 @@ msgstr "Lütfen bazı soruları veya bazı kullanıcıları takip edin."
 
 #: conf/words.py:592 conf/words.py:593
 msgid "Please feel free to ask your question!"
-msgstr "Lütfen sorularınızı sormaktan çekinmeyin!"
+msgstr "Lütfen sorunuzu sormak için çekinmeyin!"
 
 #: conf/words.py:602 conf/words.py:603
 msgid "swap with question"
@@ -3347,7 +2789,7 @@ msgstr "soru ile takas"
 
 #: conf/words.py:612 conf/words.py:613
 msgid "repost as a question comment"
-msgstr "soruya yorum olarak tekrar gönder"
+msgstr "soru açıklaması olarak tekrar gönder"
 
 #: conf/words.py:622
 msgid "(only one answer per user is allowed)"
@@ -3367,7 +2809,7 @@ msgstr "soru sahibi"
 
 #: conf/words.py:652 conf/words.py:653
 msgid "accept or unaccept the best answer"
-msgstr "en iyi cevabı onaylayabilir veya onayını kaldırabilir"
+msgstr "en iyi cevabı onaylayın veya onayını kaldırın"
 
 #: conf/words.py:662 conf/words.py:663
 msgid "accept or unaccept your own answer"
@@ -3415,7 +2857,7 @@ msgstr "Bu soruya ilk cevabı sen yaz!"
 
 #: conf/words.py:772 conf/words.py:773
 msgid "followed questions"
-msgstr "takip edilen sorular"
+msgstr "izlenen sorular"
 
 #: conf/words.py:782 conf/words.py:783
 msgid "follow questions"
@@ -3471,7 +2913,7 @@ msgstr "Soruyu yeniden aç"
 
 #: conf/words.py:903 conf/words.py:904
 msgid "There are no unanswered questions here"
-msgstr "Burada cevapsız tek bir soru bile yok"
+msgstr "Harika! Cevapsız bir soru bile kalmamış..."
 
 #: conf/words.py:913 conf/words.py:914
 msgid "this answer has been selected as correct"
@@ -3577,8 +3019,8 @@ msgstr "tüm gönderiler"
 msgid "newest"
 msgstr "en yeni"
 
-#: const/__init__.py:56 templates/users.html:54
-#: templates/question/answer_tab_bar.html:10
+#: const/__init__.py:56 templates/question/answer_tab_bar.html:10
+#: templates/users.html:54
 msgid "oldest"
 msgstr "en eski"
 
@@ -3669,7 +3111,7 @@ msgstr "cevapsız"
 
 #: const/__init__.py:140
 msgid "followed"
-msgstr "takip edilen"
+msgstr "izlenen"
 
 #: const/__init__.py:145
 msgid "list"
@@ -3721,11 +3163,11 @@ msgstr "en iyi cevap olarak işaretlenmiş"
 
 #: const/__init__.py:228
 msgid "upvoted"
-msgstr "artı oylanmış"
+msgstr "beğendim"
 
 #: const/__init__.py:229
 msgid "downvoted"
-msgstr "eksi oylandı"
+msgstr "beğenmedim"
 
 #: const/__init__.py:230
 msgid "canceled vote"
@@ -3891,6 +3333,30 @@ msgstr "Gravatar"
 #: const/__init__.py:485
 msgid "Uploaded Avatar"
 msgstr "Yüklenmiş Avatar"
+
+#: const/__init__.py:495 forms.py:712
+msgid "administrator"
+msgstr "site yöneticisi"
+
+#: const/__init__.py:496 forms.py:713
+msgid "moderator"
+msgstr "moderatör"
+
+#: const/__init__.py:497 forms.py:706
+msgid "approved"
+msgstr "onaylanmış"
+
+#: const/__init__.py:498 forms.py:707
+msgid "watched"
+msgstr "izlenen"
+
+#: const/__init__.py:499 forms.py:708
+msgid "suspended"
+msgstr "askıya alınmış"
+
+#: const/__init__.py:500 forms.py:709
+msgid "blocked"
+msgstr "engellenmiş"
 
 #: const/__init__.py:532 templates/badges.html:41
 msgid "gold"
@@ -4090,7 +3556,7 @@ msgstr "Parolalar uyuşmuyor"
 #: deps/django_authopenid/forms.py:290 deps/django_authopenid/forms.py:374
 #, python-format
 msgid "choose password > %(len)s characters"
-msgstr "seçtiğiniz parola %(len)s karakterden büyük olmalı"
+msgstr "seçtiğiniz parola > %(len)s karakter olmalı"
 
 #: deps/django_authopenid/forms.py:359 utils/forms.py:286
 msgid "password is required"
@@ -4131,6 +3597,11 @@ msgstr "gerec/"
 msgctxt "urls"
 msgid "signout/"
 msgstr "cikis/"
+
+#: deps/django_authopenid/urls.py:27 urls.py:629
+msgctxt "urls"
+msgid "complete/"
+msgstr "tamamlandi/"
 
 #: deps/django_authopenid/urls.py:31
 msgctxt "urls"
@@ -4339,31 +3810,373 @@ msgstr "Üzgünüz, bu hesap kurtarma anahtarının süresi geçmiş veya geçer
 msgid "Re: "
 msgstr "Cevap:"
 
-#: deps/livesettings/models.py:107 deps/livesettings/models.py:153
-msgid "Site"
-msgstr ""
+#: exceptions.py:15
+msgid "Sorry, but anonymous visitors cannot access this function"
+msgstr "Üzgünüz, fakat giriş yapmamış ziyaretçiler bu işleve erişemez"
 
-#: deps/livesettings/values.py:80
-msgid "Main"
-msgstr ""
+#: feed.py:37 feed.py:125
+msgid " - "
+msgstr " - "
 
-#: deps/livesettings/values.py:141
-msgid "Base Settings"
-msgstr ""
-
-#: deps/livesettings/values.py:257 deps/livesettings/values.py:291
-msgid "Default value: "
-msgstr ""
-
-#: deps/livesettings/values.py:259
+#: feed.py:38
 #, python-format
-msgid "Default value: %s"
-msgstr ""
+msgid "Individual %(question)s feed"
+msgstr "Bağımsız %(question)s beslemesi"
 
-#: deps/livesettings/values.py:765
+#: feed.py:126
 #, python-format
-msgid "Allowed image file types are %(types)s"
-msgstr ""
+msgid "Latest %(question)s feed"
+msgstr "Yeni %(question)s beslemesi"
+
+#: forms.py:105
+msgid "Wildcard tag must have only one '*' symbol"
+msgstr "Joker karakter etiketinde yalnızca bir '*' simgesi olmalıdır"
+
+#: forms.py:107
+msgid "Wildcard tag must have at least one symbol"
+msgstr "Joker karakter etiketinde en az bir simge olmalıdır"
+
+#: forms.py:113
+msgid "Wildcard tag must end with an '*' symbol"
+msgstr "Joker karakter etiketi, '*' simgesi ile bitmelidir"
+
+#: forms.py:194
+msgid "select country"
+msgstr "ülke seçin"
+
+#: forms.py:196
+msgid "Country"
+msgstr "Ülke"
+
+#: forms.py:203
+msgid "Country field is required"
+msgstr "Ülke bilgisi gereklidir"
+
+#: forms.py:230
+#, python-format
+msgid "must be > %d word"
+msgid_plural "must be > %d words"
+msgstr[0] "> %d kelime olmalı"
+msgstr[1] "> %d kelime olmalı"
+
+#: forms.py:238
+#, python-format
+msgid "must be < %d word"
+msgid_plural "must be < %d words"
+msgstr[0] "< %d kelime olmalı"
+msgstr[1] "< %d kelime olmalı"
+
+#: forms.py:258 templates/widgets/ask_form.html:46
+msgid "Select language"
+msgstr "Dili seç"
+
+#: forms.py:284
+msgid "minor edit (don't send alerts)"
+msgstr "küçük düzenlemeler (uyarıları gönderme)"
+
+#: forms.py:310 templates/widgets/markdown_help.html:20
+#: templates/widgets/markdown_help.html:24
+msgid "title"
+msgstr "başlık"
+
+#: forms.py:323
+#, python-format
+msgid "must have > %d non-punctuation character"
+msgid_plural "must have > %d non-punctuation characters"
+msgstr[0] "> %d noktalama işareti olmayan karakter olmalı"
+msgstr[1] "> %d noktalama işareti olmayan karakter olmalı"
+
+#: forms.py:335
+#, python-format
+msgid ""
+"The %(question)s is too long, maximum allowed size is %(length)d characters"
+msgstr "%(question)s çok uzun, izin verilen azami boyut %(length)d karakter"
+
+#: forms.py:342
+#, python-format
+msgid "The %(question)s is too long, maximum allowed size is %(length)d bytes"
+msgstr "%(question)s çok uzun, izin verilen azami boyut %(length)d bayt"
+
+#: forms.py:372
+msgid "post"
+msgstr "gönder"
+
+#: forms.py:379
+#, python-format
+msgid "%(post)s content must be > %(count)d character"
+msgid_plural "%(post)s content must be > %(count)d characters"
+msgstr[0] "%(post)s içerik > %(count)d karakter olmalı"
+msgstr[1] "%(post)s içerik > %(count)d karakter olmalı"
+
+#: forms.py:427
+#, python-format
+msgid "each tag must be shorter than %(max_chars)d character"
+msgid_plural "each tag must be shorter than %(max_chars)d characters"
+msgstr[0] "Etiketler %(max_chars)d karakterden kısa olmak zorundadır"
+msgstr[1] "Etiketler %(max_chars)d karakterden kısa olmak zorundadır"
+
+#: forms.py:471
+msgid ""
+"We ran out of space for recording the tags. Please shorten or delete some of"
+" them."
+msgstr "Etiketleri kaydetmek için yeterli alanımız mevcut değil. Lütfen bazılarını silin ya da kısaltın."
+
+#: forms.py:473 forms.py:1101 models/widgets.py:27
+#: templates/widgets/meta_nav.html:6 templates/widgets/tags_field.html:10
+msgid "tags"
+msgstr "etiketler"
+
+#: forms.py:475
+#, python-format
+msgid ""
+"Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
+"be used."
+msgid_plural ""
+"Tags are short keywords, with no spaces within. Up to %(max_tags)d tags can "
+"be used."
+msgstr[0] "Etiketler boşluk içermeyen kısa kelimelerdir. Azami %(max_tags)d etiket kullanılabilir."
+msgstr[1] "Etiketler boşluk içermeyen kısa kelimelerdir. Azami %(max_tags)d etiket kullanılabilir."
+
+#: forms.py:500
+#, python-format
+msgid "please use %(tag_count)d tag or less"
+msgid_plural "please use %(tag_count)d tags or less"
+msgstr[0] "Lütfen %(tag_count)d kadar veya daha az etiket kullanın"
+msgstr[1] "Lütfen %(tag_count)d kadar veya daha az etiket kullanın"
+
+#: forms.py:508
+#, python-format
+msgid "At least one of the following tags is required : %(tags)s"
+msgstr "Şu etiketlerden en az bir tanesi gereklidir : %(tags)s"
+
+#: forms.py:536
+msgid "community wiki (karma is not awarded & many others can edit wiki post)"
+msgstr "topluluk vikisi (karma puanı verilmez ve yazılan viki metinleri başkaları tarafından değiştirilebilir)"
+
+#: forms.py:578
+msgid "update summary:"
+msgstr "güncelleme özeti:"
+
+#: forms.py:580
+msgid ""
+"enter a brief summary of your revision (e.g. fixed spelling, grammar, "
+"improved style...), this field is optional"
+msgstr "yaptığınız düzeltmenin kısa bir özetini yazın (örneğin yazım yanlışı, dil bilgisi, iyileştirilmiş biçim...), bu alan isteğe bağlıdır"
+
+#: forms.py:693
+msgid "Enter number of points to add or subtract"
+msgstr "Eklenecek ya da çıkartılacak puanı girin"
+
+#: forms.py:694
+msgid "Comment"
+msgstr "Yorum"
+
+#: forms.py:732
+msgid "Change status to"
+msgstr "Durumu şuna değiştir"
+
+#: forms.py:761
+msgid "which one?"
+msgstr "hangisi?"
+
+#: forms.py:789
+msgid "Cannot change own status"
+msgstr "Kendi durumunuzu değiştiremezsiniz"
+
+#: forms.py:795
+msgid "Cannot turn other user to moderator"
+msgstr "Başka bir kullanıcıyı moderatör yapamazsınız"
+
+#: forms.py:801
+msgid "Cannot change status of another moderator"
+msgstr "Başka bir moderatörün durumunu değiştiremezsiniz"
+
+#: forms.py:806
+msgid "Cannot change status to admin"
+msgstr "Durumu site yöneticisi yapamazsınız"
+
+#: forms.py:811
+#, python-format
+msgid ""
+"If you wish to change %(username)s's status, please make a meaningful "
+"selection."
+msgstr "%(username)s kullanıcısının durumunu değiştirmek istiyorsanız lütfen anlamlı bir seçim yapınız."
+
+#: forms.py:825
+msgid "Subject line"
+msgstr "Konu satırı"
+
+#: forms.py:828
+msgid "Message text"
+msgstr "İleti metni"
+
+#: forms.py:833
+msgid "Your name (optional):"
+msgstr "Adınız (isteğe bağlı):"
+
+#: forms.py:834
+msgid "Email:"
+msgstr "E-posta:"
+
+#: forms.py:835
+msgid "Your message:"
+msgstr "İletiniz:"
+
+#: forms.py:838
+msgid "I don't want to give my email or receive a response:"
+msgstr "E-posta adresimi vermek ya da cevap almak istemiyorum:"
+
+#: forms.py:851
+msgid "Message is required"
+msgstr "İleti alanı zorunludur"
+
+#: forms.py:857 models/__init__.py:2504
+msgid "Anonymous"
+msgstr "Misafir"
+
+#: forms.py:867
+msgid "Either provide email address or mark \"I dont want to give email below\""
+msgstr "Lütfen e-posta adresinizi belirtiniz veya \"e-posta adresimi vermek istemiyorum\" alanını işaretleyiniz."
+
+#: forms.py:900
+msgid "keep private within your groups"
+msgstr "gruplar içerisinde gizli tut"
+
+#: forms.py:938 templates/ask.html:41 templates/question.html:421
+msgid "User name:"
+msgstr "Kullanıcı adı:"
+
+#: forms.py:939
+msgid "Enter name to post on behalf of someone else. Can create new accounts."
+msgstr "Başka birinin yerine göndermek için isim girin. Yeni hesaplar oluşturabilirsiniz."
+
+#: forms.py:943 templates/question.html:422
+msgid "Email address:"
+msgstr "E-posta adresi:"
+
+#: forms.py:990
+msgid "User name is required with the email"
+msgstr "Kullanıcı adı ile birlikte e-posta da gereklidir"
+
+#: forms.py:995
+msgid "Email is required if user name is added"
+msgstr "Kullanıcı adı eklenecekse eğer e-posta da gereklidir"
+
+#: forms.py:1024
+msgid "Add details (optional)"
+msgstr "Ayrıntıları ekleyin (isteğe bağlı)"
+
+#: forms.py:1026
+msgid "Add details"
+msgstr "Ayrıntı ekle"
+
+#: forms.py:1031
+msgid "post anonymously"
+msgstr "isimsiz olarak gönder"
+
+#: forms.py:1050
+msgid ""
+"Subject line is expected in the format: [tag1, tag2, tag3,...] question "
+"title"
+msgstr "Konu satırının şu biçimde olması beklenir: [tag1, tag2, tag3,...] soru başlığı"
+
+#: forms.py:1060
+msgid "ask anonymously"
+msgstr "isimsiz olarak sor"
+
+#: forms.py:1312
+msgid "Details"
+msgstr "Detaylar"
+
+#: forms.py:1319
+msgid "remove anonymity"
+msgstr "anonimliği kaldır"
+
+#: forms.py:1396
+msgid "Real name"
+msgstr "Gerçek isim"
+
+#: forms.py:1400
+msgid "Website"
+msgstr "İnternet sitesi"
+
+#: forms.py:1404
+msgid "City"
+msgstr "Şehir"
+
+#: forms.py:1409
+msgid "Show country"
+msgstr "Ülkeyi göster"
+
+#: forms.py:1412
+msgid "Show tag choices"
+msgstr "Etiket seçimlerini göster"
+
+#: forms.py:1415
+msgid "Date of birth"
+msgstr "Doğum tarihi"
+
+#: forms.py:1417
+msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
+msgstr "gösterilmeyecek, yaş hesaplanmasında kulanılacak, şu şekilde giriniz: YYYY-AA-GG"
+
+#: forms.py:1423
+msgid "Profile"
+msgstr "Profil"
+
+#: forms.py:1431
+msgid "Screen name"
+msgstr "Görünen isim"
+
+#: forms.py:1469 forms.py:1472
+msgid "this email has already been registered, please use another one"
+msgstr "bu e-posta adresi sistemimizde zaten kayıtlı, lütfen başka bir adres kullanın"
+
+#: forms.py:1479
+msgid "Choose email tag filter"
+msgstr "E-posta etiketi için filtre seçIn"
+
+#: forms.py:1533
+msgid "Individually selected"
+msgstr "Tek tek seçilmiş"
+
+#: forms.py:1534
+msgid "Entire forum (tag filtered)"
+msgstr "Tüm forum (etiket ile filtrelenmiş)"
+
+#: forms.py:1535
+msgid "Comments and posts mentioning me"
+msgstr "Benden bahseden iletiler ve yorumlar"
+
+#: forms.py:1618
+msgid "please choose one of the options above"
+msgstr "lütfen yukarıdaki seçeneklerden birini seçin "
+
+#: forms.py:1621
+msgid "okay, let's try!"
+msgstr "tamam, bir deneyelim!"
+
+#: forms.py:1622
+#, python-format
+msgid "no %(sitename)s email please, thanks"
+msgstr "%(sitename)s e-postası istemiyorum, teşekkürler"
+
+#: forms.py:1676 templates/reopen.html:7
+msgid "Title"
+msgstr "Başlık"
+
+#: forms.py:1677 templates/email/preview_email.html:9 templates/groups.html:32
+msgid "Description"
+msgstr "Açıklama"
+
+#: forms.py:1703 templates/main_page/sidebar.html:23 templates/tags.html:3
+#: templates/tags/header.html:9
+#: templates/tags/list_bulk_tag_subscription.html:12
+#: templates/widgets/tag_category_selector.html:2
+#: templates/widgets/tags_field.html:4 templates/widgets/tags_field.html:14
+#: templates/widgets/tags_field.html:18
+msgid "Tags"
+msgstr "Etiketler"
 
 #: importers/stackexchange/management/commands/load_stackexchange.py:150
 msgid "Congratulations, you are now an Administrator"
@@ -4510,11 +4323,11 @@ msgstr "Gönderi moderatör tarafından bir neden belirtilerek reddedildiğinde 
 
 #: mail/messages.py:566
 msgid "Moderation queue has items"
-msgstr "Denetleme kuyruğunda ögeler var"
+msgstr "Moderasyon kuyruğunda ögeler var"
 
 #: mail/messages.py:568
 msgid "Sent to moderators when the moderation queue is not empty"
-msgstr "Denetleme kuyruğu boş olmadığında moderatörlere gönderilir"
+msgstr "Moderasyon kuyruğu boş olmadığında moderatörlere gönderilir"
 
 #: mail/messages.py:592
 msgid "Batch email alert"
@@ -4676,12 +4489,12 @@ msgstr "Üzgünüm, kendi gönderiniz için oy kullanamazsınız"
 #: models/__init__.py:824 templates/faq_static.html:32
 #: templates/user_profile/user_votes.html:14
 msgid "upvote"
-msgstr "artı oylanmış"
+msgstr "beğendim"
 
 #: models/__init__.py:827 templates/faq_static.html:42
 #: templates/user_profile/user_votes.html:16
 msgid "downvote"
-msgstr "eksi oy"
+msgstr "beğenmedim"
 
 #: models/__init__.py:841
 msgid "upload files"
@@ -4962,12 +4775,12 @@ msgstr "Etiket üyeliğiniz kaydedildi, teşekkürler!"
 #: models/badges.py:133
 #, python-format
 msgid "Deleted own post with %(votes)s or more upvotes"
-msgstr "%(votes)s veya daha fazla artı oy alan kendi gönderisi silindi"
+msgstr "%(votes)s veya daha fazla olumlu oy alan kendi gönderisi silindi"
 
 #: models/badges.py:152
 #, python-format
 msgid "Deleted own post with %(votes)s or more downvotes"
-msgstr "%(votes)s veya daha fazla eksi oy alan kendi gönderisi silindi"
+msgstr "%(votes)s veya daha fazla olumsuz oy alan kendi gönderisi silindi"
 
 #: models/badges.py:155
 msgid "Peer Pressure"
@@ -4977,15 +4790,15 @@ msgstr "Çevre baskısı"
 #, python-format
 msgid ""
 "Gave an %(answer_voted_up)s at least %(votes)s times for the first time"
-msgstr "İlk kez en az %(votes)s defa artı oy alan %(answer_voted_up)s"
+msgstr "İlk kez en az %(votes)s defa artı oy alan %(answer_voted_up)s verildi"
 
 #: models/badges.py:215
 msgid "First upvote"
-msgstr "İlk artı oy"
+msgstr "İlk olumlu oy"
 
 #: models/badges.py:226
 msgid "First downvote"
-msgstr "İlk eksi oy"
+msgstr "İlk olumsuz oy"
 
 #: models/badges.py:238
 #, python-format
@@ -5337,6 +5150,10 @@ msgstr "hesap/"
 msgid "signin/"
 msgstr "giriş/"
 
+#: tasks.py:127
+msgid "make an edit by email"
+msgstr "e-posta ile düzenleme yap"
+
 #: templates/404.html:3 templates/404.html.py:5
 msgid "Page not found"
 msgstr "Sayfa bulunamadı"
@@ -5387,9 +5204,9 @@ msgstr "sistem hata kaydı yapıldı, hata en kısa sürede düzeltilecektir"
 msgid "please report the error to the site administrators"
 msgstr "lütfen hatayı site yöneticilerine bildirin"
 
-#: templates/answer_edit.html:11 templates/question_edit.html:9
-#: templates/question_retag.html:5 templates/revisions.html:7
-#: templates/group_messaging/home.html:9
+#: templates/answer_edit.html:11 templates/group_messaging/home.html:9
+#: templates/question_edit.html:9 templates/question_retag.html:5
+#: templates/revisions.html:7
 msgid "back"
 msgstr "geri"
 
@@ -5397,799 +5214,28 @@ msgstr "geri"
 msgid "Save edit"
 msgstr "Düzenlemeyi kaydet"
 
-#: templates/answer_edit.html:46 templates/close.html:17
-#: templates/feedback.html:49 templates/question_edit.html:58
-#: templates/question_retag.html:22 templates/reopen.html:26
-#: templates/subscribe_for_tags.html:12
-#: templates/avatar/confirm_delete.html:16
+#: templates/answer_edit.html:46 templates/avatar/confirm_delete.html:16
+#: templates/close.html:17 templates/feedback.html:49
 #: templates/group_messaging/home.html:44
 #: templates/moderation/manage_reject_reasons_dialog.html:19
+#: templates/question_edit.html:58 templates/question_retag.html:22
+#: templates/reopen.html:26 templates/subscribe_for_tags.html:12
 #: templates/user_profile/user_edit.html:90
 msgid "Cancel"
 msgstr "İptal"
 
 #: templates/answer_edit.html:85 templates/answer_edit.html.py:88
 #: templates/ask.html:60 templates/ask.html.py:63
-#: templates/question_edit.html:103 templates/question_edit.html.py:106
 #: templates/editors/rich_text.html:18 templates/question/javascript.html:129
-#: templates/question/javascript.html:132
+#: templates/question/javascript.html:132 templates/question_edit.html:103
+#: templates/question_edit.html.py:106
 msgid "hide preview"
-msgstr "önizlemeyi gizle"
+msgstr "ön izlemeyi gizle"
 
 #: templates/answer_edit.html:88 templates/ask.html:63
-#: templates/question_edit.html:106 templates/question/javascript.html:132
+#: templates/question/javascript.html:132 templates/question_edit.html:106
 msgid "show preview"
-msgstr "önizlemeyi göster"
-
-#: templates/badge.html:5 templates/badge.html.py:9
-#: templates/user_profile/user_recent.html:18
-#: templates/user_profile/user_stats.html:77
-#, python-format
-msgid "%(name)s"
-msgstr "%(name)s"
-
-#: templates/badge.html:5
-msgid "Badge"
-msgstr "Rozet"
-
-#: templates/badge.html:7
-#, python-format
-msgid "Badge \"%(name)s\""
-msgstr "Rozet \"%(name)s\""
-
-#: templates/badge.html:9 templates/user_profile/user_recent.html:16
-#: templates/user_profile/user_stats.html:75
-#, python-format
-msgid "%(description)s"
-msgstr "%(description)s"
-
-#: templates/badge.html:14
-msgid "user received this badge:"
-msgid_plural "users received this badge:"
-msgstr[0] "kullanıcı bu rozeti kazandı:"
-msgstr[1] "kullanıcı bu rozeti kazandı:"
-
-#: templates/badges.html:3 templates/badges.html.py:5
-msgid "Badges"
-msgstr "Rozetler"
-
-#: templates/badges.html:9
-msgid ""
-"Below is the list of available badges and number of times each type of badge"
-" has been awarded."
-msgstr "Aşağıda mevcut rozetler ve her bir rozet tipinin kaç kez kazanıldığı listelenmiştir."
-
-#: templates/badges.html:39
-msgid "Community badges"
-msgstr "Topluluk rozetleri"
-
-#: templates/badges.html:41
-msgid "gold badge: the highest honor and is very rare"
-msgstr "altın rozet: en yüksek rütbedir ve çok nadirdir"
-
-#: templates/badges.html:44
-msgid ""
-"Gold badge is the highest award in this community. To obtain it you have to show \n"
-"profound knowledge and ability in addition to your active participation."
-msgstr "Altın rozet bu topluluktaki en yüksek ödüldür. Bunu kazanmak için sitedeki etkin\noluşunuza ek olarak engin bir bilgiye sahip olduğunuzu da göstermelisiniz."
-
-#: templates/badges.html:50 templates/badges.html.py:54
-msgid ""
-"silver badge: occasionally awarded for the very high quality contributions"
-msgstr "gümüş rozet: yüksek kalitede katkı sağlayanlara aralıklarla verilir"
-
-#: templates/badges.html:57 templates/badges.html.py:61
-msgid "bronze badge: often given as a special honor"
-msgstr "bronz rozet: genelde özel bir rütbe olarak verilir"
-
-#: templates/base.html:16
-#, python-format
-msgid "RSS feed from %(site_title)s"
-msgstr "%(site_title)s sitesinden RSS beslemesi"
-
-#: templates/close.html:12
-msgid "Reasons"
-msgstr "Nedenler"
-
-#: templates/close.html:16
-msgid "OK to close"
-msgstr "Kapatmak için Tamam"
-
-#: templates/faq_static.html:3 templates/faq_static.html.py:5
-#: views/meta.py:111
-msgid "FAQ"
-msgstr "SSS"
-
-#: templates/faq_static.html:5
-msgid "Frequently Asked Questions "
-msgstr "Sıkça Sorulan Sorular"
-
-#: templates/faq_static.html:6
-msgid "What kinds of questions can I ask here?"
-msgstr "Burada ne tür sorular sorabilirim?"
-
-#: templates/faq_static.html:7
-msgid ""
-"Most importantly - questions should be <strong>relevant</strong> to this "
-"community."
-msgstr "En önemlisi sorular bu toplulukla <strong>ilgili</strong> olmalıdır."
-
-#: templates/faq_static.html:8
-msgid ""
-"Before you ask - please make sure to search for a similar question. You can "
-"search questions by their title or tags."
-msgstr "Sormadan önce lütfen benzer bir soru olup olmadığına bakın. Soruları başlıklarına veya etiketlerine göre arayabilirsiniz."
-
-#: templates/faq_static.html:10
-msgid "What kinds of questions should be avoided?"
-msgstr "Hangi tür sorulardan kaçınılmalıdır?"
-
-#: templates/faq_static.html:11
-msgid ""
-"Please avoid asking questions that are not relevant to this community, too "
-"subjective and argumentative."
-msgstr "Lütfen bu toplulukla ilgisi olmayan, çok öznel olan ve tartışmaya yönelik olan sorular sormaktan kaçının."
-
-#: templates/faq_static.html:13
-msgid "What should I avoid in my answers?"
-msgstr "Cevaplarımda nelerden kaçınmalıyım?"
-
-#: templates/faq_static.html:14
-msgid ""
-"is a <strong>question and answer</strong> site - <strong>it is not a "
-"discussion group</strong>. Please avoid holding debates in your answers as "
-"they tend to dilute the essense of questions and answers. For the brief "
-"discussions please use commenting facility."
-msgstr "bir <strong>soru ve cevap</strong> sitesidir - <strong>bir tartışma grubu değildir</strong>. Lütfen cevaplarınızda çekişmelerden kaçının zira bu soru-cevap ruhunu ortadan kaldırmaktadır. Kısa konuşmalar için lütfen yorum alanını kullanın."
-
-#: templates/faq_static.html:15
-msgid "Who moderates this community?"
-msgstr "Bu topluluğu kim çekip çeviriyor?"
-
-#: templates/faq_static.html:16
-msgid "The short answer is: <strong>you</strong>."
-msgstr "Kısa cevap: <strong>siz</strong>."
-
-#: templates/faq_static.html:17
-msgid "This website is moderated by the users."
-msgstr "Bu site kullanıcılar tarafından çekip çevrilmektedir."
-
-#: templates/faq_static.html:18
-msgid ""
-"Karma system allows users to earn rights to perform a variety of moderation "
-"tasks"
-msgstr "Karma sistemi kullanıcıların çeşitli moderasyön görevlerini uygulayabilecek yetkileri kazanmalarına izin verir"
-
-#: templates/faq_static.html:20
-msgid "How does karma system work?"
-msgstr "Karma sistemi nasıl çalışır?"
-
-#: templates/faq_static.html:21
-msgid ""
-"When a question or answer is upvoted, the user who posted them will gain "
-"some points, which are called \"karma points\". These points serve as a "
-"rough measure of the community trust to him/her. Various moderation tasks "
-"are gradually assigned to the users based on those points."
-msgstr "Bir soru veya cevap artı puanlandığında onu gönderen kullanıcı \"karma puanı\" denen bir puan kazanacaktır. Bu puanlar topluluğun bu kullanıcıya olan güveninin kabaca bir gösterimidir. Bu puanlara göre kullanıcıya çeşitli denetleme görevleri aşamalı olarak atanır."
-
-#: templates/faq_static.html:22
-#, python-format
-msgid ""
-"For example, if you ask an interesting question or give a helpful answer, "
-"your input will be upvoted. On the other hand if the answer is misleading - "
-"it will be downvoted. Each vote in favor will generate "
-"<strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> points, each vote against"
-" will subtract <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> points. "
-"There is a limit of <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> "
-"points that can be accumulated for a question or answer per day. The table "
-"below explains reputation point requirements for each type of moderation "
-"task."
-msgstr "Örneğin, ilgi çekici bir soru sorduğunuzda veya yardımcı olacak bir cevap verdiğinizde girdiniz artı puanlanacaktır. Öte yandan cevap yanlış yönlendiriciyse eksi puanlanacaktır. Her olumlu oy <strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> puan ekleyecek, her olumsuz oy ise <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> puan eksiltecektir. Bir soru veya cevap için günlük <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> puanlık bir toplam puan sınırı vardır. Aşağıdaki tablo her bir moderasyön görevi için gerekli olan puanları açıklamaktadır."
-
-#: templates/faq_static.html:37
-msgid "add comments"
-msgstr "yorum ekle"
-
-#: templates/faq_static.html:46
-msgid " accept own answer to own questions"
-msgstr "kendi soruna verdiğin cevabı kabul et"
-
-#: templates/faq_static.html:50
-msgid "retag other's questions"
-msgstr "başkalarının sorularını yeniden etiketle"
-
-#: templates/faq_static.html:55
-msgid "edit community wiki questions"
-msgstr "topluluk wiki sorularını düzenle"
-
-#: templates/faq_static.html:60
-msgid "edit any answer"
-msgstr "herhangi bir cevabı düzenle"
-
-#: templates/faq_static.html:64
-msgid "delete any comment"
-msgstr "herhangi bir yorumu sil"
-
-#: templates/faq_static.html:68
-msgid "How to change my picture (gravatar) and what is gravatar?"
-msgstr "Resmimi (avatar) nasıl değiştiririm ve gravatar nedir?"
-
-#: templates/faq_static.html:69
-msgid ""
-"<p>The picture that appears on the users profiles is called "
-"<strong>gravatar</strong> (which means <strong>g</strong>lobally "
-"<strong>r</strong>ecognized <strong>avatar</strong>).</p><p>Here is how it "
-"works: a <strong>cryptographic key</strong> (unbreakable code) is calculated"
-" from your email address. You upload your picture (or your favorite alter "
-"ego image) the website <a "
-"href='http://gravatar.com'><strong>gravatar.com</strong></a> from where we "
-"later retreive your image using the key.</p><p>This way all the websites you"
-" trust can show your image next to your posts and your email address remains"
-" private.</p><p>Please <strong>personalize your account</strong> with an "
-"image - just register at <a "
-"href='http://gravatar.com'><strong>gravatar.com</strong></a> (just please be"
-" sure to use the same email address that you used to register with us). "
-"Default image that looks like a kitchen tile is generated automatically.</p>"
-msgstr "<p>Kullanıcı profillerinde görünen resimlere <strong>gravatar</strong> denmektedir (bu <strong>g</strong>lobally <strong>r</strong>ecognized <strong>avatar</strong> - \"her yerde tanınır avatar\" anlamına gelmektedir).</p><p>Şu şekilde çalışır: e-posta adresinize göre bir <strong>kriptografik anahtar</strong>  (kırılamayan kod) hesaplanır. Resminizi (veya sevdiğiniz bir resmi) <a href='http://gravatar.com'><strong>gravatar.com</strong></a> sitesine yüklersiniz ve biz de oradan bu anahtara göre resminizi alırız.</p><p>Bu sayede güvendiğiniz tüm siteler gönderilerinizin yanında resminizi gösterebilir ve e-posta adresiniz gizli kalır.</p><p>Lütfen bir resim ile <strong>hesabınızı kişiselleştirin</strong> - hemen <a href='http://gravatar.com'><strong>gravatar.com</strong></a> adresinden bir hesap oluşturun (lütfen bizimle kaydolurken girdiğiniz e-posta adresini kullanmaya dikkat edin). Fayans deseni gibi görünen öntanımlı bir resim otomatik olarak üretilecektir.</p>"
-
-#: templates/faq_static.html:70
-msgid "To register, do I need to create new password?"
-msgstr "Kayıt olmak için yeni bir parola oluşturmalı mıyım?"
-
-#: templates/faq_static.html:71
-msgid ""
-"No, you don't have to. You can login through any service that supports "
-"OpenID, e.g. Google, Yahoo, AOL, etc."
-msgstr "Hayır değilsiniz. OpenID destekleyen Google, Yahoo, vb. gibi herhangi bir hizmetle giriş yapabilirsiniz."
-
-#: templates/faq_static.html:72
-msgid "\"Login now!\""
-msgstr "\"Şimdi giriş yap!\""
-
-#: templates/faq_static.html:74
-msgid "Why other people can edit my questions/answers?"
-msgstr "Neden diğer kullanıcılar sorularımı/cevaplarımı düzenleyebiliyorlar?"
-
-#: templates/faq_static.html:75
-msgid "Goal of this site is..."
-msgstr "Bu sitenin amacı..."
-
-#: templates/faq_static.html:75
-msgid ""
-"So questions and answers can be edited like wiki pages by experienced users "
-"of this site and this improves the overall quality of the knowledge base "
-"content."
-msgstr "Böylece sorular ve cevaplar bir viki sayfası gibi bu sitenin deneyimli kullanıcıları tarafından düzenlenebilmekte ve bu sayede bilgi tabanı içeriğinin genel kalitesi artmaktadır."
-
-#: templates/faq_static.html:76
-msgid "If this approach is not for you, we respect your choice."
-msgstr "Eğer bu yaklaşım sizin için uygun değilse buna saygı gösteriyoruz."
-
-#: templates/faq_static.html:78
-msgid "Still have questions?"
-msgstr "Hala sorunuz var mı?"
-
-#: templates/faq_static.html:79
-#, python-format
-msgid ""
-"Please <a href='%(ask_question_url)s'>ask</a> your question, help make our "
-"community better!"
-msgstr "Lütfen sorunuzu <a href='%(ask_question_url)s'>sorun</a>, topluluğumuzu daha iyiye götürmemize yardımcı olun!"
-
-#: templates/feedback.html:4
-msgid "Feedback"
-msgstr "Geri bildirim"
-
-#: templates/feedback.html:6
-msgid "Give us your feedback!"
-msgstr "Görüşlerinizi bize bildirin!"
-
-#: templates/feedback.html:19
-msgid "(to hear from us please enter a valid email or check the box below)"
-msgstr "(bizden haber alabilmek için lütfen geçerli bir e-posta adresi girin veya aşağıdaki onay kutusunu işaretleyin)"
-
-#: templates/feedback.html:26 templates/feedback.html.py:35
-msgid "(this field is required)"
-msgstr "(bu alan gereklidir)"
-
-#: templates/feedback.html:48
-msgid "Send Feedback"
-msgstr "Geri Bildirim Gönder"
-
-#: templates/groups.html:3 templates/groups.html.py:6
-#: templates/question/sidebar.html:109
-#: templates/tags/list_bulk_tag_subscription.html:15
-msgid "Groups"
-msgstr "Gruplar"
-
-#: templates/groups.html:11
-msgid "All groups"
-msgstr "Tüm gruplar"
-
-#: templates/groups.html:13
-msgid "all groups"
-msgstr "tüm gruplar"
-
-#: templates/groups.html:15
-msgid "My groups"
-msgstr "Gruplarım"
-
-#: templates/groups.html:17
-msgid "my groups"
-msgstr "gruplarım"
-
-#: templates/groups.html:25
-msgid ""
-"Tip: to create a new group - please go to some user profile and add the new "
-"group there. That user will be the first member of the group"
-msgstr "İpucu: yeni bir kullanıcı oluşturmak için lütfen önce bir kullanıcı profiline gidin ve yeni grubu oradan ekleyin. O kullanıcı grubun ilk üyesi olacaktır."
-
-#: templates/groups.html:30
-msgid "Group"
-msgstr "Grup"
-
-#: templates/groups.html:31
-msgid "Number of members"
-msgstr "Üye sayısı"
-
-#: templates/help_static.html:2 templates/help_static.html.py:4
-#: views/meta.py:94
-msgid "Help"
-msgstr "Yardım"
-
-#: templates/help_static.html:7
-#, python-format
-msgid "Welcome %(username)s,"
-msgstr "Merhaba %(username)s,"
-
-#: templates/help_static.html:9
-msgid "Welcome,"
-msgstr "Merhaba,"
-
-#: templates/help_static.html:13
-#, python-format
-msgid "Thank you for using %(app_name)s, here is how it works."
-msgstr "%(app_name)s kullandığınız için teşekkür ederiz, nasıl çalıştığını burada görebilirsiniz."
-
-#: templates/help_static.html:16
-msgid "How questions, answers and comments work"
-msgstr "Sorular, cevaplar ve yorumlar nasıl çalışır"
-
-#: templates/help_static.html:18
-msgid ""
-"This site is for asking and answering questions, not for open-ended "
-"discussions."
-msgstr "Bu site soru sormak ve cevaplamak içindir, ucu açık tartışmalar için değil."
-
-#: templates/help_static.html:19
-msgid ""
-"We encourage everyone to use “question” space for asking and “answer” for "
-"answering."
-msgstr "Herkesi soru sormak için \"soru\" kısmını ve cevap vermek için \"cevap\" kısmını kullanmaya teşvik ediyoruz."
-
-#: templates/help_static.html:22
-msgid ""
-"Despite that, each question and answer can be commented – \n"
-"    the comments are good for the limited discussions."
-msgstr "Buna karşın, her soru ve cevaba yorum yapılabilir – \nyorumlar sınırlı tartışmalar için iyidir."
-
-#: templates/help_static.html:26
-msgid "Please search before asking your questions"
-msgstr "Lütfen sorularınızı sormadan önce arama yapın"
-
-#: templates/help_static.html:27
-msgid ""
-"Type your question in the search bar and see whether a similar question has "
-"been asked before"
-msgstr "Sorunuzu arama çubuğuna yazın ve benzer bir sorunun daha önce sorulup sorulmadığını görün"
-
-#: templates/help_static.html:29
-msgid "Search has advanced capabilities:"
-msgstr "Arama gelişmiş yeteneklere sahiptir:"
-
-#: templates/help_static.html:31
-msgid "to search in title - enter [title: your text]"
-msgstr "başlıkta arama yapmak için - [title: arama metni] yazın"
-
-#: templates/help_static.html:32
-msgid "to search by tags - enter [tag: sometag] or #sometag"
-msgstr "etiketlerde arama yapmak için - [tag: arananetiket] veya #arananetiket yazın"
-
-#: templates/help_static.html:33
-msgid "to search by user - enter [user: somename] or @somename or @\"some name\""
-msgstr "kullanıcıya göre arama yapmak için - [user: kullanıcı] veya @kullanıcı veya @\"kullanıcı adı\" yazın"
-
-#: templates/help_static.html:35
-msgid ""
-"In addition, it is possible to click on tags to add them to the search "
-"query."
-msgstr "Ayrıca, etiketlere tıklayarak arama sorgusuna eklemek mümkündür."
-
-#: templates/help_static.html:37
-msgid ""
-"Finally, a separate tag search box is available in the side bar of the main "
-"page, where the search tags can be entered as well"
-msgstr "Son olarak, anasayfanın kenar çubuğunda aranan etiketlerin girilebileceği ayrı bir etiket arama kutusu mevcuttur"
-
-#: templates/help_static.html:40
-msgid ""
-"<em>Important!!!</em> All search terms are combined with a logical \"AND\" "
-"expression - to narrow the search by adding new terms."
-msgstr "<em>Önemli!!!</em> Tüm arama ifadeleri, yeni ifadeler ekleyerek arama sonuçlarını daraltmak için bir \"AND\" mantıksal ifadesi ile birleştirilebilir."
-
-#: templates/help_static.html:42
-msgid "Voting"
-msgstr "Oylama"
-
-#: templates/help_static.html:44
-#, python-format
-msgid ""
-"Voting in %(app_name)s helps to select best answers and thank most helpful "
-"users."
-msgstr "%(app_name)s uygulamasında yapılan oylamalar en iyi cevapların seçilmesine ve en yardımsever kullanıcılara teşekkür etmeye yardım eder."
-
-#: templates/help_static.html:47
-#, python-format
-msgid ""
-"Please vote when you find helpful information,\n"
-"    it really helps the %(app_name)s community."
-msgstr "Lütfen yararlı bir bilgi bulduğunuzda oy verin,\nbu işlem %(app_name)s topluluğuna gerçekten yardımcı olmaktadır."
-
-#: templates/help_static.html:51
-msgid "Other topics"
-msgstr "Diğer başlıklar"
-
-#: templates/help_static.html:53
-msgid ""
-"You can @mention users anywhere in the text to point their attention,\n"
-"    follow users and conversations and report inappropriate content by flagging it."
-msgstr "Dikkatlerini çekmek amaçlı, kullanıcılardan herhangi bir yerde @bahsedebilirsiniz,\nkullanıcıları ve konuşmaları takip edebilirsiniz ve uygunsuz içeriği işaretleyerek bildirebilirsiniz."
-
-#: templates/help_static.html:56
-msgid "Enjoy."
-msgstr "Tadını çıkarın."
-
-#: templates/import_data.html:2 templates/import_data.html.py:4
-msgid "Import StackExchange data"
-msgstr "StackExchange verisini içe aktar"
-
-#: templates/import_data.html:13
-msgid ""
-"<em>Warning:</em> if your database is not empty, please back it up\n"
-"        before attempting this operation."
-msgstr "<em>Uyarı:</em> Eğer veritabanınız boş değilse, bu işlemi yapmadan önce\nyedeğini alın."
-
-#: templates/import_data.html:16
-msgid ""
-"Upload your stackexchange dump .zip file, then wait until\n"
-"        the data import completes. This process may take several minutes.\n"
-"        Please note that feedback will be printed in plain text.\n"
-"        "
-msgstr "Stackexchange döküm .zip dosyanızı yükleyin ve\nverinin içe aktarılması bitene kadar bekleyin. Bu işlem bir kaç dakika sürebilir.\nLütfen geri bildirimin düz metin olarak basılacağını dikkate alın."
-
-#: templates/import_data.html:25
-msgid "Import data"
-msgstr "Veriyi içe aktar"
-
-#: templates/import_data.html:27
-msgid ""
-"In the case you experience any difficulties in using this import tool,\n"
-"        please try importing your data via command line: <code>python manage.py load_stackexchange path/to/your-data.zip</code>"
-msgstr "Bu içe aktarma aracında bir zorlukla karşılaşmanız durumunda\nlütfen verilerinizi komut satırından içe aktarmayı deneyin: <code>python manage.py load_stackexchange path/to/your-data.zip</code>"
-
-#: templates/list_suggested_tags.html:11
-msgid "Tag"
-msgstr "Etiket"
-
-#: templates/list_suggested_tags.html:12
-msgid "Suggested by"
-msgstr "Tavsiye eden"
-
-#: templates/list_suggested_tags.html:13
-msgid "Your decision"
-msgstr "Kararınız"
-
-#: templates/list_suggested_tags.html:14
-msgid "Where the tag was used"
-msgstr "Etiketin nerede kullanıldığı"
-
-#: templates/list_suggested_tags.html:34 templates/list_suggested_tags.html:45
-msgid "Accept"
-msgstr "Kabul et"
-
-#: templates/list_suggested_tags.html:35 templates/list_suggested_tags.html:46
-msgid "Reject"
-msgstr "Reddet"
-
-#: templates/list_suggested_tags.html:38
-msgid "This tag has not yet been used"
-msgstr "Bu etiket henüz kullanılmadı"
-
-#: templates/list_suggested_tags.html:61
-#, python-format
-msgid "Apply tag \"%(name)s\" to the above"
-msgstr "Yukarıdakilere \"%(name)s\" etiketini uygula"
-
-#: templates/list_suggested_tags.html:62
-msgid "Reject tag"
-msgstr "Etiketi reddet"
-
-#: templates/list_suggested_tags.html:70 templates/tags/content.html:5
-#: templates/tags/content.html.py:30
-msgid "Nothing found"
-msgstr "Hiçbir şey bulunamadı"
-
-#: templates/macros.html:5
-#, python-format
-msgid "Share this content on %(site)s"
-msgstr "Bu içeriği %(site)s sitesinde paylaş"
-
-#: templates/macros.html:48
-msgid "current number of votes"
-msgstr "mevcut oy sayısı"
-
-#: templates/macros.html:61
-msgid "anonymous user"
-msgstr "anonim kullanıcı"
-
-#: templates/macros.html:80
-msgid "posted"
-msgstr "gönderildi"
-
-#: templates/macros.html:86
-msgid "this post is marked as community wiki"
-msgstr "bu soru topluluk vikisi olarak işaretlenmiş"
-
-#: templates/macros.html:90
-#, python-format
-msgid ""
-"This post is a wiki.\n"
-"        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
-msgstr "Bu ileti bir viki sayfasıdır.\nKarması >%(wiki_min_rep)s olanların geliştirmelerini bekliyoruz."
-
-#: templates/macros.html:239 templates/macros.html.py:245
-msgid "Leave this group"
-msgstr "Bu gruptan ayrıl"
-
-#: templates/macros.html:240 templates/macros.html.py:242
-#: templates/macros.html:261
-msgid "Join this group"
-msgstr "Bu gruba katıl"
-
-#: templates/macros.html:241 templates/macros.html.py:246
-#: templates/macros.html:256
-msgid "You are a member"
-msgstr "Üyesiniz"
-
-#: templates/macros.html:248
-msgid "Cancel application"
-msgstr "Başvuruyu iptal et"
-
-#: templates/macros.html:249 templates/macros.html.py:258
-msgid "Awaiting approval"
-msgstr "Onay bekleniyor"
-
-#: templates/macros.html:251 templates/macros.html.py:252
-#: templates/macros.html:263
-msgid "Ask to join"
-msgstr "Katılma talebi ilet"
-
-#: templates/macros.html:337 templates/macros.html.py:348
-#: templates/question.html:420
-msgid "add a comment"
-msgstr "yorum ekle"
-
-#: templates/macros.html:341
-msgid "load older comments"
-msgstr "eski yorumları yükle"
-
-#: templates/macros.html:343
-msgid "see more comments"
-msgstr "daha fazla yorum göster"
-
-#: templates/macros.html:376
-msgid "delete this comment"
-msgstr "bu yorumu sil"
-
-#: templates/macros.html:379 templates/question/answer_card.html:25
-#: templates/question/question_card.html:34
-msgid "This post is awaiting moderation"
-msgstr "Bu gönderi denetlenmeyi bekliyor"
-
-#: templates/macros.html:395 templates/revisions.html:38
-#: templates/revisions.html.py:41 templates/question/answer_controls.html:5
-#: templates/question/question_card.html:22
-#: templates/question/question_controls.html:1
-#: templates/user_profile/user_info.html:173
-msgid "edit"
-msgstr "düzenle"
-
-#: templates/macros.html:404
-msgid "convert to answer"
-msgstr "cevaba çevir"
-
-#: templates/macros.html:435
-msgid "Comments"
-msgstr "Yorumlar"
-
-#: templates/macros.html:584 templatetags/extra_tags.py:45
-#, python-format
-msgid "%(username)s gravatar image"
-msgstr "<CODE>%(username)s</code> Gravatar görüntüsü"
-
-#: templates/macros.html:593
-#, python-format
-msgid "%(username)s's website is %(url)s"
-msgstr "%(username)s kullanıcısının web sitesi: %(url)s"
-
-#: templates/macros.html:614 templates/macros.html.py:615
-#: templates/macros.html:676 templates/macros.html.py:677
-msgid "previous"
-msgstr "önceki"
-
-#: templates/macros.html:633 templates/macros.html.py:688
-msgid "current page"
-msgstr "mevcut sayfa"
-
-#: templates/macros.html:639 templates/macros.html.py:652
-#: templates/macros.html:690 templates/macros.html.py:697
-#, python-format
-msgid "page %(num)s"
-msgstr "sayfa %(num)s"
-
-#: templates/macros.html:661 templates/macros.html.py:701
-msgid "next page"
-msgstr "sonraki sayfa"
-
-#: templates/macros.html:662
-msgid "next"
-msgstr "sonraki"
-
-#: templates/macros.html:713
-#, python-format
-msgid "responses for %(username)s"
-msgstr "%(username)s için yanıtlar"
-
-#: templates/macros.html:715
-#, python-format
-msgid "you have %(response_count)s new response"
-msgid_plural "you have %(response_count)s new responses"
-msgstr[0] "%(response_count)s yeni cevabınız var"
-msgstr[1] "%(response_count)s yeni cevabınız var"
-
-#: templates/macros.html:727 templates/macros.html.py:728
-#, python-format
-msgid "%(new)s new flagged posts and %(seen)s previous"
-msgstr "%(new)s yeni işaretlenmiş ve %(seen)s eski gönderi"
-
-#: templates/macros.html:730 templates/macros.html.py:731
-#, python-format
-msgid "%(new)s new flagged posts"
-msgstr "%(new)s yeni işaretlenmiş gönderi"
-
-#: templates/macros.html:736 templates/macros.html.py:737
-#, python-format
-msgid "%(seen)s flagged posts"
-msgstr "%(seen)s işaretlenmiş gönderi"
-
-#: templates/main_page.html:15
-msgid "Questions"
-msgstr "Sorular"
-
-#: templates/question_edit.html:46
-msgid "Change language"
-msgstr "Dili değiştir"
-
-#: templates/question_edit.html:64 templates/widgets/answer_edit_tips.html:3
-msgid "Tips"
-msgstr "İpuçları"
-
-#: templates/question_retag.html:21
-msgid "Retag"
-msgstr "Yeniden etiketle"
-
-#: templates/question_retag.html:28
-msgid "Why use and modify tags?"
-msgstr "Neden etiket kullanmalı ve değiştirmeli?"
-
-#: templates/question_retag.html:30
-msgid "Tags help to keep the content better organized and searchable"
-msgstr "Etiketler içeriğin daha düzenli ve aranabilir olmasını sağlar"
-
-#: templates/question_retag.html:32
-msgid "tag editors receive special awards from the community"
-msgstr "etiket editörleri topluluktan özel ödüller kazanırlar"
-
-#: templates/question_retag.html:63
-msgid "up to 5 tags, less than 20 characters each"
-msgstr "5 etikete kadar, her biri en fazla 20 karakter"
-
-#: templates/reopen.html:12
-#, python-format
-msgid ""
-"Closed by: \n"
-"    <a href=\"%(closed_by_profile_url)s\">%(username)s</a>\n"
-msgstr "Kapatan:\n<a href=\"%(closed_by_profile_url)s\">%(username)s</a>\n"
-
-#: templates/reopen.html:17
-msgid "Close reason:"
-msgstr "Kapatma sebebi:"
-
-#: templates/reopen.html:20
-msgid "When:"
-msgstr "Ne Zaman:"
-
-#: templates/revisions.html:4 templates/revisions.html.py:7
-msgid "Revision history"
-msgstr "Düzenleme geçmişi"
-
-#: templates/revisions.html:23
-msgid "click to hide/show revision"
-msgstr "düzenlemeleri gizlemek/göstermek için tıklayın"
-
-#: templates/revisions.html:29
-#, python-format
-msgid "revision %(number)s"
-msgstr "düzeltme %(number)s"
-
-#: templates/subscribe_for_tags.html:3 templates/subscribe_for_tags.html:5
-msgid "Subscribe for tags"
-msgstr "Etiketler için abone ol"
-
-#: templates/subscribe_for_tags.html:6
-msgid "Please, subscribe for the following tags:"
-msgstr "Lütfen aşağıdaki etiketler için abone olun:"
-
-#: templates/subscribe_for_tags.html:11
-msgid "Subscribe"
-msgstr "Abone ol"
-
-#: templates/users.html:8 templates/users.html.py:18
-#: templates/tags/list_bulk_tag_subscription.html:13
-msgid "Users"
-msgstr "Kullanıcılar"
-
-#: templates/users.html:16
-#, python-format
-msgid "Users in group %(name)s"
-msgstr "%(name)s grubu üyeleri"
-
-#: templates/users.html:24
-msgid "Select/Sort by &raquo;"
-msgstr "Seç/Sırala &raquo;"
-
-#: templates/users.html:29
-#, python-format
-msgid "people in group %(name)s"
-msgstr "%(name)s grubu kişileri"
-
-#: templates/users.html:33 templates/main_page/tab_bar.html:12
-#: templates/tags/header.html:14
-msgid "Sort by &raquo;"
-msgstr "Sırala &raquo;"
-
-#: templates/users.html:41 templates/user_profile/user_info.html:24
-#: templates/user_profile/user_reputation.html:4
-#: templates/user_profile/user_tabs.html:32
-msgid "karma"
-msgstr "karma"
-
-#: templates/users.html:48
-msgid "recent"
-msgstr "en yeni"
-
-#: templates/users.html:60
-msgid "by username"
-msgstr "kullanıcı adına göre"
-
-#: templates/users.html:66
-#, python-format
-msgid "users matching query %(search_query)s:"
-msgstr "%(search_query)s sorgusuna uyan kullanıcılar:"
-
-#: templates/users.html:69
-msgid "No users found."
-msgstr "Hiçbir kullanıcı bulunamadı."
+msgstr "ön izlemeyi göster"
 
 #: templates/authopenid/account_recovery_form.html:2
 #: templates/authopenid/signin.html:181
@@ -6293,6 +5339,39 @@ msgid ""
 "Sincerely,\n"
 "Q&A Forum Administrator"
 msgstr "Saygılarımızla,\nSoru&Cevap Forum Yöneticisi"
+
+#: templates/authopenid/email_validation/body.html:2
+#: templates/authopenid/email_validation/body.html:3
+#, python-format
+msgid "Greetings from %(site_name)s"
+msgstr "%(site_name)s sitesinden selamlar"
+
+#: templates/authopenid/email_validation/body.html:7
+#: templates/authopenid/email_validation/body.txt:3
+msgid "To make use of the Forum, please follow the link below:"
+msgstr "Forum faydalanmak için, aşağıdaki bağlantıyı takip edin:"
+
+#: templates/authopenid/email_validation/body.html:11
+#: templates/authopenid/email_validation/body.txt:7
+msgid "Following the link above will help us verify your email address."
+msgstr "Yukarıdaki bağlantı, e-posta adresinizi doğrulamada yardımcı olacaktır."
+
+#: templates/authopenid/email_validation/body.html:13
+#: templates/authopenid/email_validation/body.txt:9
+msgid ""
+"If you believe that this message was sent in mistake - \n"
+"no further action is needed. Just ignore this email, we apologize\n"
+"for any inconvenience"
+msgstr "Bu mesajın yanlışlıkla gönderildiğini düşünüyorsanız - \nbaşka bir işlem yapmanıza gerek yok. Sadece bu e-postayı yoksayın, \nrahatsızlık verdiğimiz için özür dileriz"
+
+#: templates/authopenid/email_validation/body.txt:1
+msgid "Greetings from the Q&A forum"
+msgstr "Soru&Cevap forumundan selamlar"
+
+#: templates/authopenid/email_validation/subject.txt:1
+#, python-format
+msgid "Validate your %(site_name)s email"
+msgstr "%(site_name)s e-postanızı doğrulayın"
 
 #: templates/authopenid/logout.html:3
 msgid "Logout"
@@ -6479,39 +5558,6 @@ msgstr "Güvenli OpenID veya benzer teknoloji ile giriş yapmak için aşağıda
 msgid "or enter your <span>user name and password</span>, then sign in"
 msgstr "veya <span>kullanıcı adı ve parolanızı</span> yazın ve giriş yapın"
 
-#: templates/authopenid/email_validation/body.html:2
-#: templates/authopenid/email_validation/body.html:3
-#, python-format
-msgid "Greetings from %(site_name)s"
-msgstr "%(site_name)s sitesinden selamlar"
-
-#: templates/authopenid/email_validation/body.html:7
-#: templates/authopenid/email_validation/body.txt:3
-msgid "To make use of the Forum, please follow the link below:"
-msgstr "Forum faydalanmak için, aşağıdaki bağlantıyı takip edin:"
-
-#: templates/authopenid/email_validation/body.html:11
-#: templates/authopenid/email_validation/body.txt:7
-msgid "Following the link above will help us verify your email address."
-msgstr "Yukarıdaki bağlantı, e-posta adresinizi doğrulamada yardımcı olacaktır."
-
-#: templates/authopenid/email_validation/body.html:13
-#: templates/authopenid/email_validation/body.txt:9
-msgid ""
-"If you believe that this message was sent in mistake - \n"
-"no further action is needed. Just ignore this email, we apologize\n"
-"for any inconvenience"
-msgstr "Bu mesajın yanlışlıkla gönderildiğini düşünüyorsanız - \nbaşka bir işlem yapmanıza gerek yok. Sadece bu e-postayı yoksayın, \nrahatsızlık verdiğimiz için özür dileriz"
-
-#: templates/authopenid/email_validation/body.txt:1
-msgid "Greetings from the Q&A forum"
-msgstr "Soru&Cevap forumundan selamlar"
-
-#: templates/authopenid/email_validation/subject.txt:1
-#, python-format
-msgid "Validate your %(site_name)s email"
-msgstr "%(site_name)s e-postanızı doğrulayın"
-
 #: templates/avatar/avatar.html:3
 #, python-format
 msgid "%(username)s's primary avatar"
@@ -6579,89 +5625,83 @@ msgstr "Henüz bir avatar yüklemediniz."
 msgid "Upload an avatar"
 msgstr "Avatar yükle"
 
+#: templates/badge.html:5 templates/badge.html.py:9
+#: templates/user_profile/user_recent.html:18
+#: templates/user_profile/user_stats.html:77
+#, python-format
+msgid "%(name)s"
+msgstr "%(name)s"
+
+#: templates/badge.html:5
+msgid "Badge"
+msgstr "Rozet"
+
+#: templates/badge.html:7
+#, python-format
+msgid "Badge \"%(name)s\""
+msgstr "Rozet \"%(name)s\""
+
+#: templates/badge.html:9 templates/user_profile/user_recent.html:16
+#: templates/user_profile/user_stats.html:75
+#, python-format
+msgid "%(description)s"
+msgstr "%(description)s"
+
+#: templates/badge.html:14
+msgid "user received this badge:"
+msgid_plural "users received this badge:"
+msgstr[0] "kullanıcı bu rozeti kazandı:"
+msgstr[1] "kullanıcı bu rozeti kazandı:"
+
+#: templates/badges.html:3 templates/badges.html.py:5
+msgid "Badges"
+msgstr "Rozetler"
+
+#: templates/badges.html:9
+msgid ""
+"Below is the list of available badges and number of times each type of badge"
+" has been awarded."
+msgstr "Aşağıda mevcut rozetler ve her bir rozet tipinin kaç kez kazanıldığı listelenmiştir."
+
+#: templates/badges.html:39
+msgid "Community badges"
+msgstr "Topluluk rozetleri"
+
+#: templates/badges.html:41
+msgid "gold badge: the highest honor and is very rare"
+msgstr "altın rozet: en yüksek rütbedir ve çok nadirdir"
+
+#: templates/badges.html:44
+msgid ""
+"Gold badge is the highest award in this community. To obtain it you have to show \n"
+"profound knowledge and ability in addition to your active participation."
+msgstr "Altın rozet bu topluluktaki en yüksek ödüldür. Bunu kazanmak için sitedeki etkin\noluşunuza ek olarak engin bir bilgiye sahip olduğunuzu da göstermelisiniz."
+
+#: templates/badges.html:50 templates/badges.html.py:54
+msgid ""
+"silver badge: occasionally awarded for the very high quality contributions"
+msgstr "gümüş rozet: yüksek kalitede katkı sağlayanlara aralıklarla verilir"
+
+#: templates/badges.html:57 templates/badges.html.py:61
+msgid "bronze badge: often given as a special honor"
+msgstr "bronz rozet: genelde özel bir rütbe olarak verilir"
+
+#: templates/base.html:16
+#, python-format
+msgid "RSS feed from %(site_title)s"
+msgstr "%(site_title)s sitesinden RSS beslemesi"
+
+#: templates/close.html:12
+msgid "Reasons"
+msgstr "Nedenler"
+
+#: templates/close.html:16
+msgid "OK to close"
+msgstr "Kapatmak için Tamam"
+
 #: templates/editors/rich_text.html:16
 msgid "Toggle the real time Markdown editor preview"
 msgstr "Gerçek zamanlı Markdown düzenleyici önizlemesini aç veya kapat"
-
-#: templates/email/change_settings_info.html:4
-#, python-format
-msgid ""
-"To change frequency, language and content of these alerts, please visit <a "
-"href=\"%(url)s\">your user profile</a>."
-msgstr "Bildirim sıklığını, dilini ve içeriğini değiştirmek için lütfen <a href=\"%(url)s\">profil sayfanızı</a> ziyaret edin."
-
-#: templates/email/change_settings_info.html:6
-#, python-format
-msgid ""
-"To change frequency and content of these alerts, please visit <a "
-"href=\"%(url)s\">your user profile</a>."
-msgstr "Bildirim sıklığını ve içeriğini değiştirmek için lütfen <a href=\"%(url)s\">profil sayfanızı</a> ziyaret edin."
-
-#: templates/email/change_settings_info.html:10
-#: templates/email/unsubscribe_link/body.html:5
-#, python-format
-msgid "To unsubscribe, visit <a href=\"%(unsubscribe_url)s\">this page</a>"
-msgstr "Abonelikten ayrılmak için <a href=\"%(unsubscribe_url)s\">bu sayfayı</a> ziyaret edin"
-
-#: templates/email/change_settings_info.html:12
-#, python-format
-msgid ""
-"If you believe that this message was sent in an error, please email about it"
-" the forum administrator at <a "
-"href=\"mailto:%(admin_email)s\">%(admin_email)s</a>."
-msgstr "Eğer bu iletinin bir hata sonucu gönderildiğini düşünüyorsanız lütfen bu konuda forum yöneticisini <a href=\"mailto:%(admin_email)s\">%(admin_email)s</a> e-posta adresinden bilgilendirin."
-
-#: templates/email/list_emails.html:2
-msgid "Preview of emails"
-msgstr "E-posta önizlemesi"
-
-#: templates/email/list_emails.html:4
-msgid "List of emails sent by Askbot"
-msgstr "Askbot tarafından gönderilmiş e-postaların listesi"
-
-#: templates/email/macros.html:34 templates/email/macros.html.py:65
-#, python-format
-msgid "In reply to %(author)s's <a href=\"%(post_url)s\">%(post_type)s</a>"
-msgstr "%(author)s kullanıcısının <a href=\"%(post_url)s\">%(post_type)s</a> gönderisine cevaben"
-
-#: templates/email/macros.html:51
-msgid "Tags:"
-msgstr "Etiketler:"
-
-#: templates/email/post_as_subthread.html:8
-#, python-format
-msgid ""
-"\n"
-"                %(count)s comment:\n"
-"            "
-msgid_plural ""
-"\n"
-"                %(count)s comments:\n"
-"            "
-msgstr[0] "\n%(count)s yorum:"
-msgstr[1] "\n%(count)s yorum:"
-
-#: templates/email/preview_email.html:2 templates/email/preview_email.html:8
-#, python-format
-msgid "Preview of email \"%(title)s\""
-msgstr "\"%(title)s\" e-postasının önizlemesi"
-
-#: templates/email/preview_email.html:5
-msgid "Askbot emails"
-msgstr "Askbot e-postaları"
-
-#: templates/email/preview_email.html:13
-#, python-format
-msgid "Example %%(num)d"
-msgstr "Örnek %%(num)d"
-
-#: templates/email/preview_email.html:19
-msgid "Subject"
-msgstr "Konu"
-
-#: templates/email/preview_email.html:20
-msgid "Body text (below, email styling preserved)"
-msgstr "Gövde metni (aşağıda, e-posta biçemi korunmuş)"
 
 #: templates/email/accept_answers_reminder/body.html:2
 #: templates/email/accept_answers_reminder/body.html:3
@@ -6737,6 +5777,34 @@ msgid_plural ""
 msgstr[0] "\n%(question_count)s güncelleme"
 msgstr[1] "\n%(question_count)s güncelleme"
 
+#: templates/email/change_settings_info.html:4
+#, python-format
+msgid ""
+"To change frequency, language and content of these alerts, please visit <a "
+"href=\"%(url)s\">your user profile</a>."
+msgstr "Bildirim sıklığını, dilini ve içeriğini değiştirmek için lütfen <a href=\"%(url)s\">profil sayfanızı</a> ziyaret edin."
+
+#: templates/email/change_settings_info.html:6
+#, python-format
+msgid ""
+"To change frequency and content of these alerts, please visit <a "
+"href=\"%(url)s\">your user profile</a>."
+msgstr "Bildirim sıklığını ve içeriğini değiştirmek için lütfen <a href=\"%(url)s\">profil sayfanızı</a> ziyaret edin."
+
+#: templates/email/change_settings_info.html:10
+#: templates/email/unsubscribe_link/body.html:5
+#, python-format
+msgid "To unsubscribe, visit <a href=\"%(unsubscribe_url)s\">this page</a>"
+msgstr "Abonelikten ayrılmak için <a href=\"%(unsubscribe_url)s\">bu sayfayı</a> ziyaret edin"
+
+#: templates/email/change_settings_info.html:12
+#, python-format
+msgid ""
+"If you believe that this message was sent in an error, please email about it"
+" the forum administrator at <a "
+"href=\"mailto:%(admin_email)s\">%(admin_email)s</a>."
+msgstr "Eğer bu iletinin bir hata sonucu gönderildiğini düşünüyorsanız lütfen bu konuda forum yöneticisini <a href=\"mailto:%(admin_email)s\">%(admin_email)s</a> e-posta adresinden bilgilendirin."
+
 #: templates/email/feedback/body.html:6 templates/email/feedback/body.html:7
 #, python-format
 msgid "%(site_name)s feedback"
@@ -6780,18 +5848,70 @@ msgstr "E-posta ile gönderim yapabilmek için yaklaşık %(min_upvotes)s artı 
 msgid "At this time, please post your content at %(link)s"
 msgstr "Şu an için lütfen içeriğinizi %(link)s adresinden gönderin"
 
+#: templates/email/list_emails.html:2
+msgid "Preview of emails"
+msgstr "E-posta önizlemesi"
+
+#: templates/email/list_emails.html:4
+msgid "List of emails sent by Askbot"
+msgstr "Askbot tarafından gönderilmiş e-postaların listesi"
+
+#: templates/email/macros.html:34 templates/email/macros.html.py:65
+#, python-format
+msgid "In reply to %(author)s's <a href=\"%(post_url)s\">%(post_type)s</a>"
+msgstr "%(author)s kullanıcısının <a href=\"%(post_url)s\">%(post_type)s</a> gönderisine cevaben"
+
+#: templates/email/macros.html:51
+msgid "Tags:"
+msgstr "Etiketler:"
+
 #: templates/email/moderation_queue_notification/body.html:3
 #, python-format
 msgid ""
 "\n"
 "        There are new items in the %(site)s moderation queue, <a href=\"%(mod_url)s\">please have a look</a>\n"
 "    "
-msgstr "\n%(site)s denetleme kuyruğunda yeni ögeler var, lütfen <a href=\"%(mod_url)s\">gözden geçirin</a>"
+msgstr "\n%(site)s moderasyon kuyruğunda yeni ögeler var, lütfen <a href=\"%(mod_url)s\">gözden geçirin</a>"
 
 #: templates/email/moderation_queue_notification/subject.txt:1
 #, python-format
 msgid "%(site)s moderation alert"
-msgstr "%(site)s denetleme uyarısı"
+msgstr "%(site)s moderasyon uyarısı"
+
+#: templates/email/post_as_subthread.html:8
+#, python-format
+msgid ""
+"\n"
+"                %(count)s comment:\n"
+"            "
+msgid_plural ""
+"\n"
+"                %(count)s comments:\n"
+"            "
+msgstr[0] "\n%(count)s yorum:"
+msgstr[1] "\n%(count)s yorum:"
+
+#: templates/email/preview_email.html:2 templates/email/preview_email.html:8
+#, python-format
+msgid "Preview of email \"%(title)s\""
+msgstr "\"%(title)s\" e-postasının önizlemesi"
+
+#: templates/email/preview_email.html:5
+msgid "Askbot emails"
+msgstr "Askbot e-postaları"
+
+#: templates/email/preview_email.html:13
+#, python-format
+msgid "Example %%(num)d"
+msgstr "Örnek %%(num)d"
+
+#: templates/email/preview_email.html:19
+msgid "Subject"
+msgstr "Konu"
+
+#: templates/email/preview_email.html:20
+msgid "Body text (below, email styling preserved)"
+msgstr "Gövde metni (aşağıda, e-posta biçemi korunmuş)"
 
 #: templates/email/re_welcome/body.html:2
 #: templates/email/re_welcome/body.html:3
@@ -6953,6 +6073,218 @@ msgstr "oluştur"
 msgid "view list"
 msgstr "listeyi göster"
 
+#: templates/faq_static.html:3 templates/faq_static.html.py:5
+#: views/meta.py:111
+msgid "FAQ"
+msgstr "SSS"
+
+#: templates/faq_static.html:5
+msgid "Frequently Asked Questions "
+msgstr "Sıkça Sorulan Sorular"
+
+#: templates/faq_static.html:6
+msgid "What kinds of questions can I ask here?"
+msgstr "Burada ne tür sorular sorabilirim?"
+
+#: templates/faq_static.html:7
+msgid ""
+"Most importantly - questions should be <strong>relevant</strong> to this "
+"community."
+msgstr "En önemlisi sorular bu toplulukla <strong>ilgili</strong> olmalıdır."
+
+#: templates/faq_static.html:8
+msgid ""
+"Before you ask - please make sure to search for a similar question. You can "
+"search questions by their title or tags."
+msgstr "Sormadan önce lütfen benzer bir soru olup olmadığına bakın. Soruları başlıklarına veya etiketlerine göre arayabilirsiniz."
+
+#: templates/faq_static.html:10
+msgid "What kinds of questions should be avoided?"
+msgstr "Hangi tür sorulardan kaçınılmalıdır?"
+
+#: templates/faq_static.html:11
+msgid ""
+"Please avoid asking questions that are not relevant to this community, too "
+"subjective and argumentative."
+msgstr "Lütfen bu toplulukla ilgisi olmayan, çok öznel olan ve tartışmaya yönelik olan sorular sormaktan kaçının."
+
+#: templates/faq_static.html:13
+msgid "What should I avoid in my answers?"
+msgstr "Cevaplarımda nelerden kaçınmalıyım?"
+
+#: templates/faq_static.html:14
+msgid ""
+"is a <strong>question and answer</strong> site - <strong>it is not a "
+"discussion group</strong>. Please avoid holding debates in your answers as "
+"they tend to dilute the essense of questions and answers. For the brief "
+"discussions please use commenting facility."
+msgstr "bir <strong>soru ve cevap</strong> sitesidir - <strong>bir tartışma grubu değildir</strong>. Lütfen cevaplarınızda çekişmelerden kaçının zira bu soru-cevap ruhunu ortadan kaldırmaktadır. Kısa konuşmalar için lütfen yorum alanını kullanın."
+
+#: templates/faq_static.html:15
+msgid "Who moderates this community?"
+msgstr "Bu topluluğu kim çekip çeviriyor?"
+
+#: templates/faq_static.html:16
+msgid "The short answer is: <strong>you</strong>."
+msgstr "Kısa cevap: <strong>siz</strong>."
+
+#: templates/faq_static.html:17
+msgid "This website is moderated by the users."
+msgstr "Bu site kullanıcılar tarafından çekip çevrilmektedir."
+
+#: templates/faq_static.html:18
+msgid ""
+"Karma system allows users to earn rights to perform a variety of moderation "
+"tasks"
+msgstr "Karma sistemi kullanıcıların çeşitli moderasyön görevlerini uygulayabilecek yetkileri kazanmalarına izin verir"
+
+#: templates/faq_static.html:20
+msgid "How does karma system work?"
+msgstr "Karma sistemi nasıl çalışır?"
+
+#: templates/faq_static.html:21
+msgid ""
+"When a question or answer is upvoted, the user who posted them will gain "
+"some points, which are called \"karma points\". These points serve as a "
+"rough measure of the community trust to him/her. Various moderation tasks "
+"are gradually assigned to the users based on those points."
+msgstr "Bir soru veya cevap artı puanlandığında onu gönderen kullanıcı \"karma puanı\" denen bir puan kazanacaktır. Bu puanlar topluluğun bu kullanıcıya olan güveninin kabaca bir gösterimidir. Bu puanlara göre kullanıcıya çeşitli moderasyon görevleri aşamalı olarak atanır."
+
+#: templates/faq_static.html:22
+#, python-format
+msgid ""
+"For example, if you ask an interesting question or give a helpful answer, "
+"your input will be upvoted. On the other hand if the answer is misleading - "
+"it will be downvoted. Each vote in favor will generate "
+"<strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> points, each vote against"
+" will subtract <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> points. "
+"There is a limit of <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> "
+"points that can be accumulated for a question or answer per day. The table "
+"below explains reputation point requirements for each type of moderation "
+"task."
+msgstr "Örneğin, ilgi çekici bir soru sorduğunuzda veya yardımcı olacak bir cevap verdiğinizde girdiniz artı puanlanacaktır. Öte yandan cevap yanlış yönlendiriciyse eksi puanlanacaktır. Her olumlu oy <strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> puan ekleyecek, her olumsuz oy ise <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> puan eksiltecektir. Bir soru veya cevap için günlük <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> puanlık bir toplam puan sınırı vardır. Aşağıdaki tablo her bir moderasyön görevi için gerekli olan puanları açıklamaktadır."
+
+#: templates/faq_static.html:37
+msgid "add comments"
+msgstr "yorum ekle"
+
+#: templates/faq_static.html:46
+msgid " accept own answer to own questions"
+msgstr "kendi soruna verdiğin cevabı kabul et"
+
+#: templates/faq_static.html:50
+msgid "retag other's questions"
+msgstr "başkalarının sorularını yeniden etiketle"
+
+#: templates/faq_static.html:55
+msgid "edit community wiki questions"
+msgstr "topluluk wiki sorularını düzenle"
+
+#: templates/faq_static.html:60
+msgid "edit any answer"
+msgstr "herhangi bir cevabı düzenle"
+
+#: templates/faq_static.html:64
+msgid "delete any comment"
+msgstr "herhangi bir yorumu sil"
+
+#: templates/faq_static.html:68
+msgid "How to change my picture (gravatar) and what is gravatar?"
+msgstr "Resmimi (avatar) nasıl değiştiririm ve gravatar nedir?"
+
+#: templates/faq_static.html:69
+msgid ""
+"<p>The picture that appears on the users profiles is called "
+"<strong>gravatar</strong> (which means <strong>g</strong>lobally "
+"<strong>r</strong>ecognized <strong>avatar</strong>).</p><p>Here is how it "
+"works: a <strong>cryptographic key</strong> (unbreakable code) is calculated"
+" from your email address. You upload your picture (or your favorite alter "
+"ego image) the website <a "
+"href='http://gravatar.com'><strong>gravatar.com</strong></a> from where we "
+"later retreive your image using the key.</p><p>This way all the websites you"
+" trust can show your image next to your posts and your email address remains"
+" private.</p><p>Please <strong>personalize your account</strong> with an "
+"image - just register at <a "
+"href='http://gravatar.com'><strong>gravatar.com</strong></a> (just please be"
+" sure to use the same email address that you used to register with us). "
+"Default image that looks like a kitchen tile is generated automatically.</p>"
+msgstr "<p>Kullanıcı profillerinde görünen resimlere <strong>gravatar</strong> denmektedir (bu <strong>g</strong>lobally <strong>r</strong>ecognized <strong>avatar</strong> - \"her yerde tanınır avatar\" anlamına gelmektedir).</p><p>Şu şekilde çalışır: e-posta adresinize göre bir <strong>kriptografik anahtar</strong>  (kırılamayan kod) hesaplanır. Resminizi (veya sevdiğiniz bir resmi) <a href='http://gravatar.com'><strong>gravatar.com</strong></a> sitesine yüklersiniz ve biz de oradan bu anahtara göre resminizi alırız.</p><p>Bu sayede güvendiğiniz tüm siteler gönderilerinizin yanında resminizi gösterebilir ve e-posta adresiniz gizli kalır.</p><p>Lütfen bir resim ile <strong>hesabınızı kişiselleştirin</strong> - hemen <a href='http://gravatar.com'><strong>gravatar.com</strong></a> adresinden bir hesap oluşturun (lütfen bizimle kaydolurken girdiğiniz e-posta adresini kullanmaya dikkat edin). Fayans deseni gibi görünen öntanımlı bir resim otomatik olarak üretilecektir.</p>"
+
+#: templates/faq_static.html:70
+msgid "To register, do I need to create new password?"
+msgstr "Kayıt olmak için yeni bir parola oluşturmalı mıyım?"
+
+#: templates/faq_static.html:71
+msgid ""
+"No, you don't have to. You can login through any service that supports "
+"OpenID, e.g. Google, Yahoo, AOL, etc."
+msgstr "Hayır değilsiniz. OpenID destekleyen Google, Yahoo, vb. gibi herhangi bir hizmetle giriş yapabilirsiniz."
+
+#: templates/faq_static.html:72
+msgid "\"Login now!\""
+msgstr "\"Şimdi giriş yap!\""
+
+#: templates/faq_static.html:74
+msgid "Why other people can edit my questions/answers?"
+msgstr "Neden diğer kullanıcılar sorularımı/cevaplarımı düzenleyebiliyorlar?"
+
+#: templates/faq_static.html:75
+msgid "Goal of this site is..."
+msgstr "Bu sitenin amacı..."
+
+#: templates/faq_static.html:75
+msgid ""
+"So questions and answers can be edited like wiki pages by experienced users "
+"of this site and this improves the overall quality of the knowledge base "
+"content."
+msgstr "Böylece sorular ve cevaplar bir viki sayfası gibi bu sitenin deneyimli kullanıcıları tarafından düzenlenebilmekte ve bu sayede bilgi tabanı içeriğinin genel kalitesi artmaktadır."
+
+#: templates/faq_static.html:76
+msgid "If this approach is not for you, we respect your choice."
+msgstr "Eğer bu yaklaşım sizin için uygun değilse buna saygı gösteriyoruz."
+
+#: templates/faq_static.html:78
+msgid "Still have questions?"
+msgstr "Hala sorunuz var mı?"
+
+#: templates/faq_static.html:79
+#, python-format
+msgid ""
+"Please <a href='%(ask_question_url)s'>ask</a> your question, help make our "
+"community better!"
+msgstr "Lütfen sorunuzu <a href='%(ask_question_url)s'>sorun</a>, topluluğumuzu daha iyiye götürmemize yardımcı olun!"
+
+#: templates/feedback.html:4
+msgid "Feedback"
+msgstr "Geri bildirim"
+
+#: templates/feedback.html:6
+msgid "Give us your feedback!"
+msgstr "Görüşlerinizi bize bildirin!"
+
+#: templates/feedback.html:19
+msgid "(to hear from us please enter a valid email or check the box below)"
+msgstr "(bizden haber alabilmek için lütfen geçerli bir e-posta adresi girin veya aşağıdaki onay kutusunu işaretleyin)"
+
+#: templates/feedback.html:26 templates/feedback.html.py:35
+msgid "(this field is required)"
+msgstr "(bu alan gereklidir)"
+
+#: templates/feedback.html:48
+msgid "Send Feedback"
+msgstr "Geri Bildirim Gönder"
+
+#: templates/group_messaging/email_alert/body.html:7
+#, python-format
+msgid "%(author)s wrote:"
+msgstr "%(author)s yazdı:"
+
+#: templates/group_messaging/email_alert/body.html:11
+msgid ""
+"To reply please <a class=\"thread-link\" href=\"THREAD_URL_HOLE\">visit your"
+" message inbox</a>"
+msgstr "Yanıtlamak için lütfen <a class=\"thread-link\" href=\"THREAD_URL_HOLE\">ileti gelen kutunuzu ziyaret edin</a>"
+
 #: templates/group_messaging/home.html:10
 #: templates/group_messaging/home_thread_details.html:7
 msgid "compose"
@@ -7001,16 +6333,228 @@ msgstr "çöp"
 msgid "there are no messages yet..."
 msgstr "henüz ileti yok..."
 
-#: templates/group_messaging/email_alert/body.html:7
-#, python-format
-msgid "%(author)s wrote:"
-msgstr "%(author)s yazdı:"
+#: templates/groups.html:3 templates/groups.html.py:6
+#: templates/question/sidebar.html:109
+#: templates/tags/list_bulk_tag_subscription.html:15
+msgid "Groups"
+msgstr "Gruplar"
 
-#: templates/group_messaging/email_alert/body.html:11
+#: templates/groups.html:11
+msgid "All groups"
+msgstr "Tüm gruplar"
+
+#: templates/groups.html:13
+msgid "all groups"
+msgstr "tüm gruplar"
+
+#: templates/groups.html:15
+msgid "My groups"
+msgstr "Gruplarım"
+
+#: templates/groups.html:17
+msgid "my groups"
+msgstr "gruplarım"
+
+#: templates/groups.html:25
 msgid ""
-"To reply please <a class=\"thread-link\" href=\"THREAD_URL_HOLE\">visit your"
-" message inbox</a>"
-msgstr "Yanıtlamak için lütfen <a class=\"thread-link\" href=\"THREAD_URL_HOLE\">ileti gelen kutunuzu ziyaret edin</a>"
+"Tip: to create a new group - please go to some user profile and add the new "
+"group there. That user will be the first member of the group"
+msgstr "İpucu: yeni bir kullanıcı oluşturmak için lütfen önce bir kullanıcı profiline gidin ve yeni grubu oradan ekleyin. O kullanıcı grubun ilk üyesi olacaktır."
+
+#: templates/groups.html:30
+msgid "Group"
+msgstr "Grup"
+
+#: templates/groups.html:31
+msgid "Number of members"
+msgstr "Üye sayısı"
+
+#: templates/help_static.html:2 templates/help_static.html.py:4
+#: views/meta.py:94
+msgid "Help"
+msgstr "Yardım"
+
+#: templates/help_static.html:7
+#, python-format
+msgid "Welcome %(username)s,"
+msgstr "Merhaba %(username)s,"
+
+#: templates/help_static.html:9
+msgid "Welcome,"
+msgstr "Merhaba,"
+
+#: templates/help_static.html:13
+#, python-format
+msgid "Thank you for using %(app_name)s, here is how it works."
+msgstr "%(app_name)s kullandığınız için teşekkür ederiz, nasıl çalıştığını burada görebilirsiniz."
+
+#: templates/help_static.html:16
+msgid "How questions, answers and comments work"
+msgstr "Sorular, cevaplar ve yorumlar nasıl çalışır"
+
+#: templates/help_static.html:18
+msgid ""
+"This site is for asking and answering questions, not for open-ended "
+"discussions."
+msgstr "Bu site soru sormak ve cevaplamak içindir, ucu açık tartışmalar için değil."
+
+#: templates/help_static.html:19
+msgid ""
+"We encourage everyone to use “question” space for asking and “answer” for "
+"answering."
+msgstr "Herkesi soru sormak için \"soru\" kısmını ve cevap vermek için \"cevap\" kısmını kullanmaya teşvik ediyoruz."
+
+#: templates/help_static.html:22
+msgid ""
+"Despite that, each question and answer can be commented – \n"
+"    the comments are good for the limited discussions."
+msgstr "Buna karşın, her soru ve cevaba yorum yapılabilir – \nyorumlar sınırlı tartışmalar için iyidir."
+
+#: templates/help_static.html:26
+msgid "Please search before asking your questions"
+msgstr "Lütfen sorularınızı sormadan önce arama yapınız"
+
+#: templates/help_static.html:27
+msgid ""
+"Type your question in the search bar and see whether a similar question has "
+"been asked before"
+msgstr "Sorunuzu arama çubuğuna yazın ve benzer bir sorunun daha önce sorulup sorulmadığını görün"
+
+#: templates/help_static.html:29
+msgid "Search has advanced capabilities:"
+msgstr "Arama gelişmiş yeteneklere sahiptir:"
+
+#: templates/help_static.html:31
+msgid "to search in title - enter [title: your text]"
+msgstr "başlıkta arama yapmak için - [title: arama metni] yazın"
+
+#: templates/help_static.html:32
+msgid "to search by tags - enter [tag: sometag] or #sometag"
+msgstr "etiketlerde arama yapmak için - [tag: arananetiket] veya #arananetiket yazın"
+
+#: templates/help_static.html:33
+msgid "to search by user - enter [user: somename] or @somename or @\"some name\""
+msgstr "kullanıcıya göre arama yapmak için - [user: kullanıcı] veya @kullanıcı veya @\"kullanıcı adı\" yazın"
+
+#: templates/help_static.html:35
+msgid ""
+"In addition, it is possible to click on tags to add them to the search "
+"query."
+msgstr "Ayrıca, etiketlere tıklayarak arama sorgusuna eklemek mümkündür."
+
+#: templates/help_static.html:37
+msgid ""
+"Finally, a separate tag search box is available in the side bar of the main "
+"page, where the search tags can be entered as well"
+msgstr "Son olarak, anasayfanın kenar çubuğunda aranan etiketlerin girilebileceği ayrı bir etiket arama kutusu mevcuttur"
+
+#: templates/help_static.html:40
+msgid ""
+"<em>Important!!!</em> All search terms are combined with a logical \"AND\" "
+"expression - to narrow the search by adding new terms."
+msgstr "<em>Önemli!!!</em> Tüm arama ifadeleri, yeni ifadeler ekleyerek arama sonuçlarını daraltmak için bir \"AND\" mantıksal ifadesi ile birleştirilebilir."
+
+#: templates/help_static.html:42
+msgid "Voting"
+msgstr "Oylama"
+
+#: templates/help_static.html:44
+#, python-format
+msgid ""
+"Voting in %(app_name)s helps to select best answers and thank most helpful "
+"users."
+msgstr "%(app_name)s uygulamasında yapılan oylamalar en iyi cevapların seçilmesine ve en yardımsever kullanıcılara teşekkür etmeye yardım eder."
+
+#: templates/help_static.html:47
+#, python-format
+msgid ""
+"Please vote when you find helpful information,\n"
+"    it really helps the %(app_name)s community."
+msgstr "Lütfen yararlı bir bilgi bulduğunuzda oy verin,\nbu işlem %(app_name)s topluluğuna gerçekten yardımcı olmaktadır."
+
+#: templates/help_static.html:51
+msgid "Other topics"
+msgstr "Diğer başlıklar"
+
+#: templates/help_static.html:53
+msgid ""
+"You can @mention users anywhere in the text to point their attention,\n"
+"    follow users and conversations and report inappropriate content by flagging it."
+msgstr "Dikkatlerini çekmek amaçlı, kullanıcılardan herhangi bir yerde @bahsedebilirsiniz,\nkullanıcıları ve konuşmaları takip edebilirsiniz ve uygunsuz içeriği işaretleyerek bildirebilirsiniz."
+
+#: templates/help_static.html:56
+msgid "Enjoy."
+msgstr "Tadını çıkarın."
+
+#: templates/import_data.html:2 templates/import_data.html.py:4
+msgid "Import StackExchange data"
+msgstr "StackExchange verisini içe aktar"
+
+#: templates/import_data.html:13
+msgid ""
+"<em>Warning:</em> if your database is not empty, please back it up\n"
+"        before attempting this operation."
+msgstr "<em>Uyarı:</em> Eğer veritabanınız boş değilse, bu işlemi yapmadan önce\nyedeğini alın."
+
+#: templates/import_data.html:16
+msgid ""
+"Upload your stackexchange dump .zip file, then wait until\n"
+"        the data import completes. This process may take several minutes.\n"
+"        Please note that feedback will be printed in plain text.\n"
+"        "
+msgstr "Stackexchange döküm .zip dosyanızı yükleyin ve\nverinin içe aktarılması bitene kadar bekleyin. Bu işlem bir kaç dakika sürebilir.\nLütfen geri bildirimin düz metin olarak basılacağını dikkate alın."
+
+#: templates/import_data.html:25
+msgid "Import data"
+msgstr "Veriyi içe aktar"
+
+#: templates/import_data.html:27
+msgid ""
+"In the case you experience any difficulties in using this import tool,\n"
+"        please try importing your data via command line: <code>python manage.py load_stackexchange path/to/your-data.zip</code>"
+msgstr "Bu içe aktarma aracında bir zorlukla karşılaşmanız durumunda\nlütfen verilerinizi komut satırından içe aktarmayı deneyin: <code>python manage.py load_stackexchange path/to/your-data.zip</code>"
+
+#: templates/list_suggested_tags.html:11
+msgid "Tag"
+msgstr "Etiket"
+
+#: templates/list_suggested_tags.html:12
+msgid "Suggested by"
+msgstr "Tavsiye eden"
+
+#: templates/list_suggested_tags.html:13
+msgid "Your decision"
+msgstr "Kararınız"
+
+#: templates/list_suggested_tags.html:14
+msgid "Where the tag was used"
+msgstr "Etiketin nerede kullanıldığı"
+
+#: templates/list_suggested_tags.html:34 templates/list_suggested_tags.html:45
+msgid "Accept"
+msgstr "Kabul et"
+
+#: templates/list_suggested_tags.html:35 templates/list_suggested_tags.html:46
+msgid "Reject"
+msgstr "Reddet"
+
+#: templates/list_suggested_tags.html:38
+msgid "This tag has not yet been used"
+msgstr "Bu etiket henüz kullanılmadı"
+
+#: templates/list_suggested_tags.html:61
+#, python-format
+msgid "Apply tag \"%(name)s\" to the above"
+msgstr "Yukarıdakilere \"%(name)s\" etiketini uygula"
+
+#: templates/list_suggested_tags.html:62
+msgid "Reject tag"
+msgstr "Etiketi reddet"
+
+#: templates/list_suggested_tags.html:70 templates/tags/content.html:5
+#: templates/tags/content.html.py:30
+msgid "Nothing found"
+msgstr "Hiçbir şey bulunamadı"
 
 #: templates/livesettings/_admin_site_views.html:4
 msgid "Sites"
@@ -7069,6 +6613,162 @@ msgstr "Grup ayarları: %(name)s"
 #: templates/livesettings/site_settings.html:94
 msgid "Uncollapse all"
 msgstr "Hepsini genişlet"
+
+#: templates/macros.html:5
+#, python-format
+msgid "Share this content on %(site)s"
+msgstr "Bu içeriği %(site)s sitesinde paylaş"
+
+#: templates/macros.html:48
+msgid "current number of votes"
+msgstr "mevcut oy sayısı"
+
+#: templates/macros.html:61
+msgid "anonymous user"
+msgstr "anonim kullanıcı"
+
+#: templates/macros.html:80
+msgid "posted"
+msgstr "gönderildi"
+
+#: templates/macros.html:86
+msgid "this post is marked as community wiki"
+msgstr "bu soru topluluk vikisi olarak işaretlenmiş"
+
+#: templates/macros.html:90
+#, python-format
+msgid ""
+"This post is a wiki.\n"
+"        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
+msgstr "Bu ileti bir viki sayfasıdır.\nKarması >%(wiki_min_rep)s olanların geliştirmelerini bekliyoruz."
+
+#: templates/macros.html:239 templates/macros.html.py:245
+msgid "Leave this group"
+msgstr "Bu gruptan ayrıl"
+
+#: templates/macros.html:240 templates/macros.html.py:242
+#: templates/macros.html:261
+msgid "Join this group"
+msgstr "Bu gruba katıl"
+
+#: templates/macros.html:241 templates/macros.html.py:246
+#: templates/macros.html:256
+msgid "You are a member"
+msgstr "Üyesiniz"
+
+#: templates/macros.html:248
+msgid "Cancel application"
+msgstr "Başvuruyu iptal et"
+
+#: templates/macros.html:249 templates/macros.html.py:258
+msgid "Awaiting approval"
+msgstr "Onay bekleniyor"
+
+#: templates/macros.html:251 templates/macros.html.py:252
+#: templates/macros.html:263
+msgid "Ask to join"
+msgstr "Katılma talebi ilet"
+
+#: templates/macros.html:337 templates/macros.html.py:348
+#: templates/question.html:420
+msgid "add a comment"
+msgstr "yorum ekle"
+
+#: templates/macros.html:341
+msgid "load older comments"
+msgstr "eski yorumları yükle"
+
+#: templates/macros.html:343
+msgid "see more comments"
+msgstr "daha fazla yorum göster"
+
+#: templates/macros.html:376
+msgid "delete this comment"
+msgstr "bu yorumu sil"
+
+#: templates/macros.html:379 templates/question/answer_card.html:25
+#: templates/question/question_card.html:34
+msgid "This post is awaiting moderation"
+msgstr "Bu gönderi moderasyon bekliyor"
+
+#: templates/macros.html:395 templates/question/answer_controls.html:5
+#: templates/question/question_card.html:22
+#: templates/question/question_controls.html:1 templates/revisions.html:38
+#: templates/revisions.html.py:41 templates/user_profile/user_info.html:173
+msgid "edit"
+msgstr "düzenle"
+
+#: templates/macros.html:404
+msgid "convert to answer"
+msgstr "cevaba çevir"
+
+#: templates/macros.html:435
+msgid "Comments"
+msgstr "Yorumlar"
+
+#: templates/macros.html:584 templatetags/extra_tags.py:45
+#, python-format
+msgid "%(username)s gravatar image"
+msgstr "<CODE>%(username)s</code> Gravatar görüntüsü"
+
+#: templates/macros.html:593
+#, python-format
+msgid "%(username)s's website is %(url)s"
+msgstr "%(username)s kullanıcısının web sitesi: %(url)s"
+
+#: templates/macros.html:614 templates/macros.html.py:615
+#: templates/macros.html:676 templates/macros.html.py:677
+msgid "previous"
+msgstr "önceki"
+
+#: templates/macros.html:633 templates/macros.html.py:688
+msgid "current page"
+msgstr "mevcut sayfa"
+
+#: templates/macros.html:639 templates/macros.html.py:652
+#: templates/macros.html:690 templates/macros.html.py:697
+#, python-format
+msgid "page %(num)s"
+msgstr "sayfa %(num)s"
+
+#: templates/macros.html:661 templates/macros.html.py:701
+msgid "next page"
+msgstr "sonraki sayfa"
+
+#: templates/macros.html:662
+msgid "next"
+msgstr "sonraki"
+
+#: templates/macros.html:713
+#, python-format
+msgid "responses for %(username)s"
+msgstr "%(username)s için yanıtlar"
+
+#: templates/macros.html:715
+#, python-format
+msgid "you have %(response_count)s new response"
+msgid_plural "you have %(response_count)s new responses"
+msgstr[0] "%(response_count)s yeni cevabınız var"
+msgstr[1] "%(response_count)s yeni cevabınız var"
+
+#: templates/macros.html:727 templates/macros.html.py:728
+#, python-format
+msgid "%(new)s new flagged posts and %(seen)s previous"
+msgstr "%(new)s yeni işaretlenmiş ve %(seen)s eski gönderi"
+
+#: templates/macros.html:730 templates/macros.html.py:731
+#, python-format
+msgid "%(new)s new flagged posts"
+msgstr "%(new)s yeni işaretlenmiş gönderi"
+
+#: templates/macros.html:736 templates/macros.html.py:737
+#, python-format
+msgid "%(seen)s flagged posts"
+msgstr "%(seen)s işaretlenmiş gönderi"
+
+#: templates/main_page.html:15
+msgid "Questions"
+msgstr "Sorular"
 
 #: templates/main_page/headline.html:6
 #, python-format
@@ -7142,6 +6842,11 @@ msgstr "beslemeye abone ol"
 msgid "RSS"
 msgstr "RSS"
 
+#: templates/main_page/tab_bar.html:12 templates/tags/header.html:14
+#: templates/users.html:33
+msgid "Sort by &raquo;"
+msgstr "&raquo; ile sırala"
+
 #: templates/main_page/tag_search.html:2
 msgid "Tag search"
 msgstr "Etiket arama"
@@ -7208,7 +6913,7 @@ msgstr "Yeni bir sebep ekle"
 
 #: templates/moderation/queue.html:4 templates/moderation/queue.html.py:7
 msgid "Moderation queue"
-msgstr "Denetleme kuyruğu"
+msgstr "Moderasyon kuyruğu"
 
 #: templates/moderation/queue.html:10
 msgid "Select:"
@@ -7262,7 +6967,7 @@ msgstr "işareti kaldır"
 #: templates/question/question_controls.html:20
 msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
-msgstr "saldırgan içerik olarak işaretle (örn. spam içeren, reklam, zararlı metin, vb.)"
+msgstr "saldırgan olarak işaretle (örn. spam içeren, reklam, zararlı metin, vb.)"
 
 #: templates/question/answer_controls.html:20
 #: templates/question/answer_controls.html:28
@@ -7295,7 +7000,7 @@ msgstr "bağlantı"
 
 #: templates/question/answer_tab_bar.html:7
 msgid "Sort by »"
-msgstr "Sıralama »"
+msgstr "Sıralama "
 
 #: templates/question/answer_vote_buttons.html:10
 msgid "(click again to undo)"
@@ -7436,6 +7141,74 @@ msgstr "kez"
 msgid "Last updated"
 msgstr "Son güncelleme"
 
+#: templates/question_edit.html:46
+msgid "Change language"
+msgstr "Dili değiştir"
+
+#: templates/question_edit.html:64 templates/widgets/answer_edit_tips.html:3
+msgid "Tips"
+msgstr "İpuçları"
+
+#: templates/question_retag.html:21
+msgid "Retag"
+msgstr "Yeniden etiketle"
+
+#: templates/question_retag.html:28
+msgid "Why use and modify tags?"
+msgstr "Neden etiket kullanmalı ve değiştirmeli?"
+
+#: templates/question_retag.html:30
+msgid "Tags help to keep the content better organized and searchable"
+msgstr "Etiketler içeriğin daha düzenli ve aranabilir olmasını sağlar"
+
+#: templates/question_retag.html:32
+msgid "tag editors receive special awards from the community"
+msgstr "etiket editörleri topluluktan özel ödüller kazanırlar"
+
+#: templates/question_retag.html:63
+msgid "up to 5 tags, less than 20 characters each"
+msgstr "5 etikete kadar, her biri en fazla 20 karakter"
+
+#: templates/reopen.html:12
+#, python-format
+msgid ""
+"Closed by: \n"
+"    <a href=\"%(closed_by_profile_url)s\">%(username)s</a>\n"
+msgstr "Kapatan:\n<a href=\"%(closed_by_profile_url)s\">%(username)s</a>\n"
+
+#: templates/reopen.html:17
+msgid "Close reason:"
+msgstr "Kapatma sebebi:"
+
+#: templates/reopen.html:20
+msgid "When:"
+msgstr "Ne Zaman:"
+
+#: templates/revisions.html:4 templates/revisions.html.py:7
+msgid "Revision history"
+msgstr "Düzenleme geçmişi"
+
+#: templates/revisions.html:23
+msgid "click to hide/show revision"
+msgstr "düzenlemeleri gizlemek/göstermek için tıklayın"
+
+#: templates/revisions.html:29
+#, python-format
+msgid "revision %(number)s"
+msgstr "düzeltme %(number)s"
+
+#: templates/subscribe_for_tags.html:3 templates/subscribe_for_tags.html:5
+msgid "Subscribe for tags"
+msgstr "Etiketler için abone ol"
+
+#: templates/subscribe_for_tags.html:6
+msgid "Please, subscribe for the following tags:"
+msgstr "Lütfen aşağıdaki etiketler için abone olun:"
+
+#: templates/subscribe_for_tags.html:11
+msgid "Subscribe"
+msgstr "Abone ol"
+
 #: templates/tags/form_bulk_tag_subscription.html:4
 msgid "Tag subscriptions"
 msgstr "Etiket abonelikleri"
@@ -7480,6 +7253,11 @@ msgstr "Yeni Oluştur"
 #: templates/tags/list_bulk_tag_subscription.html:11
 msgid "Date"
 msgstr "Tarih"
+
+#: templates/tags/list_bulk_tag_subscription.html:13 templates/users.html:8
+#: templates/users.html.py:18
+msgid "Users"
+msgstr "Kullanıcılar"
 
 #: templates/tags/list_bulk_tag_subscription.html:17
 msgid "Action"
@@ -7651,11 +7429,11 @@ msgid ""
 "updates on interesting content by email. If you do not wish to receive "
 "emails - select 'no email' on all items below.<br/>Updates are only sent "
 "when there is any new activity on selected items."
-msgstr "<span class='big strong'>E-posta güncellemelerinin sıklığını ayarlayın.</span> İlginizi çekebilecek içerik hakkında e-posta ile güncellemeler alın. Eğer e-posta almak istemiyorsanız aşağıdaki ögelerin hepsinde 'hiçbir zaman' seçeneğini işaretleyin.<br/>Güncellemeler sadece seçili ögelerde yeni etkinlik olduğunda gönderilir."
+msgstr "<span class='big strong'>E-posta güncellemelerinin sıklığını ayarlayın.</span> İlginizi çekebilecek içerik hakkında e-posta ile güncellemeler alın. Eğer e-posta almak istemiyorsanız aşağıdaki tüm ögelerde 'e-posta yok' seçin.<br/>Güncellemeler sadece seçili ögelerde yeni etkinlik olduğunda gönderilir."
 
 #: templates/user_profile/user_email_subscriptions.html:11
 msgid "Note: language settings also apply to the email subscriptions"
-msgstr "Not: Dil ayarları aynı zamanda e-posta aboneliklerine de uygulanır."
+msgstr "Not: dil ayarları aynı zamanda e-posta aboneliklerine de uygulanır"
 
 #: templates/user_profile/user_email_subscriptions.html:128
 msgid "Stop Email"
@@ -7670,6 +7448,12 @@ msgid ""
 "Note: the homepage link and the about section won't be shown to other users "
 "until your profile is approved by the moderators."
 msgstr "Not: profiliniz moderatörler tarafından onaylanmadan ana sayfa bağlantısı ve hakkında bölümü diğer kullanıcılara gösterilmeyecektir."
+
+#: templates/user_profile/user_info.html:24
+#: templates/user_profile/user_reputation.html:4
+#: templates/user_profile/user_tabs.html:32 templates/users.html:41
+msgid "karma"
+msgstr "karma"
 
 #: templates/user_profile/user_info.html:36
 msgid "unfollow"
@@ -7763,7 +7547,7 @@ msgstr "Ana dilim"
 #: templates/user_profile/user_moderate.html:4
 #: templates/user_profile/user_tabs.html:48
 msgid "moderation"
-msgstr "denetleme"
+msgstr "moderasyon"
 
 #: templates/user_profile/user_moderate.html:8
 #, python-format
@@ -7869,7 +7653,7 @@ msgstr[1] "%(count)s kişiyi takip ediyor"
 msgid ""
 "Your network is empty. Would you like to follow someone? - Just visit their "
 "profiles and click \"follow\""
-msgstr "Ağınızda kimse yok. Birini takip etmek ister misiniz? - Sadece profilini ziyaret edin ve \"takip et\"i tıklayın."
+msgstr "Ağınızda kimse yok. Birini takip etmek ister misiniz? - Sadece profilini ziyaret edin ve \"takip et\"i tıklayın"
 
 #: templates/user_profile/user_network.html:21
 #, python-format
@@ -7924,15 +7708,46 @@ msgstr "Cevapla:"
 msgid "email alerts"
 msgstr "e-posta uyarıları"
 
+#: templates/users.html:16
+#, python-format
+msgid "Users in group %(name)s"
+msgstr "%(name)s grubu üyeleri"
+
+#: templates/users.html:24
+msgid "Select/Sort by &raquo;"
+msgstr "&raquo; ile Seç/Sırala"
+
+#: templates/users.html:29
+#, python-format
+msgid "people in group %(name)s"
+msgstr "%(name)s grubu kişileri"
+
+#: templates/users.html:48
+msgid "recent"
+msgstr "son"
+
+#: templates/users.html:60
+msgid "by username"
+msgstr "kullanıcı adına göre"
+
+#: templates/users.html:66
+#, python-format
+msgid "users matching query %(search_query)s:"
+msgstr "%(search_query)s sorgusuna uyan kullanıcılar:"
+
+#: templates/users.html:69
+msgid "No users found."
+msgstr "Hiçbir kullanıcı bulunamadı."
+
 #: templates/widgets/answer_edit_tips.html:8
 #: templates/widgets/question_edit_tips.html:10
 msgid "provide enough details"
-msgstr "Yeterli ayrıntı sağlayın"
+msgstr "yeterli ayrıntı sağlayın"
 
 #: templates/widgets/answer_edit_tips.html:9
 #: templates/widgets/question_edit_tips.html:11
 msgid "be clear and concise"
-msgstr "Kısa ve öz olun"
+msgstr "kısa ve öz olun"
 
 #: templates/widgets/ask_form.html:56
 msgid "Login/Signup to Post"
@@ -8102,11 +7917,11 @@ msgstr "rozetler"
 
 #: templates/widgets/moderated_image.html:1
 msgid "image awaiting moderation"
-msgstr "resim denetlenmeyi bekliyor"
+msgstr "resim moderasyon bekliyor"
 
 #: templates/widgets/moderated_link.html:1
 msgid "link awaiting moderation"
-msgstr "bağlantı denetlenmeyi bekliyor"
+msgstr "bağlantı moderasyon bekliyor"
 
 #: templates/widgets/proxy_author_fields.html:7
 msgid ""
@@ -8144,7 +7959,7 @@ msgstr "Arama yapın ya da sorunuzu sorun"
 
 #: templates/widgets/tag_selector.html:4
 msgid "Interesting tags"
-msgstr "İlgi çekici etiketler"
+msgstr "İlginizi çekebilecek etiketler"
 
 #: templates/widgets/tag_selector.html:22
 msgid "Ignored tags"
@@ -8230,11 +8045,168 @@ msgstr "Yeni gönderi yapma"
 
 #: templatetags/extra_filters_jinja.py:371
 msgid "no"
-msgstr "sıfır"
+msgstr "hayır"
 
 #: templatetags/extra_filters_jinja.py:407
 msgid "Visitor"
 msgstr "Ziyaretçi"
+
+#: urls.py:39
+msgctxt "urls"
+msgid "questions"
+msgstr "sorular"
+
+#: urls.py:41
+msgctxt "urls"
+msgid "question"
+msgstr "soru"
+
+#: urls.py:68 urls.py:394 urls.py:400 urls.py:409 urls.py:418
+msgctxt "urls"
+msgid "tags/"
+msgstr "etiketler/"
+
+#: urls.py:73 urls.py:79 urls.py:88 urls.py:109 urls.py:118 urls.py:126
+#: urls.py:133
+msgctxt "urls"
+msgid "users/"
+msgstr "kullanıcılar/"
+
+#: urls.py:80
+msgctxt "urls"
+msgid "by-group/"
+msgstr "gruba-göre/"
+
+#: urls.py:88 urls.py:194 urls.py:301 urls.py:420 urls.py:645
+msgctxt "urls"
+msgid "edit/"
+msgstr "düzenle/"
+
+#: urls.py:110 urls.py:394 urls.py:401 urls.py:410 urls.py:419
+msgctxt "urls"
+msgid "subscriptions/"
+msgstr "abonelikler/"
+
+#: urls.py:119
+msgctxt "urls"
+msgid "unsubscribe/"
+msgstr "abonelik_iptali/"
+
+#: urls.py:127
+msgctxt "urls"
+msgid "select_languages/"
+msgstr "dil_secin/"
+
+#: urls.py:138
+msgctxt "urls"
+msgid "groups/"
+msgstr "gruplar/"
+
+#: urls.py:143 urls.py:148
+msgctxt "urls"
+msgid "badges/"
+msgstr "rozetler/"
+
+#: urls.py:161
+msgctxt "urls"
+msgid "feedback/"
+msgstr "geribildirim/"
+
+#: urls.py:183
+msgctxt "urls"
+msgid "about/"
+msgstr "hakkinda/"
+
+#: urls.py:184
+msgctxt "urls"
+msgid "faq/"
+msgstr "sss/"
+
+#: urls.py:185
+msgctxt "urls"
+msgid "privacy/"
+msgstr "gizlilik/"
+
+#: urls.py:187
+msgctxt "urls"
+msgid "terms/"
+msgstr "sartlar/"
+
+#: urls.py:192
+msgctxt "urls"
+msgid "help/"
+msgstr "yardim/"
+
+#: urls.py:194 urls.py:199
+msgctxt "urls"
+msgid "answers/"
+msgstr "cevaplar/"
+
+#: urls.py:199 urls.py:336
+msgctxt "urls"
+msgid "revisions/"
+msgstr "düzeltmeler/"
+
+#: urls.py:231
+msgctxt "urls"
+msgid "moderation-queue/"
+msgstr "yonetim-kuyrugu/"
+
+#: urls.py:296 urls.py:604 urls.py:612 urls.py:620 urls.py:628
+msgctxt "urls"
+msgid "ask/"
+msgstr "sor/"
+
+#: urls.py:306
+msgctxt "urls"
+msgid "retag/"
+msgstr "yeniden_etiketle/"
+
+#: urls.py:311
+msgctxt "urls"
+msgid "close/"
+msgstr "kapat/"
+
+#: urls.py:316
+msgctxt "urls"
+msgid "reopen/"
+msgstr "yeniden_ac/"
+
+#: urls.py:321
+msgctxt "urls"
+msgid "answer/"
+msgstr "cevapla/"
+
+#: urls.py:402 urls.py:653
+msgctxt "urls"
+msgid "delete/"
+msgstr "sil/"
+
+#: urls.py:411 urls.py:637
+msgctxt "urls"
+msgid "create/"
+msgstr "olustur/"
+
+#: urls.py:426
+msgctxt "urls"
+msgid "suggested-tags/"
+msgstr "onerilen-etiketler/"
+
+#: urls.py:597 urls.py:603 urls.py:611 urls.py:619 urls.py:627 urls.py:636
+#: urls.py:644 urls.py:652 urls.py:659
+msgctxt "urls"
+msgid "widgets/"
+msgstr "gerecler/"
+
+#: urls.py:690
+msgctxt "urls"
+msgid "upload/"
+msgstr "karsiya_yukle/"
+
+#: urls.py:721
+msgctxt "urls"
+msgid "account/"
+msgstr "hesap/"
 
 #: utils/decorators.py:104
 msgid "Oops, apologies - there was some error"
@@ -8244,16 +8216,16 @@ msgstr "Ahh, özür dileriz - bir hata meydana geldi"
 msgid "Please login to post"
 msgstr "Yazmak için lütfen giriş yapınız"
 
-#: utils/decorators.py:206 views/commands.py:641 views/commands.py:675
+#: utils/decorators.py:201 views/commands.py:641 views/commands.py:675
 #: views/users.py:684 views/writers.py:347 views/writers.py:817
 msgid "Spam was detected on your post, sorry for if this is a mistake"
 msgstr "İletinizde spam içerik tespit edildi, eğer bu bir hataysa özür dileriz"
 
-#: utils/decorators.py:230
+#: utils/decorators.py:225
 msgid "This function is limited to moderators and administrators"
 msgstr "Bu işlev moderatör ve site yöneticileriyle kısıtlıdır"
 
-#: utils/decorators.py:243
+#: utils/decorators.py:238
 msgid "This function is limited to administrators"
 msgstr "Bu işlev site yöneticileriyle kısıtlıdır"
 

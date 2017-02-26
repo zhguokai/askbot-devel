@@ -756,7 +756,7 @@ class Post(models.Model):
         update_activity = Activity(
                         user=updated_by,
                         active_at=timestamp,
-                        content_object=self,
+                        content_object=self.current_revision,
                         activity_type=activity_type,
                         question=self.get_origin_post(),
                         summary=summary
@@ -808,6 +808,29 @@ class Post(models.Model):
             ),
             countdown=django_settings.NOTIFICATION_DELAY_TIME
         )
+
+    def delete_update_notifications(self, keep_activity):
+        """reverse of issue update notifications
+        With second argument `False` Activities and ActivityAuditStatus
+        records are deleted, with `True` only ActivityAuditStatus items
+        are deleted
+        """
+        # Find revisions of current post
+        # The reason is that notifications are bound to revisions
+        # not the posts themselves
+        self_rev_ids = set(self.revisions.values_list('pk', flat=True))
+
+        # Find revisions of child posts
+        child_posts = Post.objects.filter(parent=self)
+        child_post_ids = child_posts.values_list('pk', flat=True)
+        child_revs = PostRevision.objects.filter(post__pk__in=child_post_ids)
+        child_rev_ids = set(child_revs.values_list('pk', flat=True))
+
+        rev_ids = list(self_rev_ids | child_rev_ids)
+        
+        from askbot.tasks import delete_update_notifications_task
+        task_args = (rev_ids, keep_activity)
+        defer_celery_task(delete_update_notifications_task, args=task_args)
 
     def make_private(self, user, group_id=None):
         """makes post private within user's groups
@@ -1736,37 +1759,26 @@ class Post(models.Model):
             return self._comment__assert_is_visible_to(user)
         raise NotImplementedError
 
-    def get_updated_activity_data(self, created=False):
+    def get_updated_activity_type(self, created):
         if self.is_answer():
-            # TODO: simplify this to always return latest revision for the
-            # second part
             if created:
-                return const.TYPE_ACTIVITY_ANSWER, self
-            else:
-                latest_revision = self.get_latest_revision()
-                return const.TYPE_ACTIVITY_UPDATE_ANSWER, latest_revision
+                return const.TYPE_ACTIVITY_ANSWER
+            return const.TYPE_ACTIVITY_UPDATE_ANSWER
         elif self.is_question():
             if created:
-                return const.TYPE_ACTIVITY_ASK_QUESTION, self
-            else:
-                latest_revision = self.get_latest_revision()
-                return const.TYPE_ACTIVITY_UPDATE_QUESTION, latest_revision
+                return const.TYPE_ACTIVITY_ASK_QUESTION
+            return const.TYPE_ACTIVITY_UPDATE_QUESTION
         elif self.is_comment():
             if self.parent.post_type == 'question':
-                return const.TYPE_ACTIVITY_COMMENT_QUESTION, self
+                return const.TYPE_ACTIVITY_COMMENT_QUESTION
             elif self.parent.post_type == 'answer':
-                return const.TYPE_ACTIVITY_COMMENT_ANSWER, self
+                return const.TYPE_ACTIVITY_COMMENT_ANSWER
+            #todo - what if there is other parent post
+            #we might support nested comments at some point
         elif self.is_tag_wiki():
-            if created:
-                return const.TYPE_ACTIVITY_CREATE_TAG_WIKI, self
-            else:
-                return const.TYPE_ACTIVITY_UPDATE_TAG_WIKI, self
+            return const.TYPE_ACTIVITY_UPDATE_TAG_WIKI
         elif self.is_reject_reason():
-            if created:
-                return const.TYPE_ACTIVITY_CREATE_REJECT_REASON, self
-            else:
-                return const.TYPE_ACTIVITY_UPDATE_REJECT_REASON, self
-
+            return const.TYPE_ACTIVITY_CREATE_REJECT_REASON
         raise NotImplementedError
 
     def get_tag_names(self):
@@ -2332,7 +2344,7 @@ class PostRevision(models.Model):
 
     def get_snippet(self, max_length=120):
         """a little simpler than as Post.get_snippet"""
-        return html_utils.strip_tags(self.html)[:max_length] + '...'
+        return '<p>' + html_utils.strip_tags(self.html)[:max_length] + '</p>'
 
 
 class PostFlagReason(models.Model):

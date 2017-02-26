@@ -63,7 +63,7 @@ msgstr[1] "Te tagi nie istnieją"
 msgstr[2] "Te tagi nie istnieją"
 
 #: media/js/live_search.js:315
-msgid "Search or ask your question"
+msgid "search or ask your question"
 msgstr "znajdź lub zadaj pytanie"
 
 #: media/js/post.js:28

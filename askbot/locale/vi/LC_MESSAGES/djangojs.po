@@ -62,7 +62,7 @@ msgid_plural "Sorry, these tags do not exist"
 msgstr[0] "Xin lỗi, những thẻ này không tồn tại"
 
 #: media/js/live_search.js:315
-msgid "Search or ask your question"
+msgid "search or ask your question"
 msgstr "tìm hoặc đặt câu hỏi"
 
 #: media/js/post.js:28

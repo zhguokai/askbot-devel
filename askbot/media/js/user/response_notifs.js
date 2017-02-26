@@ -68,9 +68,24 @@ ResponseNotifs.prototype.getSnippets = function (memoIds) {
     return snippets;
 };
 
+ResponseNotifs.prototype.deleteEmptySnippetGroups = function () {
+    var groups = $('.js-message-group');
+    $.each(groups, function (idx, item) {
+        var group = $(item);
+        var messages = group.find('.message');
+        if (messages.length === 0) {
+            group.remove();
+        }
+    });
+};
+
 ResponseNotifs.prototype.deleteSnippets = function (memoIds) {
     var snippets = this.getSnippets(memoIds);
-    snippets.fadeOut();
+    var me = this;
+    snippets.fadeOut(function () {
+        $(this).remove();
+        me.deleteEmptySnippetGroups();
+    });
 };
 
 ResponseNotifs.prototype.getCheckedMemoIds = function () {

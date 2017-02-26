@@ -53,6 +53,7 @@ from askbot import models
 from askbot import exceptions
 from askbot.models.badges import award_badges_signal
 from askbot.models.tag import format_personal_group_name
+from askbot.models.post import PostRevision
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
@@ -763,11 +764,29 @@ def user_recent(request, user, context):
                 badge=content.badge,
             )
         else:
+            if hasattr(content, 'thread'):
+                # this is the old way, where events
+                # were tied to posts, rather then revisions
+                # old records might exist in the database
+                # that still satisfy this condition
+                event_title = content.thread.title
+                event_summary = content.summary
+            elif hasattr(content, 'post'):
+                # revision. In the future here we only
+                # user revisions here, because this reflects
+                # the activity better
+                event_title = content.post.thread.title
+                event_summary = content.get_snippet()
+            else:
+                # don't know what to do here...
+                event_title = ''
+                event_summary = ''
+                
             event = Event(
                 time=activity.active_at,
                 type=activity.activity_type,
-                title=content.thread.title,
-                summary=content.summary,
+                title=event_title,
+                summary=event_summary,
                 url=content.get_absolute_url()
             )
 
@@ -839,11 +858,13 @@ def user_responses(request, user, context):
     section = request.GET.get('section', 'forum')
 
     if section == 'forum':
+        #this is for the on-screen notifications
         activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
         activity_types += (const.TYPE_ACTIVITY_MENTION,)
     elif section == 'join_requests':
         return show_group_join_requests(request, user, context)
     elif section == 'messages':
+        #this is for the private messaging feature
         if request.user != user:
             if askbot_settings.ADMIN_INBOX_ACCESS_ENABLED == False:
                 raise Http404
@@ -880,6 +901,9 @@ def user_responses(request, user, context):
     else:
         raise Http404
 
+    #code below takes care only of on-screen notifications about
+    #the forum activity - such as answers and comments from other users
+    #
     #2) load the activity notifications according to activity types
     #todo: insert pagination code here
     memo_set = request.user.get_notifications(activity_types)
@@ -906,12 +930,17 @@ def user_responses(request, user, context):
         act_message = act.get_activity_type_display()
         act_type = 'edit'
 
+        if isinstance(obj, PostRevision):
+            url = obj.post.get_absolute_url()
+        else:
+            url = obj.get_absolute_url()
+
         response = {
             'id': memo.id,
             'timestamp': act.active_at,
             'user': act_user,
             'is_new': memo.is_new(),
-            'url': act.get_absolute_url(),
+            'url': url,
             'snippet': act.get_snippet(),
             'title': act.question.thread.title,
             'message_type': act_message,
@@ -941,14 +970,12 @@ def user_responses(request, user, context):
     #6) sort responses by time
     filtered_message_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
 
-    reject_reasons = models.PostFlagReason.objects.all().order_by('title')
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name' : 'inbox',
         'inbox_section': section,
         'page_title' : _('profile - responses'),
-        'post_reject_reasons': reject_reasons,
         'messages' : filtered_message_list,
     }
     context.update(data)

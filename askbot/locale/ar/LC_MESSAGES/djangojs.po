@@ -72,7 +72,7 @@ msgstr[4] "عفواً، هذة الوسوم غير موجودة"
 msgstr[5] "عفواً، هذة الوسوم غير موجودة"
 
 #: media/js/live_search.js:315
-msgid "Search or ask your question"
+msgid "search or ask your question"
 msgstr "ابحث عن سؤالك أو اسأله"
 
 #: media/js/post.js:28

@@ -16,20 +16,22 @@
     <p class="action-status"><span></span></p>
     <div class="messages">
     {% for message in messages %}{# messages are grouped by question, using the "nested_messages" #}
-        <div class="message{% if message.is_new %} highlight new{% else %} seen{% endif %}"
-            data-message-id="{{ message.id }}"
-        >
-            <h2>"{{ message.title.strip()|escape}}"</h2>
-            {{ macros.inbox_message_snippet(message) }}
-        </div>
-        {# "nested" messages are further response messages to the same question #}
-        {% for followup_message in message.followup_messages %}
-            <div class="message{% if followup_message.is_new %} highlight new{% else %} seen{% endif %}"
-                data-message-id="{{ followup_message.id }}"
+        <div class="js-message-group">
+            <h2><input type="checkbox" />"{{ message.title.strip()|escape}}"</h2>
+            <div class="message{% if message.is_new %} highlight new{% else %} seen{% endif %}"
+                data-message-id="{{ message.id }}"
             >
-                {{ macros.inbox_message_snippet(followup_message) }}
+                {{ macros.inbox_message_snippet(message) }}
             </div>
-        {% endfor %}
+            {# "nested" messages are further response messages to the same question #}
+            {% for followup_message in message.followup_messages %}
+                <div class="message{% if followup_message.is_new %} highlight new{% else %} seen{% endif %}"
+                    data-message-id="{{ followup_message.id }}"
+                >
+                    {{ macros.inbox_message_snippet(followup_message) }}
+                </div>
+            {% endfor %}
+        </div>
     {% endfor %}
     </div>
 {% endblock %}

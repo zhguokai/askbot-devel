@@ -1,5 +1,6 @@
 Coffin>=0.3,<=0.3.8
 Jinja2==2.8
+django-appconf
 akismet<=0.2.0
 beautifulsoup4<=4.4.1
 django-avatar==2.2.1
