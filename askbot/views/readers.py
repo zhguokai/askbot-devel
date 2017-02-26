@@ -50,7 +50,7 @@ from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.html import sanitize_html
 from askbot.utils.loading import load_module
-from askbot.utils.translation import get_language_name
+from askbot.utils.translation import (get_language_name, get_language)
 from askbot.utils.url_utils import reverse_i18n
 from askbot.views import context
 import askbot
@@ -73,7 +73,14 @@ def index(request):#generates front page - shows listing of questions sorted in 
         space_url = reverse('questions', kwargs={'space': space})
         return HttpResponseRedirect(space_url)
 
-    spaces = Space.objects.all().order_by('order_number')
+    space_filter = {'language_code': get_language()}
+    if askbot.is_multilingual():
+        lang_mode = django_settings.ASKBOT_LANGUAGE_MODE
+        if lang_mode == 'user-lang' and request.user.is_authenticated():
+            user_langs = request.user.get_languages()
+            space_filter = {'language_code__in': user_langs}
+
+    spaces = Space.objects.filter(**space_filter).order_by('order_number')
     template_data = {
         'spaces': spaces,
     }

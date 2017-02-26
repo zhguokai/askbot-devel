@@ -1,11 +1,27 @@
 {% extends "one_column_body.html" %}
 {% block content %}
     <div>{{ settings.SPACES_PAGE_DESCRIPTION }}</div>
-    <ul>
+    <ul class="space-list">
         {% for space in spaces %}
         <li>
-            <a href="{{ space.get_absolute_url() }}">{{ space.name }}</a>
+            <div class="space-card">
+                {% if space.image %}
+                <a href="{{ space.get_absolute_url() }}">
+                    <img class="space-image" src="{{ space.image.url }}"
+                        alt="{% trans name=space.name %}{{ name }} image{% endtrans %}" 
+                    />
+
+                </a>
+                {% endif %}
+                <a class="space-link" href="{{ space.get_absolute_url() }}">{{ space.name }}</a>
+                {% if space.description %}
+                <div class="space-description">
+                    {{ space.description|convert_markdown }}
+                </div>
+                {% endif %}
+            </div>
         </li>
         {% endfor %}
     </ul>
+    <div class="clearfix"></div>
 {% endblock %}
