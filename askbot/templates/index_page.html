@@ -1,6 +1,6 @@
 {% extends "one_column_body.html" %}
 {% block content %}
-    <div>{{ settings.SPACES_PAGE_DESCRIPTION }}</div>
+    <div>{{ settings.SPACES_PAGE_DESCRIPTION|convert_markdown }}</div>
     <ul class="space-list">
         {% for space in spaces %}
         <li>
