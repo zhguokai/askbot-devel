@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-28 11:40-0600\n"
+"POT-Creation-Date: 2017-02-28 11:46-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -246,7 +246,7 @@ msgstr ""
 msgid "Are you sure you don't want to post this comment?"
 msgstr "Are you sure you do not want to post this comment?"
 
-#: media/js/post.js:2555 media/jslib/timeago.js:37 media/jslib/timeago.js.c:157
+#: media/js/post.js:2555 media/jslib/timeago.js:137
 msgid "just now"
 msgstr ""
 
@@ -554,119 +554,70 @@ msgstr ""
 msgid "disabled"
 msgstr ""
 
-#: media/jslib/timeago.js:35
-msgid "ago"
-msgstr ""
-
-#: media/jslib/timeago.js:36
-msgid "from now"
-msgstr ""
-
-#: media/jslib/timeago.js:38
-msgid "about a minute"
-msgstr ""
-
-#: media/jslib/timeago.js:39
-#, c-format
-msgid "%d min"
-msgstr ""
-
-#: media/jslib/timeago.js:40
-msgid "about an hour"
-msgstr ""
-
-#: media/jslib/timeago.js:41
-#, c-format
-msgid "%d h"
-msgstr ""
-
-#: media/jslib/timeago.js:42 media/jslib/timeago.js.c:135
-msgid "yesterday"
-msgstr ""
-
-#: media/jslib/timeago.js:43
-#, c-format
-msgid "%d days"
-msgstr ""
-
-#: media/jslib/timeago.js:44
-msgid "about a month"
-msgstr ""
-
-#: media/jslib/timeago.js:45
-#, c-format
-msgid "%d months"
-msgstr ""
-
-#: media/jslib/timeago.js:46
-msgid "about a year"
-msgstr ""
-
-#: media/jslib/timeago.js:47
-#, c-format
-msgid "%d years"
-msgstr ""
-
-#: media/jslib/timeago.js:110
+#: media/jslib/timeago.js:90
 msgid "Jan"
 msgstr ""
 
-#: media/jslib/timeago.js:111
+#: media/jslib/timeago.js:91
 msgid "Feb"
 msgstr ""
 
-#: media/jslib/timeago.js:112
+#: media/jslib/timeago.js:92
 msgid "Mar"
 msgstr ""
 
-#: media/jslib/timeago.js:113
+#: media/jslib/timeago.js:93
 msgid "Apr"
 msgstr ""
 
-#: media/jslib/timeago.js:114
+#: media/jslib/timeago.js:94
 msgid "May"
 msgstr ""
 
-#: media/jslib/timeago.js:115
+#: media/jslib/timeago.js:95
 msgid "Jun"
 msgstr ""
 
-#: media/jslib/timeago.js:116
+#: media/jslib/timeago.js:96
 msgid "Jul"
 msgstr ""
 
-#: media/jslib/timeago.js:117
+#: media/jslib/timeago.js:97
 msgid "Aug"
 msgstr ""
 
-#: media/jslib/timeago.js:118
+#: media/jslib/timeago.js:98
 msgid "Sep"
 msgstr ""
 
-#: media/jslib/timeago.js:119
+#: media/jslib/timeago.js:99
 msgid "Oct"
 msgstr ""
 
-#: media/jslib/timeago.js:120
+#: media/jslib/timeago.js:100
 msgid "Nov"
 msgstr ""
 
-#: media/jslib/timeago.js:121
+#: media/jslib/timeago.js:101
 msgid "Dec"
 msgstr ""
 
-#: media/jslib/timeago.js:133
+#: media/jslib/timeago.js:113
 msgid "2 days ago"
 msgstr ""
 
-#: media/jslib/timeago.js:140
+#: media/jslib/timeago.js:115
+msgid "yesterday"
+msgstr ""
+
+#: media/jslib/timeago.js:120
 #, c-format
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: media/jslib/timeago.js:150
+#: media/jslib/timeago.js:130
 #, c-format
 msgid "%s min ago"
 msgid_plural "%s mins ago"

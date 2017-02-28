@@ -27,27 +27,7 @@
 
   $.extend($.timeago, {
     settings: {
-      refreshMillis: 60000,
-      allowFuture: false,
-      strings: {
-        prefixAgo: null,
-        prefixFromNow: null,
-        suffixAgo: gettext("ago"),
-        suffixFromNow: gettext("from now"),
-        seconds: gettext("just now"),
-        minute: gettext("about a minute"),
-        minutes: gettext("%d min"),
-        hour: gettext("about an hour"),
-        hours: gettext("%d h"),
-        day: gettext("yesterday"),
-        days: gettext("%d days"),
-        month: gettext("about a month"),
-        months: gettext("%d months"),
-        year: gettext("about a year"),
-        years: gettext("%d years"),
-        wordSeparator: " ",
-        numbers: []
-      }
+      refreshMillis: 60000
     },
     'inWords': function(dateSince) {
         return inWords(dateSince);
