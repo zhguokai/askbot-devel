@@ -103,9 +103,10 @@ settings.register(
         WORDS,
         'WORDS_INSTRUCTION_TO_GIVE_ANSWERS',
         default=_(
-            'Please try to <strong>give a substantial answer</strong>, '
-            'for discussions, <strong>please use comments</strong> and '
-            '<strong>do remember to vote</strong>.'
+            'This space is reserved only for answers. '
+            'If you would like to engage in a discussion, '
+            'please instead post a comment under the question or '
+            'an answer that you would like to discuss'
         ),
         description=_('Instruction to give answers'),
         help_text=_('HTML is allowed'),
@@ -138,6 +139,11 @@ settings.register(
     )
 )
 
+#action definition (action def)
+#this phrase is used as a parameter within 
+#another phrase like "sorry, you cannot ask questions"
+#hopefully it works, because it is used in indefinite form
+#other similarly used phrases are marked as "action def" below
 settings.register(
     values.StringValue(
         WORDS,
@@ -148,6 +154,7 @@ settings.register(
     )
 )
 
+#action def
 settings.register(
     values.StringValue(
         WORDS,
