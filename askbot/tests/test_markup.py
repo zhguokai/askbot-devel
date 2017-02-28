@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings as django_settings
-from django.test import TestCase
+from django.utils import translation
+from django.test import SimpleTestCase
 from askbot.utils.markup import markdown_input_converter
 from askbot.tests.utils import AskbotTestCase
 from askbot.utils import markup
+from askbot.utils.translation import get_language
 
 class MarkupTest(AskbotTestCase):
 
@@ -80,7 +82,7 @@ Known to fail against:
     example.com/
 """
 
-class MarkdownTestCase(TestCase):
+class MarkdownTestCase(SimpleTestCase):
     """tests markdown,
     todo: add more test cases from above"""
     def setUp(self):
@@ -101,6 +103,14 @@ class MarkdownTestCase(TestCase):
         text = """text www.example.com text"""
         expected ="""<p>text <a href="http://www.example.com">www.example.com</a> text</p>\n"""
         self.assertHTMLEqual(self.conv(text), expected)
+
+    def test_convert_lazy_text(self):
+        lang = get_language()
+        translation.activate('en')
+        text = translation.ugettext_lazy('Good Answer')
+        self.assertHTMLEqual(self.conv(text), '<p>Good Answer</p>')
+        translation.activate(lang)
+
 
     def test_convert_mixed_text(self):
         text = """<p>

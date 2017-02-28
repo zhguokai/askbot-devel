@@ -8,6 +8,7 @@ import logging
 
 from django.utils.html import urlize
 from django.utils.module_loading import import_string
+from django.utils.encoding import force_unicode
 
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -202,11 +203,13 @@ def mentionize_text(text, anticipated_authors):
 
 def plain_text_input_converter(text):
     """plain text to html converter"""
+    text = force_unicode(text)
     return sanitize_html(urlize('<p>' + text + '</p>'))
 
 
 def markdown_input_converter(text):
     """markdown to html converter"""
+    text = force_unicode(text)
     text = get_parser().convert(text)
     text = sanitize_html(text)
     text = urlize_html(text)
@@ -215,6 +218,7 @@ def markdown_input_converter(text):
 
 def tinymce_input_converter(text):
     """tinymce input to production html converter"""
+    text = force_unicode(text)
     text = urlize_html(text)
     return strip_tags(text, ['script', 'style', 'link'])
 
