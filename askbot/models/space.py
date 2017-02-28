@@ -36,12 +36,45 @@ class Space(models.Model):
     def __unicode__(self):
         return self.name
 
+    @classmethod
+    def from_db(cls, db, field_names, values):
+        # default implementation of from_db() (could be replaced
+        # with super())
+        if cls._deferred:
+            instance = cls(**zip(field_names, values))
+        else:
+            instance = cls(*values)
+        instance._state.adding = False
+        instance._state.db = db
+        # customization to store the original field values on the instance
+        instance._loaded_values = dict(zip(field_names, values))
+        return instance
+
     def save(self):
         # Auto-populate slug
         self.slug = slugify(self.name)
         # TODO: validate slug so that it does not clash with
         # existing urls
+        if not self._state.adding:
+            old_slug = self._loaded_values['slug']
+            if self.slug != old_slug:
+                #create a redirect object
+                redirect = SpaceRedirect()
+                redirect.space = self
+                redirect.slug = old_slug
+                redirect.language_code = self.language_code
+                redirect.save()
+
         super(Space, self).save()
 
     def get_absolute_url(self):
         return reverse('questions', kwargs={'space': self.slug})
+
+
+class SpaceRedirect(models.Model):
+    slug = models.CharField(max_length=128, unique=True)
+    space = models.ForeignKey(Space, related_name='redirects')
+    language_code = LanguageCodeField()
+
+    class Meta:
+        app_label = 'askbot'

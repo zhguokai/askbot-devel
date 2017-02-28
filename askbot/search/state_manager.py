@@ -12,7 +12,7 @@ import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot.utils.functions import strip_plus
-from askbot.models.space import get_space
+from askbot.models.space import get_space, Space
 
 
 def extract_matching_token(text, regexes):
@@ -252,6 +252,15 @@ class SearchState(object):
             ss.tags = []
         ss.page = 1
         return ss
+
+    def set_space(self, space):
+        if isinstance(space, basestring):
+            space_slug = space
+            self.space = get_space(space_slug)
+        elif isinstance(space, Space):
+            self.space = space
+        else:
+            raise TypeError('space argument must be instance of Space model or space slug')
 
     def change_scope(self, new_scope):
         ss = self.deepcopy()

@@ -40,7 +40,8 @@ from askbot.forms import GetUserItemsForm
 from askbot.forms import ShowTagsForm
 from askbot.forms import ShowQuestionForm
 from askbot.models.post import MockPost
-from askbot.models.space import get_space, get_primary_space, Space
+from askbot.models.space import (get_space, get_primary_space,
+                                 Space, SpaceRedirect)
 from askbot.models.tag import Tag
 from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.startup_procedures import domain_is_bad
@@ -96,14 +97,21 @@ def questions(request, **kwargs):
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
-    space = get_space(kwargs['space'])
-    if not space:
-        raise Http404
-
     search_state = SearchState(
                     user_logged_in=request.user.is_authenticated(),
                     **kwargs
                 )
+
+    space = get_space(kwargs['space'])
+    if not space:
+        try:
+            space_redirect = SpaceRedirect.objects.get(slug=kwargs['space'])
+        except SpaceRedirect.DoesNotExist:
+            raise Http404
+        else:
+            search_state.set_space(space_redirect.space.slug)
+            return HttpResponseRedirect(search_state.full_url())
+
 
     qs, meta_data = models.Thread.objects.run_advanced_search(
                         request_user=request.user, search_state=search_state
