@@ -29,16 +29,6 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
-        'WORDS_PLEASE_ENTER_YOUR_QUESTION',
-        default=_('Please enter your question'),
-        description=_('Please enter your question'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
         'WORDS_ASK_THE_GROUP',
         default=_('Ask the Group'),
         description=_('Ask the Group'),
@@ -371,16 +361,6 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
-        'WORDS_UPVOTED_ANSWER',
-        default=_('upvoted answer'),
-        description=_('upvoted answer'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
         'WORDS_NICE_ANSWER',
         default=_('Nice Answer'),
         description=_('Nice Answer'),
@@ -502,16 +482,6 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
-        'WORDS_UPVOTED_ANSWERS',
-        default=_('upvoted answers'),
-        description=_('upvoted answers'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
         'WORDS_SHOW_ONLY_QUESTIONS_FROM',
         default=_('Show only questions from'),
         description=_('Show only questions from'),
@@ -532,19 +502,6 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
-        'WORDS_THIS_QUESTION_HAS_BEEN_DELETED',
-        default=_(
-                'Sorry, this question has been '
-                'deleted and is no longer accessible'
-            ),
-        description=_('This question has been deleted'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
         'WORDS_PLEASE_ENTER_YOUR_QUESTION',
         default=_('Please enter your question'),
         description=_('Please enter your question'),
@@ -555,59 +512,9 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
-        'WORDS_DELETE_YOUR_QUESTION',
-        default=_('delete your question'),
-        description=_('delete your question'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
         'WORDS_ASK_A_QUESTION_INTERESTING_TO_THIS_COMMUNITY',
         default=_('ask a question interesting to this community'),
         description=_('ask a question interesting to this community'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
-        'WORDS_NO_QUESTIONS_HERE',
-        default=_('No questions here.'),
-        description=_('No questions here.'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
-        'WORDS_PLEASE_FOLLOW_QUESTIONS',
-        default=_('Please follow some questions or follow some users.'),
-        description=_('Please follow some questions or follow some users.'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
-        'WORDS_PLEASE_FEEL_FREE_TO_ASK_YOUR_QUESTION',
-        default=_('Please feel free to ask your question!'),
-        description=_('Please feel free to ask your question!'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
-        'WORDS_SWAP_WITH_QUESTION',
-        default=_('swap with question'),
-        description=_('swap with question'),
         localized=True
     )
 )
@@ -678,16 +585,6 @@ settings.register(
         'WORDS_YOU_ALREADY_GAVE_AN_ANSWER',
         default=_('you already gave an answer'),
         description=_('you already gave an answer'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
-        'WORDS_GAVE_AN_ANSWER',
-        default=_('gave an answer'),
-        description=_('gave an answer'),
         localized=True
     )
 )
@@ -778,27 +675,6 @@ settings.register(
         'WORDS_FOLLOWED_QUESTIONS',
         default=_('followed questions'),
         description=_('followed questions'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
-        'WORDS_FOLLOW_QUESTIONS',
-        default=_('follow questions'),
-        description=_('follow questions'),
-        help_text=_('Indefinite form'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
-        'WORDS_COMMENTS_AND_ANSWERS_TO_OTHERS_QUESTIONS',
-        default = '',
-        description = _('Phrase: comments and answers to others questions'),
         localized=True
     )
 )
@@ -906,16 +782,6 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
-        'WORDS_THERE_ARE_NO_UNANSWERED_QUESTIONS_HERE',
-        default=_('There are no unanswered questions here'),
-        description=_('There are no unanswered questions here'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
         'WORDS_THIS_ANSWER_HAS_BEEN_SELECTED_AS_CORRECT',
         default=_('this answer has been selected as correct'),
         description=_('this answer has been selected as correct'),
@@ -969,16 +835,6 @@ settings.register(
         'WORDS_GIVE_AN_ANSWER_INTERESTING_TO_THIS_COMMUNITY',
         default=_('give an answer interesting to this community'),
         description=_('give an answer interesting to this community'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
-        'WORDS_GIVE_A_GOOD_ANSWER',
-        default=_('give a substantial answer'),
-        description=_('give a substantial answer'),
         localized=True
     )
 )
