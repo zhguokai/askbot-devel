@@ -134,14 +134,11 @@ askbot.validators.titleValidator = function (text) {
     if (text.length < askbot.settings.minTitleLength) {
         throw interpolate(
                         ngettext(
-                            '%(question)s must have > %(length)s character',
-                            '%(question)s must have > %(length)s characters',
+                            'enter > %(length)s character',
+                            'enter > %(length)s characters',
                             askbot.settings.minTitleLength
                         ),
-                        {
-                            'question': askbot.messages.questionSingular,
-                            'length': askbot.settings.minTitleLength
-                        },
+                        {'length': askbot.settings.minTitleLength},
                         true
                     );
     }
@@ -176,14 +173,11 @@ askbot.validators.answerValidator = function (text) {
     if (minLength && (textLength < minLength)) {
         throw interpolate(
                 ngettext(
-                    '%(answer)s must be > %(length)s character',
-                    '%(answer)s must be > %(length)s characters',
+                    'enter > %(length)s character',
+                    'enter > %(length)s characters',
                     minLength
                 ),
-                {
-                    'answer': askbot.messages.answerSingular,
-                    'length': minLength
-                },
+                {'length': minLength},
                 true
             );
     }
@@ -232,14 +226,11 @@ var CPValidator = (function () {
                     required: ' ' + gettext('enter your question'),
                     minlength: interpolate(
                                     ngettext(
-                                        '%(question)s must have > %(length)s character',
-                                        '%(question)s must have > %(length)s characters',
+                                        'enter > %(length)s character',
+                                        'enter > %(length)s characters',
                                         askbot.settings.minTitleLength
                                     ),
-                                    {
-                                        'question': askbot.messages.questionSingular,
-                                        'length': askbot.settings.minTitleLength
-                                    },
+                                    {'length': askbot.settings.minTitleLength},
                                     true
                                 )
                 }
@@ -259,14 +250,11 @@ var CPValidator = (function () {
                     required: ' ' + gettext('content cannot be empty'),
                     minlength: interpolate(
                                     ngettext(
-                                        '%(answer)s must be > %(length)s character',
-                                        '%(answer)s must be > %(length)s characters',
+                                        'enter > %(length)s character',
+                                        'enter > %(length)s characters',
                                         askbot.settings.minAnswerBodyLength
                                     ),
-                                    {
-                                        'answer': askbot.messages.answerSingular,
-                                        'length': askbot.settings.minAnswerBodyLength
-                                    },
+                                    {'length': askbot.settings.minAnswerBodyLength},
                                     true
                                 )
                 }

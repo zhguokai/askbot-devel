@@ -31,7 +31,7 @@
             <p style="{{ info_text_style() }}">
                 {% if format == 'parent_subthread' %}
                     {% set post_type=settings.WORDS_QUESTION_SINGULAR|escape %}
-                    {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
+                    <a href="{{ post_url}}">{% trans %}In reply to {{ author }}'s {{ post_type }}{% endtrans %}</a>:
                 {% else %}
                     {% set performed_action=settings.WORDS_ASKED|escape %}
                     {% trans %}{{ author }} {{ performed_action }}{% endtrans %}:
@@ -63,7 +63,7 @@
             {% endif %}
             <p style="{{ info_text_style() }}">
                 {% if format == 'parent_subthread' %}
-                    {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
+                    <a href="{{ post_url}}">{% trans %}In reply to {{ author }}'s {{ post_type }}{% endtrans %}</a>:
                 {% else %}
                     <a href="{{ post_url }}">{% trans %}{{ author }} {{ performed_action }}{% endtrans %}</a>:
                 {% endif %}

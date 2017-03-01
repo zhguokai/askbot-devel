@@ -301,16 +301,6 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
-        'WORDS_QUESTION_PLURAL',
-        default=_('questions'),
-        description=_('questions (noun, plural)'),
-        localized=True
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
         'WORDS_UNANSWERED_QUESTION_SINGULAR',
         default=_('unanswered question'),
         description=_('unanswered question (singular)'),
