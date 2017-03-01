@@ -820,25 +820,6 @@ def reopen(request, id):#re-open question
 
 @csrf.csrf_protect
 @decorators.ajax_only
-def swap_question_with_answer(request):
-    """receives two json parameters - answer id
-    and new question title
-    the view is made to be used only by the site administrator
-    or moderators
-    """
-    if request.user.is_authenticated():
-        if request.user.is_administrator() or request.user.is_moderator():
-            answer = models.Post.objects.get_answers(
-                                                request.user
-                                            ).get(
-                                                id=request.POST['answer_id']
-                                            )
-            new_question = answer.swap_with_question(new_title = request.POST['new_title'])
-            return {'question_url': new_question.get_absolute_url() }
-    raise Http404
-
-@csrf.csrf_protect
-@decorators.ajax_only
 @decorators.post_only
 def upvote_comment(request):
     if request.user.is_anonymous():

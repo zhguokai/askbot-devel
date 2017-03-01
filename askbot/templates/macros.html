@@ -73,13 +73,13 @@
     <div class='post-update-info'>
         <p>
            {%- if post.post_type == 'question' -%}
-               {{ settings.WORDS_ASKED|escape }}
+               {% set action_performed=settings.WORDS_ASKED|escape %}
            {% elif post.post_type == 'answer' %}
-               {{ settings.WORDS_ANSWERED|escape }}
+               {% set action_performed=settings.WORDS_ANSWERED|escape %}
            {% else %}
-               {%- trans %}posted{% endtrans %}
+               {%- set action_performed=gettext('posted') %}
            {% endif %}
-           <strong>{{ timeago(post.added_at) }}</strong>
+           <strong>{{ timeago(post.added_at, action_performed=action_performed) }}</strong>
         </p>
         <img width="35" height="35"
             src="{{'/images/wiki.png'|media}}"
@@ -125,7 +125,7 @@
         {% else %}
             href="{% url answer_revisions revision.post.id %}"
         {% endif %}
-        >{{ action_label }} <strong>{{ timeago(revision.revised_at) }}</strong></a>
+        ><strong>{{ timeago(revision.revised_at, action_performed=action_label) }}</strong></a>
     </p>
     {% set show_user_info = (contributor_type == 'original_author' or 
         (contributor_type == 'last_updater' and 
@@ -741,10 +741,19 @@ for the purposes of the AJAX comment editor #}
     {% endif %}
 {%- endmacro -%}
 
-{%- macro timeago(datetime_object) -%}
-    <abbr class="timeago" title="{{datetime_object.replace(microsecond=0)|add_tz_offset}}">
-        {{datetime_object.replace(microsecond=0)|add_tz_offset}}
-    </abbr>
+{%- macro timeago(datetime_object, action_performed=None) -%}
+    {% set when='<abbr class="timeago" title="' 
+                ~ datetime_object.replace(microsecond=0)|add_tz_offset
+                ~ '">'
+                ~ datetime_object.replace(microsecond=0)|add_tz_offset
+                ~ '</abbr>' 
+    %}
+    {% if action_performed %}
+        {# action and time can be reversed, depending on language #}
+        {% trans %}{{ action_performed }} {{ when }}{% endtrans %}
+    {% else %}
+        {{ when }}
+    {% endif %}
 {%- endmacro -%}
 
 {% macro one_shot_form_js(form=None, submit_button=None) %}

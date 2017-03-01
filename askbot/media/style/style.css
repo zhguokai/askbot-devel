@@ -1315,6 +1315,14 @@ body.anon.ask-page .search-drop-menu {
   padding-top: 6px;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
+#questionCount .count {
+  font-weight: bold;
+  font-size: 20px;
+  color: #7ea9b3;
+  margin-bottom: 0;
+  padding-top: 0;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+}
 #listSearchTags {
   margin-top: 3px;
   color: #707070;

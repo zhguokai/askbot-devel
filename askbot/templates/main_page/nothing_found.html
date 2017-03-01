@@ -1,12 +1,6 @@
 {# todo: add tips to widen selection #}
 <p class="evenMore" style="padding-top:30px;text-align:center;">
-{% if search_state.scope == "unanswered" %}
-    {{ settings.WORDS_THERE_ARE_NO_UNANSWERED_QUESTIONS_HERE|escape }}
-{% endif %}
-{% if search_state.scope == "followed" %}
-    {{ settings.WORDS_NO_QUESTIONS_HERE|escape }}
-    {{ settings.WORDS_PLEASE_FOLLOW_QUESTIONS|escape }}
-{% endif %}
+    {% trans %}Oops, looks like there is nothing here yet{% endtrans %}
 </p>
 {% if search_state.query or search_state.tags or search_state.author %}
 <p class="evenMore" style="text-align:center">
@@ -26,6 +20,3 @@
     {% endif %}
 </p>
 {% endif %}
-<p class="evenMore" style="text-align:center">
-<a href="{% url ask %}">{{ settings.WORDS_PLEASE_FEEL_FREE_TO_ASK_YOUR_QUESTION|escape }}</a>
-</p>
