@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-27 09:03-0600\n"
+"POT-Creation-Date: 2017-02-28 11:31-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,18 +21,12 @@ msgstr ""
 msgid "Sorry, but anonymous visitors cannot access this function"
 msgstr ""
 
-#: feed.py:36 feed.py:109
+#: feed.py:36 feed.py:108
 msgid " - "
 msgstr ""
 
-#: feed.py:37
-#, python-format
-msgid "Individual %(question)s feed"
-msgstr ""
-
-#: feed.py:110
-#, python-format
-msgid "Latest %(question)s feed"
+#: feed.py:36 feed.py:108
+msgid "RSS feed"
 msgstr ""
 
 #: forms.py:100
@@ -73,7 +67,7 @@ msgid_plural "must be < %d words"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:263 templates/widgets/ask_form.html:46
+#: forms.py:263 templates/widgets/ask_form.html:67
 msgid "Select language"
 msgstr ""
 
@@ -81,59 +75,54 @@ msgstr ""
 msgid "minor edit (don't send alerts)"
 msgstr ""
 
-#: forms.py:318 templates/widgets/markdown_help.html:20
-#: templates/widgets/markdown_help.html:24
-msgid "title"
-msgstr ""
-
-#: forms.py:331
+#: forms.py:330
 #, python-format
 msgid "must have > %d non-punctuation character"
 msgid_plural "must have > %d non-punctuation characters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:343
+#: forms.py:342
 #, python-format
 msgid ""
 "The %(question)s is too long, maximum allowed size is %(length)d characters"
 msgstr ""
 
-#: forms.py:350
+#: forms.py:349
 #, python-format
 msgid "The %(question)s is too long, maximum allowed size is %(length)d bytes"
 msgstr ""
 
-#: forms.py:380
+#: forms.py:379
 msgid "post"
 msgstr ""
 
-#: forms.py:387
+#: forms.py:391
 #, python-format
 msgid "%(post)s content must be > %(count)d character"
 msgid_plural "%(post)s content must be > %(count)d characters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:436
+#: forms.py:440
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:483
+#: forms.py:487
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of "
 "them."
 msgstr ""
 
-#: forms.py:486 forms.py:1157 models/widgets.py:27
+#: forms.py:490 forms.py:1161 models/widgets.py:27
 #: templates/widgets/meta_nav.html:6 templates/widgets/tags_field.html:10
 msgid "tags"
 msgstr ""
 
-#: forms.py:488
+#: forms.py:492
 #, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
@@ -144,263 +133,263 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:514
+#: forms.py:518
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:522
+#: forms.py:526
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
 msgstr ""
 
-#: forms.py:550
+#: forms.py:554
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr ""
 
-#: forms.py:593
+#: forms.py:597
 msgid "update summary:"
 msgstr ""
 
-#: forms.py:595
+#: forms.py:599
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style...), this field is optional"
 msgstr ""
 
-#: forms.py:719
+#: forms.py:723
 msgid "Enter number of points to add or subtract"
 msgstr ""
 
-#: forms.py:722
+#: forms.py:726
 msgid "Comment"
 msgstr ""
 
-#: forms.py:734 const/__init__.py:497
+#: forms.py:738 const/__init__.py:497
 msgid "approved"
 msgstr ""
 
-#: forms.py:735 const/__init__.py:498
+#: forms.py:739 const/__init__.py:498
 msgid "watched"
 msgstr ""
 
-#: forms.py:736 const/__init__.py:499
+#: forms.py:740 const/__init__.py:499
 msgid "suspended"
 msgstr ""
 
-#: forms.py:737 const/__init__.py:500
+#: forms.py:741 const/__init__.py:500
 msgid "blocked"
 msgstr ""
 
-#: forms.py:739 const/__init__.py:495
+#: forms.py:743 const/__init__.py:495
 msgid "administrator"
 msgstr ""
 
-#: forms.py:740 const/__init__.py:496
+#: forms.py:744 const/__init__.py:496
 msgid "moderator"
 msgstr ""
 
-#: forms.py:759
+#: forms.py:763
 msgid "Change status to"
 msgstr ""
 
-#: forms.py:787
+#: forms.py:791
 msgid "which one?"
 msgstr ""
 
-#: forms.py:817
+#: forms.py:821
 msgid "Cannot change own status"
 msgstr ""
 
-#: forms.py:823
+#: forms.py:827
 msgid "Cannot turn other user to moderator"
 msgstr ""
 
-#: forms.py:830
+#: forms.py:834
 msgid "Cannot change status of another moderator"
 msgstr ""
 
-#: forms.py:836
+#: forms.py:840
 msgid "Cannot change status to admin"
 msgstr ""
 
-#: forms.py:842
+#: forms.py:846
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr ""
 
-#: forms.py:856
+#: forms.py:860
 msgid "Subject line"
 msgstr ""
 
-#: forms.py:861
+#: forms.py:865
 msgid "Message text"
 msgstr ""
 
-#: forms.py:868
+#: forms.py:872
 msgid "Your name (optional):"
 msgstr ""
 
-#: forms.py:869
+#: forms.py:873
 msgid "Email:"
 msgstr ""
 
-#: forms.py:871
+#: forms.py:875
 msgid "Your message:"
 msgstr ""
 
-#: forms.py:875
+#: forms.py:879
 msgid "I don't want to give my email or receive a response:"
 msgstr ""
 
-#: forms.py:889
+#: forms.py:893
 msgid "Message is required"
 msgstr ""
 
-#: forms.py:895 models/__init__.py:2566
+#: forms.py:899 models/__init__.py:2566
 msgid "Anonymous"
 msgstr ""
 
-#: forms.py:905
+#: forms.py:909
 msgid ""
-"Either provide email address or mark \"I dont want to give email below\""
+"Either provide email address or mark \"I don' want to give my email\" below"
 msgstr ""
 
-#: forms.py:938
+#: forms.py:942
 msgid "keep private within your groups"
 msgstr ""
 
-#: forms.py:977 templates/ask.html:41 templates/question.html:421
+#: forms.py:981 templates/ask.html:47 templates/question.html:421
 msgid "User name:"
 msgstr ""
 
-#: forms.py:979
+#: forms.py:983
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
 msgstr ""
 
-#: forms.py:986 templates/question.html:422
+#: forms.py:990 templates/question.html:422
 msgid "Email address:"
 msgstr ""
 
-#: forms.py:1036
+#: forms.py:1040
 msgid "User name is required with the email"
 msgstr ""
 
-#: forms.py:1041
+#: forms.py:1045
 msgid "Email is required if user name is added"
 msgstr ""
 
-#: forms.py:1071
+#: forms.py:1075
 msgid "Add details (optional)"
 msgstr ""
 
-#: forms.py:1073
+#: forms.py:1077
 msgid "Add details"
 msgstr ""
 
-#: forms.py:1078
+#: forms.py:1082
 msgid "post anonymously"
 msgstr ""
 
-#: forms.py:1099
+#: forms.py:1103
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question title"
 msgstr ""
 
-#: forms.py:1108
+#: forms.py:1112
 msgid "ask anonymously"
 msgstr ""
 
-#: forms.py:1381
+#: forms.py:1373
 msgid "Details"
 msgstr ""
 
-#: forms.py:1387
+#: forms.py:1379
 msgid "remove anonymity"
 msgstr ""
 
-#: forms.py:1472
+#: forms.py:1464
 msgid "Real name"
 msgstr ""
 
-#: forms.py:1479
+#: forms.py:1471
 msgid "Website"
 msgstr ""
 
-#: forms.py:1486
+#: forms.py:1478
 msgid "City"
 msgstr ""
 
-#: forms.py:1495
+#: forms.py:1487
 msgid "Show country"
 msgstr ""
 
-#: forms.py:1500
+#: forms.py:1492
 msgid "Show tag choices"
 msgstr ""
 
-#: forms.py:1505
+#: forms.py:1497
 msgid "Date of birth"
 msgstr ""
 
-#: forms.py:1507
+#: forms.py:1499
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr ""
 
-#: forms.py:1515
+#: forms.py:1507
 msgid "Profile"
 msgstr ""
 
-#: forms.py:1525
+#: forms.py:1517
 msgid "Screen name"
 msgstr ""
 
-#: forms.py:1563 forms.py:1567
+#: forms.py:1555 forms.py:1559
 msgid "this email has already been registered, please use another one"
 msgstr ""
 
-#: forms.py:1576
+#: forms.py:1568
 msgid "Choose email tag filter"
 msgstr ""
 
-#: forms.py:1632
+#: forms.py:1624
 msgid "Individually selected"
 msgstr ""
 
-#: forms.py:1633
+#: forms.py:1625
 msgid "Entire forum (tag filtered)"
 msgstr ""
 
-#: forms.py:1634
+#: forms.py:1626
 msgid "Comments and posts mentioning me"
 msgstr ""
 
-#: forms.py:1718
+#: forms.py:1710
 msgid "please choose one of the options above"
 msgstr ""
 
-#: forms.py:1721
+#: forms.py:1713
 msgid "okay, let's try!"
 msgstr ""
 
-#: forms.py:1724
+#: forms.py:1716
 #, python-format
 msgid "no %(sitename)s email please, thanks"
 msgstr ""
 
-#: forms.py:1777 templates/reopen.html:7
+#: forms.py:1769 templates/reopen.html:7
 msgid "Title"
 msgstr ""
 
-#: forms.py:1780 templates/groups.html:32 templates/email/preview_email.html:9
+#: forms.py:1772 templates/groups.html:32 templates/email/preview_email.html:9
 msgid "Description"
 msgstr ""
 
-#: forms.py:1799 templates/tags.html:3 templates/main_page/sidebar.html:23
+#: forms.py:1791 templates/tags.html:3 templates/main_page/sidebar.html:23
 #: templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
 #: templates/widgets/tag_category_selector.html:2
@@ -409,168 +398,158 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: tasks.py:127
+#: tasks.py:156
 msgid "make an edit by email"
 msgstr ""
 
-#: urls.py:46
-msgctxt "urls"
-msgid "questions"
-msgstr ""
-
-#: urls.py:51
-msgctxt "urls"
-msgid "question"
-msgstr ""
-
-#: urls.py:78 urls.py:404 urls.py:410 urls.py:419 urls.py:428
+#: urls.py:64 urls.py:390 urls.py:396 urls.py:405 urls.py:414
 msgctxt "urls"
 msgid "tags/"
 msgstr ""
 
-#: urls.py:83 urls.py:89 urls.py:98 urls.py:119 urls.py:128 urls.py:136
-#: urls.py:143
+#: urls.py:69 urls.py:75 urls.py:84 urls.py:105 urls.py:114 urls.py:122
+#: urls.py:129
 msgctxt "urls"
 msgid "users/"
 msgstr ""
 
-#: urls.py:90
+#: urls.py:76
 msgctxt "urls"
 msgid "by-group/"
 msgstr ""
 
-#: urls.py:98 urls.py:204 urls.py:311 urls.py:430 urls.py:655
+#: urls.py:84 urls.py:190 urls.py:297 urls.py:416 urls.py:641
 msgctxt "urls"
 msgid "edit/"
 msgstr ""
 
-#: urls.py:120 urls.py:404 urls.py:411 urls.py:420 urls.py:429
+#: urls.py:106 urls.py:390 urls.py:397 urls.py:406 urls.py:415
 msgctxt "urls"
 msgid "subscriptions/"
 msgstr ""
 
-#: urls.py:129
+#: urls.py:115
 msgctxt "urls"
 msgid "unsubscribe/"
 msgstr ""
 
-#: urls.py:137
+#: urls.py:123
 msgctxt "urls"
 msgid "select_languages/"
 msgstr ""
 
-#: urls.py:148
+#: urls.py:134
 msgctxt "urls"
 msgid "groups/"
 msgstr ""
 
-#: urls.py:153 urls.py:158
+#: urls.py:139 urls.py:144
 msgctxt "urls"
 msgid "badges/"
 msgstr ""
 
-#: urls.py:171
+#: urls.py:157
 msgctxt "urls"
 msgid "feedback/"
 msgstr ""
 
-#: urls.py:193
+#: urls.py:179
 msgctxt "urls"
 msgid "about/"
 msgstr ""
 
-#: urls.py:194
+#: urls.py:180
 msgctxt "urls"
 msgid "faq/"
 msgstr ""
 
-#: urls.py:195
+#: urls.py:181
 msgctxt "urls"
 msgid "privacy/"
 msgstr ""
 
-#: urls.py:197
+#: urls.py:183
 msgctxt "urls"
 msgid "terms/"
 msgstr ""
 
-#: urls.py:202
+#: urls.py:188
 msgctxt "urls"
 msgid "help/"
 msgstr ""
 
-#: urls.py:204 urls.py:209
+#: urls.py:190 urls.py:195
 msgctxt "urls"
 msgid "answers/"
 msgstr ""
 
-#: urls.py:209 urls.py:346
+#: urls.py:195 urls.py:332
 msgctxt "urls"
 msgid "revisions/"
 msgstr ""
 
-#: urls.py:241
+#: urls.py:227
 msgctxt "urls"
 msgid "moderation-queue/"
 msgstr ""
 
-#: urls.py:306 urls.py:614 urls.py:622 urls.py:630 urls.py:638
+#: urls.py:292 urls.py:600 urls.py:608 urls.py:616 urls.py:624
 msgctxt "urls"
 msgid "ask/"
 msgstr ""
 
-#: urls.py:316
+#: urls.py:302
 msgctxt "urls"
 msgid "retag/"
 msgstr ""
 
-#: urls.py:321
+#: urls.py:307
 msgctxt "urls"
 msgid "close/"
 msgstr ""
 
-#: urls.py:326
+#: urls.py:312
 msgctxt "urls"
 msgid "reopen/"
 msgstr ""
 
-#: urls.py:331
+#: urls.py:317
 msgctxt "urls"
 msgid "answer/"
 msgstr ""
 
-#: urls.py:412 urls.py:663
+#: urls.py:398 urls.py:649
 msgctxt "urls"
 msgid "delete/"
 msgstr ""
 
-#: urls.py:421 urls.py:647
+#: urls.py:407 urls.py:633
 msgctxt "urls"
 msgid "create/"
 msgstr ""
 
-#: urls.py:436
+#: urls.py:422
 msgctxt "urls"
 msgid "suggested-tags/"
 msgstr ""
 
-#: urls.py:607 urls.py:613 urls.py:621 urls.py:629 urls.py:637 urls.py:646
-#: urls.py:654 urls.py:662 urls.py:669
+#: urls.py:593 urls.py:599 urls.py:607 urls.py:615 urls.py:623 urls.py:632
+#: urls.py:640 urls.py:648 urls.py:655
 msgctxt "urls"
 msgid "widgets/"
 msgstr ""
 
-#: urls.py:639 deps/django_authopenid/urls.py:27
+#: urls.py:625 deps/django_authopenid/urls.py:27
 msgctxt "urls"
 msgid "complete/"
 msgstr ""
 
-#: urls.py:700
+#: urls.py:686
 msgctxt "urls"
 msgid "upload/"
 msgstr ""
 
-#: urls.py:731
+#: urls.py:717
 msgctxt "urls"
 msgid "account/"
 msgstr ""
@@ -1077,42 +1056,32 @@ msgid "Use this setting to control gravatar for email-less user"
 msgstr ""
 
 #: conf/email.py:358
-msgid "Allow posting questions by email"
-msgstr ""
-
-#: conf/email.py:360
-msgid ""
-"Before enabling this setting - please fill out IMAP settings in the settings."
-"py file"
-msgstr ""
-
-#: conf/email.py:371
 msgid "Replace space in emailed tags with dash"
 msgstr ""
 
-#: conf/email.py:373
+#: conf/email.py:360
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
 msgstr ""
 
-#: conf/email.py:384
-msgid "Enable posting answers and comments by email"
+#: conf/email.py:371
+msgid "Enable posting and replying by email"
 msgstr ""
 
-#: conf/email.py:387
+#: conf/email.py:374
 msgid "To enable this feature make sure lamson is running"
 msgstr ""
 
-#: conf/email.py:398
+#: conf/email.py:385
 msgid "Emailed post: when to notify author about publishing"
 msgstr ""
 
-#: conf/email.py:423
+#: conf/email.py:410
 msgid "Reply by email hostname"
 msgstr ""
 
-#: conf/email.py:434
+#: conf/email.py:421
 msgid ""
 "Email replies having fewer words than this number will be posted as comments "
 "instead of answers"
@@ -1502,249 +1471,249 @@ msgid ""
 "question body length to 0. Also - please make tags optional.</b>"
 msgstr ""
 
-#: conf/forum_data_rules.py:157
+#: conf/forum_data_rules.py:159
 msgid "Maximum length of tag (number of characters)"
 msgstr ""
 
-#: conf/forum_data_rules.py:166
+#: conf/forum_data_rules.py:168
 msgid "Minimum length of title (number of characters)"
 msgstr ""
 
-#: conf/forum_data_rules.py:176
+#: conf/forum_data_rules.py:178
 msgid "Minimum length of question body (number of characters)"
 msgstr ""
 
-#: conf/forum_data_rules.py:187
+#: conf/forum_data_rules.py:189
 msgid "Minimum length of answer body (number of characters)"
 msgstr ""
 
-#: conf/forum_data_rules.py:197
+#: conf/forum_data_rules.py:199
 msgid "Show comment updates on the main page"
 msgstr ""
 
-#: conf/forum_data_rules.py:207
+#: conf/forum_data_rules.py:209
 msgid "Minimum length of comment (number of characters)"
 msgstr ""
 
-#: conf/forum_data_rules.py:218
+#: conf/forum_data_rules.py:220
 msgid "Limit one answer per question per user"
 msgstr ""
 
-#: conf/forum_data_rules.py:228
+#: conf/forum_data_rules.py:230
 msgid "Allow commenting in closed questions"
 msgstr ""
 
-#: conf/forum_data_rules.py:237
+#: conf/forum_data_rules.py:239
 msgid "Enable accepting best answer"
 msgstr ""
 
-#: conf/forum_data_rules.py:246
+#: conf/forum_data_rules.py:248
 msgid "Show accepted answer first"
 msgstr ""
 
-#: conf/forum_data_rules.py:256
+#: conf/forum_data_rules.py:258
 msgid "How to sort answers by default"
 msgstr ""
 
-#: conf/forum_data_rules.py:264
+#: conf/forum_data_rules.py:266
 msgid "Are tags required?"
 msgstr ""
 
-#: conf/forum_data_rules.py:270
+#: conf/forum_data_rules.py:272
 msgid "category tree"
 msgstr ""
 
-#: conf/forum_data_rules.py:271
+#: conf/forum_data_rules.py:273
 msgid "user input"
 msgstr ""
 
-#: conf/forum_data_rules.py:278
+#: conf/forum_data_rules.py:280
 msgid "Source of tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:289
+#: conf/forum_data_rules.py:291
 msgid "Mandatory tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:292
+#: conf/forum_data_rules.py:294
 msgid ""
 "At least one of these tags will be required for any new or newly edited "
 "question. A mandatory tag may be wildcard, if the wildcard tags are active."
 msgstr ""
 
-#: conf/forum_data_rules.py:304
+#: conf/forum_data_rules.py:306
 msgid "Force lowercase the tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:306
+#: conf/forum_data_rules.py:308
 msgid ""
 "Attention: after checking this, please back up the database, and run a "
 "management command: <code>python manage.py fix_question_tags</code> to "
 "globally rename the tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:320
+#: conf/forum_data_rules.py:322
 msgid "Format of tag list"
 msgstr ""
 
-#: conf/forum_data_rules.py:322
+#: conf/forum_data_rules.py:324
 msgid ""
 "Select the format to show tags in, either as a simple list, or as a tag cloud"
 msgstr ""
 
-#: conf/forum_data_rules.py:334
+#: conf/forum_data_rules.py:336
 msgid "Use wildcard tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:336
+#: conf/forum_data_rules.py:338
 msgid ""
 "Wildcard tags can be used to follow or ignore many tags at once, a valid "
 "wildcard tag has a single wildcard at the very end"
 msgstr ""
 
-#: conf/forum_data_rules.py:348
+#: conf/forum_data_rules.py:350
 msgid "Use separate set for subscribed tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:350
+#: conf/forum_data_rules.py:352
 msgid ""
 "If enabled, users will have a third set of tag selections - \"subscribed"
 "\" (by email) in addition to \"interesting\" and \"ignored\""
 msgstr ""
 
-#: conf/forum_data_rules.py:358
+#: conf/forum_data_rules.py:360
 msgid "Always, for all users"
 msgstr ""
 
-#: conf/forum_data_rules.py:359
+#: conf/forum_data_rules.py:361
 msgid "Never, for all users"
 msgstr ""
 
-#: conf/forum_data_rules.py:360
+#: conf/forum_data_rules.py:362
 msgid "Let users decide"
 msgstr ""
 
-#: conf/forum_data_rules.py:368
+#: conf/forum_data_rules.py:370
 msgid "Publicly show user tag selections"
 msgstr ""
 
-#: conf/forum_data_rules.py:377
+#: conf/forum_data_rules.py:379
 msgid "Enable separate tag search box on main page"
 msgstr ""
 
-#: conf/forum_data_rules.py:386
+#: conf/forum_data_rules.py:388
 msgid "Enable comments under questions"
 msgstr ""
 
-#: conf/forum_data_rules.py:395
+#: conf/forum_data_rules.py:397
 msgid "Enable comments under answers"
 msgstr ""
 
-#: conf/forum_data_rules.py:405
+#: conf/forum_data_rules.py:407
 msgid "Default max number of comments to display under posts"
 msgstr ""
 
-#: conf/forum_data_rules.py:415
+#: conf/forum_data_rules.py:417
 msgid "Reverse ordering of comments"
 msgstr ""
 
-#: conf/forum_data_rules.py:424
+#: conf/forum_data_rules.py:426
 msgid "Minimum words to start wrapping comments"
 msgstr ""
 
-#: conf/forum_data_rules.py:433
+#: conf/forum_data_rules.py:435
 msgid "Minimum words to start wrapping posts"
 msgstr ""
 
-#: conf/forum_data_rules.py:443
+#: conf/forum_data_rules.py:445
 #, python-format
 msgid "Maximum comment length, must be &lt; %(max_len)s"
 msgstr ""
 
-#: conf/forum_data_rules.py:453
+#: conf/forum_data_rules.py:455
 msgid "Limit time to edit comments"
 msgstr ""
 
-#: conf/forum_data_rules.py:454 conf/forum_data_rules.py:487
-#: conf/forum_data_rules.py:507
+#: conf/forum_data_rules.py:456 conf/forum_data_rules.py:489
+#: conf/forum_data_rules.py:509
 msgid "If unchecked, there will be no time limit"
 msgstr ""
 
-#: conf/forum_data_rules.py:463
+#: conf/forum_data_rules.py:465
 msgid "Minutes allowed to edit a comment"
 msgstr ""
 
-#: conf/forum_data_rules.py:464 conf/forum_data_rules.py:497
-#: conf/forum_data_rules.py:517
+#: conf/forum_data_rules.py:466 conf/forum_data_rules.py:499
+#: conf/forum_data_rules.py:519
 msgid "To enable this setting, check the previous one"
 msgstr ""
 
-#: conf/forum_data_rules.py:473
+#: conf/forum_data_rules.py:475
 msgid "Save comment by pressing &lt;Enter&gt; key"
 msgstr ""
 
-#: conf/forum_data_rules.py:475
+#: conf/forum_data_rules.py:477
 msgid ""
 "This may be useful when only one-line comments are desired. Will not work "
 "with TinyMCE editor."
 msgstr ""
 
-#: conf/forum_data_rules.py:486
+#: conf/forum_data_rules.py:488
 msgid "Limit time to edit answers"
 msgstr ""
 
-#: conf/forum_data_rules.py:496
+#: conf/forum_data_rules.py:498
 msgid "Minutes allowed to edit answers"
 msgstr ""
 
-#: conf/forum_data_rules.py:506
+#: conf/forum_data_rules.py:508
 msgid "Limit time to edit questions"
 msgstr ""
 
-#: conf/forum_data_rules.py:516
+#: conf/forum_data_rules.py:518
 msgid "Minutes allowed to edit questions"
 msgstr ""
 
-#: conf/forum_data_rules.py:526
+#: conf/forum_data_rules.py:528
 msgid "Minimum length of search term for Ajax search"
 msgstr ""
 
-#: conf/forum_data_rules.py:527
+#: conf/forum_data_rules.py:529
 msgid "Must match the corresponding database backend setting"
 msgstr ""
 
-#: conf/forum_data_rules.py:536
+#: conf/forum_data_rules.py:538
 msgid "Do not make text query sticky in search"
 msgstr ""
 
-#: conf/forum_data_rules.py:538
+#: conf/forum_data_rules.py:540
 msgid ""
 "Check to disable the \"sticky\" behavior of the search query. This may be "
 "useful if you want to move the search bar away from the default position or "
 "do not like the default sticky behavior of the text search query."
 msgstr ""
 
-#: conf/forum_data_rules.py:551
+#: conf/forum_data_rules.py:553
 msgid "Maximum number of tags per question"
 msgstr ""
 
-#: conf/forum_data_rules.py:563
+#: conf/forum_data_rules.py:565
 msgid "Number of questions to list by default"
 msgstr ""
 
-#: conf/forum_data_rules.py:572
+#: conf/forum_data_rules.py:574
 msgid "Maximum users per users page"
 msgstr ""
 
-#: conf/forum_data_rules.py:582
+#: conf/forum_data_rules.py:584
 msgid "What should \"unanswered question\" mean?"
 msgstr ""
 
-#: conf/forum_data_rules.py:591
+#: conf/forum_data_rules.py:593
 msgid "Allow swapping answer with question"
 msgstr ""
 
-#: conf/forum_data_rules.py:593
+#: conf/forum_data_rules.py:595
 msgid ""
 "This setting will help import data from other forums such as zendesk, when "
 "automatic data import fails to detect the original question correctly."
@@ -2684,25 +2653,25 @@ msgstr ""
 msgid "To change the logo, select new file, then submit this whole form."
 msgstr ""
 
-#: conf/skin_general_settings.py:71
+#: conf/skin_general_settings.py:75
 msgid "Select Language"
 msgstr ""
 
-#: conf/skin_general_settings.py:79
+#: conf/skin_general_settings.py:83
 msgid "Show logo"
 msgstr ""
 
-#: conf/skin_general_settings.py:81
+#: conf/skin_general_settings.py:85
 msgid ""
 "Check if you want to show logo in the forum header or uncheck in the case "
 "you do not want the logo to appear in the default location"
 msgstr ""
 
-#: conf/skin_general_settings.py:93
+#: conf/skin_general_settings.py:97
 msgid "Site favicon"
 msgstr ""
 
-#: conf/skin_general_settings.py:95
+#: conf/skin_general_settings.py:99
 #, python-format
 msgid ""
 "A small 16x16 or 32x32 pixel icon image used to distinguish your site in the "
@@ -2710,40 +2679,40 @@ msgid ""
 "href=\"%(favicon_info_url)s\">this page</a>."
 msgstr ""
 
-#: conf/skin_general_settings.py:111
+#: conf/skin_general_settings.py:115
 msgid "Password login button"
 msgstr ""
 
-#: conf/skin_general_settings.py:113
+#: conf/skin_general_settings.py:117
 msgid ""
 "An 88x38 pixel image that is used on the login screen for the password login "
 "button."
 msgstr ""
 
-#: conf/skin_general_settings.py:126
+#: conf/skin_general_settings.py:130
 msgid "Show all UI functions to all users"
 msgstr ""
 
-#: conf/skin_general_settings.py:128
+#: conf/skin_general_settings.py:132
 msgid ""
 "If checked, all forum functions will be shown to users, regardless of their "
 "reputation. However to use those functions, moderation rules, reputation and "
 "other limits will still apply."
 msgstr ""
 
-#: conf/skin_general_settings.py:143
+#: conf/skin_general_settings.py:147
 msgid "Select skin"
 msgstr ""
 
-#: conf/skin_general_settings.py:154
+#: conf/skin_general_settings.py:158
 msgid "Customize HTML <HEAD>"
 msgstr ""
 
-#: conf/skin_general_settings.py:163
+#: conf/skin_general_settings.py:167
 msgid "Custom portion of the HTML <HEAD>"
 msgstr ""
 
-#: conf/skin_general_settings.py:165
+#: conf/skin_general_settings.py:169
 msgid ""
 "<strong>To use this option</strong>, check \"Customize HTML &lt;HEAD&gt;\" "
 "above. Contents of this box will be inserted into the &lt;HEAD&gt; portion "
@@ -2755,11 +2724,11 @@ msgid ""
 "please test the site with the W3C HTML validator service."
 msgstr ""
 
-#: conf/skin_general_settings.py:187
+#: conf/skin_general_settings.py:191
 msgid "Custom header additions"
 msgstr ""
 
-#: conf/skin_general_settings.py:189
+#: conf/skin_general_settings.py:193
 msgid ""
 "Header is the bar at the top of the content that contains user info and site "
 "links, and is common to all pages. Use this area to enter contents of the "
@@ -2768,21 +2737,21 @@ msgid ""
 "sure that your input is valid and works well in all browsers."
 msgstr ""
 
-#: conf/skin_general_settings.py:204
+#: conf/skin_general_settings.py:208
 msgid "Site footer mode"
 msgstr ""
 
-#: conf/skin_general_settings.py:206
+#: conf/skin_general_settings.py:210
 msgid ""
 "Footer is the bottom portion of the content, which is common to all pages. "
 "You can disable, customize, or use the default footer."
 msgstr ""
 
-#: conf/skin_general_settings.py:223
+#: conf/skin_general_settings.py:227
 msgid "Custom footer (HTML format)"
 msgstr ""
 
-#: conf/skin_general_settings.py:225
+#: conf/skin_general_settings.py:229
 msgid ""
 "<strong>To enable this function</strong>, please select option 'customize' "
 "in the \"Site footer mode\" above. Use this area to enter contents of the "
@@ -2791,21 +2760,21 @@ msgid ""
 "that your input is valid and works well in all browsers."
 msgstr ""
 
-#: conf/skin_general_settings.py:240
+#: conf/skin_general_settings.py:244
 msgid "Apply custom style sheet (CSS)"
 msgstr ""
 
-#: conf/skin_general_settings.py:242
+#: conf/skin_general_settings.py:246
 msgid ""
 "Check if you want to change appearance of your form by adding custom style "
 "sheet rules (please see the next item)"
 msgstr ""
 
-#: conf/skin_general_settings.py:254
+#: conf/skin_general_settings.py:258
 msgid "Custom style sheet (CSS)"
 msgstr ""
 
-#: conf/skin_general_settings.py:256
+#: conf/skin_general_settings.py:260
 msgid ""
 "<strong>To use this function</strong>, check \"Apply custom style sheet\" "
 "option above. The CSS rules added in this window will be applied after the "
@@ -2814,19 +2783,19 @@ msgid ""
 "depends (default is empty string) on the url configuration in your urls.py."
 msgstr ""
 
-#: conf/skin_general_settings.py:272
+#: conf/skin_general_settings.py:276
 msgid "Add custom javascript"
 msgstr ""
 
-#: conf/skin_general_settings.py:275
+#: conf/skin_general_settings.py:279
 msgid "Check to enable javascript that you can enter in the next field"
 msgstr ""
 
-#: conf/skin_general_settings.py:285
+#: conf/skin_general_settings.py:289
 msgid "Custom javascript"
 msgstr ""
 
-#: conf/skin_general_settings.py:287
+#: conf/skin_general_settings.py:291
 msgid ""
 "Type or paste plain javascript that you would like to run on your site. Link "
 "to the script will be inserted at the bottom of the HTML output and will be "
@@ -2837,19 +2806,19 @@ msgid ""
 "above)."
 msgstr ""
 
-#: conf/skin_general_settings.py:305
+#: conf/skin_general_settings.py:309
 msgid "Skin media revision number"
 msgstr ""
 
-#: conf/skin_general_settings.py:307
+#: conf/skin_general_settings.py:311
 msgid "Will be set automatically but you can modify it if necessary."
 msgstr ""
 
-#: conf/skin_general_settings.py:318
+#: conf/skin_general_settings.py:322
 msgid "Hash to update the media revision number automatically."
 msgstr ""
 
-#: conf/skin_general_settings.py:322
+#: conf/skin_general_settings.py:326
 msgid "Will be set automatically, it is not necesary to modify manually."
 msgstr ""
 
@@ -2906,6 +2875,16 @@ msgstr ""
 
 #: conf/spam_and_moderation.py:31
 msgid "Akismet key for spam detection"
+msgstr ""
+
+#: conf/static_settings.py:21
+msgctxt "urls"
+msgid "questions"
+msgstr ""
+
+#: conf/static_settings.py:30
+msgctxt "urls"
+msgid "question"
 msgstr ""
 
 #: conf/super_groups.py:5
@@ -3531,14 +3510,12 @@ msgstr ""
 msgid "disable sharing"
 msgstr ""
 
-#: const/__init__.py:31
-#: templates/user_profile/twitter_sharing_controls.html:13
+#: const/__init__.py:31 templates/user_profile/twitter_sharing_controls.html:13
 #: templates/user_profile/twitter_sharing_controls.html:17
 msgid "my posts"
 msgstr ""
 
-#: const/__init__.py:32
-#: templates/user_profile/twitter_sharing_controls.html:14
+#: const/__init__.py:32 templates/user_profile/twitter_sharing_controls.html:14
 #: templates/user_profile/twitter_sharing_controls.html:16
 msgid "all posts"
 msgstr ""
@@ -4389,14 +4366,14 @@ msgid ""
 "privileges of your user account</p>"
 msgstr ""
 
-#: mail/lamson_handlers.py:160 mail/messages.py:383
+#: mail/lamson_handlers.py:169 mail/messages.py:383
 msgid ""
 "You were replying to an email address             unknown to the system or "
 "you were replying from a different address from the one where "
 "you             received the notification."
 msgstr ""
 
-#: mail/lamson_handlers.py:257
+#: mail/lamson_handlers.py:266
 msgid "Please reply to the welcome email without editing it"
 msgstr ""
 
@@ -4920,7 +4897,7 @@ msgid ""
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr ""
 
-#: models/__init__.py:4025 views/commands.py:494
+#: models/__init__.py:4037 views/commands.py:494
 msgid "Your tag subscription was saved, thanks!"
 msgstr ""
 
@@ -5066,52 +5043,52 @@ msgstr ""
 msgid "message"
 msgstr ""
 
-#: models/post.py:904 models/question.py:1562
+#: models/post.py:921 models/question.py:1562
 msgid "Sharing did not work, because group is unknown"
 msgstr ""
 
-#: models/post.py:925
+#: models/post.py:942
 msgid "merged revision"
 msgstr ""
 
-#: models/post.py:1125 templates/question/answer_controls.html:60
+#: models/post.py:1142 templates/question/answer_controls.html:60
 #: templatetags/extra_filters_jinja.py:147
 msgid "more"
 msgstr ""
 
-#: models/post.py:1803
+#: models/post.py:1820
 msgid "Sorry, this content is not available"
 msgstr ""
 
-#: models/post.py:1805 models/post.py:1818 models/post.py:1821
+#: models/post.py:1822 models/post.py:1835 models/post.py:1838
 msgid "Sorry, this content is no longer available"
 msgstr ""
 
-#: models/post.py:1834 models/post.py:1837
+#: models/post.py:1851 models/post.py:1854
 msgid "Sorry, this comment is no longer available"
 msgstr ""
 
-#: models/post.py:1856
+#: models/post.py:1873
 msgid "This post is temporarily not available"
 msgstr ""
 
-#: models/post.py:2298
+#: models/post.py:2304
 msgid "Suggested edit"
 msgstr ""
 
-#: models/post.py:2425
+#: models/post.py:2431
 #, python-format
 msgid ""
 "Thank you for your post to %(site)s. It will be published after the "
 "moderators review."
 msgstr ""
 
-#: models/post.py:2429
+#: models/post.py:2435
 #, python-format
 msgid "your post to %(site)s"
 msgstr ""
 
-#: models/post.py:2436
+#: models/post.py:2442
 msgid ""
 "Your post was placed on the moderation queue and will be published after the "
 "moderator approval."
@@ -5149,59 +5126,59 @@ msgstr ""
 msgid "<em>Changed by moderator. Reason:</em> %(reason)s"
 msgstr ""
 
-#: models/user.py:347
+#: models/user.py:335
 msgid "Entire forum"
 msgstr ""
 
-#: models/user.py:348
+#: models/user.py:336
 msgid "Questions that I asked"
 msgstr ""
 
-#: models/user.py:349
+#: models/user.py:337
 msgid "Questions that I answered"
 msgstr ""
 
-#: models/user.py:350
+#: models/user.py:338
 msgid "Individually selected questions"
 msgstr ""
 
-#: models/user.py:351
+#: models/user.py:339
 msgid "Mentions and comment responses"
 msgstr ""
 
-#: models/user.py:354
+#: models/user.py:342
 msgid "Instantly"
 msgstr ""
 
-#: models/user.py:355
+#: models/user.py:343
 msgid "Daily"
 msgstr ""
 
-#: models/user.py:356
+#: models/user.py:344
 msgid "Weekly"
 msgstr ""
 
-#: models/user.py:357
+#: models/user.py:345
 msgid "No email"
 msgstr ""
 
-#: models/user.py:615
+#: models/user.py:603
 msgid "Can join when they want"
 msgstr ""
 
-#: models/user.py:616
+#: models/user.py:604
 msgid "Users ask permission"
 msgstr ""
 
-#: models/user.py:617
+#: models/user.py:605
 msgid "Moderator adds users"
 msgstr ""
 
-#: models/user.py:667
+#: models/user.py:655
 msgid "Please give a list of valid email addresses."
 msgstr ""
 
-#: models/user.py:678
+#: models/user.py:666
 msgid "Please give a list of valid email domain names."
 msgstr ""
 
@@ -5209,11 +5186,11 @@ msgstr ""
 msgid "css for the widget"
 msgstr ""
 
-#: setup_templates/settings.py:245
+#: setup_templates/settings.py:208
 msgid "account/"
 msgstr ""
 
-#: setup_templates/settings.py:245
+#: setup_templates/settings.py:208
 msgid "signin/"
 msgstr ""
 
@@ -5280,8 +5257,7 @@ msgstr ""
 #: templates/answer_edit.html:46 templates/close.html:17
 #: templates/feedback.html:49 templates/question_edit.html:58
 #: templates/question_retag.html:22 templates/reopen.html:26
-#: templates/subscribe_for_tags.html:12
-#: templates/avatar/confirm_delete.html:16
+#: templates/subscribe_for_tags.html:12 templates/avatar/confirm_delete.html:16
 #: templates/group_messaging/home.html:44
 #: templates/moderation/manage_reject_reasons_dialog.html:19
 #: templates/user_profile/user_edit.html:90
@@ -5289,15 +5265,15 @@ msgid "Cancel"
 msgstr ""
 
 #: templates/answer_edit.html:85 templates/answer_edit.html.py:88
-#: templates/ask.html:60 templates/ask.html.py:63
+#: templates/ask.html:66 templates/ask.html.py:69
 #: templates/question_edit.html:103 templates/question_edit.html.py:106
-#: templates/editors/rich_text.html:18 templates/question/javascript.html:129
-#: templates/question/javascript.html:132
+#: templates/editors/rich_text.html:18 templates/question/javascript.html:132
+#: templates/question/javascript.html:135
 msgid "hide preview"
 msgstr ""
 
-#: templates/answer_edit.html:88 templates/ask.html:63
-#: templates/question_edit.html:106 templates/question/javascript.html:132
+#: templates/answer_edit.html:88 templates/ask.html:69
+#: templates/question_edit.html:106 templates/question/javascript.html:135
 msgid "show preview"
 msgstr ""
 
@@ -5363,11 +5339,6 @@ msgstr ""
 msgid "bronze badge: often given as a special honor"
 msgstr ""
 
-#: templates/base.html:16
-#, python-format
-msgid "RSS feed from %(site_title)s"
-msgstr ""
-
 #: templates/close.html:12
 msgid "Reasons"
 msgstr ""
@@ -5376,8 +5347,7 @@ msgstr ""
 msgid "OK to close"
 msgstr ""
 
-#: templates/faq_static.html:3 templates/faq_static.html.py:5
-#: views/meta.py:112
+#: templates/faq_static.html:3 templates/faq_static.html.py:5 views/meta.py:112
 msgid "FAQ"
 msgstr ""
 
@@ -6189,8 +6159,7 @@ msgid ""
 "of your provider if you wish to do so."
 msgstr ""
 
-#: templates/authopenid/signin.html:5
-#: templates/authopenid/widget_signin.html:5
+#: templates/authopenid/signin.html:5 templates/authopenid/widget_signin.html:5
 msgid "User login"
 msgstr ""
 
@@ -7280,7 +7249,7 @@ msgstr ""
 msgid "You"
 msgstr ""
 
-#: templates/question/sidebar.html:96 templates/question/sidebar.html:116
+#: templates/question/sidebar.html:96 templates/question/sidebar.html.py:116
 msgid "and"
 msgstr ""
 
@@ -7319,11 +7288,8 @@ msgid "Last updated"
 msgstr ""
 
 #: templates/tags/form_bulk_tag_subscription.html:4
-msgid "Tag subscriptions"
-msgstr ""
-
 #: templates/tags/form_bulk_tag_subscription.html:6
-msgid "Tag Subscriptions"
+msgid "Tag subscriptions"
 msgstr ""
 
 #: templates/tags/header.html:7
@@ -7348,15 +7314,15 @@ msgid "manage subscriptions"
 msgstr ""
 
 #: templates/tags/list_bulk_tag_subscription.html:4
-msgid "Manage Tag subscriptions"
+msgid "Manage tag subscriptions"
 msgstr ""
 
 #: templates/tags/list_bulk_tag_subscription.html:7
-msgid "Manage Tag subscription"
+msgid "Manage tag subscription"
 msgstr ""
 
 #: templates/tags/list_bulk_tag_subscription.html:8
-msgid "Create New"
+msgid "Create new"
 msgstr ""
 
 #: templates/tags/list_bulk_tag_subscription.html:11
@@ -7821,7 +7787,7 @@ msgstr ""
 msgid "be clear and concise"
 msgstr ""
 
-#: templates/widgets/ask_form.html:56
+#: templates/widgets/ask_form.html:77
 msgid "Login/Signup to Post"
 msgstr ""
 
@@ -7949,6 +7915,11 @@ msgstr ""
 #: templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "text"
+msgstr ""
+
+#: templates/widgets/markdown_help.html:20
+#: templates/widgets/markdown_help.html:24
+msgid "title"
 msgstr ""
 
 #: templates/widgets/markdown_help.html:24
@@ -8143,7 +8114,7 @@ msgid "Please login to post"
 msgstr ""
 
 #: utils/decorators.py:206 views/commands.py:641 views/commands.py:675
-#: views/users.py:672 views/writers.py:342 views/writers.py:806
+#: views/users.py:673 views/writers.py:342 views/writers.py:809
 msgid "Spam was detected on your post, sorry for if this is a mistake"
 msgstr ""
 
@@ -8389,7 +8360,7 @@ msgid_plural "%d users approved"
 msgstr[0] ""
 msgstr[1] ""
 
-#: views/moderation.py:293 views/moderation.py:369 views/users.py:277
+#: views/moderation.py:293 views/moderation.py:369 views/users.py:278
 #, python-format
 msgid "%d post deleted"
 msgid_plural "%d posts deleted"
@@ -8430,63 +8401,63 @@ msgid ""
 "accessible"
 msgstr ""
 
-#: views/users.py:259
+#: views/users.py:260
 msgid "User status changed"
 msgstr ""
 
-#: views/users.py:335
+#: views/users.py:336
 msgid "moderate user"
 msgstr ""
 
-#: views/users.py:600
+#: views/users.py:601
 msgid "user profile overview"
 msgstr ""
 
-#: views/users.py:770
+#: views/users.py:789
 msgid "profile - recent activity"
 msgstr ""
 
-#: views/users.py:801
+#: views/users.py:820
 msgid "profile - moderation"
 msgstr ""
 
-#: views/users.py:850
+#: views/users.py:871
 msgid "profile - messages"
 msgstr ""
 
-#: views/users.py:938
+#: views/users.py:966
 msgid "profile - responses"
 msgstr ""
 
-#: views/users.py:952
+#: views/users.py:979
 msgid "profile - network"
 msgstr ""
 
-#: views/users.py:981
+#: views/users.py:1008
 msgid "profile - votes"
 msgstr ""
 
-#: views/users.py:1022
+#: views/users.py:1049
 msgid "Profile - User's Karma"
 msgstr ""
 
-#: views/users.py:1059
+#: views/users.py:1086
 msgid "profile - favorites"
 msgstr ""
 
-#: views/users.py:1190 views/users.py:1194
+#: views/users.py:1217 views/users.py:1221
 msgid "changes saved"
 msgstr ""
 
-#: views/users.py:1200
+#: views/users.py:1227
 msgid "email updates canceled"
 msgstr ""
 
-#: views/users.py:1218
+#: views/users.py:1245
 msgid "profile - email subscriptions"
 msgstr ""
 
-#: views/users.py:1241
+#: views/users.py:1268
 #, python-format
 msgid "profile - %(section)s"
 msgstr ""
@@ -8513,55 +8484,55 @@ msgstr ""
 msgid "Please log in to make posts"
 msgstr ""
 
-#: views/writers.py:748
+#: views/writers.py:751
 msgid "This content is forbidden"
 msgstr ""
 
-#: views/writers.py:758
+#: views/writers.py:761
 msgid "Post not found"
 msgstr ""
 
-#: views/writers.py:766
+#: views/writers.py:769
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a href="
 "\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:795
+#: views/writers.py:798
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr ""
 
-#: views/writers.py:859
+#: views/writers.py:862
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:889
+#: views/writers.py:892
 msgid "sorry, we seem to have some technical difficulties"
 msgstr ""
 
-#: views/writers.py:902
+#: views/writers.py:905
 #, python-format
 msgid ""
 "Sorry, only logged in users can convert comments to answers. Please <a href="
 "\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:933
+#: views/writers.py:936
 #, python-format
 msgid ""
 "Sorry, only logged in users can convert answers to comments. Please <a href="
 "\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:958
+#: views/writers.py:961
 msgid "Error - could not find the destination post"
 msgstr ""
 
-#: views/writers.py:982
+#: views/writers.py:985
 #, python-format
 msgid ""
 "Cannot convert, because text has more characters than %(max_chars)s - "

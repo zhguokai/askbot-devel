@@ -1160,21 +1160,13 @@ def user_assert_can_delete_question(self, question = None):
                         .exclude(author=self).exclude(points__lte=0).count()
 
         if answer_count > 0:
-            if answer_count > 1:
-                upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWERS
-            else:
-                upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWER
-
             msg = ungettext(
-                'Sorry, cannot %(delete_your_question)s since it '
-                'has an %(upvoted_answers)s posted by someone else',
-                'Sorry, cannot %(delete_your_question)s since it '
-                'has some %(upvoted_answers)s posted by other users',
+                'Sorry, cannot delete this since it '
+                'has an upvoted response posted by someone else',
+                'Sorry, cannot delete this since it '
+                'has some upvoted responses posted by someone else',
                 answer_count
-            ) % {
-                'delete_your_question': askbot_settings.WORDS_DELETE_YOUR_QUESTION,
-                'upvoted_answers': upvoted_answers_phrase
-            }
+            )
             raise django_exceptions.PermissionDenied(msg)
 
 
