@@ -326,21 +326,17 @@ class TitleField(forms.CharField):
             raise forms.ValidationError(msg)
 
         encoded_value = value.encode('utf-8')
-        question_term = askbot_settings.WORDS_QUESTION_SINGULAR
         if len(value) == len(encoded_value):
             if len(value) > self.max_length:
                 raise forms.ValidationError(
                     _(
-                        'The %(question)s is too long, maximum allowed size is '
-                        '%(length)d characters'
-                    ) % {'question': question_term, 'length': self.max_length}
+                        'The input is too long, maximum %(length)d characters is allowed'
+                    ) % {'length': self.max_length}
                 )
         elif len(encoded_value) > self.max_length:
             raise forms.ValidationError(
-                _(
-                    'The %(question)s is too long, maximum allowed size is '
-                    '%(length)d bytes'
-                ) % {'question': question_term, 'length': self.max_length}
+                _('The input is too long, maximum %(length)d bytes is allowed'
+                ) % {'length': self.max_length}
             )
 
         return value.strip()  # TODO: test me
@@ -368,7 +364,6 @@ class EditorField(forms.CharField):
         elif askbot_settings.EDITOR_TYPE == 'tinymce':
             self.widget = TinyMCE(attrs=widget_attrs, mce_attrs=editor_attrs)
         self.min_length = 10
-        self.post_term_name = _('post')
 
     def clean(self, value):
         value = value or ''
@@ -380,10 +375,10 @@ class EditorField(forms.CharField):
 
         if text_length < self.min_length:
             msg = ungettext_lazy(
-                '%(post)s content must be > %(count)d character',
-                '%(post)s content must be > %(count)d characters',
+                'enter > %(length)d character',
+                'enter > %(length)d characters',
                 self.min_length
-            ) % {'post': unicode(self.post_term_name), 'count': self.min_length}
+            ) % {'length': self.min_length}
             raise forms.ValidationError(msg)
 
         if self.user.is_anonymous():
@@ -407,7 +402,6 @@ class QuestionEditorField(EditorField):
         super(QuestionEditorField, self).__init__(
                                 user=user, *args, **kwargs)
         self.min_length = askbot_settings.MIN_QUESTION_BODY_LENGTH
-        self.post_term_name = askbot_settings.WORDS_QUESTION_SINGULAR
 
 
 class AnswerEditorField(EditorField):
@@ -415,7 +409,6 @@ class AnswerEditorField(EditorField):
 
     def __init__(self, *args, **kwargs):
         super(AnswerEditorField, self).__init__(*args, **kwargs)
-        self.post_term_name = askbot_settings.WORDS_ANSWER_SINGULAR
         self.min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
 
 
@@ -868,7 +861,7 @@ class FeedbackForm(forms.Form):
             need_email = not bool(self.cleaned_data.get('no_email', False))
             email = self.cleaned_data.get('email', '').strip()
             if need_email and email == '':
-                msg = _('Either provide email address or mark "I dont want to give email below"')
+                msg = _("""Either provide email address or mark "I don' want to give my email" below""")
                 self._errors['email'] = self.error_class([msg])
 
         return self.cleaned_data

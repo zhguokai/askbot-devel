@@ -31,9 +31,10 @@
             <p style="{{ info_text_style() }}">
                 {% if format == 'parent_subthread' %}
                     {% set post_type=settings.WORDS_QUESTION_SINGULAR|escape %}
-                    {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
+                    <a href="{{ post_url}}">{% trans %}In reply to {{ author }}'s {{ post_type }}{% endtrans %}</a>:
                 {% else %}
-                    {{ author }} {{ settings.WORDS_ASKED|escape }}:
+                    {% set performed_action=settings.WORDS_ASKED|escape %}
+                    {% trans %}{{ author }} {{ performed_action }}{% endtrans %}:
                 {% endif %}
             </p>
 
@@ -55,16 +56,16 @@
         {% elif post.post_type in ('answer', 'comment') %}
             {% if post.post_type == 'comment' %}
                 {% set post_type=gettext('comment') %}
-                {% set acted=gettext('commented') %}
+                {% set performed_action=gettext('commented') %}
             {% else %}
                 {% set post_type=settings.WORDS_ANSWER_SINGULAR|escape %}
-                {% set acted=settings.WORDS_ANSWERED|escape %}
+                {% set performed_action=settings.WORDS_ANSWERED|escape %}
             {% endif %}
             <p style="{{ info_text_style() }}">
                 {% if format == 'parent_subthread' %}
-                    {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
+                    <a href="{{ post_url}}">{% trans %}In reply to {{ author }}'s {{ post_type }}{% endtrans %}</a>:
                 {% else %}
-                    {{ author }}&nbsp;<a href="{{ post_url }}">{{ acted }}</a>:
+                    <a href="{{ post_url }}">{% trans %}{{ author }} {{ performed_action }}{% endtrans %}</a>:
                 {% endif %}
             </p>
         {% endif %}

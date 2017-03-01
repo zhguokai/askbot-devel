@@ -148,6 +148,8 @@ settings.register(
     )
 )
 
+# TODO: add cleaning code suggesting that
+# value must be a positive integer
 settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,

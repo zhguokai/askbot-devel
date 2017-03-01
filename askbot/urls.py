@@ -535,11 +535,6 @@ urlpatterns = patterns(
         name='toggle_follow_question'
     ),
     service_url(
-        r'^swap-question-with-answer/',
-        views.commands.swap_question_with_answer,
-        name='swap_question_with_answer'
-    ),
-    service_url(
         r'^subscribe-for-tags/$',
         views.commands.subscribe_for_tags,
         name='subscribe_for_tags'

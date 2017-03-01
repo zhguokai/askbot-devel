@@ -134,14 +134,11 @@ askbot.validators.titleValidator = function (text) {
     if (text.length < askbot.settings.minTitleLength) {
         throw interpolate(
                         ngettext(
-                            '%(question)s must have > %(length)s character',
-                            '%(question)s must have > %(length)s characters',
+                            'enter > %(length)s character',
+                            'enter > %(length)s characters',
                             askbot.settings.minTitleLength
                         ),
-                        {
-                            'question': askbot.messages.questionSingular,
-                            'length': askbot.settings.minTitleLength
-                        },
+                        {'length': askbot.settings.minTitleLength},
                         true
                     );
     }
@@ -176,14 +173,11 @@ askbot.validators.answerValidator = function (text) {
     if (minLength && (textLength < minLength)) {
         throw interpolate(
                 ngettext(
-                    '%(answer)s must be > %(length)s character',
-                    '%(answer)s must be > %(length)s characters',
+                    'enter > %(length)s character',
+                    'enter > %(length)s characters',
                     minLength
                 ),
-                {
-                    'answer': askbot.messages.answerSingular,
-                    'length': minLength
-                },
+                {'length': minLength},
                 true
             );
     }
@@ -232,14 +226,11 @@ var CPValidator = (function () {
                     required: ' ' + gettext('enter your question'),
                     minlength: interpolate(
                                     ngettext(
-                                        '%(question)s must have > %(length)s character',
-                                        '%(question)s must have > %(length)s characters',
+                                        'enter > %(length)s character',
+                                        'enter > %(length)s characters',
                                         askbot.settings.minTitleLength
                                     ),
-                                    {
-                                        'question': askbot.messages.questionSingular,
-                                        'length': askbot.settings.minTitleLength
-                                    },
+                                    {'length': askbot.settings.minTitleLength},
                                     true
                                 )
                 }
@@ -259,14 +250,11 @@ var CPValidator = (function () {
                     required: ' ' + gettext('content cannot be empty'),
                     minlength: interpolate(
                                     ngettext(
-                                        '%(answer)s must be > %(length)s character',
-                                        '%(answer)s must be > %(length)s characters',
+                                        'enter > %(length)s character',
+                                        'enter > %(length)s characters',
                                         askbot.settings.minAnswerBodyLength
                                     ),
-                                    {
-                                        'answer': askbot.messages.answerSingular,
-                                        'length': askbot.settings.minAnswerBodyLength
-                                    },
+                                    {'length': askbot.settings.minAnswerBodyLength},
                                     true
                                 )
                 }
@@ -3237,47 +3225,6 @@ var socialSharing = (function () {
 
 /**
  * @constructor
- * @extends {SimpleControl}
- */
-var QASwapper = function () {
-    SimpleControl.call(this);
-    this._ans_id = null;
-};
-inherits(QASwapper, SimpleControl);
-
-QASwapper.prototype.decorate = function (element) {
-    this._element = element;
-    this._ans_id = parseInt(element.attr('id').split('-').pop());
-    var me = this;
-    this.setHandler(function () {
-        me.startSwapping();
-    });
-};
-
-QASwapper.prototype.startSwapping = function () {
-    /* jshint loopfunc:true */
-    for (;;) {
-        var title = prompt(gettext('Please enter question title (>10 characters)'));
-        if (title.length >= 10) {
-            var data = {new_title: title, answer_id: this._ans_id};
-            $.ajax({
-                type: 'POST',
-                cache: false,
-                dataType: 'json',
-                url: askbot.urls.swap_question_with_answer,
-                data: data,
-                success: function (data) {
-                    window.location.href = data.question_url;
-                }
-            });
-            break;
-        }
-    }
-    /* jshint loopfunc:false */
-};
-
-/**
- * @constructor
  * @todo: change this to generic object description editor
  */
 var TagWikiEditor = function () {
@@ -5011,10 +4958,6 @@ $(document).ready(function () {
     $('.comments').each(function (index, element) {
         var comments = new PostCommentsWidget();
         comments.decorate($(element));
-    });
-    $('[id^="swap-question-with-answer-"]').each(function (idx, element) {
-        var swapper = new QASwapper();
-        swapper.decorate($(element));
     });
     $('[id^="post-id-"]').each(function (idx, element) {
         var deleter = new DeletePostLink();
