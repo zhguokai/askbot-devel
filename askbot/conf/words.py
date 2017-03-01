@@ -672,6 +672,17 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
+        'WORDS_FOLLOW_QUESTIONS',
+        default=_('follow questions'),
+        description=_('follow questions'),
+        help_text=_('Indefinite form'),
+        localized=True
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
         'WORDS_FOLLOWED_QUESTIONS',
         default=_('followed questions'),
         description=_('followed questions'),
