@@ -19,7 +19,7 @@ settings.register(
         MIN_REP,
         'MIN_REP_TO_AUTOAPPROVE_USER',
         default=10,
-        description=_('Become approved'),
+        description=_('To become an automatically approved user'),
         help_text=_('Approved users bypass moderation and skip recaptcha')
     )
 )
@@ -222,7 +222,7 @@ settings.register(
         'MIN_REP_TO_TRIGGER_EMAIL',
         default=15,
         description=_('Trigger email notifications'),
-        help_text=_('Reduces spam')
+        help_text=_('Users with smaller reputation will not be generating email alerts')
     )
 )
 
