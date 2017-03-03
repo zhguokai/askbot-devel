@@ -323,7 +323,7 @@ settings.register(
         WORDS,
         'WORDS_ANSWER_SINGULAR',
         default=_('answer'),
-        description=_('answer (noun, sungular)'),
+        description=_('answer (noun, singular)'),
         localized=True
     )
 )
