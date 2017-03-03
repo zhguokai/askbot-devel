@@ -33,7 +33,7 @@ settings.register(
     values.BooleanValue(
         SIDEBAR_PROFILE,
         'SIDEBAR_PROFILE_ANON_ONLY',
-        description=_('Show above only to anonymous users'),
+        description=_('Show the text entered above only to anonymous users'),
         default=False
     )
 )

@@ -32,7 +32,7 @@ settings.register(
         SIDEBAR_QUESTION,
         'QUESTION_PAGE_TOP_BANNER_ANON_ONLY',
         default=False,
-        description=_('Show above only to anonymous users'),
+        description=_('Show the text entered above only to anonymous users'),
     )
 )
 
@@ -55,7 +55,7 @@ settings.register(
         SIDEBAR_QUESTION,
         'QUESTION_PAGE_ANSWER_BANNER_ANON_ONLY',
         default=False,
-        description=_('Show above only to anonymous users'),
+        description=_('Show the text entered above only to anonymous users'),
     )
 )
 
@@ -89,7 +89,7 @@ settings.register(
         SIDEBAR_QUESTION,
         'SIDEBAR_QUESTION_HEADER_ANON_ONLY',
         default=False,
-        description=_('Show above only to anonymous users')
+        description=_('Show the text entered above only to anonymous users')
     )
 )
 
@@ -147,6 +147,6 @@ settings.register(
         SIDEBAR_QUESTION,
         'SIDEBAR_QUESTION_FOOTER_ANON_ONLY',
         default=False,
-        description=_('Show above only to anonymous users')
+        description=_('Show the text entered above only to anonymous users')
     )
 )
