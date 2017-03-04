@@ -32,7 +32,7 @@ settings.register(
     values.BooleanValue(
         SIDEBAR_MAIN,
         'SIDEBAR_MAIN_HEADER_ANON_ONLY',
-        description=_('Show above only to anonymous users'),
+        description=_('Show the text entered above only to anonymous users'),
         default=False,
     )
 )
@@ -102,6 +102,6 @@ settings.register(
         SIDEBAR_MAIN,
         'SIDEBAR_MAIN_FOOTER_ANON_ONLY',
         default=False,
-        description=_('Show above only to anonymous users')
+        description=_('Show the text entered above only to anonymous users')
     )
 )

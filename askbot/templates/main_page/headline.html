@@ -1,10 +1,9 @@
 {% import "macros.html" as macros %}
 {% if questions_count > 0 %}
         <h1 id="questionCount" class="search-result-summary">
-            {{ questions_count|intcomma }} {{ settings.WORDS_QUESTIONS_COUNTABLE_FORMS|py_pluralize(questions_count)|escape }}
-        {% if author_name %}
-            {% trans %}with {{author_name}}'s contributions{% endtrans %}
-        {% endif %}
+            {% set pluralized_item_term=settings.WORDS_QUESTIONS_COUNTABLE_FORMS|py_pluralize(questions_count)|escape %}
+            {% set item_count=questions_count %}
+            {% trans %}<span class="count">{{ item_count }}</span> {{ pluralized_item_term }}{% endtrans %}
         </h1>
         <div class="clearfix"></div>
         <div id="listSearchTags" {% if not search_tags %}style="display: none;"{% endif %}>
@@ -17,6 +16,7 @@
                     search_state = search_state
                 )
             }}
+            {#%- if author_name %}{% trans %}author: {{author_name}}{% endtrans %} {% endif %#}
         </div>
         {#% if author_name or search_tags or query %}
             <p class="search-tips"><b>{% trans %}Search tips:{% endtrans %}</b> 
