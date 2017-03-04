@@ -713,8 +713,6 @@ class Thread(models.Model):
 
     def get_absolute_url(self):
         return self._question_post().get_absolute_url(thread=self)
-        # question_id = self._question_post().id
-        # return reverse('question', args = [question_id]) + slugify(self.title)
 
     def get_answer_count(self, user=None):
         """returns answer count depending on who the user is.

@@ -87,13 +87,13 @@ class SearchState(object):
 
     @classmethod
     def get_empty(cls):
-        return cls(space=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, page_size=None, user_logged_in=None)
+        return cls(space_name=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, page_size=None, user_logged_in=None)
 
     def __init__(self,
-        space=None, scope=None, sort=None, query=None, tags=None,
+        space_name=None, scope=None, sort=None, query=None, tags=None,
         author=None, page=None, page_size=None, user_logged_in=False
     ):
-        self.space = get_space(space)
+        self.space = get_space(space_name)
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
             if user_logged_in:
@@ -158,7 +158,7 @@ class SearchState(object):
         return '?' + urlencode({'title': ask_title})
 
     def full_ask_url(self):
-        return urlresolvers.reverse('ask', kwargs={'space': self.space.slug}) + self.ask_query_string()
+        return urlresolvers.reverse('ask', kwargs={'space_name': self.space.slug}) + self.ask_query_string()
 
     def unified_tags(self):
         "Returns tags both from tag selector and extracted from query"

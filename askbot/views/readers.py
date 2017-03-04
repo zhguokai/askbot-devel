@@ -71,7 +71,7 @@ def index(request):#generates front page - shows listing of questions sorted in 
     """
     if askbot_settings.MAIN_PAGE_MODE == 'redirect':
         space = get_primary_space().slug
-        space_url = reverse('questions', kwargs={'space': space})
+        space_url = reverse('questions', kwargs={'space_name': space})
         return HttpResponseRedirect(space_url)
 
     space_filter = {'language_code': get_language()}
@@ -102,10 +102,10 @@ def questions(request, **kwargs):
                     **kwargs
                 )
 
-    space = get_space(kwargs['space'])
+    space = get_space(kwargs['space_name'])
     if not space:
         try:
-            space_redirect = SpaceRedirect.objects.get(slug=kwargs['space'])
+            space_redirect = SpaceRedirect.objects.get(slug=kwargs['space_name'])
         except SpaceRedirect.DoesNotExist:
             raise Http404
         else:
@@ -412,7 +412,7 @@ def tags(request):#view showing a listing of available tags - plain list
         return render(request, 'tags.html', data)
 
 @csrf.csrf_protect
-def question(request, id):#refactor - long subroutine. display question body, answers and comments
+def question(request, space_name, id):#refactor - long subroutine. display question body, answers and comments
     """view that displays body of the question and
     all answers to it
 
@@ -472,6 +472,22 @@ def question(request, id):#refactor - long subroutine. display question body, an
             if (show_comment and not show_post.is_comment()) \
                 or (show_answer and not show_post.is_answer()):
                 return HttpResponseRedirect(show_post.get_absolute_url())
+
+    space = get_space(space_name)
+    if not space:
+        try:
+            space_redirect = SpaceRedirect.objects.get(slug=space_name)
+        except SpaceRedirect.DoesNotExist:
+            raise Http404
+        else:
+            #here we need to redirect to question url using it's current
+            #space name, we also need to reproduce any of the post
+            #parameters provided
+            url = question_post.get_absolute_url()
+            params = urllib.urlencode(request.REQUEST)
+            if params:
+                url += '?' + params
+            return HttpResponseRedirect(url)
 
     try:
         question_post.assert_is_visible_to(request.user)
@@ -682,10 +698,12 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'previous_answer': previous_answer,
         'published_answer_ids': published_answer_ids,
         'question' : question_post,
+        'search_state': SearchState(space_name=space_name),
         'show_comment': show_comment,
         'show_comment_position': show_comment_position,
         'show_post': show_post,
         'similar_threads' : thread.get_similar_threads(),
+        'space_slug': space_name,
         'tab_id' : answer_sort_method,
         'thread': thread,
         'thread_is_moderated': thread.is_moderated(),
@@ -707,9 +725,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #print 'generated in ', timezone.now() - before
     #return res
 
-def revisions(request, id, post_type = None):
-    assert post_type in ('question', 'answer')
-    post = get_object_or_404(models.Post, post_type=post_type, id=id)
+def revisions(request, id):
+    post = get_object_or_404(models.Post, pk=id)
 
     if post.deleted:
         if request.user.is_anonymous() \
@@ -718,6 +735,7 @@ def revisions(request, id, post_type = None):
 
     revisions = list(models.PostRevision.objects.filter(post=post))
     revisions.reverse()
+
     for i, revision in enumerate(revisions):
         if i == 0:
             revision.diff = sanitize_html(revisions[i].html)

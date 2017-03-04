@@ -68,7 +68,7 @@ class Space(models.Model):
         super(Space, self).save()
 
     def get_absolute_url(self):
-        return reverse('questions', kwargs={'space': self.slug})
+        return reverse('questions', kwargs={'space_name': self.slug})
 
 
 class SpaceRedirect(models.Model):

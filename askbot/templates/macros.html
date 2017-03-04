@@ -119,13 +119,9 @@
         {% set original_author = None %}
     {% endif %}
     <p style="line-height:12px;">
-        <a 
-        {% if revision.post.post_type == 'question' %}
-            href="{% url question_revisions revision.post.id %}"
-        {% else %}
-            href="{% url answer_revisions revision.post.id %}"
-        {% endif %}
-        ><strong>{{ timeago(revision.revised_at, action_performed=action_label) }}</strong></a>
+        <a href="{% url post_revisions revision.post.id %}">
+            <strong>{{ timeago(revision.revised_at, action_performed=action_label) }}</strong>
+        </a>
     </p>
     {% set show_user_info = (contributor_type == 'original_author' or 
         (contributor_type == 'last_updater' and 

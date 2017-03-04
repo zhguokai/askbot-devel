@@ -198,14 +198,16 @@ def import_data(request):
 @csrf.csrf_protect
 @decorators.check_authorization_to_post(ugettext_lazy('Please log in to make posts'))
 @decorators.check_spam('text')
-def ask(request, space):#view used to ask a new question
+def ask(request, space_name):#view used to ask a new question
     """a view to ask a new question
     gives space for q title, body, tags and checkbox for to post as wiki
 
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
-    space = get_object_or_404(models.Space, slug=space)
+    #todo: add redirect here is space by name does not exist
+    #but redirect object exists. What to do with POST requests?
+    space = get_object_or_404(models.Space, slug=space_name)
 
     if request.user.is_authenticated():
         if request.user.is_read_only():

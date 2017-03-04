@@ -970,23 +970,32 @@ class Post(models.Model):
         if self.is_answer():
             if not question_post:
                 question_post = self.thread._question_post()
-            if no_slug:
+
+            space_slug = self.thread.space.slug
+
+            if no_slug: #no_slug refers to no title slug, not space_slug
                 url = u'%(base)s?answer=%(id)d#post-id-%(id)d' % {
-                    'base': urlresolvers.reverse('question', args=[question_post.id]),
+                    'base': urlresolvers.reverse('question', args=[space_slug, question_post.id]),
                     'id': self.id
                 }
             else:
                 url = u'%(base)s%(slug)s/?answer=%(id)d#post-id-%(id)d' % {
-                    'base': urlresolvers.reverse('question', args=[question_post.id]),
+                    'base': urlresolvers.reverse('question', args=[space_slug, question_post.id]),
                     'slug': django_urlquote(slugify(self.thread.title)),
                     'id': self.id
                 }
         elif self.is_question():
-            url = urlresolvers.reverse('question', args=[self.id])
+            if thread:
+                space_slug = thread.space.slug
+            else:
+                space_slug = self.thread.space.slug
+
+            url = urlresolvers.reverse('question', args=[space_slug, self.id])
             if thread:
                 url += django_urlquote(slugify(thread.title)) + '/'
             elif no_slug is False:
                 url += django_urlquote(self.slug) + '/'
+
         elif self.is_comment():
             origin_post = self.get_origin_post()
             url = '%(url)s?comment=%(id)d#post-id-%(id)d' % \
@@ -2308,12 +2317,7 @@ class PostRevision(models.Model):
             request_language = get_language()
             activate_language(self.post.language_code)
 
-        if self.post.is_question():
-            url = reverse('question_revisions', args=(self.post.id,))
-        elif self.post.is_answer():
-            url = reverse('answer_revisions', kwargs={'id': self.post.id})
-        else:
-            url = self.post.get_absolute_url()
+        url = reverse('post_revisions', args=(self.post.id,))
 
         if askbot.is_multilingual():
             activate_language(request_language)
@@ -2331,9 +2335,7 @@ class PostRevision(models.Model):
 
     @property
     def html(self, **kwargs):
-        markdowner = markup.get_parser()
-        sanitized_html = sanitize_html(markdowner.convert(self.text))
-
+        sanitized_html = markup.convert_text(self.text)
         if self.post.is_question():
             return sanitize_html(self.QUESTION_REVISION_TEMPLATE_NO_TAGS % {
                 'title': self.title,

@@ -38,11 +38,6 @@ urlpatterns = patterns(
     url(r'^$', views.readers.index, name='index'),
     # BEGIN Questions (main page) urls. All this urls work both normally and through ajax
     url(
-        r'^%s(?P<id>\d+)/' % QUESTION_PAGE_BASE_URL,
-        views.readers.question,
-        name='question'
-    ),
-    url(
         r'^%s$' % pgettext('urls', 'tags/'),
         views.readers.tags,
         name='tags'
@@ -173,12 +168,6 @@ urlpatterns = patterns(
         views.writers.edit_answer,
         name='edit_answer'
     ),
-    url(
-        r'^%s(?P<id>\d+)/%s$' % (pgettext('urls', 'answers/'), pgettext('urls', 'revisions/')),
-        views.readers.revisions,
-        kwargs={'post_type': 'answer'},
-        name='answer_revisions'
-    ),
     service_url(
         r'^get-top-answers/',
         views.readers.get_top_answers,
@@ -271,7 +260,7 @@ urlpatterns = patterns(
         name='get_post_html'
     ),
     url(
-        r'^%s%s$' % (r'(?P<space>\w+)/', pgettext('urls', 'ask/')),
+        r'^%s%s$' % (r'(?P<space_name>\w+)/', pgettext('urls', 'ask/')),
         views.writers.ask,
         name='ask'
     ),
@@ -309,12 +298,6 @@ urlpatterns = patterns(
         r'^vote$',
         views.commands.vote,
         name='vote'
-    ),
-    url(
-        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'revisions/')),
-        views.readers.revisions,
-        kwargs={'post_type': 'question'},
-        name='question_revisions'
     ),
     service_url(  # ajax only
         r'^comment/upvote/$',
@@ -687,8 +670,18 @@ urlpatterns = patterns(
     url('^api/v1/questions/$', views.api_v1.questions, name='api_v1_questions'),
     url('^api/v1/questions/(?P<question_id>\d+)/$', views.api_v1.question, name='api_v1_question'),
     url(
+        r'^%s(?P<id>\d+)/$' % pgettext('urls', 'revisions/'),
+        views.readers.revisions,
+        name='post_revisions'
+    ),
+    url(
+        r'^(?P<space_name>\w+)/(?P<id>\d+)/',
+        views.readers.question,
+        name='question'
+    ),
+    url(
         # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
-        (r'^%s' % r'(?P<space>\w+)' + 
+        (r'^%s' % r'(?P<space_name>\w+)' + 
             r'(%s)?' % r'/scope:(?P<scope>\w+)' +
             r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
             r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
