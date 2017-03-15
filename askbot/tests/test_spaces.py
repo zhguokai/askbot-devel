@@ -1,5 +1,7 @@
 from django.test import TestCase
+from askbot.tests.utils import AskbotTestCase
 from askbot import models
+from askbot.exceptions import SpaceNotEmptyError
 from askbot.search.state_manager import SearchState
 
 class SpaceRedirectTests(TestCase):
@@ -21,3 +23,23 @@ class SpaceRedirectTests(TestCase):
         ss = SearchState(space='putin')
         self.assertRedirects(response, ss.full_url())
 
+class SpaceTests(AskbotTestCase):
+    def test_delete_non_empty_space_raises_error(self):
+        space = models.Space(description='blahblah',
+                    name='Blah', language_code='en',
+                    order_number=2)
+        space.save()
+        u = self.create_user()
+        q = self.post_question(user=u, space=space)
+        with self.assertRaises(SpaceNotEmptyError):
+            space.delete()
+
+    def test_delete_empty_space_works(self):
+        space = models.Space(description='blahblah',
+                    name='Blah', language_code='en',
+                    order_number=2)
+        space.save()
+        try:
+            space.delete()
+        except SpaceNotEmptyError:
+            self.fail('unexpected test fail')

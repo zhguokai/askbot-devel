@@ -23,7 +23,7 @@ import simplejson
 from django.utils import timezone
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import ungettext, pgettext
 from django.utils import translation
 from django.views.decorators import csrf
 from django.core.urlresolvers import reverse
@@ -413,6 +413,11 @@ def question(request, space_name, id):#refactor - long subroutine. display quest
 
     todo: convert this view into class
     """
+    if space_name == pgettext('urls', 'question'):
+        slug = pgettext('urls', 'questions')
+        plural_url = reverse('question', kwargs={'id': id, 'space_name': slug})
+        return HttpResponseRedirect(plural_url)
+
     #process url parameters
     #todo: fix inheritance of sort method from questions
     #before = timezone.now()

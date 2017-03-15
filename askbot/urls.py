@@ -30,9 +30,9 @@ sitemaps = {
 }
 
 MAIN_PAGE_BASE_URL = pgettext('urls', 'questions') + '/'
-QUESTION_PAGE_BASE_URL = pgettext('urls', 'question') + '/'
 
 APP_PATH = os.path.dirname(__file__)
+
 urlpatterns = patterns(
     '',
     url(r'^$', views.readers.index, name='index'),

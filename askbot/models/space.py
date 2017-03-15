@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.http import Http404
+from askbot.exceptions import SpaceNotEmptyError
 from askbot.models.fields import LanguageCodeField
 from askbot.utils.slug import slugify
 
@@ -41,6 +42,7 @@ class Space(models.Model):
     order_number = models.PositiveIntegerField(default=0)
 
     class Meta:
+        ordering = ['order_number',]
         unique_together = (
             ('slug', 'language_code'),
             ('slug', 'order_number')
@@ -80,6 +82,11 @@ class Space(models.Model):
                 redirect.save()
 
         super(Space, self).save()
+
+    def delete(self):
+        if self.threads.count() > 0:
+            raise SpaceNotEmptyError
+        super(Space, self).delete()
 
     def get_absolute_url(self):
         return reverse('questions', kwargs={'space_name': self.slug})

@@ -164,6 +164,7 @@ class AskbotTestCase(TestCase):
     def post_question(
                     self,
                     user=None,
+                    space=None,
                     title='test question title',
                     body_text='test question body text',
                     tags='test',
@@ -183,10 +184,14 @@ class AskbotTestCase(TestCase):
         if follow is True, question is followed by the poster
         """
 
-        if user is None:
+        if not user:
             user = self.user
 
+        if not space:
+            space = Space.objects.all()[0]
+
         question = user.post_question(
+                            space=space,
                             title=title,
                             body_text=body_text,
                             tags=tags,

@@ -2,6 +2,10 @@ from django.core import exceptions
 from django.utils.translation import ugettext as _
 
 
+class SpaceNotEmptyError(ValueError):
+    pass
+
+
 class DeploymentError(exceptions.ImproperlyConfigured):
     """raised when there is some error with deployment"""
     pass
