@@ -40,7 +40,7 @@ from askbot.forms import GetUserItemsForm
 from askbot.forms import ShowTagsForm
 from askbot.forms import ShowQuestionForm
 from askbot.models.post import MockPost
-from askbot.models.space import (get_space, get_primary_space,
+from askbot.models.space import (resolve_space_or_404, get_primary_space,
                                  Space, SpaceRedirect)
 from askbot.models.tag import Tag
 from askbot.search.state_manager import SearchState, DummySearchState
@@ -102,15 +102,10 @@ def questions(request, **kwargs):
                     **kwargs
                 )
 
-    space = get_space(kwargs['space_name'])
-    if not space:
-        try:
-            space_redirect = SpaceRedirect.objects.get(slug=kwargs['space_name'])
-        except SpaceRedirect.DoesNotExist:
-            raise Http404
-        else:
-            search_state.set_space(space_redirect.space.slug)
-            return HttpResponseRedirect(search_state.full_url())
+    space, redirect = resolve_space_or_404(kwargs['space_name'])
+    if redirect:
+        search_state.set_space(space)
+        return HttpResponseRedirect(search_state.full_url())
 
 
     qs, meta_data = models.Thread.objects.run_advanced_search(
@@ -473,21 +468,16 @@ def question(request, space_name, id):#refactor - long subroutine. display quest
                 or (show_answer and not show_post.is_answer()):
                 return HttpResponseRedirect(show_post.get_absolute_url())
 
-    space = get_space(space_name)
-    if not space:
-        try:
-            space_redirect = SpaceRedirect.objects.get(slug=space_name)
-        except SpaceRedirect.DoesNotExist:
-            raise Http404
-        else:
-            #here we need to redirect to question url using it's current
-            #space name, we also need to reproduce any of the post
-            #parameters provided
-            url = question_post.get_absolute_url()
-            params = urllib.urlencode(request.REQUEST)
-            if params:
-                url += '?' + params
-            return HttpResponseRedirect(url)
+    space, redirect = resolve_space_or_404(space_name)
+    if redirect:
+        #here we need to redirect to question url using it's current
+        #space name, we also need to reproduce any of the post
+        #parameters provided
+        url = question_post.get_absolute_url()
+        params = urllib.urlencode(request.REQUEST)
+        if params:
+            url += '?' + params
+        return HttpResponseRedirect(url)
 
     try:
         question_post.assert_is_visible_to(request.user)

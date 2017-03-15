@@ -93,7 +93,7 @@ class SearchState(object):
         space_name=None, scope=None, sort=None, query=None, tags=None,
         author=None, page=None, page_size=None, user_logged_in=False
     ):
-        self.space = get_space(space_name)
+        self.space = get_space(space_name) #what happens if space is None?
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
             if user_logged_in:
@@ -256,7 +256,7 @@ class SearchState(object):
     def set_space(self, space):
         if isinstance(space, basestring):
             space_slug = space
-            self.space = get_space(space_slug)
+            self.space = get_space(space_slug)# what if space is none?
         elif isinstance(space, Space):
             self.space = space
         else:

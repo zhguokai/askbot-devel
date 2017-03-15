@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from askbot.models.fields import LanguageCodeField
 from askbot.utils.slug import slugify
 
@@ -10,6 +11,19 @@ def get_space(slug):
         return Space.objects.get(slug=slug)
     except Space.DoesNotExist:
         return None
+
+def resolve_space_or_404(slug):
+    """returns space and Boolean,
+    the Boolean value is True if space name is redirected
+    otherwise second value is False
+    """
+    space = get_space(slug)
+    if space:
+        return space, False
+    try:
+        return SpaceRedirect.objects.get(slug=slug).space, True
+    except SpaceRedirect.DoesNotExist:
+        raise Http404
 
 def get_primary_space():
     try:

@@ -130,7 +130,7 @@ urlpatterns = patterns(
     ),
     # feeds
     url(r'^feeds/rss/$', RssLastestQuestionsFeed(), name="latest_questions_feed"),
-    url(r'^feeds/question/(?P<pk>\d+)/$', RssIndividualQuestionFeed(), name="individual_question_feed"),
+    url(r'^feeds/(?P<space_slug>\w+)/(?P<pk>\d+)/$', RssIndividualQuestionFeed(), name="individual_question_feed"),
     url(r'^%s$' % pgettext('urls', 'feedback/'), views.meta.feedback, name='feedback'),
     url(
         '^custom\.css$',
