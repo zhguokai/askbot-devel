@@ -8,7 +8,7 @@
             {% set subject=alt_reply_subject %}
             <p style="{{ info_text_style() }}">
             {% trans addr=alt_reply_address %}Note: to reply with a comment, please use 
-                <a href="mailto:{{ addr }}s?subject={{ subject }}">this link</a>
+                <a href="mailto:{{ addr }}?subject={{ subject }}">this link</a>
             {% endtrans %}
             </p>
         {% endif %}
