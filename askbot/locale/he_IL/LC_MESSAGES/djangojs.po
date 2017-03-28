@@ -4,13 +4,14 @@
 # 
 # Translators:
 # naor zeharya <naorzh@gmail.com>, 2013
+# Yaron Shahrabani <sh.yaron@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-30 10:32-0500\n"
-"PO-Revision-Date: 2016-06-16 08:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"POT-Creation-Date: 2017-03-03 09:49-0600\n"
+"PO-Revision-Date: 2017-03-11 22:52+0000\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew (Israel) (http://www.transifex.com/askbot/askbot/language/he_IL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,11 +21,11 @@ msgstr ""
 
 #: media/js/group_messaging.js:132
 msgid "Type a message"
-msgstr ""
+msgstr "נא להקליד הודעה"
 
 #: media/js/group_messaging.js:141
 msgid "Add a recipient"
-msgstr ""
+msgstr "הוספת נמען"
 
 #: media/js/group_messaging.js:171
 msgid "message sent"
@@ -34,7 +35,7 @@ msgstr "הודעה שנשלחה"
 msgid ""
 "Did you mean to send your message to muliple users? Use comma instead of "
 "whitespaces"
-msgstr ""
+msgstr "כוונתך הייתה לשלוח את ההודעה שלך למספר נמענים? יש להשתמש בפסיק במקום ברווח"
 
 #: media/js/group_messaging.js:191
 msgid "user {{str}} does not exist"
@@ -44,432 +45,418 @@ msgstr[1] "משתמשים {{str}} לא קיימים"
 
 #: media/js/group_messaging.js:198
 msgid "cannot send message to yourself"
-msgstr "אינך יכול לשלוח הודעה לעצמך"
+msgstr "לא ניתן לשלוח הודעה לעצמך"
 
 #: media/js/live_search.js:198
 msgid "To see search results, 2 or more characters may be required"
-msgstr "כדי לראות את תוצאות חיפוש, ייתכן שיידרשו 2 או יותר תווים"
+msgstr "כדי לצפות בתוצאות החיפוש, נדרשים 2 תווים ומעלה"
 
 #: media/js/live_search.js:220
 msgid "Ask Your Question"
-msgstr "שאל את השאלה שלך"
+msgstr "פרסום השאלה שלך"
 
 #: media/js/live_search.js:301
 msgid "Sorry, this tag does not exist"
 msgid_plural "Sorry, these tags do not exist"
-msgstr[0] "מצטער, תגים אלה אינם קיימים"
-msgstr[1] "מצטער, תגים אלה אינם קיימים"
+msgstr[0] "תגית זו אינה קיימת, עמך הסליחה"
+msgstr[1] "תגיות אלו לא קיימות, עמך הסליחה"
 
 #: media/js/live_search.js:315
-msgid "search or ask your question"
-msgstr "לחפש או לשאול את השאלה שלך"
+msgid "Search or ask your question"
+msgstr "חיפוש או פרסום השאלה שלך"
 
 #: media/js/post.js:28
 msgid "loading..."
-msgstr "טוען ..."
+msgstr "בטעינה…"
 
-#: media/js/post.js:136
-msgid "enter %(question)s title"
-msgstr ""
+#: media/js/post.js:137 media/js/post.js.c:176 media/js/post.js.c:229
+#: media/js/post.js:253
+msgid "enter > %(length)s character"
+msgid_plural "enter > %(length)s characters"
+msgstr[0] "נא להקליד > תו אחד - %(length)s"
+msgstr[1] "נא להקליד > %(length)s תווים"
 
-#: media/js/post.js:143 media/js/post.js.c:233
-msgid "%(question)s must have > %(length)s character"
-msgid_plural "%(question)s must have > %(length)s characters"
-msgstr[0] ""
-msgstr[1] ""
-
-#: media/js/post.js:162 media/js/post.js.c:222
+#: media/js/post.js:155 media/js/post.js.c:218
 #, c-format
 msgid "details must have > %s character"
 msgid_plural "details must have > %s characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "בפרטים חייב להיות > תו אחד - %s"
+msgstr[1] "בפרטים חייבים להיות > %s תווים"
 
-#: media/js/post.js:177 media/js/post.js.c:260
-msgid "%(answer)s must be > %(length)s character"
-msgid_plural "%(answer)s must be > %(length)s characters"
-msgstr[0] ""
-msgstr[1] ""
-
-#: media/js/post.js:213 media/js/post.js.c:1467
+#: media/js/post.js:209 media/js/post.js.c:1457
 msgid "tags cannot be empty"
-msgstr "אנא הכנס את תג אחד לפחות"
+msgstr "נא לבחור בתגית אחת לפחות"
 
-#: media/js/post.js:219
+#: media/js/post.js:215
 msgid "details are required"
-msgstr ""
+msgstr "נדרשים פרטים"
 
-#: media/js/post.js:230
+#: media/js/post.js:226
 msgid "enter your question"
-msgstr ""
+msgstr "נא להקליד את השאלה שלך"
 
-#: media/js/post.js:257
+#: media/js/post.js:250
 msgid "content cannot be empty"
-msgstr "אנא הכנס את תג אחד לפחות"
+msgstr "התוכן לא יכול להיות ריק"
 
-#: media/js/post.js:321
+#: media/js/post.js:311
 msgid "Back to the question"
 msgstr "בחזרה לשאלה"
 
-#: media/js/post.js:392 media/js/post.js.c:436 media/js/post.js.c:522
+#: media/js/post.js:382 media/js/post.js.c:426 media/js/post.js.c:512
 msgid "Load preview"
-msgstr ""
+msgstr "טעינת התצוגה המקדימה"
 
-#: media/js/post.js:430
+#: media/js/post.js:420
 msgid "Merge"
-msgstr ""
+msgstr "מיזוג"
 
-#: media/js/post.js:521 media/js/utils/modal_dialog.js:9
+#: media/js/post.js:511 media/js/utils/modal_dialog.js:9
 #: media/js/utils/text_property_editor.js:48
 msgid "Cancel"
-msgstr "בטל"
+msgstr "ביטול"
 
-#: media/js/post.js:571
+#: media/js/post.js:561
 msgid "draft saved..."
-msgstr "טיוטה נשמרה..."
+msgstr "הטיוטה נשמרה…"
 
-#: media/js/post.js:791
+#: media/js/post.js:781
 #, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
 msgstr[0] "%s עוקבים"
 msgstr[1] "%s עוקבים"
 
-#: media/js/post.js:829
+#: media/js/post.js:819
 msgid "insufficient privilege"
-msgstr "הרשאה מספיקה"
+msgstr "הרשאה בלתי תואמת"
 
-#: media/js/post.js:831 media/js/post.js.c:1616
+#: media/js/post.js:821 media/js/post.js.c:1606
 msgid "please login"
-msgstr "אנא התחבר"
+msgstr "נא להיכנס"
 
-#: media/js/post.js:834
+#: media/js/post.js:824
 msgid "anonymous users cannot subscribe to questions"
-msgstr "משתמשי אנונימיים לא יכולים להירשם לשאלות"
+msgstr "משתמשים אלמוניים לא יכול להירשם לשאלות"
 
-#: media/js/post.js:835 media/js/post.js.c:1626
+#: media/js/post.js:825 media/js/post.js.c:1616
 msgid "anonymous users cannot vote"
-msgstr "מצטער, משתמשי אנונימיים לא יכולים להצביע"
+msgstr "משתמשים אלמוניים לא יכולים להצביע, עמך הסליחה"
 
-#: media/js/post.js:837
+#: media/js/post.js:827
 msgid "anonymous users cannot flag offensive posts"
-msgstr "משתמשים אנונימיים לא יכולים לסמן הודעות פוגעניות"
+msgstr "משתמשים אלמוניים לא יכולים לסמן הודעות כפוגעניות"
 
-#: media/js/post.js:838
+#: media/js/post.js:828
 msgid "confirm delete"
-msgstr "האם אתה בטוח רוצה למחוק זאת?"
+msgstr "למחוק זאת?"
 
-#: media/js/post.js:839
+#: media/js/post.js:829
 msgid "anonymous users cannot delete/undelete"
-msgstr "מצטער, משתמשים אנונימיים לא יכולים למחוק או לבטל את המחיקה של הודעות"
+msgstr "משתמשים אלמוניים לא יכולים למחוק או לבטל מחיקה של הודעות, עמך הסליחה"
 
-#: media/js/post.js:840
+#: media/js/post.js:830
 msgid "post recovered"
-msgstr "ההודעה שלך כעת שוחזרה!"
+msgstr "ההודעה שלך שוחזרה כעת!"
 
-#: media/js/post.js:841
+#: media/js/post.js:831
 msgid "post deleted"
 msgstr "ההודעה שלך נמחקה"
 
-#: media/js/post.js:1057
+#: media/js/post.js:1047
 msgid "sorry, you cannot %(accept_own_answer)s"
-msgstr ""
+msgstr "אין אפשרות %(accept_own_answer)s, עמך הסליחה"
 
-#: media/js/post.js:1111
+#: media/js/post.js:1101
 msgid "remove flag"
-msgstr "להסיר את הדגל"
+msgstr "הסרת סימון"
 
-#: media/js/post.js:1145 media/js/post.js.c:1176
+#: media/js/post.js:1135 media/js/post.js.c:1166
 msgid "flag offensive"
-msgstr "אתה בטוח שהפוסט הזה הוא פוגעני, מכיל דואר זבל, פרסום, הערות זדוניות, וכו'?"
+msgstr "סימון כפוגעני"
 
-#: media/js/post.js:1201 media/js/post.js.c:1697
+#: media/js/post.js:1191 media/js/post.js.c:1687
 msgid "undelete"
-msgstr "האם אתה בטוח רוצה למחוק זאת?"
+msgstr "ביטול מחיקה"
 
-#: media/js/post.js:1205 media/js/post.js.c:1701
+#: media/js/post.js:1195 media/js/post.js.c:1691
 msgid "delete"
-msgstr "ההודעה שלך נמחקה"
+msgstr "מחיקה"
 
-#: media/js/post.js:1407 media/js/post.js.c:1645
+#: media/js/post.js:1397 media/js/post.js.c:1635
 msgid "sorry, something is not right here"
-msgstr ""
+msgstr "משהו פה לא תקין, עמך הסליחה"
 
-#: media/js/post.js:1875
+#: media/js/post.js:1865
 msgid "Preview: (hide)"
-msgstr ""
+msgstr "תצוגה מקדימה: (הסתרה)"
 
-#: media/js/post.js:1876
+#: media/js/post.js:1866
 msgid "Show preview"
-msgstr ""
+msgstr "הצגת תצוגה מקדימה"
+
+#: media/js/post.js:2283
+msgid "add comment"
+msgstr "הוספת תגובה"
 
 #: media/js/post.js:2288
-msgid "add comment"
-msgstr "הוסף תגובה"
-
-#: media/js/post.js:2293
 msgid "save comment"
-msgstr "לשמור תגובה"
+msgstr "שמירת תגובה"
 
-#: media/js/post.js:2337
+#: media/js/post.js:2332
 #, c-format
 msgid "enter at least %s characters"
-msgstr "נא להזין %s תווים לפחות"
+msgstr "נא להקליד לפחות %s תווים"
 
-#: media/js/post.js:2339
+#: media/js/post.js:2334
 #, c-format
 msgid "enter at least %s more characters"
-msgstr "נא להזין %s תווים לפחות"
+msgstr "נא להקליד לפחות עוד %s תווים"
 
-#: media/js/post.js:2351
+#: media/js/post.js:2346
 #, c-format
 msgid "%s characters left"
-msgstr "נא להזין %s תווים לפחות"
+msgstr "%s תווים נותרו"
 
-#: media/js/post.js:2353
+#: media/js/post.js:2348
 msgid "maximum comment length reached"
-msgstr ""
+msgstr "התגובה ממלאה את האורך המרבי המותר"
 
-#: media/js/post.js:2456 media/js/post.js.c:3526 media/js/post.js.c:5077
-#: media/js/user/group_adder_widget.js:17 media/js/utils/editable.js:314
+#: media/js/post.js:2451 media/js/post.js.c:3370 media/js/post.js.c:4921
+#: media/js/user/group_adder_widget.js:17 media/js/utils/editable.js:319
 msgid "cancel"
-msgstr "בטל"
+msgstr "ביטול"
 
-#: media/js/post.js:2471
+#: media/js/post.js:2466
 msgid "minor edit (don't send alerts)"
-msgstr "עריכה משנית (לא לשלוח התראות)"
+msgstr "עריכה משנית (לא לשלוח התרעות)"
 
-#: media/js/post.js:2503
+#: media/js/post.js:2498
 msgid "Are you sure you don't want to post this comment?"
-msgstr "האם אתה בטוח שאתה לא רוצה לפרסם את ההערה הזאת?"
+msgstr "לבטל את פרסום התגובה הזו?"
 
-#: media/js/post.js:2548 media/jslib/timeago.js:37
-#: media/jslib/timeago.js.c:192
+#: media/js/post.js:2543 media/jslib/timeago.js:137
 msgid "just now"
-msgstr "רק עכשיו"
+msgstr "הרגע"
 
-#: media/js/post.js:2625
+#: media/js/post.js:2620
 msgid "delete this comment"
-msgstr "לחץ כדי לערוך תגובה זו"
+msgstr "מחיקת תגובה זו"
 
-#: media/js/post.js:2923
+#: media/js/post.js:2918
 msgid "confirm delete comment"
-msgstr "האם אתה באמת רוצה למחוק תגובה זו?"
+msgstr "למחוק תגובה זו?"
 
-#: media/js/post.js:3092
+#: media/js/post.js:3087
 msgid "please sign in or register to post comments"
-msgstr "היכנס או הירשם בכדי להגיב"
+msgstr "נא להיכנס או להירשם כדי לפרסם תגובות"
 
-#: media/js/post.js:3253
-msgid "Please enter question title (>10 characters)"
-msgstr "אנא הכנס כותרת לשאלה (> 10 תווים)"
-
-#: media/js/post.js:3309 media/js/post.js.c:5105
-msgid "Sorry, you have only read access"
-msgstr ""
-
-#: media/js/post.js:3520 media/js/post.js.c:4341 media/js/post.js.c:4534
-#: media/js/utils/editable.js:309
+#: media/js/post.js:3364 media/js/post.js.c:4185 media/js/post.js.c:4378
+#: media/js/utils/editable.js:314
 msgid "save"
-msgstr "שמור"
+msgstr "שמירה"
 
-#: media/js/post.js:3645
+#: media/js/post.js:3489
 msgid "Enter the logo url or upload an image"
-msgstr "הזן את כתובת האתר של הלוגו או להעלות תמונה"
+msgstr "נא להקליד את כתובת הלוגו או להעלות תמונה"
 
-#: media/js/post.js:3671
+#: media/js/post.js:3515
 msgid "Do you really want to remove the image?"
-msgstr "האם אתה באמת רוצה להסיר את התמונה?"
+msgstr "להסיר את התמונה הזו?"
 
-#: media/js/post.js:3787
+#: media/js/post.js:3631
 msgid "change logo"
-msgstr "לשנות את הלוגו"
+msgstr "החלפת הלוגו"
 
-#: media/js/post.js:3788
+#: media/js/post.js:3632
 msgid "add logo"
-msgstr "הוסף לוגו"
+msgstr "הוספת לוגו"
 
-#: media/js/post.js:3892
+#: media/js/post.js:3736
 #, c-format
 msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
-msgstr ""
+msgstr "התגית „%s“ כבר נוספה, אין צורך לחזור עליה (יש ללחוץ על „escape“ כדי למחוק)"
 
-#: media/js/post.js:3901
+#: media/js/post.js:3745
 #, c-format
 msgid "a maximum of %s tag is allowed"
 msgid_plural "a maximum of %s tags are allowed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "מותר עד תגית אחת - %s"
+msgstr[1] "כמות התגיות המרבית המותרת היא %s"
 
-#: media/js/post.js:4270
+#: media/js/post.js:4114
 msgid "Delete category?"
-msgstr "מחק את הקטגוריה?"
+msgstr "למחוק את הקטגוריה?"
 
-#: media/js/post.js:4360 media/js/utils/edit_link.js:15
+#: media/js/post.js:4204 media/js/utils/edit_link.js:15
 msgid "edit"
-msgstr "לערוך"
+msgstr "עריכה"
 
-#: media/js/post.js:4447
+#: media/js/post.js:4291
 msgid "category name cannot be empty"
-msgstr "אנא הכנס תג אחד לפחות"
+msgstr "שם הקטגוריה לא יכול להישאר ריק"
 
-#: media/js/post.js:4484
+#: media/js/post.js:4328
 msgid "already exists at the current level!"
-msgstr "כבר קיים ברמה הנוכחית!"
+msgstr "כבר קיים ברמה נוכחית!"
 
-#: media/js/post.js:4520
+#: media/js/post.js:4364
 msgid "add category"
-msgstr "הוסף קטגוריה"
+msgstr "הוספת קטגוריה"
 
-#: media/js/post.js:5073
+#: media/js/post.js:4917
 msgid "save tags"
-msgstr "שמור תגים"
+msgstr "שמירת תגיות"
 
-#: media/js/post.js:5182
+#: media/js/post.js:4949 media/js/editors/folded_editor.js:38
+msgid "Sorry, you have only read access"
+msgstr "יש לך גישה לקריאה בלבד, עמך הסליחה"
+
+#: media/js/post.js:5022
 msgid "Group name:"
-msgstr "שם קבוצה:"
+msgstr "שם הקבוצה:"
 
-#: media/js/post.js:5208
+#: media/js/post.js:5048
 msgid "Shared with the following users:"
 msgstr "משותף עם המשתמשים הבאים:"
 
-#: media/js/post.js:5214
+#: media/js/post.js:5054
 msgid "Shared with the following groups:"
 msgstr "משותף עם הקבוצות הבאות:"
 
 #: media/js/tag_selector.js:14
 msgid "Tag \"<span></span>\" matches:"
-msgstr ""
+msgstr "התגית \"<span></span>\" תואמת:"
 
 #: media/js/tag_selector.js:91
 #, c-format
 msgid "and %s more, not shown..."
-msgstr ""
+msgstr "ו־%s נוספים, שאינם מוצגים…"
 
-#: media/js/user.js:45
+#: media/js/user.js:50
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr ""
+msgstr "נא <a href=\"%(signin_url)s\">להיכנס</a> כדי לעקוב אחר %(username)s"
 
-#: media/js/utils.js:199
+#: media/js/utils.js:206
 msgid "must be shorter than %(max_chars)s character"
 msgid_plural "must be shorter than %(max_chars)s characters"
-msgstr[0] "חייב להיות קצר יותר %(max_chars)s תווים"
-msgstr[1] "חייב להיות קצר יותר %(max_chars)s תווים"
+msgstr[0] "חייב להיות פחות מתו אחד - %(max_chars)s"
+msgstr[1] "חייב להיות פחות מ־%(max_chars)s תווים"
 
-#: media/js/utils.js:267
+#: media/js/utils.js:274
 msgid "and"
-msgstr "ו"
+msgstr "וגם"
 
-#: media/js/utils.js:285
+#: media/js/utils.js:292
 msgid "click to close"
-msgstr "לחץ כדי לסגור"
+msgstr "לחיצה לסגירה"
 
 #: media/js/jquery-openid/jquery.authenticator.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr "האם אתה בטוח שברצונך להסיר %s התחברות?"
+msgstr "להסיר את הכניסה שלך באמצעות %s?"
 
 #: media/js/jquery-openid/jquery.authenticator.js:90
 msgid "Please add one or more login methods."
-msgstr "נא להוסיף אחד או יותר שיטות התחברות."
+msgstr "נא להוסיף שיטת כניסה אחת או יותר."
 
 #: media/js/jquery-openid/jquery.authenticator.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
-msgstr "אין לך שיטה כדי להיכנס עכשיו, בבקשה להוסיף אחד או יותר על ידי לחיצה על כל אחד מהסמלים שלהלן."
+msgstr "אין לך שיטת כניסה כרגע, נא להוסיף שיטה אחת או יותר ע״י לחיצה על הסמלים שלהלן."
 
-#: media/js/jquery-openid/jquery.authenticator.js:146
+#: media/js/jquery-openid/jquery.authenticator.js:147
 msgid "enter username"
-msgstr ""
+msgstr "נא להקליד שם משתמש"
 
-#: media/js/jquery-openid/jquery.authenticator.js:148
+#: media/js/jquery-openid/jquery.authenticator.js:149
 msgid "enter username or email"
-msgstr ""
+msgstr "נא להקליד שם משתמש או דוא״ל"
 
-#: media/js/jquery-openid/jquery.authenticator.js:157
+#: media/js/jquery-openid/jquery.authenticator.js:158
 msgid "enter password"
-msgstr ""
+msgstr "נא להזין ססמה"
 
-#: media/js/jquery-openid/jquery.authenticator.js:179
+#: media/js/jquery-openid/jquery.authenticator.js:180
 msgid "passwords do not match"
-msgstr "סיסמא לא מתאימה"
+msgstr "הססמאות אינן תואמות"
 
-#: media/js/jquery-openid/jquery.authenticator.js:205
+#: media/js/jquery-openid/jquery.authenticator.js:206
 msgid "Show/change current login methods"
-msgstr "הצג/לשנות את שיטות התחברות הנוכחיות"
+msgstr "הצגה/שינוי של שיטות הכניסה הנוכחיות"
 
 #: media/js/jquery-openid/jquery.authenticator.js:262
 #, c-format
 msgid "Please enter your %s, then proceed"
-msgstr "אנא הכנס %s שלך, ולאחר מכן להמשיך"
+msgstr "נא להקליד את ה%s שלך ולאחר מכן להמשיך"
 
 #: media/js/jquery-openid/jquery.authenticator.js:264
 msgid "Connect your %(provider_name)s account to %(site)s"
-msgstr "account to"
+msgstr "ניתן להתחבר עם חשבון ה־%(provider_name)s שלך אל  %(site)s"
 
 #: media/js/jquery-openid/jquery.authenticator.js:362
 #, c-format
 msgid "Change your %s password"
-msgstr "לשנות את הסיסמה שלך %s"
+msgstr "החלפת הססמה שלך ב־%s"
 
 #: media/js/jquery-openid/jquery.authenticator.js:363
 msgid "Change password"
-msgstr "לשנות את הסיסמה"
+msgstr "החלפת הססמה"
 
 #: media/js/jquery-openid/jquery.authenticator.js:365
 #, c-format
 msgid "Create a password for %s"
-msgstr "צור סיסמא עבור %s"
+msgstr "יצירת ססמה עבור %s"
 
 #: media/js/jquery-openid/jquery.authenticator.js:366
 msgid "Create password"
-msgstr "צור סיסמא"
+msgstr "יצירת ססמה"
 
 #: media/js/jquery-openid/jquery.authenticator.js:377
 msgid "Create a password-protected account"
-msgstr "צור חשבון מוגן בסיסמא"
+msgstr "יצירת חשבון מוגן בססמה"
 
 #: media/js/user/group_adder_widget.js:12
 msgid "add group"
-msgstr "הוסף קבוצה"
+msgstr "הוספת קבוצה"
 
 #: media/js/user/group_adder_widget.js:92
 msgid "add"
-msgstr "הוסף"
+msgstr "הוספה"
 
 #: media/js/user/manage_reject_reasons_dialog.js:90
 msgid "Looks there are some things to fix:"
-msgstr "נראה שיש כמה דברים לתיקון:"
+msgstr "נראה כי יש לתקן מספר דברים:"
 
 #: media/js/user/manage_reject_reasons_dialog.js:158
 msgid "Please provide description."
-msgstr "אנא ספק תיאור."
+msgstr "נא לספק תיאור."
 
 #: media/js/user/manage_reject_reasons_dialog.js:161
 msgid "Please provide details."
-msgstr "אנא ספק פרטים."
+msgstr "נא לספק פרטים."
 
 #: media/js/user/manage_reject_reasons_dialog.js:248
 msgid "A reason must be selected to delete one."
-msgstr ""
+msgstr "צריך לספק סיבה כדי למחוק אחת."
 
 #: media/js/user/post_moderation_controls.js:77
-#: media/js/user/response_notifs.js:30 media/js/user/response_notifs.js.c:92
+#: media/js/user/response_notifs.js:30 media/js/user/response_notifs.js.c:107
 msgid "Please select at least one item"
-msgstr "אנא בחר פריט אחד לפחות"
+msgstr "נא לבחור בפריט אחד לפחות"
 
 #: media/js/user/post_moderation_controls.js:113
 msgid "Load more items."
-msgstr ""
+msgstr "טעינת פריטים נוספים."
 
 #: media/js/utils/comment_convert_link.js:26
 msgid "convert to answer"
-msgstr "להמיר את התשובה"
+msgstr "המרה לתשובה"
 
 #: media/js/utils/edit_link.js:14
 msgid "click to edit this comment"
-msgstr "לחץ כדי לערוך תגובה זו"
+msgstr "יש ללחוץ כדי לערוך תגובה זו"
 
 #: media/js/utils/file_upload_dialog.js:138
 #, c-format
@@ -478,44 +465,44 @@ msgstr "קובץ שהועלה: %s"
 
 #: media/js/utils/file_upload_dialog.js:152
 msgid "Choose a different file"
-msgstr "בחר קובץ אחר"
+msgstr "בחירה בקובץ אחר"
 
 #: media/js/utils/file_upload_dialog.js:154
 msgid "Choose a different image"
-msgstr "בחר תמונה אחרת"
+msgstr "בחירה בתמונה אחרת"
 
 #: media/js/utils/file_upload_dialog.js:168
 msgid "Oops, looks like we had an error. Sorry."
-msgstr "אופס, נראה היה לנו טעות. סליחה."
+msgstr "געוואלד, כנראה שיש טעות בידינו, עמך הסליחה."
 
 #: media/js/utils/file_upload_dialog.js:228
 msgid "Choose a file to insert"
-msgstr "בחר קובץ להוספה"
+msgstr "בחירה בקובץ להוספה"
 
 #: media/js/utils/file_upload_dialog.js:230
 msgid "Choose an image to insert"
-msgstr "בחר תמונה להוספה"
+msgstr "בחירה בתמונה להוספה"
 
 #: media/js/utils/file_upload_dialog.js:243
 msgid "Allowed file types are:"
-msgstr "סוגי קבצים מותרים הם:"
+msgstr "סוגי הקבצים המותרים הם:"
 
 #: media/js/utils/file_upload_dialog.js:249
 #: media/tinymce/plugins/askbot_attachment/editor_plugin.js:35
 msgid "Or paste file url here"
-msgstr ""
+msgstr "או להדביק את הכתובת לכאן"
 
 #: media/js/utils/group_dropdown.js:18
 msgid "group name"
-msgstr ""
+msgstr "שם הקבוצה"
 
 #: media/js/utils/group_dropdown.js:26
 msgid "add new group"
-msgstr ""
+msgstr "הוספת קבוצה חדשה"
 
 #: media/js/utils/group_dropdown.js:118
 msgid "Group %(name)s already exists. Group names are case-insensitive."
-msgstr ""
+msgstr "הקבוצה %(name)s כבר קיימת. שמות הקבוצות תלויי רישיות."
 
 #: media/js/utils/modal_dialog.js:7
 msgid "Ok"
@@ -524,16 +511,16 @@ msgstr "בסדר"
 #: media/js/utils/paginator.js:115
 #, c-format
 msgid "page %s"
-msgstr ""
+msgstr "עמוד %s"
 
 #: media/js/utils/tag.js:122
 #, c-format
 msgid "see questions tagged '%s'"
-msgstr ""
+msgstr "הצגת שאלות עם התגית '%s'"
 
 #: media/js/utils/text_property_editor.js:47
 msgid "Save"
-msgstr "שמור"
+msgstr "שמירה"
 
 #: media/js/utils/text_property_editor.js:119
 msgid "saved"
@@ -541,130 +528,81 @@ msgstr "נשמר"
 
 #: media/js/utils/toggle.js:88 media/js/utils/toggle.js.c:103
 msgid "enabled"
-msgstr "לאפשר"
+msgstr "פעיל"
 
 #: media/js/utils/toggle.js:89 media/js/utils/toggle.js.c:104
 msgid "disabled"
-msgstr "הושבת"
+msgstr "מנוטרל"
 
-#: media/jslib/timeago.js:35
-msgid "ago"
-msgstr ""
-
-#: media/jslib/timeago.js:36
-msgid "from now"
-msgstr ""
-
-#: media/jslib/timeago.js:38
-msgid "about a minute"
-msgstr ""
-
-#: media/jslib/timeago.js:39
-#, c-format
-msgid "%d min"
-msgstr ""
-
-#: media/jslib/timeago.js:40
-msgid "about an hour"
-msgstr ""
-
-#: media/jslib/timeago.js:41
-#, c-format
-msgid "%d h"
-msgstr ""
-
-#: media/jslib/timeago.js:42 media/jslib/timeago.js.c:170
-msgid "yesterday"
-msgstr ""
-
-#: media/jslib/timeago.js:43
-#, c-format
-msgid "%d days"
-msgstr ""
-
-#: media/jslib/timeago.js:44
-msgid "about a month"
-msgstr ""
-
-#: media/jslib/timeago.js:45
-#, c-format
-msgid "%d months"
-msgstr ""
-
-#: media/jslib/timeago.js:46
-msgid "about a year"
-msgstr ""
-
-#: media/jslib/timeago.js:47
-#, c-format
-msgid "%d years"
-msgstr ""
-
-#: media/jslib/timeago.js:145
+#: media/jslib/timeago.js:90
 msgid "Jan"
-msgstr "ינואר"
+msgstr "ינו׳"
 
-#: media/jslib/timeago.js:146
+#: media/jslib/timeago.js:91
 msgid "Feb"
-msgstr "פבואר"
+msgstr "פבר׳"
 
-#: media/jslib/timeago.js:147
+#: media/jslib/timeago.js:92
 msgid "Mar"
 msgstr "מרץ"
 
-#: media/jslib/timeago.js:148
+#: media/jslib/timeago.js:93
 msgid "Apr"
-msgstr "אפריל"
+msgstr "אפר׳"
 
-#: media/jslib/timeago.js:149
+#: media/jslib/timeago.js:94
 msgid "May"
 msgstr "מאי"
 
-#: media/jslib/timeago.js:150
+#: media/jslib/timeago.js:95
 msgid "Jun"
-msgstr "יוני"
+msgstr "יונ׳"
 
-#: media/jslib/timeago.js:151
+#: media/jslib/timeago.js:96
 msgid "Jul"
-msgstr "יולי"
+msgstr "יול׳"
 
-#: media/jslib/timeago.js:152
+#: media/jslib/timeago.js:97
 msgid "Aug"
-msgstr "אוגוסט"
+msgstr "אוג׳"
 
-#: media/jslib/timeago.js:153
+#: media/jslib/timeago.js:98
 msgid "Sep"
-msgstr "ספטמבר"
+msgstr "ספט׳"
 
-#: media/jslib/timeago.js:154
+#: media/jslib/timeago.js:99
 msgid "Oct"
-msgstr "אוקטובר"
+msgstr "אוק׳"
 
-#: media/jslib/timeago.js:155
+#: media/jslib/timeago.js:100
 msgid "Nov"
-msgstr "נובמבר"
+msgstr "נוב׳"
 
-#: media/jslib/timeago.js:156
+#: media/jslib/timeago.js:101
 msgid "Dec"
-msgstr "דצמבר"
+msgstr "דצמ׳"
 
-#: media/jslib/timeago.js:168
+#: media/jslib/timeago.js:113
 msgid "2 days ago"
-msgstr "לפני 2 ימים"
+msgstr "לפני יומיים"
 
-#: media/jslib/timeago.js:175
+#: media/jslib/timeago.js:115
+msgid "yesterday"
+msgstr "אתמול"
+
+#: media/jslib/timeago.js:120
 #, c-format
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "לפני שעה - %s"
+msgstr[1] "לפני %s שעות"
 
-#: media/jslib/timeago.js:185
+#: media/jslib/timeago.js:130
 #, c-format
 msgid "%s min ago"
 msgid_plural "%s mins ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "לפני דקה - %s"
+msgstr[1] "לפני %s דקות"
 
 #: media/tinymce/plugins/askbot_attachment/editor_plugin.js:71
 msgid "Insert a file"
@@ -672,11 +610,11 @@ msgstr "הוספת קובץ"
 
 #: media/tinymce/plugins/askbot_imageuploader/editor_plugin.js:70
 msgid "Insert image"
-msgstr ""
+msgstr "הוספת תמונה"
 
 #: media/wmd/wmd.js:31
 msgid "bold"
-msgstr "הדגש"
+msgstr "מודגש"
 
 #: media/wmd/wmd.js:32
 msgid "italic"
@@ -684,11 +622,11 @@ msgstr "נטוי"
 
 #: media/wmd/wmd.js:33
 msgid "link"
-msgstr "לינק"
+msgstr "קישור"
 
 #: media/wmd/wmd.js:34
 msgid "quote"
-msgstr "לצטט"
+msgstr "ציטוט"
 
 #: media/wmd/wmd.js:35
 msgid "preformatted text"
@@ -700,7 +638,7 @@ msgstr "תמונה"
 
 #: media/wmd/wmd.js:37
 msgid "attachment"
-msgstr "קובץ המצורף"
+msgstr "קובץ מצורף"
 
 #: media/wmd/wmd.js:38
 msgid "numbered list"
@@ -724,51 +662,56 @@ msgstr "ביטול"
 
 #: media/wmd/wmd.js:43 media/wmd/wmd.js.c:1171
 msgid "redo"
-msgstr "לבצע שוב"
+msgstr "ביצוע חוזר"
 
 #: media/wmd/wmd.js:54
 msgid "enter image url"
-msgstr "הזן את כתובת אתר של התמונה, לדוגמה: http://www.example.com/image.jpg או להעלות קובץ תמונה"
+msgstr "יש להזין את כתובת התמונה, למשל: http://www.example.com/image.jpg או להעלות קובץ תמונה"
 
 #: media/wmd/wmd.js:55
 msgid "enter url"
-msgstr "הכנס את כתובת אינטרנט, לדוגמה: http://www.example.com \"כותרת הדף\""
+msgstr "יש להזין כתובת אתר, למשל: http://www.example.com „כותרת העמוד“"
 
 #: media/wmd/wmd.js:56
 msgid "upload file attachment"
-msgstr "בחר והעלה קובץ:"
+msgstr "נא לבחור ולהעלות קובץ:"
 
 #: media/wmd/wmd.js:1686
 msgid "strong text"
-msgstr ""
+msgstr "טקסט חזק"
 
 #: media/wmd/wmd.js:1690
 msgid "emphasized text"
-msgstr ""
+msgstr "טקסט מודגש"
 
 #: media/wmd/wmd.js:1844
 msgid "image description"
-msgstr ""
+msgstr "תיאור תמונה"
 
 #: media/wmd/wmd.js:1847
 msgid "file name"
-msgstr ""
+msgstr "שם קובץ"
 
 #: media/wmd/wmd.js:1851
 msgid "link text"
-msgstr ""
+msgstr "טקסט הקישור"
 
 #: media/wmd/wmd.js:2284 media/wmd/wmd.js.c:2304
 msgid "enter code here"
-msgstr ""
+msgstr "נא להזין קוד כאן"
 
 #: media/wmd/wmd.js:2398
 msgid "List item"
-msgstr ""
+msgstr "פריט ברשימה"
 
 #: media/wmd/wmd.js:2430
 msgid "Heading"
-msgstr ""
+msgstr "כותרת עליונה"
+
+#~ msgid "%(question)s must have > %(length)s character"
+#~ msgid_plural "%(question)s must have > %(length)s characters"
+#~ msgstr[0] "5885b33f80dc5ea8fa5bdbd8e5e02d53_pl_0"
+#~ msgstr[1] "5885b33f80dc5ea8fa5bdbd8e5e02d53_pl_1"
 
 #~ msgid "anonymous users cannot %(follow_questions)s"
 #~ msgstr "sorry, anonymous users cannot vote "
