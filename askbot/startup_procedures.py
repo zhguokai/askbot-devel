@@ -338,25 +338,22 @@ def test_celery():
             'NOTIFICATION_DELAY_TIME = 60*15\n' +
             delay_setting_info
         )
-    else:
-        if not isinstance(delay_time, int):
-            raise AskbotConfigError(
-                '\nNOTIFICATION_DELAY_TIME setting must have a numeric value\n' +
-                delay_setting_info
-            )
+    elif not isinstance(delay_time, int):
+        raise AskbotConfigError(
+            '\nNOTIFICATION_DELAY_TIME setting must have a numeric value\n' + \
+            delay_setting_info
+        )
 
-    if broker_backend is None:
-        if broker_transport is None:
-            raise AskbotConfigError(
-                "\nPlease add\n"
-                'BROKER_TRANSPORT = "djkombu.transport.DatabaseTransport"\n'
-                "or other valid value to your settings.py file"
-            )
-        else:
-            # TODO: check that broker transport setting is valid
-            return
 
-    if broker_backend != broker_transport:
+    if (broker_backend is None) and (broker_transport is None):
+        raise AskbotConfigError(
+            "\nPlease add\n"
+            'An appropriate BROKER_TRANSPORT value to settings.py. '
+            'Refer to the Celery project documentation to see what '
+            'values are supported.'
+        )
+
+    if broker_backend and broker_backend != broker_transport:
         raise AskbotConfigError(
             "\nPlease rename setting BROKER_BACKEND to BROKER_TRANSPORT\n"
             "in your settings.py file\n"
