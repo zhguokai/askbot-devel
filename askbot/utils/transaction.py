@@ -23,6 +23,10 @@ dummy_transaction = DummyTransaction()
 
 def defer_celery_task(task, **kwargs):
     if django_settings.CELERY_ALWAYS_EAGER:
-        return task.apply_async(**kwargs)
+        return task.apply(**kwargs)
     else:
+        from celery import current_task
+        if current_task:
+            #TODO: look into task chains in celery
+            return task.apply(**kwargs)
         return defer(task.apply_async, **kwargs)
