@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-30 10:32-0500\n"
-"PO-Revision-Date: 2016-06-16 08:09+0000\n"
+"POT-Creation-Date: 2017-03-03 09:49-0600\n"
+"PO-Revision-Date: 2017-03-03 16:06+0000\n"
 "Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/askbot/askbot/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -72,20 +72,17 @@ msgstr[4] "عفواً، هذة الوسوم غير موجودة"
 msgstr[5] "عفواً، هذة الوسوم غير موجودة"
 
 #: media/js/live_search.js:315
-msgid "search or ask your question"
-msgstr "ابحث عن سؤالك أو اسأله"
+msgid "Search or ask your question"
+msgstr ""
 
 #: media/js/post.js:28
 msgid "loading..."
 msgstr "تحميل..."
 
-#: media/js/post.js:136
-msgid "enter %(question)s title"
-msgstr ""
-
-#: media/js/post.js:143 media/js/post.js.c:233
-msgid "%(question)s must have > %(length)s character"
-msgid_plural "%(question)s must have > %(length)s characters"
+#: media/js/post.js:137 media/js/post.js.c:176 media/js/post.js.c:229
+#: media/js/post.js:253
+msgid "enter > %(length)s character"
+msgid_plural "enter > %(length)s characters"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
@@ -93,7 +90,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: media/js/post.js:162 media/js/post.js.c:222
+#: media/js/post.js:155 media/js/post.js.c:218
 #, c-format
 msgid "details must have > %s character"
 msgid_plural "details must have > %s characters"
@@ -104,54 +101,44 @@ msgstr[3] "يرجى إدخال %s حرفاً إضافياً على الأقل"
 msgstr[4] "يرجى إدخال %s حرفاً إضافياً على الأقل"
 msgstr[5] "يرجى إدخال %s حرفاً إضافياً على الأقل"
 
-#: media/js/post.js:177 media/js/post.js.c:260
-msgid "%(answer)s must be > %(length)s character"
-msgid_plural "%(answer)s must be > %(length)s characters"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-#: media/js/post.js:213 media/js/post.js.c:1467
+#: media/js/post.js:209 media/js/post.js.c:1457
 msgid "tags cannot be empty"
 msgstr "فضلاً حدد المواضيع (مطلوب)"
 
-#: media/js/post.js:219
+#: media/js/post.js:215
 msgid "details are required"
 msgstr "معلومات مطلوبة"
 
-#: media/js/post.js:230
+#: media/js/post.js:226
 msgid "enter your question"
 msgstr "اطرح سؤالك"
 
-#: media/js/post.js:257
+#: media/js/post.js:250
 msgid "content cannot be empty"
 msgstr "من فضلك أدخل وسماً واحداً على الأقل"
 
-#: media/js/post.js:321
+#: media/js/post.js:311
 msgid "Back to the question"
 msgstr "ارجع للسؤل"
 
-#: media/js/post.js:392 media/js/post.js.c:436 media/js/post.js.c:522
+#: media/js/post.js:382 media/js/post.js.c:426 media/js/post.js.c:512
 msgid "Load preview"
 msgstr ""
 
-#: media/js/post.js:430
+#: media/js/post.js:420
 msgid "Merge"
 msgstr ""
 
-#: media/js/post.js:521 media/js/utils/modal_dialog.js:9
+#: media/js/post.js:511 media/js/utils/modal_dialog.js:9
 #: media/js/utils/text_property_editor.js:48
 msgid "Cancel"
 msgstr "إلغاء"
 
-#: media/js/post.js:571
+#: media/js/post.js:561
 msgid "draft saved..."
 msgstr "تم حفظ المسودة"
 
-#: media/js/post.js:791
+#: media/js/post.js:781
 #, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
@@ -162,166 +149,157 @@ msgstr[3] "%s متابعين"
 msgstr[4] "%s متابعين"
 msgstr[5] "%s متابع"
 
-#: media/js/post.js:829
+#: media/js/post.js:819
 msgid "insufficient privilege"
 msgstr "صلاحيات غير كافية"
 
-#: media/js/post.js:831 media/js/post.js.c:1616
+#: media/js/post.js:821 media/js/post.js.c:1606
 msgid "please login"
 msgstr "من فضلك الدخول"
 
-#: media/js/post.js:834
+#: media/js/post.js:824
 msgid "anonymous users cannot subscribe to questions"
 msgstr "المستخدم المجهول لا يمكنه الإشتراك بالأسئلة"
 
-#: media/js/post.js:835 media/js/post.js.c:1626
+#: media/js/post.js:825 media/js/post.js.c:1616
 msgid "anonymous users cannot vote"
 msgstr "المستخدم المجهول لا يمكنه التصويت"
 
-#: media/js/post.js:837
+#: media/js/post.js:827
 msgid "anonymous users cannot flag offensive posts"
 msgstr "لا يمكن للمستخدمين غير المسجلين الإشارة إلى مشاركة مسيئة"
 
-#: media/js/post.js:838
+#: media/js/post.js:828
 msgid "confirm delete"
 msgstr "هل أنت متأكد من هذا الحذف؟"
 
-#: media/js/post.js:839
+#: media/js/post.js:829
 msgid "anonymous users cannot delete/undelete"
 msgstr "عذراً، لا يمكن للمستخدمين غير المسجلين حذف أو استعادة المشاركات"
 
-#: media/js/post.js:840
+#: media/js/post.js:830
 msgid "post recovered"
 msgstr "تمت استعادة المشاركة!"
 
-#: media/js/post.js:841
+#: media/js/post.js:831
 msgid "post deleted"
 msgstr "تم حذف المشاركة"
 
-#: media/js/post.js:1057
+#: media/js/post.js:1047
 msgid "sorry, you cannot %(accept_own_answer)s"
 msgstr ""
 
-#: media/js/post.js:1111
+#: media/js/post.js:1101
 msgid "remove flag"
 msgstr "ازالة العلامة"
 
-#: media/js/post.js:1145 media/js/post.js.c:1176
+#: media/js/post.js:1135 media/js/post.js.c:1166
 msgid "flag offensive"
 msgstr "هل أنت متأكد أن هذه المشاركة مسيئة، أو مزعجة، أو تحتوي على إعلانات، أو إشارات مشبوهة، وما إلى ذلك؟"
 
-#: media/js/post.js:1201 media/js/post.js.c:1697
+#: media/js/post.js:1191 media/js/post.js.c:1687
 msgid "undelete"
 msgstr "تأكيد الحذف"
 
-#: media/js/post.js:1205 media/js/post.js.c:1701
+#: media/js/post.js:1195 media/js/post.js.c:1691
 msgid "delete"
 msgstr "تم حذف المشاركة"
 
-#: media/js/post.js:1407 media/js/post.js.c:1645
+#: media/js/post.js:1397 media/js/post.js.c:1635
 msgid "sorry, something is not right here"
 msgstr "عذراً، شيء غير صحيح هنا"
 
-#: media/js/post.js:1875
+#: media/js/post.js:1865
 msgid "Preview: (hide)"
 msgstr ""
 
-#: media/js/post.js:1876
+#: media/js/post.js:1866
 msgid "Show preview"
 msgstr ""
 
-#: media/js/post.js:2288
+#: media/js/post.js:2283
 msgid "add comment"
 msgstr "إضافة تعليق"
 
-#: media/js/post.js:2293
+#: media/js/post.js:2288
 msgid "save comment"
 msgstr "حفظ التعليق"
 
-#: media/js/post.js:2337
+#: media/js/post.js:2332
 #, c-format
 msgid "enter at least %s characters"
 msgstr "يرجى إدخال %s حرفاً إضافياً على الأقل"
 
-#: media/js/post.js:2339
+#: media/js/post.js:2334
 #, c-format
 msgid "enter at least %s more characters"
 msgstr "يرجى إدخال %s حرفاً إضافياً على الأقل"
 
-#: media/js/post.js:2351
+#: media/js/post.js:2346
 #, c-format
 msgid "%s characters left"
 msgstr "يرجى إدخال %s حرفاً إضافياً على الأقل"
 
-#: media/js/post.js:2353
+#: media/js/post.js:2348
 msgid "maximum comment length reached"
 msgstr ""
 
-#: media/js/post.js:2456 media/js/post.js.c:3526 media/js/post.js.c:5077
-#: media/js/user/group_adder_widget.js:17 media/js/utils/editable.js:314
+#: media/js/post.js:2451 media/js/post.js.c:3370 media/js/post.js.c:4921
+#: media/js/user/group_adder_widget.js:17 media/js/utils/editable.js:319
 msgid "cancel"
 msgstr "إلغاء"
 
-#: media/js/post.js:2471
+#: media/js/post.js:2466
 msgid "minor edit (don't send alerts)"
 msgstr "تعديل بسيط (لا ترسل تنبيهات بريد)"
 
-#: media/js/post.js:2503
+#: media/js/post.js:2498
 msgid "Are you sure you don't want to post this comment?"
 msgstr "هل انت متاكد من نشر التعليق؟"
 
-#: media/js/post.js:2548 media/jslib/timeago.js:37
-#: media/jslib/timeago.js.c:192
+#: media/js/post.js:2543 media/jslib/timeago.js:137
 msgid "just now"
 msgstr "الأن"
 
-#: media/js/post.js:2625
+#: media/js/post.js:2620
 msgid "delete this comment"
 msgstr "انقر لتعديل التعليق"
 
-#: media/js/post.js:2923
+#: media/js/post.js:2918
 msgid "confirm delete comment"
 msgstr "هل تريد ازالة التعليق؟"
 
-#: media/js/post.js:3092
+#: media/js/post.js:3087
 msgid "please sign in or register to post comments"
 msgstr "الرجاء التسجيل لاضافة تعليق"
 
-#: media/js/post.js:3253
-msgid "Please enter question title (>10 characters)"
-msgstr "من فضلك ادخل عنوان السؤال (أن يكون أكبر من ١٠ حروف)"
-
-#: media/js/post.js:3309 media/js/post.js.c:5105
-msgid "Sorry, you have only read access"
-msgstr "عذراً، لديك صلاحيات قراءة فقط"
-
-#: media/js/post.js:3520 media/js/post.js.c:4341 media/js/post.js.c:4534
-#: media/js/utils/editable.js:309
+#: media/js/post.js:3364 media/js/post.js.c:4185 media/js/post.js.c:4378
+#: media/js/utils/editable.js:314
 msgid "save"
 msgstr "حفظ"
 
-#: media/js/post.js:3645
+#: media/js/post.js:3489
 msgid "Enter the logo url or upload an image"
 msgstr "اضف الرابطا أو حمل الصورة"
 
-#: media/js/post.js:3671
+#: media/js/post.js:3515
 msgid "Do you really want to remove the image?"
 msgstr "هل تريد ازالة الصورة؟"
 
-#: media/js/post.js:3787
+#: media/js/post.js:3631
 msgid "change logo"
 msgstr "غير الشعار"
 
-#: media/js/post.js:3788
+#: media/js/post.js:3632
 msgid "add logo"
 msgstr "اضف شعار"
 
-#: media/js/post.js:3892
+#: media/js/post.js:3736
 #, c-format
 msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
 msgstr "الوسم \"%s\" تمت إضافته مسبقاً، لا حاجة للتكرار (إضغط \"مفتاح الهروب escape\" للمسح)"
 
-#: media/js/post.js:3901
+#: media/js/post.js:3745
 #, c-format
 msgid "a maximum of %s tag is allowed"
 msgid_plural "a maximum of %s tags are allowed"
@@ -332,39 +310,43 @@ msgstr[3] "%s وسام مسموح به كحد أقصى"
 msgstr[4] "%s وسام مسموح به كحد أقصى"
 msgstr[5] "%s وسام مسموح به كحد أقصى"
 
-#: media/js/post.js:4270
+#: media/js/post.js:4114
 msgid "Delete category?"
 msgstr "ازالة  تصنيف؟"
 
-#: media/js/post.js:4360 media/js/utils/edit_link.js:15
+#: media/js/post.js:4204 media/js/utils/edit_link.js:15
 msgid "edit"
 msgstr "تحرير"
 
-#: media/js/post.js:4447
+#: media/js/post.js:4291
 msgid "category name cannot be empty"
 msgstr "من فضلك اختر علي الأقل عنصر واحد"
 
-#: media/js/post.js:4484
+#: media/js/post.js:4328
 msgid "already exists at the current level!"
 msgstr "موجود مسبقاً في المستوى الحالي!"
 
-#: media/js/post.js:4520
+#: media/js/post.js:4364
 msgid "add category"
 msgstr "اضف تصنيف"
 
-#: media/js/post.js:5073
+#: media/js/post.js:4917
 msgid "save tags"
 msgstr "حفظ الوسم"
 
-#: media/js/post.js:5182
+#: media/js/post.js:4949 media/js/editors/folded_editor.js:38
+msgid "Sorry, you have only read access"
+msgstr "عذراً، لديك صلاحيات قراءة فقط"
+
+#: media/js/post.js:5022
 msgid "Group name:"
 msgstr "اسم المجموعة :"
 
-#: media/js/post.js:5208
+#: media/js/post.js:5048
 msgid "Shared with the following users:"
 msgstr "بحث عن المستخدم"
 
-#: media/js/post.js:5214
+#: media/js/post.js:5054
 msgid "Shared with the following groups:"
 msgstr "شارك المجموعة"
 
@@ -377,11 +359,11 @@ msgstr "علامة \"<span></span>\" تطابق:"
 msgid "and %s more, not shown..."
 msgstr "و المزيد من %s، غير معروض"
 
-#: media/js/user.js:45
+#: media/js/user.js:50
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
 msgstr "من فضلك، <a href=\"%(signin_url)s\">قم بالدخول</a> لمتابعة  %(username)s "
 
-#: media/js/utils.js:199
+#: media/js/utils.js:206
 msgid "must be shorter than %(max_chars)s character"
 msgid_plural "must be shorter than %(max_chars)s characters"
 msgstr[0] "لا تستخدم أية أحرف"
@@ -391,11 +373,11 @@ msgstr[3] "ينبغي أن تكون أقصر من %(max_chars)s حرفاً"
 msgstr[4] "ينبغي أن تكون أقصر من %(max_chars)s حرفاً"
 msgstr[5] "ينبغي أن تكون أقصر من %(max_chars)s حرفاً"
 
-#: media/js/utils.js:267
+#: media/js/utils.js:274
 msgid "and"
 msgstr "و"
 
-#: media/js/utils.js:285
+#: media/js/utils.js:292
 msgid "click to close"
 msgstr "انقر للغلق"
 
@@ -414,23 +396,23 @@ msgid ""
 "clicking any of the icons below."
 msgstr "لا يوجد لديك وسيلة للدخول، يمكنك إختيار واحدة مما يلي."
 
-#: media/js/jquery-openid/jquery.authenticator.js:146
+#: media/js/jquery-openid/jquery.authenticator.js:147
 msgid "enter username"
 msgstr ""
 
-#: media/js/jquery-openid/jquery.authenticator.js:148
+#: media/js/jquery-openid/jquery.authenticator.js:149
 msgid "enter username or email"
 msgstr ""
 
-#: media/js/jquery-openid/jquery.authenticator.js:157
+#: media/js/jquery-openid/jquery.authenticator.js:158
 msgid "enter password"
 msgstr ""
 
-#: media/js/jquery-openid/jquery.authenticator.js:179
+#: media/js/jquery-openid/jquery.authenticator.js:180
 msgid "passwords do not match"
 msgstr "كلمة المرور لم تتطابق"
 
-#: media/js/jquery-openid/jquery.authenticator.js:205
+#: media/js/jquery-openid/jquery.authenticator.js:206
 msgid "Show/change current login methods"
 msgstr "عرض/تغيير وسائل الدخول"
 
@@ -490,7 +472,7 @@ msgid "A reason must be selected to delete one."
 msgstr "يجب ان تختار سبب لحذف الاخر "
 
 #: media/js/user/post_moderation_controls.js:77
-#: media/js/user/response_notifs.js:30 media/js/user/response_notifs.js.c:92
+#: media/js/user/response_notifs.js:30 media/js/user/response_notifs.js.c:107
 msgid "Please select at least one item"
 msgstr "فضلاً اختر عنصراً واحداً علي الأقل"
 
@@ -582,112 +564,63 @@ msgstr "مفعل"
 msgid "disabled"
 msgstr "غير مسموح به"
 
-#: media/jslib/timeago.js:35
-msgid "ago"
-msgstr "منذ"
-
-#: media/jslib/timeago.js:36
-msgid "from now"
-msgstr "من الآن"
-
-#: media/jslib/timeago.js:38
-msgid "about a minute"
-msgstr "في حدود دقيقة"
-
-#: media/jslib/timeago.js:39
-#, c-format
-msgid "%d min"
-msgstr ""
-
-#: media/jslib/timeago.js:40
-msgid "about an hour"
-msgstr "ساعة تفريباً"
-
-#: media/jslib/timeago.js:41
-#, c-format
-msgid "%d h"
-msgstr ""
-
-#: media/jslib/timeago.js:42 media/jslib/timeago.js.c:170
-msgid "yesterday"
-msgstr "البارحة"
-
-#: media/jslib/timeago.js:43
-#, c-format
-msgid "%d days"
-msgstr "%d يوم"
-
-#: media/jslib/timeago.js:44
-msgid "about a month"
-msgstr "شهر تفريباً"
-
-#: media/jslib/timeago.js:45
-#, c-format
-msgid "%d months"
-msgstr "%d أشهر"
-
-#: media/jslib/timeago.js:46
-msgid "about a year"
-msgstr "سنة تقريباً"
-
-#: media/jslib/timeago.js:47
-#, c-format
-msgid "%d years"
-msgstr "%d سنة"
-
-#: media/jslib/timeago.js:145
+#: media/jslib/timeago.js:90
 msgid "Jan"
 msgstr "يناير"
 
-#: media/jslib/timeago.js:146
+#: media/jslib/timeago.js:91
 msgid "Feb"
 msgstr "فبراير"
 
-#: media/jslib/timeago.js:147
+#: media/jslib/timeago.js:92
 msgid "Mar"
 msgstr "مارس"
 
-#: media/jslib/timeago.js:148
+#: media/jslib/timeago.js:93
 msgid "Apr"
 msgstr "أبريل"
 
-#: media/jslib/timeago.js:149
+#: media/jslib/timeago.js:94
 msgid "May"
 msgstr "مايو"
 
-#: media/jslib/timeago.js:150
+#: media/jslib/timeago.js:95
 msgid "Jun"
 msgstr "يونيو"
 
-#: media/jslib/timeago.js:151
+#: media/jslib/timeago.js:96
 msgid "Jul"
 msgstr "يوليو"
 
-#: media/jslib/timeago.js:152
+#: media/jslib/timeago.js:97
 msgid "Aug"
 msgstr "أغسطس"
 
-#: media/jslib/timeago.js:153
+#: media/jslib/timeago.js:98
 msgid "Sep"
 msgstr "سبتمبر"
 
-#: media/jslib/timeago.js:154
+#: media/jslib/timeago.js:99
 msgid "Oct"
 msgstr "أكتوبر"
 
-#: media/jslib/timeago.js:155
+#: media/jslib/timeago.js:100
 msgid "Nov"
 msgstr "نوفمبر"
 
-#: media/jslib/timeago.js:156
+#: media/jslib/timeago.js:101
 msgid "Dec"
 msgstr "ديسمبر"
 
-#: media/jslib/timeago.js:168
+#: media/jslib/timeago.js:113
 msgid "2 days ago"
 msgstr "منذ يومين"
 
-#: media/jslib/timeago.js:175
+#: media/jslib/timeago.js:115
+msgid "yesterday"
+msgstr "البارحة"
+
+#: media/jslib/timeago.js:120
 #, c-format
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
@@ -698,7 +631,7 @@ msgstr[3] "منذ %s ساعات"
 msgstr[4] "منذ %s ساعات"
 msgstr[5] "منذ %s ساعات"
 
-#: media/jslib/timeago.js:185
+#: media/jslib/timeago.js:130
 #, c-format
 msgid "%s min ago"
 msgid_plural "%s mins ago"
@@ -812,6 +745,15 @@ msgstr ""
 #: media/wmd/wmd.js:2430
 msgid "Heading"
 msgstr ""
+
+#~ msgid "%(question)s must have > %(length)s character"
+#~ msgid_plural "%(question)s must have > %(length)s characters"
+#~ msgstr[0] "5885b33f80dc5ea8fa5bdbd8e5e02d53_pl_0"
+#~ msgstr[1] "5885b33f80dc5ea8fa5bdbd8e5e02d53_pl_1"
+#~ msgstr[2] "5885b33f80dc5ea8fa5bdbd8e5e02d53_pl_2"
+#~ msgstr[3] "5885b33f80dc5ea8fa5bdbd8e5e02d53_pl_3"
+#~ msgstr[4] "5885b33f80dc5ea8fa5bdbd8e5e02d53_pl_4"
+#~ msgstr[5] "5885b33f80dc5ea8fa5bdbd8e5e02d53_pl_5"
 
 #~ msgid "anonymous users cannot %(follow_questions)s"
 #~ msgstr "sorry, anonymous users cannot vote "
