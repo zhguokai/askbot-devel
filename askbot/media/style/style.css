@@ -5411,3 +5411,33 @@ body.lang-nl .box .inputs #subscribedTagInput,
 body.lang-nl .box .inputs #ab-tag-search {
   width: 110px;
 }
+body.lang-eu .box .inputs #interestingTagInput,
+body.lang-eu .box .inputs #ignoredTagInput,
+body.lang-eu .box .inputs #subscribedTagInput,
+body.lang-eu .box .inputs #ab-tag-search {
+  width: 132px;
+}
+body.lang-tr .short-summary .votes,
+body.lang-tr .short-summary .answers,
+body.lang-tr .short-summary .favorites,
+body.lang-tr .short-summary .views {
+  overflow: hidden;
+}
+body.lang-tr .box .inputs #interestingTagInput,
+body.lang-tr .box .inputs #ignoredTagInput,
+body.lang-tr .box .inputs #subscribedTagInput,
+body.lang-tr .box .inputs #ab-tag-search {
+  width: 141px;
+}
+body.lang-cs-cz .short-summary .votes,
+body.lang-cs-cz .short-summary .answers,
+body.lang-cs-cz .short-summary .favorites,
+body.lang-cs-cz .short-summary .views {
+  overflow: hidden;
+}
+body.lang-cs-cz .box .inputs #interestingTagInput,
+body.lang-cs-cz .box .inputs #ignoredTagInput,
+body.lang-cs-cz .box .inputs #subscribedTagInput,
+body.lang-cs-cz .box .inputs #ab-tag-search {
+  width: 134px;
+}
