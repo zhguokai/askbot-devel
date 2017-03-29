@@ -101,7 +101,7 @@ settings.register(
         'AUTO_LINK_PATTERNS',
         description=_('Regexes to detect the link patterns'),
         help_text=_(
-            'Enter valid regular expressions for the patters,'
+            'Enter valid regular expressions for the patterns,'
             ' one per line.'
             ' For example to'
             ' detect a bug pattern like #bug123,'
@@ -109,7 +109,8 @@ settings.register(
             ' captured by the pattern in the parentheses will'
             ' be transferred to the link url template.'
             ' Please look up more information about regular'
-            ' expressions elsewhere.'
+            ' expressions elsewhere. Invalid expressions will'
+            ' not be accepted.'
         ),
         update_callback=regex_settings_validation,
         default=''
