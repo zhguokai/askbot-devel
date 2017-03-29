@@ -65,7 +65,7 @@ settings.register(
         default = False,
         description = _('Enable embedding videos. '),
         help_text = _(
-            '<em>Note: please read <a href="%(url)s">read this</a> first.</em>'
+            '<em>Note: please <a href="%(url)s">read this</a> first.</em>'
         ) % {'url': const.DEPENDENCY_URLS['embedding-video']}
     )
 )
