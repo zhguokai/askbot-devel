@@ -136,7 +136,7 @@
             {% if view_user.date_of_birth %}
             <tr>
                 <td>{% trans %}age, years{% endtrans %}</td>
-                <td>{{ view_user.date_of_birth|get_age }}{% endtrans %}</td>
+                <td>{{ view_user.date_of_birth|get_age }}</td>
             </tr>
             {% endif %}
             {% if votes_today_left %}
