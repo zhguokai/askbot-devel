@@ -10,7 +10,7 @@
     {% for sample in samples %}
 
         {% if samples|length > 1 %}
-            <h2>{% trans num=loop.index %}Example %(num)d{% endtrans %}</h2>
+            <h2>{% trans num=loop.index %}Example {{ num }}{% endtrans %}</h2>
         {% endif %}
 
         {% if sample['error_message'] %}
