@@ -260,11 +260,6 @@ urlpatterns = patterns(
         name='get_post_html'
     ),
     url(
-        r'^%s%s$' % (r'(?P<space_name>\w+)/', pgettext('urls', 'ask/')),
-        views.writers.ask,
-        name='ask'
-    ),
-    url(
         r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'edit/')),
         views.writers.edit_question,
         name='edit_question'
@@ -673,26 +668,7 @@ urlpatterns = patterns(
         r'^%s(?P<id>\d+)/$' % pgettext('urls', 'revisions/'),
         views.readers.revisions,
         name='post_revisions'
-    ),
-    url(
-        r'^(?P<space_name>\w+)/(?P<id>\d+)/',
-        views.readers.question,
-        name='question'
-    ),
-    url(
-        # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
-        (r'^%s' % r'(?P<space_name>\w+)' + 
-            r'(%s)?' % r'/scope:(?P<scope>\w+)' +
-            r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
-            r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
-            r'(%s)?' % r'/author:(?P<author>\d+)' +
-            r'(%s)?' % r'/page:(?P<page>\d+)' +
-            r'(%s)?' % r'/page-size:(?P<page_size>\d+)' +
-            r'(%s)?' % r'/query:(?P<query>.+)' +  # INFO: query is last, b/c it can contain slash!!!
-        r'/$'),
-        views.readers.questions,
-        name='questions'
-    ),
+    )
 )
 
 if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
@@ -744,3 +720,31 @@ if 'avatar' in settings.INSTALLED_APPS:
             name='askbot_avatar_enable_default_avatar'
         )
     )
+
+# URLs prefixed with the space name
+urlpatterns += (
+    url(
+        r'^%s%s$' % (r'(?P<space_name>\w+)/', pgettext('urls', 'ask/')),
+        views.writers.ask,
+        name='ask'
+    ),
+    url(
+        r'^(?P<space_name>\w+)/(?P<id>\d+)/',
+        views.readers.question,
+        name='question'
+    ),
+    url(
+        # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
+        (r'^%s' % r'(?P<space_name>\w+)' + 
+            r'(%s)?' % r'/scope:(?P<scope>\w+)' +
+            r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
+            r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
+            r'(%s)?' % r'/author:(?P<author>\d+)' +
+            r'(%s)?' % r'/page:(?P<page>\d+)' +
+            r'(%s)?' % r'/page-size:(?P<page_size>\d+)' +
+            r'(%s)?' % r'/query:(?P<query>.+)' +  # INFO: query is last, b/c it can contain slash!!!
+        r'/$'),
+        views.readers.questions,
+        name='questions'
+    ),
+)
