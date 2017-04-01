@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy
-from askbot.models import Tag, Group
+from askbot.models import Tag, Group, Space
 from askbot.const import DEFAULT_QUESTION_WIDGET_STYLE, SEARCH_ORDER_BY
 
 class AskWidget(models.Model):
@@ -8,6 +8,7 @@ class AskWidget(models.Model):
     title = models.CharField(max_length=100)
     group = models.ForeignKey(Group, null=True, blank=True)
     tag = models.ForeignKey(Tag, null=True, blank=True)
+    space = models.ForeignKey(Space, null=True, blank=True)
 
     include_text_field = models.BooleanField(default=False, blank=True)
 
@@ -26,6 +27,7 @@ class QuestionWidget(models.Model):
     question_number = models.PositiveIntegerField(default=7)
     tagnames = models.CharField(ugettext_lazy('tags'), max_length=50)
     group = models.ForeignKey(Group, null=True, blank=True)
+    space = models.ForeignKey(Space, null=True, blank=True)
     search_query = models.CharField(
         max_length=50, null=True, blank=True, default=''
     )
