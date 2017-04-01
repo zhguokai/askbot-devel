@@ -76,7 +76,6 @@ def ask_widget(request, widget_id):
             else:
                 text = ' '
 
-
             if widget.group:
                 group_id = widget.group.id
             else:
@@ -113,6 +112,7 @@ def ask_widget(request, widget_id):
             if request.user.is_authenticated():
                 data_dict = request.session['widget_question']
                 data_dict['author'] = request.user
+                data_dict['space'] = widget.space
                 question = post_question(request.session['widget_question'], request)
                 del request.session['widget_question']
                 return redirect('ask_by_widget_complete')
@@ -275,6 +275,8 @@ def question_widget(request, widget_id):
 
     if widget.group:
         filter_params['groups'] = widget.group
+
+    filter_params['space'] = widget.space
 
     #simple title search for now
     if widget.search_query:
