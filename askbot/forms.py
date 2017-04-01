@@ -1082,12 +1082,15 @@ class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
     outer_style = forms.CharField(widget=forms.Textarea, required=False)
 
     def __init__(self, *args, **kwargs):
-        from askbot.models import Group, Tag
+        from askbot.models import Group, Tag, Space
         super(CreateAskWidgetForm, self).__init__(*args, **kwargs)
+        self.fields['space'] = forms.ModelChoiceField(
+            queryset=Space.objects.all(), required=True)
         self.fields['group'] = forms.ModelChoiceField(
             queryset=Group.objects.exclude_personal(), required=False)
         self.fields['tag'] = forms.ModelChoiceField(
             queryset=Tag.objects.get_content_tags(), required=False)
+
         if not askbot_settings.GROUPS_ENABLED:
             self.hide_field('group')
 
@@ -1103,8 +1106,10 @@ class CreateQuestionWidgetForm(forms.Form, FormWithHideableFields):
                             initial=const.DEFAULT_QUESTION_WIDGET_STYLE)
 
     def __init__(self, *args, **kwargs):
-        from askbot.models import Group
+        from askbot.models import Group, Space
         super(CreateQuestionWidgetForm, self).__init__(*args, **kwargs)
+        self.fields['space'] = forms.ModelChoiceField(
+            queryset=Space.objects.all(), required=True)
         self.fields['tagnames'] = TagNamesField()
         self.fields['group'] = forms.ModelChoiceField(
             queryset=Group.objects.exclude(name__startswith='_internal'),
