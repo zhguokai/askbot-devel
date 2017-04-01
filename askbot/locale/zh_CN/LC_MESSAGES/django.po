@@ -11,7 +11,7 @@
 # Kun Huang <gareth@unitedstack.com>, 2013
 # ianwu <ian.wu@163.com>, 2013
 # jurik <codeyu@gmail.com>, 2015
-# Kevin Suo <suokunlong@126.com>, 2016
+# Kevin Suo <suokunlong@126.com>, 2016-2017
 # Kun Huang <gareth@unitedstack.com>, 2013
 # leonfeng <chaofeng111@gmail.com>, 2014
 # litimetal <litimetal@gmail.com>, 2016
@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-04 14:06-0500\n"
-"PO-Revision-Date: 2016-11-22 03:24+0000\n"
+"POT-Creation-Date: 2017-03-03 09:41-0600\n"
+"PO-Revision-Date: 2017-03-05 11:56+0000\n"
 "Last-Translator: Kevin Suo <suokunlong@126.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/askbot/askbot/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -37,19 +37,13 @@ msgstr ""
 msgid "Sorry, but anonymous visitors cannot access this function"
 msgstr "对不起，匿名用户不能使用此功能"
 
-#: feed.py:36 feed.py:109
+#: feed.py:36 feed.py:108
 msgid " - "
 msgstr "-"
 
-#: feed.py:37
-#, python-format
-msgid "Individual %(question)s feed"
-msgstr "单条 %(question)s 订阅"
-
-#: feed.py:110
-#, python-format
-msgid "Latest %(question)s feed"
-msgstr "最新 %(question)s 订阅"
+#: feed.py:36 feed.py:108
+msgid "RSS feed"
+msgstr "RSS订阅"
 
 #: forms.py:100
 msgid "Wildcard tag must have only one '*' symbol"
@@ -87,7 +81,7 @@ msgid "must be < %d word"
 msgid_plural "must be < %d words"
 msgstr[0] "最多 %d 个单词"
 
-#: forms.py:263 templates/widgets/ask_form.html:46
+#: forms.py:263 templates/widgets/ask_form.html:67
 msgid "Select language"
 msgstr "选择语言"
 
@@ -95,56 +89,46 @@ msgstr "选择语言"
 msgid "minor edit (don't send alerts)"
 msgstr "小修改(不发送通知)"
 
-#: forms.py:318 templates/widgets/markdown_help.html:20
-#: templates/widgets/markdown_help.html:24
-msgid "title"
-msgstr "标题"
-
-#: forms.py:331
+#: forms.py:330
 #, python-format
 msgid "must have > %d non-punctuation character"
 msgid_plural "must have > %d non-punctuation characters"
 msgstr[0] "必须有 > %d 个非标点字符"
 
-#: forms.py:343
+#: forms.py:341
 #, python-format
-msgid ""
-"The %(question)s is too long, maximum allowed size is %(length)d characters"
-msgstr "%(question)s 问题太长，最大允许长度是 %(length)d 个字符"
+msgid "The input is too long, maximum %(length)d characters is allowed"
+msgstr "输入的内容太长，最多允许 %(length)d 个字符"
 
-#: forms.py:350
+#: forms.py:346
 #, python-format
-msgid "The %(question)s is too long, maximum allowed size is %(length)d bytes"
-msgstr "%(question)s 问题太长，最大允许长度是 %(length)d 字节"
+msgid "The input is too long, maximum %(length)d bytes is allowed"
+msgstr "输入的内容太长，最多允许 %(length)d 字节"
 
-#: forms.py:380
-msgid "post"
-msgstr "发布"
-
-#: forms.py:387
+#: forms.py:386
 #, python-format
-msgid "%(post)s content must be > %(count)d character"
-msgid_plural "%(post)s content must be > %(count)d characters"
-msgstr[0] "%(post)s 的内容必须 > %(count)d 个字符"
+msgid "enter > %(length)d character"
+msgid_plural "enter > %(length)d characters"
+msgstr[0] "输入 >  %(length)d 个字符"
 
-#: forms.py:436
+#: forms.py:433
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] "每个标签最多只能有 %(max_chars)d 个字符"
 
-#: forms.py:483
+#: forms.py:480
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of"
 " them."
 msgstr "已经没有空间记录这些标签。请缩短或者删除部分标签。"
 
-#: forms.py:486 forms.py:1157 models/widgets.py:27
+#: forms.py:483 forms.py:1154 models/widgets.py:27
 #: templates/widgets/meta_nav.html:6 templates/widgets/tags_field.html:10
 msgid "tags"
 msgstr "标签"
 
-#: forms.py:488
+#: forms.py:485
 #, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
@@ -154,262 +138,263 @@ msgid_plural ""
 "be used."
 msgstr[0] "标签为不带空格的间断关键词。最多可以使用 %(max_tags)d 个标签。"
 
-#: forms.py:514
+#: forms.py:511
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] "最多只能有 %(tag_count)d 个标签"
 
-#: forms.py:522
+#: forms.py:519
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
 msgstr "至少需要有下列标签之一：%(tags)s"
 
-#: forms.py:550
+#: forms.py:547
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr "社区维基（无积分奖励，其他用户也能编辑维基文章）"
 
-#: forms.py:593
+#: forms.py:590
 msgid "update summary:"
 msgstr "更新摘要："
 
-#: forms.py:595
+#: forms.py:592
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style...), this field is optional"
 msgstr "输入本次修改的简单概述（如：修改了错别字，修正了语法，改进了样式等）。可选"
 
-#: forms.py:719
+#: forms.py:716
 msgid "Enter number of points to add or subtract"
 msgstr "输入要增加或减少的点数"
 
-#: forms.py:722
+#: forms.py:719
 msgid "Comment"
 msgstr "评论"
 
-#: forms.py:734 const/__init__.py:497
+#: forms.py:731 const/__init__.py:497
 msgid "approved"
 msgstr "已接受"
 
-#: forms.py:735 const/__init__.py:498
+#: forms.py:732 const/__init__.py:498
 msgid "watched"
 msgstr "已监视"
 
-#: forms.py:736 const/__init__.py:499
+#: forms.py:733 const/__init__.py:499
 msgid "suspended"
 msgstr "已暂停"
 
-#: forms.py:737 const/__init__.py:500
+#: forms.py:734 const/__init__.py:500
 msgid "blocked"
 msgstr "已冻结"
 
-#: forms.py:739 const/__init__.py:495
+#: forms.py:736 const/__init__.py:495
 msgid "administrator"
 msgstr "管理员"
 
-#: forms.py:740 const/__init__.py:496
+#: forms.py:737 const/__init__.py:496
 msgid "moderator"
 msgstr "版主"
 
-#: forms.py:759
+#: forms.py:756
 msgid "Change status to"
 msgstr "修改状态为"
 
-#: forms.py:787
+#: forms.py:784
 msgid "which one?"
 msgstr "哪个?"
 
-#: forms.py:817
+#: forms.py:814
 msgid "Cannot change own status"
 msgstr "不能修改自己的状态"
 
-#: forms.py:823
+#: forms.py:820
 msgid "Cannot turn other user to moderator"
 msgstr "不能把其他用户转为版主"
 
-#: forms.py:830
+#: forms.py:827
 msgid "Cannot change status of another moderator"
 msgstr "不能修改其他版主的状态"
 
-#: forms.py:836
+#: forms.py:833
 msgid "Cannot change status to admin"
 msgstr "不能修改管理员的状态"
 
-#: forms.py:842
+#: forms.py:839
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr "如果你希望修改 %(username)s 的状态，请作出有意义的选择。"
 
-#: forms.py:856
+#: forms.py:853
 msgid "Subject line"
 msgstr "主题行"
 
-#: forms.py:861
+#: forms.py:858
 msgid "Message text"
 msgstr "消息正文"
 
-#: forms.py:868
+#: forms.py:865
 msgid "Your name (optional):"
 msgstr "您的名字（可选）："
 
-#: forms.py:869
+#: forms.py:866
 msgid "Email:"
 msgstr "Email:"
 
-#: forms.py:871
+#: forms.py:868
 msgid "Your message:"
 msgstr "你的消息："
 
-#: forms.py:875
+#: forms.py:872
 msgid "I don't want to give my email or receive a response:"
 msgstr "我不想透露我的email或者收到回复："
 
-#: forms.py:889
+#: forms.py:886
 msgid "Message is required"
 msgstr "消息内容是必填项"
 
-#: forms.py:895 models/__init__.py:2566
+#: forms.py:892 models/__init__.py:2558
 msgid "Anonymous"
 msgstr "匿名"
 
-#: forms.py:905
-msgid "Either provide email address or mark \"I dont want to give email below\""
-msgstr "请提供email地址，或者选择“我不想在下方提供email”"
+#: forms.py:902
+msgid ""
+"Either provide email address or mark \"I don' want to give my email\" below"
+msgstr "输入email地址，或者勾选“我不想提供email地址”"
 
-#: forms.py:938
+#: forms.py:935
 msgid "keep private within your groups"
 msgstr "设置为私密，只有您的组内成员可查看"
 
-#: forms.py:977 templates/ask.html:41 templates/question.html:421
+#: forms.py:974 templates/ask.html:47 templates/question.html:420
 msgid "User name:"
 msgstr "用户名："
 
-#: forms.py:979
+#: forms.py:976
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
 msgstr "请输入文章署名，可以同时创建新帐号。"
 
-#: forms.py:986 templates/question.html:422
+#: forms.py:983 templates/question.html:421
 msgid "Email address:"
 msgstr "邮箱地址："
 
-#: forms.py:1036
+#: forms.py:1033
 msgid "User name is required with the email"
 msgstr "邮箱需要有用户名"
 
-#: forms.py:1041
+#: forms.py:1038
 msgid "Email is required if user name is added"
 msgstr "增加用户名需要提供邮箱"
 
-#: forms.py:1071
+#: forms.py:1068
 msgid "Add details (optional)"
 msgstr "详细描述（可选）"
 
-#: forms.py:1073
+#: forms.py:1070
 msgid "Add details"
 msgstr "详细描述"
 
-#: forms.py:1078
+#: forms.py:1075
 msgid "post anonymously"
 msgstr "匿名提交"
 
-#: forms.py:1099
+#: forms.py:1096
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
 msgstr "标题行要满足如下格式：[tag1, tag2, tag2, ...] 问题标题"
 
-#: forms.py:1108
+#: forms.py:1105
 msgid "ask anonymously"
 msgstr "匿名提问"
 
-#: forms.py:1381
+#: forms.py:1366
 msgid "Details"
 msgstr "详细描述"
 
-#: forms.py:1387
+#: forms.py:1372
 msgid "remove anonymity"
 msgstr "删除匿名"
 
-#: forms.py:1472
+#: forms.py:1457
 msgid "Real name"
 msgstr "真实姓名"
 
-#: forms.py:1479
+#: forms.py:1464
 msgid "Website"
 msgstr "个人网站"
 
-#: forms.py:1486
+#: forms.py:1471
 msgid "City"
 msgstr "城市"
 
-#: forms.py:1495
+#: forms.py:1480
 msgid "Show country"
 msgstr "显示国家"
 
-#: forms.py:1500
+#: forms.py:1485
 msgid "Show tag choices"
 msgstr "显示标签选择"
 
-#: forms.py:1505
+#: forms.py:1490
 msgid "Date of birth"
 msgstr "生日"
 
-#: forms.py:1507
+#: forms.py:1492
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "不会公开，只会显示您的年龄，格式为：YYYY-MM-DD"
 
-#: forms.py:1515
+#: forms.py:1500
 msgid "Profile"
 msgstr "个人资料"
 
-#: forms.py:1525
+#: forms.py:1510
 msgid "Screen name"
 msgstr "昵称"
 
-#: forms.py:1563 forms.py:1567
+#: forms.py:1548 forms.py:1552
 msgid "this email has already been registered, please use another one"
 msgstr "该电子邮件已被注册，请选择另一个再试。"
 
-#: forms.py:1576
+#: forms.py:1561
 msgid "Choose email tag filter"
 msgstr "选择邮件标签过滤"
 
-#: forms.py:1632
+#: forms.py:1617
 msgid "Individually selected"
 msgstr "个人选项"
 
-#: forms.py:1633
+#: forms.py:1618
 msgid "Entire forum (tag filtered)"
 msgstr "整个论坛(标签过滤)"
 
-#: forms.py:1634
+#: forms.py:1619
 msgid "Comments and posts mentioning me"
 msgstr "提到我的评论和帖子"
 
-#: forms.py:1718
+#: forms.py:1703
 msgid "please choose one of the options above"
 msgstr "请从以上选项中选择一项"
 
-#: forms.py:1721
+#: forms.py:1706
 msgid "okay, let's try!"
 msgstr "试一试"
 
-#: forms.py:1724
+#: forms.py:1709
 #, python-format
 msgid "no %(sitename)s email please, thanks"
 msgstr "不要 %(sitename)s的电子邮件，谢谢"
 
-#: forms.py:1777 templates/reopen.html:7
+#: forms.py:1762 templates/reopen.html:7
 msgid "Title"
 msgstr "标题"
 
-#: forms.py:1780 templates/groups.html:32 templates/email/preview_email.html:9
+#: forms.py:1765 templates/groups.html:32 templates/email/preview_email.html:9
 msgid "Description"
 msgstr "描述"
 
-#: forms.py:1799 templates/tags.html:3 templates/main_page/sidebar.html:23
+#: forms.py:1784 templates/tags.html:3 templates/main_page/sidebar.html:23
 #: templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
 #: templates/widgets/tag_category_selector.html:2
@@ -418,168 +403,158 @@ msgstr "描述"
 msgid "Tags"
 msgstr "标签"
 
-#: tasks.py:127
+#: tasks.py:156
 msgid "make an edit by email"
 msgstr "通过邮件编辑"
 
-#: urls.py:46
-msgctxt "urls"
-msgid "questions"
-msgstr "问题"
-
-#: urls.py:51
-msgctxt "urls"
-msgid "question"
-msgstr "问题"
-
-#: urls.py:78 urls.py:404 urls.py:410 urls.py:419 urls.py:428
+#: urls.py:64 urls.py:390 urls.py:396 urls.py:405 urls.py:414
 msgctxt "urls"
 msgid "tags/"
 msgstr "标签/"
 
-#: urls.py:83 urls.py:89 urls.py:98 urls.py:119 urls.py:128 urls.py:136
-#: urls.py:143
+#: urls.py:69 urls.py:75 urls.py:84 urls.py:105 urls.py:114 urls.py:122
+#: urls.py:129
 msgctxt "urls"
 msgid "users/"
 msgstr "用户/"
 
-#: urls.py:90
+#: urls.py:76
 msgctxt "urls"
 msgid "by-group/"
 msgstr "按组/"
 
-#: urls.py:98 urls.py:204 urls.py:311 urls.py:430 urls.py:655
+#: urls.py:84 urls.py:190 urls.py:297 urls.py:416 urls.py:636
 msgctxt "urls"
 msgid "edit/"
 msgstr "编辑/"
 
-#: urls.py:120 urls.py:404 urls.py:411 urls.py:420 urls.py:429
+#: urls.py:106 urls.py:390 urls.py:397 urls.py:406 urls.py:415
 msgctxt "urls"
 msgid "subscriptions/"
 msgstr "订阅/"
 
-#: urls.py:129
+#: urls.py:115
 msgctxt "urls"
 msgid "unsubscribe/"
 msgstr "取消订阅"
 
-#: urls.py:137
+#: urls.py:123
 msgctxt "urls"
 msgid "select_languages/"
 msgstr "选择语言/"
 
-#: urls.py:148
+#: urls.py:134
 msgctxt "urls"
 msgid "groups/"
 msgstr "小组/"
 
-#: urls.py:153 urls.py:158
+#: urls.py:139 urls.py:144
 msgctxt "urls"
 msgid "badges/"
 msgstr "奖牌/"
 
-#: urls.py:171
+#: urls.py:157
 msgctxt "urls"
 msgid "feedback/"
 msgstr "反馈/"
 
-#: urls.py:193
+#: urls.py:179
 msgctxt "urls"
 msgid "about/"
 msgstr "关于/"
 
-#: urls.py:194
+#: urls.py:180
 msgctxt "urls"
 msgid "faq/"
 msgstr "常见问题/"
 
-#: urls.py:195
+#: urls.py:181
 msgctxt "urls"
 msgid "privacy/"
 msgstr "隐私政策/"
 
-#: urls.py:197
+#: urls.py:183
 msgctxt "urls"
 msgid "terms/"
 msgstr "条款/"
 
-#: urls.py:202
+#: urls.py:188
 msgctxt "urls"
 msgid "help/"
 msgstr "帮助/"
 
-#: urls.py:204 urls.py:209
+#: urls.py:190 urls.py:195
 msgctxt "urls"
 msgid "answers/"
 msgstr "回答/"
 
-#: urls.py:209 urls.py:346
+#: urls.py:195 urls.py:332
 msgctxt "urls"
 msgid "revisions/"
 msgstr "修订版本/"
 
-#: urls.py:241
+#: urls.py:227
 msgctxt "urls"
 msgid "moderation-queue/"
 msgstr "管理队列/"
 
-#: urls.py:306 urls.py:614 urls.py:622 urls.py:630 urls.py:638
+#: urls.py:292 urls.py:595 urls.py:603 urls.py:611 urls.py:619
 msgctxt "urls"
 msgid "ask/"
 msgstr "提问/"
 
-#: urls.py:316
+#: urls.py:302
 msgctxt "urls"
 msgid "retag/"
 msgstr "更新标签/"
 
-#: urls.py:321
+#: urls.py:307
 msgctxt "urls"
 msgid "close/"
 msgstr "关闭/"
 
-#: urls.py:326
+#: urls.py:312
 msgctxt "urls"
 msgid "reopen/"
 msgstr "重新打开/"
 
-#: urls.py:331
+#: urls.py:317
 msgctxt "urls"
 msgid "answer/"
 msgstr "回答/"
 
-#: urls.py:412 urls.py:663
+#: urls.py:398 urls.py:644
 msgctxt "urls"
 msgid "delete/"
 msgstr "删除/"
 
-#: urls.py:421 urls.py:647
+#: urls.py:407 urls.py:628
 msgctxt "urls"
 msgid "create/"
 msgstr "新建/"
 
-#: urls.py:436
+#: urls.py:422
 msgctxt "urls"
 msgid "suggested-tags/"
 msgstr "推荐的标签/"
 
-#: urls.py:607 urls.py:613 urls.py:621 urls.py:629 urls.py:637 urls.py:646
-#: urls.py:654 urls.py:662 urls.py:669
+#: urls.py:588 urls.py:594 urls.py:602 urls.py:610 urls.py:618 urls.py:627
+#: urls.py:635 urls.py:643 urls.py:650
 msgctxt "urls"
 msgid "widgets/"
 msgstr "小工具/"
 
-#: urls.py:639 deps/django_authopenid/urls.py:27
+#: urls.py:620 deps/django_authopenid/urls.py:27
 msgctxt "urls"
 msgid "complete/"
 msgstr "完成/"
 
-#: urls.py:700
+#: urls.py:681
 msgctxt "urls"
 msgid "upload/"
 msgstr "上传/"
 
-#: urls.py:731
+#: urls.py:712
 msgctxt "urls"
 msgid "account/"
 msgstr "账户/"
@@ -616,8 +591,8 @@ msgstr "<p>目前不能注册新用户。如果您已经有一个账户，请登
 msgid "Message explaining that user registrations are disabled"
 msgstr "用于解释用户注册功能已禁用的信息"
 
-#: conf/access_control.py:59 conf/words.py:82 conf/words.py:96
-#: conf/words.py:111
+#: conf/access_control.py:59 conf/words.py:72 conf/words.py:86
+#: conf/words.py:102
 msgid "HTML is allowed"
 msgstr "允许使用HTML"
 
@@ -692,7 +667,7 @@ msgstr "奖牌设置"
 #: conf/badges.py:27
 #, python-format
 msgid "Enable \"%s\" badge"
-msgstr ""
+msgstr "启用 \"%s\" 徽章"
 
 #: conf/badges.py:47 models/badges.py:709
 msgid "Associate Editor"
@@ -740,7 +715,7 @@ msgstr "自律"
 
 #: conf/badges.py:81
 msgid "minimum upvotes for deleted post"
-msgstr ""
+msgstr "删除帖的最小支持投票"
 
 #: conf/badges.py:85 models/badges.py:697
 msgid "Editor"
@@ -752,7 +727,7 @@ msgstr ""
 
 #: conf/badges.py:91 conf/badges.py:157 conf/badges.py:165
 msgid "minimum upvotes"
-msgstr ""
+msgstr "最小的支持数"
 
 #: conf/badges.py:97 models/badges.py:808
 msgid "Enthusiast"
@@ -760,49 +735,49 @@ msgstr "粉丝"
 
 #: conf/badges.py:99
 msgid "minimum days"
-msgstr ""
+msgstr "最小的天数"
 
 #: conf/badges.py:103 models/badges.py:877
 msgid "Expert"
 msgstr "达人"
 
-#: conf/badges.py:107 conf/words.py:466 conf/words.py:467
+#: conf/badges.py:107 conf/words.py:443 conf/words.py:444
 msgid "Famous Question"
 msgstr "著名问题"
 
 #: conf/badges.py:109 conf/badges.py:190 conf/badges.py:208
 msgid "minimum views"
-msgstr ""
+msgstr "最小的查看数"
 
-#: conf/badges.py:115 conf/words.py:488 conf/words.py:489
+#: conf/badges.py:115 conf/words.py:465 conf/words.py:466
 msgid "Favorite Question"
 msgstr "收藏问题"
 
 #: conf/badges.py:117 conf/badges.py:228
 msgid "minimum followers"
-msgstr ""
+msgstr "最小的粉丝数"
 
-#: conf/badges.py:123 conf/words.py:400 conf/words.py:401
+#: conf/badges.py:123 conf/words.py:377 conf/words.py:378
 msgid "Good Answer"
 msgstr "优秀回答"
 
 #: conf/badges.py:125 conf/badges.py:141 conf/badges.py:182 conf/badges.py:248
 msgid "minimum upvotes for the answer"
-msgstr ""
+msgstr "回答的最小支持数"
 
-#: conf/badges.py:131 conf/words.py:411 conf/words.py:412
+#: conf/badges.py:131 conf/words.py:388 conf/words.py:389
 msgid "Good Question"
 msgstr "优秀问题"
 
 #: conf/badges.py:133 conf/badges.py:149 conf/badges.py:174
 msgid "minimum upvotes for the question"
-msgstr ""
+msgstr "问题的最小支持数"
 
-#: conf/badges.py:139 conf/words.py:422 conf/words.py:423
+#: conf/badges.py:139 conf/words.py:399 conf/words.py:400
 msgid "Great Answer"
 msgstr "完美答案"
 
-#: conf/badges.py:147 conf/words.py:433 conf/words.py:434
+#: conf/badges.py:147 conf/words.py:410 conf/words.py:411
 msgid "Great Question"
 msgstr "伟大问题"
 
@@ -816,17 +791,17 @@ msgstr "复兴的问题"
 
 #: conf/badges.py:166
 msgid "minimum delay in days"
-msgstr ""
+msgstr "最小的延迟天数"
 
-#: conf/badges.py:172 conf/words.py:389 conf/words.py:390
+#: conf/badges.py:172 conf/words.py:366 conf/words.py:367
 msgid "Nice Question"
 msgstr "好问题"
 
-#: conf/badges.py:180 conf/words.py:378 conf/words.py:379
+#: conf/badges.py:180 conf/words.py:355 conf/words.py:356
 msgid "Nice Answer"
 msgstr "好回答"
 
-#: conf/badges.py:188 conf/words.py:455 conf/words.py:456
+#: conf/badges.py:188 conf/words.py:432 conf/words.py:433
 msgid "Notable Question"
 msgstr "热门的问题"
 
@@ -840,9 +815,9 @@ msgstr ""
 
 #: conf/badges.py:200
 msgid "minimum downvotes for deleted post"
-msgstr ""
+msgstr "删除帖子的最小反对数"
 
-#: conf/badges.py:206 conf/words.py:444 conf/words.py:445
+#: conf/badges.py:206 conf/words.py:421 conf/words.py:422
 msgid "Popular Question"
 msgstr "受欢迎的问题"
 
@@ -860,9 +835,9 @@ msgstr "自学者"
 
 #: conf/badges.py:220
 msgid "minimum answer upvotes"
-msgstr ""
+msgstr "最小回答支持数"
 
-#: conf/badges.py:226 conf/words.py:477 conf/words.py:478
+#: conf/badges.py:226 conf/words.py:454 conf/words.py:455
 msgid "Stellar Question"
 msgstr "重要问题"
 
@@ -880,7 +855,7 @@ msgstr "分类学者"
 
 #: conf/badges.py:240
 msgid "minimum tag use count"
-msgstr ""
+msgstr "最小标签使用数"
 
 #: conf/badges.py:246 models/badges.py:191
 msgid "Teacher"
@@ -898,7 +873,7 @@ msgstr "邮件主题前缀"
 msgid ""
 "This setting takes default from the django settingEMAIL_SUBJECT_PREFIX. A "
 "value entered here will overridethe default."
-msgstr "此设置默认取 django 设置 EMAIL_SUBJECT_PREFIX 的值。此处输入的值将覆盖默认值。"
+msgstr "该选项从django的 EMAIL_SUBJECT_PREFIX 获取默认值。此处输入的值将会覆盖默认值。"
 
 #: conf/email.py:45
 msgid "Site administrator email address"
@@ -910,35 +885,35 @@ msgstr "启用电子邮件提醒"
 
 #: conf/email.py:62
 msgid "Enable instant email alerts"
-msgstr ""
+msgstr "启用即时email提示"
 
 #: conf/email.py:71
 msgid "Enable welcome email"
-msgstr ""
+msgstr "启用欢迎email"
 
 #: conf/email.py:80
 msgid "Enable rejected post alert"
-msgstr ""
+msgstr "启用被拒绝帖子提醒"
 
 #: conf/email.py:81 conf/email.py:91
 msgid "Also, premoderation mode must be enabled"
-msgstr ""
+msgstr "必须同时开启帖子预先审核模式"
 
 #: conf/email.py:90
 msgid "Enable approved post alert"
-msgstr ""
+msgstr "启用已批准帖子提醒"
 
 #: conf/email.py:100
 msgid "Enable batch email alert"
-msgstr ""
+msgstr "启用批量email提醒"
 
 #: conf/email.py:109
 msgid "Enable private messaging alerts"
-msgstr ""
+msgstr "启用私信提醒"
 
 #: conf/email.py:118
 msgid "Enable moderation queue alerts"
-msgstr ""
+msgstr "启用审核队列提醒"
 
 #: conf/email.py:128
 msgid "Enable HTML-formatted email"
@@ -1005,7 +980,7 @@ msgstr "本选项可定义发送更新邮件的频率：提及与评论。"
 
 #: conf/email.py:219
 msgid "Enable reminders about unanswered questions"
-msgstr ""
+msgstr "启用未回复问题提醒"
 
 #: conf/email.py:221
 msgid ""
@@ -1042,7 +1017,7 @@ msgstr "发送无回答提问提醒邮件的最大数量"
 
 #: conf/email.py:283
 msgid "Enable accept the best answer reminders"
-msgstr ""
+msgstr "启用采纳最佳答案提醒"
 
 #: conf/email.py:285
 msgid ""
@@ -1067,15 +1042,15 @@ msgstr "发送接收最佳答案的提醒邮件的最大数量"
 
 #: conf/email.py:332
 msgid "Allow blank email"
-msgstr ""
+msgstr "允许空白邮件"
 
 #: conf/email.py:334
 msgid "DANGER: makes impossible account recovery by email."
-msgstr ""
+msgstr "危险：将不能通过邮件进行账户恢复。"
 
 #: conf/email.py:337 conf/login_providers.py:273
 msgid "Must be not be required"
-msgstr ""
+msgstr "必须是非必需"
 
 #: conf/email.py:348
 msgid "Fake email for anonymous user"
@@ -1086,42 +1061,32 @@ msgid "Use this setting to control gravatar for email-less user"
 msgstr "使用这个设置没有邮件的用户图像"
 
 #: conf/email.py:358
-msgid "Allow posting questions by email"
-msgstr "允许邮件提问"
-
-#: conf/email.py:360
-msgid ""
-"Before enabling this setting - please fill out IMAP settings in the "
-"settings.py file"
-msgstr "启用本设置前 - 请在 settings.py 文件中填写 IMAP 设置"
-
-#: conf/email.py:371
 msgid "Replace space in emailed tags with dash"
 msgstr "以破折号替代所发送邮件中标签中的空格"
 
-#: conf/email.py:373
+#: conf/email.py:360
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
 msgstr "This setting applies to tags written in the subject line of questions asked by email"
 
-#: conf/email.py:384
-msgid "Enable posting answers and comments by email"
-msgstr "允许通过电子邮件发布答案和评论"
+#: conf/email.py:371
+msgid "Enable posting and replying by email"
+msgstr "允许通过email发帖或回复"
 
-#: conf/email.py:387
+#: conf/email.py:374
 msgid "To enable this feature make sure lamson is running"
 msgstr "为了启用这项功能，请确保lamson正在运行"
 
-#: conf/email.py:398
+#: conf/email.py:385
 msgid "Emailed post: when to notify author about publishing"
 msgstr "通过邮件提问：何时通知作者发布动态"
 
-#: conf/email.py:423
+#: conf/email.py:410
 msgid "Reply by email hostname"
 msgstr "通过电子邮件的主机名回复"
 
-#: conf/email.py:434
+#: conf/email.py:421
 msgid ""
 "Email replies having fewer words than this number will be posted as comments"
 " instead of answers"
@@ -1268,7 +1233,7 @@ msgid ""
 "Please register your forum at %(mw_page)s page of your Wiki. Your wiki must "
 "have <a href=\"%(url)s\">OAuth extension</a> installed "
 "installationSpecial:OAuthConsumerRegistration/propose <a href=\"%(url)s\">"
-msgstr ""
+msgstr "请在Wiki的 %(mw_page)s 页面注册您的论坛。您的wiki必需安装了 <a href=\"%(url)s\">OAuth 扩展</a>。installationSpecial:OAuthConsumerRegistration/propose <a href=\"%(url)s\">"
 
 #: conf/external_keys.py:164
 msgid "MediaWiki consumer secret"
@@ -1306,23 +1271,23 @@ msgstr "ident.ca 客户 secret"
 
 #: conf/feedback.py:11
 msgid "Feedback settings"
-msgstr ""
+msgstr "反馈设置"
 
 #: conf/feedback.py:16
 msgid "Anyone"
-msgstr ""
+msgstr "任何人"
 
 #: conf/feedback.py:17
 msgid "Only authenticated users"
-msgstr ""
+msgstr "仅授权用户"
 
 #: conf/feedback.py:18
 msgid "Nobody, disable feedback form"
-msgstr ""
+msgstr "无，禁用反馈表单"
 
 #: conf/feedback.py:27
 msgid "Who can send feedback"
-msgstr ""
+msgstr "谁可以发送反馈"
 
 #: conf/feedback.py:36
 msgid "Feedback site URL"
@@ -1334,13 +1299,13 @@ msgstr "如果留空，将使用一个简单的内部反馈表格代替"
 
 #: conf/feedback.py:49
 msgid "Message on the feedback page"
-msgstr ""
+msgstr "反馈页面中的消息"
 
 #: conf/feedback.py:51
 msgid ""
 "**Dear {{ USER_NAME }}**, we look forward to hearing your feedback. Please "
 "type and send us your message below."
-msgstr ""
+msgstr "**尊敬的 {{ USER_NAME }}**，我们期待您的反馈。请将在下方键入并提交您的反馈信息。"
 
 #: conf/feedback.py:55 conf/flatpages.py:95
 msgid ""
@@ -1351,7 +1316,7 @@ msgstr "保存，然后在 \"terms\" 页面 <a href=\"http://validator.w3.org/\"
 #: conf/feedback.py:72
 #, python-format
 msgid "'%(value)s' is not a valid email"
-msgstr ""
+msgstr "'%(value)s' 不是有效的email"
 
 #: conf/feedback.py:79
 msgid "Internal feedback form email recipients"
@@ -1361,7 +1326,7 @@ msgstr "来自联系人的内部反馈"
 msgid ""
 "Comma separated list of email addresses. If left empty, feedback mails are "
 "sent to admins and moderators."
-msgstr ""
+msgstr "以逗号分隔的email地址。若留空，则反馈邮件将会发给管理员和版主。"
 
 #: conf/flatpages.py:12
 msgid "Messages and pages - about, privacy policy, etc."
@@ -1379,13 +1344,13 @@ msgstr "保存, 然后使用 <a href=\"http://validator.w3.org/\">HTML验证</a>
 
 #: conf/flatpages.py:34
 msgid "Text of the Help page (html format)"
-msgstr ""
+msgstr "帮助页面的内容（html格式）"
 
 #: conf/flatpages.py:38
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"help\" page to check your input."
-msgstr ""
+msgstr "保存，然后使用“帮助”页面上的<a href=\"http://validator.w3.org/\">HTML验证工具</a>检查您的输入。"
 
 #: conf/flatpages.py:48
 msgid "Text of the Q&amp;A forum FAQ page (html format)"
@@ -1449,12 +1414,12 @@ msgstr "禁用这个按钮将会减少问题数量，如果禁用了，搜索框
 
 #: conf/forum_data_rules.py:66
 msgid "Enable embedding videos. "
-msgstr "启用嵌入视频。"
+msgstr "允许嵌入视频"
 
 #: conf/forum_data_rules.py:68
 #, python-format
 msgid "<em>Note: please read <a href=\"%(url)s\">read this</a> first.</em>"
-msgstr "<em>注意: 请先阅读 <a href=\"%(url)s\">这里</a> </em>"
+msgstr "<em>注意：请先阅读 <a href=\"%(url)s\">这个说明</a>。</em>"
 
 #: conf/forum_data_rules.py:78
 msgid "Check to enable community wiki feature"
@@ -1512,250 +1477,250 @@ msgid ""
 "question body length to 0. Also - please make tags optional.</b>"
 msgstr "<b style=\"color:red;\">要使用折叠模式，请先设置主页最小显示问题数为0，并让标签可选。</b>"
 
-#: conf/forum_data_rules.py:157
+#: conf/forum_data_rules.py:159
 msgid "Maximum length of tag (number of characters)"
 msgstr "标签最大长度(字符数)"
 
-#: conf/forum_data_rules.py:166
+#: conf/forum_data_rules.py:168
 msgid "Minimum length of title (number of characters)"
 msgstr "标题最小长度 (字符数)"
 
-#: conf/forum_data_rules.py:176
+#: conf/forum_data_rules.py:178
 msgid "Minimum length of question body (number of characters)"
 msgstr "问题正文最小长度 (字符数)"
 
-#: conf/forum_data_rules.py:187
+#: conf/forum_data_rules.py:189
 msgid "Minimum length of answer body (number of characters)"
 msgstr "回答正文最小长度 (字符数)"
 
-#: conf/forum_data_rules.py:197
+#: conf/forum_data_rules.py:199
 msgid "Show comment updates on the main page"
-msgstr ""
+msgstr "在主页面上显示评论更新"
 
-#: conf/forum_data_rules.py:207
+#: conf/forum_data_rules.py:209
 msgid "Minimum length of comment (number of characters)"
 msgstr "评论最小长度 (字符数)"
 
-#: conf/forum_data_rules.py:218
+#: conf/forum_data_rules.py:220
 msgid "Limit one answer per question per user"
 msgstr "每个用户只允许回答一次"
 
-#: conf/forum_data_rules.py:228
+#: conf/forum_data_rules.py:230
 msgid "Allow commenting in closed questions"
-msgstr ""
+msgstr "允许在已关闭的问题中提交评论"
 
-#: conf/forum_data_rules.py:237
+#: conf/forum_data_rules.py:239
 msgid "Enable accepting best answer"
 msgstr "可以接受最佳答案"
 
-#: conf/forum_data_rules.py:246
+#: conf/forum_data_rules.py:248
 msgid "Show accepted answer first"
-msgstr ""
+msgstr "优先显示已回答的问题"
 
-#: conf/forum_data_rules.py:256
+#: conf/forum_data_rules.py:258
 msgid "How to sort answers by default"
 msgstr "如何按默认方式排列问题"
 
-#: conf/forum_data_rules.py:264
+#: conf/forum_data_rules.py:266
 msgid "Are tags required?"
 msgstr "标签是必须的吗?"
 
-#: conf/forum_data_rules.py:270
+#: conf/forum_data_rules.py:272
 msgid "category tree"
 msgstr "类别树"
 
-#: conf/forum_data_rules.py:271
+#: conf/forum_data_rules.py:273
 msgid "user input"
 msgstr "用户输入"
 
-#: conf/forum_data_rules.py:278
+#: conf/forum_data_rules.py:280
 msgid "Source of tags"
 msgstr "标签来源"
 
-#: conf/forum_data_rules.py:289
+#: conf/forum_data_rules.py:291
 msgid "Mandatory tags"
 msgstr "必选标签"
 
-#: conf/forum_data_rules.py:292
+#: conf/forum_data_rules.py:294
 msgid ""
 "At least one of these tags will be required for any new or newly edited "
 "question. A mandatory tag may be wildcard, if the wildcard tags are active."
 msgstr "任何帖子都必须选择下面至少一个标签。如果启用了通配标签，可以通过通配符指定。"
 
-#: conf/forum_data_rules.py:304
+#: conf/forum_data_rules.py:306
 msgid "Force lowercase the tags"
 msgstr "强制小写字母标签"
 
-#: conf/forum_data_rules.py:306
+#: conf/forum_data_rules.py:308
 msgid ""
 "Attention: after checking this, please back up the database, and run a "
 "management command: <code>python manage.py fix_question_tags</code> to "
 "globally rename the tags"
 msgstr "注意：选中此项后，请备份数据库，然后执行管理命令: <code>python manage.py fix_question_tags</code> 进行全局重命名"
 
-#: conf/forum_data_rules.py:320
+#: conf/forum_data_rules.py:322
 msgid "Format of tag list"
 msgstr "标签列表格式"
 
-#: conf/forum_data_rules.py:322
+#: conf/forum_data_rules.py:324
 msgid ""
 "Select the format to show tags in, either as a simple list, or as a tag "
 "cloud"
 msgstr "选择标签的显示格式，可以是简单列表或者标签云"
 
-#: conf/forum_data_rules.py:334
+#: conf/forum_data_rules.py:336
 msgid "Use wildcard tags"
 msgstr "使用通配符标签"
 
-#: conf/forum_data_rules.py:336
+#: conf/forum_data_rules.py:338
 msgid ""
 "Wildcard tags can be used to follow or ignore many tags at once, a valid "
 "wildcard tag has a single wildcard at the very end"
 msgstr "通配符标签可以一次添加或取消多个标签，合法的通配符标签在末尾包含单一通配符"
 
-#: conf/forum_data_rules.py:348
-msgid "Use separate set for subscribed tags"
-msgstr ""
-
 #: conf/forum_data_rules.py:350
+msgid "Use separate set for subscribed tags"
+msgstr "单独显示已订阅的标签"
+
+#: conf/forum_data_rules.py:352
 msgid ""
 "If enabled, users will have a third set of tag selections - \"subscribed\" "
 "(by email) in addition to \"interesting\" and \"ignored\""
-msgstr ""
+msgstr "若启用，则用户将会有第三个标签选项集：“已订阅的”（通过邮件），“有趣的”和“已忽略的”。"
 
-#: conf/forum_data_rules.py:358
+#: conf/forum_data_rules.py:360
 msgid "Always, for all users"
 msgstr "对所有用户，总是"
 
-#: conf/forum_data_rules.py:359
+#: conf/forum_data_rules.py:361
 msgid "Never, for all users"
 msgstr "对所有用户，从不"
 
-#: conf/forum_data_rules.py:360
+#: conf/forum_data_rules.py:362
 msgid "Let users decide"
 msgstr "用户决定"
 
-#: conf/forum_data_rules.py:368
+#: conf/forum_data_rules.py:370
 msgid "Publicly show user tag selections"
 msgstr "公开显示用户标签的选择"
 
-#: conf/forum_data_rules.py:377
+#: conf/forum_data_rules.py:379
 msgid "Enable separate tag search box on main page"
 msgstr "在主页启用单独的标签搜索栏"
 
-#: conf/forum_data_rules.py:386
+#: conf/forum_data_rules.py:388
 msgid "Enable comments under questions"
-msgstr ""
+msgstr "允许在问题下方提交评论"
 
-#: conf/forum_data_rules.py:395
+#: conf/forum_data_rules.py:397
 msgid "Enable comments under answers"
-msgstr ""
+msgstr "允许在回答下方提交评论"
 
-#: conf/forum_data_rules.py:405
+#: conf/forum_data_rules.py:407
 msgid "Default max number of comments to display under posts"
 msgstr "默认显示的最大留言数"
 
-#: conf/forum_data_rules.py:415
+#: conf/forum_data_rules.py:417
 msgid "Reverse ordering of comments"
 msgstr "翻转评论顺序"
 
-#: conf/forum_data_rules.py:424
+#: conf/forum_data_rules.py:426
 msgid "Minimum words to start wrapping comments"
-msgstr ""
+msgstr "评论开始换行的最小字数"
 
-#: conf/forum_data_rules.py:433
+#: conf/forum_data_rules.py:435
 msgid "Minimum words to start wrapping posts"
-msgstr ""
+msgstr "帖子换行的最小字数"
 
-#: conf/forum_data_rules.py:443
+#: conf/forum_data_rules.py:445
 #, python-format
 msgid "Maximum comment length, must be &lt; %(max_len)s"
 msgstr "最大留言长度，必须小于 %(max_len)s"
 
-#: conf/forum_data_rules.py:453
+#: conf/forum_data_rules.py:455
 msgid "Limit time to edit comments"
 msgstr "限制编辑评论的时间"
 
-#: conf/forum_data_rules.py:454 conf/forum_data_rules.py:487
-#: conf/forum_data_rules.py:507
+#: conf/forum_data_rules.py:456 conf/forum_data_rules.py:489
+#: conf/forum_data_rules.py:509
 msgid "If unchecked, there will be no time limit"
-msgstr ""
+msgstr "若不选，则没有时间限制"
 
-#: conf/forum_data_rules.py:463
+#: conf/forum_data_rules.py:465
 msgid "Minutes allowed to edit a comment"
 msgstr "允许编辑评论的分钟数"
 
-#: conf/forum_data_rules.py:464 conf/forum_data_rules.py:497
-#: conf/forum_data_rules.py:517
+#: conf/forum_data_rules.py:466 conf/forum_data_rules.py:499
+#: conf/forum_data_rules.py:519
 msgid "To enable this setting, check the previous one"
 msgstr "要启用本设置，请选中前一个设置"
 
-#: conf/forum_data_rules.py:473
+#: conf/forum_data_rules.py:475
 msgid "Save comment by pressing &lt;Enter&gt; key"
 msgstr "按“回车”键保存评论"
 
-#: conf/forum_data_rules.py:475
+#: conf/forum_data_rules.py:477
 msgid ""
 "This may be useful when only one-line comments are desired. Will not work "
 "with TinyMCE editor."
 msgstr "当评论内容只有一行的时候这也许会有用，但当使用TinyMCE编辑器时不起作用。"
 
-#: conf/forum_data_rules.py:486
+#: conf/forum_data_rules.py:488
 msgid "Limit time to edit answers"
-msgstr ""
+msgstr "限制编辑回答的时间"
 
-#: conf/forum_data_rules.py:496
+#: conf/forum_data_rules.py:498
 msgid "Minutes allowed to edit answers"
-msgstr ""
+msgstr "编辑回答允许的分钟数"
 
-#: conf/forum_data_rules.py:506
+#: conf/forum_data_rules.py:508
 msgid "Limit time to edit questions"
-msgstr ""
+msgstr "限制编辑问题的时间"
 
-#: conf/forum_data_rules.py:516
+#: conf/forum_data_rules.py:518
 msgid "Minutes allowed to edit questions"
-msgstr ""
+msgstr "编辑问题允许的分钟数"
 
-#: conf/forum_data_rules.py:526
+#: conf/forum_data_rules.py:528
 msgid "Minimum length of search term for Ajax search"
 msgstr "搜索最小长度"
 
-#: conf/forum_data_rules.py:527
+#: conf/forum_data_rules.py:529
 msgid "Must match the corresponding database backend setting"
 msgstr "必须匹配相关数据库设置"
 
-#: conf/forum_data_rules.py:536
+#: conf/forum_data_rules.py:538
 msgid "Do not make text query sticky in search"
 msgstr "不要固定搜索文本请求"
 
-#: conf/forum_data_rules.py:538
+#: conf/forum_data_rules.py:540
 msgid ""
 "Check to disable the \"sticky\" behavior of the search query. This may be "
 "useful if you want to move the search bar away from the default position or "
 "do not like the default sticky behavior of the text search query."
 msgstr "选中会禁用搜索查询的粘滞行为。如果搜索栏不在默认的位置或者不需要粘滞时有用。"
 
-#: conf/forum_data_rules.py:551
+#: conf/forum_data_rules.py:553
 msgid "Maximum number of tags per question"
 msgstr "每个问题的最多标签数"
 
-#: conf/forum_data_rules.py:563
+#: conf/forum_data_rules.py:565
 msgid "Number of questions to list by default"
 msgstr "默认显示的问题数"
 
-#: conf/forum_data_rules.py:572
+#: conf/forum_data_rules.py:574
 msgid "Maximum users per users page"
-msgstr ""
+msgstr "每个用户页面的最大用户数"
 
-#: conf/forum_data_rules.py:582
+#: conf/forum_data_rules.py:584
 msgid "What should \"unanswered question\" mean?"
 msgstr "\"未回答\"问题是什么?"
 
-#: conf/forum_data_rules.py:591
+#: conf/forum_data_rules.py:593
 msgid "Allow swapping answer with question"
 msgstr "允许对调问题与回答"
 
-#: conf/forum_data_rules.py:593
+#: conf/forum_data_rules.py:595
 msgid ""
 "This setting will help import data from other forums such as zendesk, when "
 "automatic data import fails to detect the original question correctly."
@@ -1779,11 +1744,11 @@ msgstr "所有用户自动归属这个群组"
 
 #: conf/group_settings.py:55
 msgid "Enable group email adddresses"
-msgstr "启用全局电子邮件地址"
+msgstr "允许群组email地址"
 
 #: conf/group_settings.py:57
 msgid "If selected, users can post to groups by email \"group-name@domain.com\""
-msgstr "如果选中，用户可以通过\"group-name@domain.com\"发送群组邮件"
+msgstr "若勾选，则用户可以通过 \"group-name@domain.com\" 的形式向组中发帖"
 
 #: conf/karma_and_badges_visibility.py:12
 msgid "Karma & Badge visibility"
@@ -1877,7 +1842,7 @@ msgid ""
 "should be left in the intact format. First placeholder will be used for the "
 "user id field name, and the second - for the user id value. The template can"
 " be extended to match schema of your LDAP directory."
-msgstr ""
+msgstr "Python字符串格式化模板，必须有两个字符完整格式的占位符。第一个占位符将用于 user id 字段名称，第二个将用于 user id 的值。该模板可以被扩展以适用您的LDAP目录的schema."
 
 #: conf/ldap.py:113
 msgid "UserID/login field"
@@ -1952,7 +1917,7 @@ msgid ""
 "Use this area to enter content at the LEFT sidebarin HTML format.  When "
 "using this option, please use the HTML validation service to make sure that "
 "your input is valid and works well in all browsers."
-msgstr ""
+msgstr "在此区域以HTML格式输入左侧边栏的内容。使用此选项时，请使用HTML验证服务验证您的输入，以确保其在所有浏览器中均能正常显示。"
 
 #: conf/license.py:13
 msgid "Content License"
@@ -1996,7 +1961,7 @@ msgstr "授权 logo 图像"
 
 #: conf/login_providers.py:15
 msgid "Login provider settings"
-msgstr ""
+msgstr "登录服务提供者设置"
 
 #: conf/login_providers.py:24
 msgid "Acceptance of terms required at registration"
@@ -2026,11 +1991,11 @@ msgstr "要启用，请转到 设置->撰写->远程发布 并选中 XML-RPC 的
 
 #: conf/login_providers.py:54
 msgid "WordPress login button image"
-msgstr ""
+msgstr "WordPress 登录按钮图像"
 
 #: conf/login_providers.py:64
 msgid "Enable Fedora OpenID login"
-msgstr ""
+msgstr "启用 Fedora OpenID 登录"
 
 #: conf/login_providers.py:73
 msgid "Enable custom OpenID login"
@@ -2038,23 +2003,23 @@ msgstr "启用自定义OpenID登录"
 
 #: conf/login_providers.py:83
 msgid "Enable CAS authentication"
-msgstr ""
+msgstr "启用 CAS 验证"
 
 #: conf/login_providers.py:91
 msgid "CAS server url"
-msgstr ""
+msgstr "CAS 服务器 url"
 
 #: conf/login_providers.py:99
 msgid "CAS server name"
-msgstr ""
+msgstr "CAS 服务器名称"
 
 #: conf/login_providers.py:108
 msgid "CAS protocol version"
-msgstr ""
+msgstr "CAS 协议版本"
 
 #: conf/login_providers.py:116
 msgid "Upload CAS login icon"
-msgstr ""
+msgstr "上传 CAS 登录图标"
 
 #: conf/login_providers.py:144
 msgid "Custom OpenID"
@@ -2113,19 +2078,19 @@ msgstr "Note: to really enable %(provider)s login some additional parameters wil
 
 #: conf/login_providers.py:257
 msgid "MediaWiki login button image"
-msgstr ""
+msgstr "MediaWiki 登录按钮图像"
 
 #: conf/login_providers.py:267
 msgid "MediaWiki - enable one click registration"
-msgstr ""
+msgstr "MediaWiki - 启用一键注册"
 
 #: conf/login_providers.py:269
 msgid "Allows skipping the registration page after the wiki authentication."
-msgstr ""
+msgstr "允许使用wiki验证后跳过注册页面。"
 
 #: conf/login_providers.py:272
 msgid "Must be enabled"
-msgstr ""
+msgstr "必需启用"
 
 #: conf/markup.py:15
 msgid "Markup in posts"
@@ -2207,8 +2172,8 @@ msgid "Karma thresholds"
 msgstr "积分阈值"
 
 #: conf/minimum_reputation.py:22
-msgid "Become approved"
-msgstr "已认证"
+msgid "To become an automatically approved user"
+msgstr "要成为自动批准用户"
 
 #: conf/minimum_reputation.py:23
 msgid "Approved users bypass moderation and skip recaptcha"
@@ -2248,7 +2213,7 @@ msgstr "删除其他人的问题或答案"
 
 #: conf/minimum_reputation.py:116
 msgid "Delete own questions"
-msgstr ""
+msgstr "删除自己的问题"
 
 #: conf/minimum_reputation.py:125
 msgid "Upload files"
@@ -2266,7 +2231,7 @@ msgstr "以文本方式插入“链接建议”"
 msgid ""
 "This value should be smaller than that for \"insert clickable links\". This "
 "setting should stop link-spamming by newly registered users."
-msgstr ""
+msgstr "此处的值必需与“插入可点击的链接”处的值类似。此设置可以防止新注册用户链接类型的垃圾信息。"
 
 #: conf/minimum_reputation.py:156
 msgid "Retag questions posted by other people"
@@ -2306,13 +2271,17 @@ msgstr "通过邮件发表"
 msgid "Trigger email notifications"
 msgstr "触发邮件通知"
 
-#: conf/minimum_reputation.py:225 conf/minimum_reputation.py:235
-msgid "Reduces spam"
-msgstr "减少垃圾邮件"
+#: conf/minimum_reputation.py:225
+msgid "Users with smaller reputation will not be generating email alerts"
+msgstr "具有较小信誉度的用户将不会生成email提醒"
 
 #: conf/minimum_reputation.py:234
 msgid "Trigger tweets on others accounts"
 msgstr "用其它账户发布 Tweet"
+
+#: conf/minimum_reputation.py:235
+msgid "Reduces spam"
+msgstr "减少垃圾邮件"
 
 #: conf/moderation.py:14
 msgid "Content moderation"
@@ -2324,11 +2293,11 @@ msgstr "审核提交"
 
 #: conf/moderation.py:20
 msgid "audit flagged posts and watched users"
-msgstr ""
+msgstr "审计加标注的帖子以及监视的用户"
 
 #: conf/moderation.py:21
 msgid "pre-moderate watched users and audit flagged posts"
-msgstr ""
+msgstr "对受监视用户的发帖进行预审核，并对加标注的帖子进行审计"
 
 #: conf/moderation.py:30
 msgid "Content moderation method"
@@ -2338,25 +2307,25 @@ msgstr "内容管理方法"
 msgid ""
 "Audit is made after the posts are published, pre-moderation prevents "
 "publishing before moderator's decision."
-msgstr ""
+msgstr "“审计”是在帖子发布后进行的，而预审核是管理员在帖子发布前对其进行审核。"
 
 #: conf/moderation.py:40
 msgid "Reject all posts with these phrases"
-msgstr ""
+msgstr "拒绝所有包含该语句的帖子"
 
 #: conf/moderation.py:41
 msgid ""
 "Enter one phrase per line (case-insensitive). Posts with these phrases will "
 "be rejected without moderation."
-msgstr ""
+msgstr "每个语句一行（区分大小写）。包含这些语句的帖子将被自动拒绝。"
 
 #: conf/moderation.py:53
 msgid "Enable image moderation"
-msgstr ""
+msgstr "启用图像审核"
 
 #: conf/moderation.py:62
 msgid "Enable link moderation"
-msgstr ""
+msgstr "启用链接审核"
 
 #: conf/moderation.py:71
 msgid "Enable tag moderation"
@@ -2454,17 +2423,17 @@ msgstr "同一个帖子被标记5次垃圾贴的作者积分减少"
 msgid ""
 "There are required related settings: %(required)s and some optional: "
 "%(optional)s."
-msgstr ""
+msgstr "有一些必需的相关设置：%(required)s，和一些可选的相关设置： %(optional)s。"
 
 #: conf/settings_wrapper.py:175
 #, python-format
 msgid "There are required related settings: %(required)s."
-msgstr ""
+msgstr "有一些必需的相关设置： %(required)s."
 
 #: conf/settings_wrapper.py:181
 #, python-format
 msgid "There are optional related settings: %(optional)s."
-msgstr ""
+msgstr "有一些可选的相关设置： %(optional)s."
 
 #: conf/sidebar_main.py:12
 msgid "Main page sidebar"
@@ -2480,13 +2449,13 @@ msgid ""
 "When using this option (as well as the sidebar footer), please use the HTML "
 "validation service to make sure that your input is valid and works well in "
 "all browsers."
-msgstr "使用此区域输入要显示在侧边栏顶端的内容。使用此选项(以及侧边栏底部设置)时，请使用 HTML 验证服务确保输入的代码在所有浏览器都显示正常。"
+msgstr "在此区域以HTML格式输入顶部边栏的内容。使用此选项（以及底部边栏）时，请使用HTML验证服务验证您的输入，以确保其在所有浏览器中均能正常显示。"
 
 #: conf/sidebar_main.py:37 conf/sidebar_main.py:113 conf/sidebar_profile.py:38
 #: conf/sidebar_question.py:35 conf/sidebar_question.py:60
 #: conf/sidebar_question.py:96 conf/sidebar_question.py:162
-msgid "Show above only to anonymous users"
-msgstr "以上内容仅对匿名用户可见"
+msgid "Show the text entered above only to anonymous users"
+msgstr "仅对匿名用户显示上面输入的文字"
 
 #: conf/sidebar_main.py:46
 msgid "Show avatar block in sidebar"
@@ -2508,7 +2477,7 @@ msgstr "在侧边栏显示标签选择器"
 msgid ""
 "Uncheck this if you want to hide the options for choosing interesting and "
 "ignored tags "
-msgstr "如果想隐藏感兴趣标签和不感兴趣标签，请取消此项"
+msgstr ""
 
 #: conf/sidebar_main.py:82
 msgid "Show tag list/cloud in sidebar"
@@ -2517,7 +2486,7 @@ msgstr "在侧边栏显示标签列表/标签云"
 #: conf/sidebar_main.py:84
 msgid ""
 "Uncheck this if you want to hide the tag cloud or tag list from the sidebar "
-msgstr "取消此项会隐藏侧边栏中的标签云或标签列表 "
+msgstr ""
 
 #: conf/sidebar_main.py:95 conf/sidebar_question.py:144
 msgid "Custom sidebar footer"
@@ -2529,7 +2498,7 @@ msgid ""
 "   When using this option (as well as the sidebar header), please use the "
 "HTML validation service to make sure that your input is valid and works well"
 " in all browsers."
-msgstr "使用此区域输入要显示在侧边栏底部的内容。使用此选项(以及侧边栏顶部设置)时，请使用 HTML 验证服务确保输入的代码在所有浏览器都显示正常。"
+msgstr ""
 
 #: conf/sidebar_profile.py:12
 msgid "User profile sidebar"
@@ -2582,7 +2551,7 @@ msgstr "侧边栏显示标签列表"
 
 #: conf/sidebar_question.py:106
 msgid "Uncheck this if you want to hide the tag list from the sidebar "
-msgstr "若您希望在侧边栏隐藏标签列表请取消选中本项"
+msgstr ""
 
 #: conf/sidebar_question.py:117
 msgid "Show meta information in sidebar"
@@ -2592,7 +2561,7 @@ msgstr "侧边栏显示元信息"
 msgid ""
 "Uncheck this if you want to hide the meta information about the question "
 "(post date, views, last updated). "
-msgstr "取消此项可以隐藏问题的元信息(发布时间、阅读数，最后更新时间). "
+msgstr ""
 
 #: conf/sidebar_question.py:131
 msgid "Show related questions in sidebar"
@@ -2600,7 +2569,7 @@ msgstr "在侧边栏显示相关问题"
 
 #: conf/sidebar_question.py:133
 msgid "Uncheck this if you want to hide the list of related questions. "
-msgstr "取消选会可隐藏相关问题列表。"
+msgstr ""
 
 #: conf/site_modes.py:62
 msgid "Bootstrap mode"
@@ -2692,27 +2661,27 @@ msgstr "问答网logo"
 
 #: conf/skin_general_settings.py:54
 msgid "To change the logo, select new file, then submit this whole form."
-msgstr "要变更 logo, 请选择一个新文件并提交。"
+msgstr ""
 
-#: conf/skin_general_settings.py:71
+#: conf/skin_general_settings.py:75
 msgid "Select Language"
 msgstr "选择语言"
 
-#: conf/skin_general_settings.py:79
+#: conf/skin_general_settings.py:83
 msgid "Show logo"
 msgstr "显示 logo"
 
-#: conf/skin_general_settings.py:81
+#: conf/skin_general_settings.py:85
 msgid ""
 "Check if you want to show logo in the forum header or uncheck in the case "
 "you do not want the logo to appear in the default location"
 msgstr "选中此项将在论坛开头显示徽标，如果不希望显示默认徽标，请取消选择"
 
-#: conf/skin_general_settings.py:93
+#: conf/skin_general_settings.py:97
 msgid "Site favicon"
 msgstr "网站favicon"
 
-#: conf/skin_general_settings.py:95
+#: conf/skin_general_settings.py:99
 #, python-format
 msgid ""
 "A small 16x16 or 32x32 pixel icon image used to distinguish your site in the"
@@ -2720,40 +2689,40 @@ msgid ""
 "href=\"%(favicon_info_url)s\">this page</a>."
 msgstr "一个 16x16 或 32x32 像素的 icon 图片，在浏览器界面中区分处您的网站。favicon的更多信息信息位于<a href=\"%(favicon_info_url)s\">此页</a>."
 
-#: conf/skin_general_settings.py:111
+#: conf/skin_general_settings.py:115
 msgid "Password login button"
 msgstr "密码登录按钮"
 
-#: conf/skin_general_settings.py:113
+#: conf/skin_general_settings.py:117
 msgid ""
 "An 88x38 pixel image that is used on the login screen for the password login"
 " button."
 msgstr "88x38 像素的图片，用作登录界面的密码登录按钮"
 
-#: conf/skin_general_settings.py:126
+#: conf/skin_general_settings.py:130
 msgid "Show all UI functions to all users"
 msgstr "为用户显示所有 UI 功能"
 
-#: conf/skin_general_settings.py:128
+#: conf/skin_general_settings.py:132
 msgid ""
 "If checked, all forum functions will be shown to users, regardless of their "
 "reputation. However to use those functions, moderation rules, reputation and"
 " other limits will still apply."
 msgstr "如果选中,将给用户显示所有的网站功能，不管他们的积分是多少。但是如果要使用这些功能，依然需要满足监管规则、积分和其他限制。"
 
-#: conf/skin_general_settings.py:143
+#: conf/skin_general_settings.py:147
 msgid "Select skin"
 msgstr "选择主题"
 
-#: conf/skin_general_settings.py:154
+#: conf/skin_general_settings.py:158
 msgid "Customize HTML <HEAD>"
 msgstr "自定义 HTML HEAD"
 
-#: conf/skin_general_settings.py:163
+#: conf/skin_general_settings.py:167
 msgid "Custom portion of the HTML <HEAD>"
 msgstr "自定义 HTML的 HEAD 部分"
 
-#: conf/skin_general_settings.py:165
+#: conf/skin_general_settings.py:169
 msgid ""
 "<strong>To use this option</strong>, check \"Customize HTML &lt;HEAD&gt;\" "
 "above. Contents of this box will be inserted into the &lt;HEAD&gt; portion "
@@ -2765,34 +2734,34 @@ msgid ""
 "setting, please test the site with the W3C HTML validator service."
 msgstr "<strong>To use this option</strong>, check \"Customize HTML &lt;HEAD&gt;\" above. Contents of this box will be inserted into the &lt;HEAD&gt; portion of the HTML output, where elements such as &lt;script&gt;, &lt;link&gt;, &lt;meta&gt; may be added. Please, keep in mind that adding external javascript to the &lt;HEAD&gt; is not recommended because it slows loading of the pages. Instead, it will be more efficient to place links to the javascript files into the footer. <strong>Note:</strong> if you do use this setting, please test the site with the W3C HTML validator service."
 
-#: conf/skin_general_settings.py:187
+#: conf/skin_general_settings.py:191
 msgid "Custom header additions"
 msgstr "自定义头部增加内容"
 
-#: conf/skin_general_settings.py:189
+#: conf/skin_general_settings.py:193
 msgid ""
 "Header is the bar at the top of the content that contains user info and site"
 " links, and is common to all pages. Use this area to enter contents of the "
 "headerin the HTML format.   When customizing the site header (as well as "
 "footer and the HTML &lt;HEAD&gt;), use the HTML validation service to make "
 "sure that your input is valid and works well in all browsers."
-msgstr "Header is the bar at the top of the content that contains user info and site links, and is common to all pages. Use this area to enter contents of the headerin the HTML format.   When customizing the site header (as well as footer and the HTML &lt;HEAD&gt;), use the HTML validation service to make sure that your input is valid and works well in all browsers."
+msgstr ""
 
-#: conf/skin_general_settings.py:204
+#: conf/skin_general_settings.py:208
 msgid "Site footer mode"
 msgstr "网站底部模式"
 
-#: conf/skin_general_settings.py:206
+#: conf/skin_general_settings.py:210
 msgid ""
 "Footer is the bottom portion of the content, which is common to all pages. "
 "You can disable, customize, or use the default footer."
 msgstr "Footer is the bottom portion of the content, which is common to all pages. You can disable, customize, or use the default footer."
 
-#: conf/skin_general_settings.py:223
+#: conf/skin_general_settings.py:227
 msgid "Custom footer (HTML format)"
 msgstr "自定义底部（HTML 格式）"
 
-#: conf/skin_general_settings.py:225
+#: conf/skin_general_settings.py:229
 msgid ""
 "<strong>To enable this function</strong>, please select option 'customize' "
 "in the \"Site footer mode\" above. Use this area to enter contents of the "
@@ -2801,21 +2770,21 @@ msgid ""
 "that your input is valid and works well in all browsers."
 msgstr "<strong>To enable this function</strong>, please select option 'customize' in the \"Site footer mode\" above. Use this area to enter contents of the footer in the HTML format. When customizing the site footer (as well as the header and HTML &lt;HEAD&gt;), use the HTML validation service to make sure that your input is valid and works well in all browsers."
 
-#: conf/skin_general_settings.py:240
+#: conf/skin_general_settings.py:244
 msgid "Apply custom style sheet (CSS)"
 msgstr "应用自定义样式表（CSS）"
 
-#: conf/skin_general_settings.py:242
+#: conf/skin_general_settings.py:246
 msgid ""
 "Check if you want to change appearance of your form by adding custom style "
 "sheet rules (please see the next item)"
 msgstr "Check if you want to change appearance of your form by adding custom style sheet rules (please see the next item)"
 
-#: conf/skin_general_settings.py:254
+#: conf/skin_general_settings.py:258
 msgid "Custom style sheet (CSS)"
 msgstr "自定义样式表（CSS）"
 
-#: conf/skin_general_settings.py:256
+#: conf/skin_general_settings.py:260
 msgid ""
 "<strong>To use this function</strong>, check \"Apply custom style sheet\" "
 "option above. The CSS rules added in this window will be applied after the "
@@ -2824,19 +2793,19 @@ msgid ""
 " depends (default is empty string) on the url configuration in your urls.py."
 msgstr "<strong>To use this function</strong>, check \"Apply custom style sheet\" option above. The CSS rules added in this window will be applied after the default style sheet rules. The custom style sheet will be served dynamically at url \"&lt;forum url&gt;/custom.css\", where the \"&lt;forum url&gt; part depends (default is empty string) on the url configuration in your urls.py."
 
-#: conf/skin_general_settings.py:272
+#: conf/skin_general_settings.py:276
 msgid "Add custom javascript"
 msgstr "添加自定义 javascript"
 
-#: conf/skin_general_settings.py:275
+#: conf/skin_general_settings.py:279
 msgid "Check to enable javascript that you can enter in the next field"
 msgstr "点击可启用可在下一字段输入的 javascript"
 
-#: conf/skin_general_settings.py:285
+#: conf/skin_general_settings.py:289
 msgid "Custom javascript"
 msgstr "自定义 javascript"
 
-#: conf/skin_general_settings.py:287
+#: conf/skin_general_settings.py:291
 msgid ""
 "Type or paste plain javascript that you would like to run on your site. Link"
 " to the script will be inserted at the bottom of the HTML output and will be"
@@ -2847,19 +2816,19 @@ msgid ""
 "javascript\" option above)."
 msgstr "Type or paste plain javascript that you would like to run on your site. Link to the script will be inserted at the bottom of the HTML output and will be served at the url \"&lt;forum url&gt;/custom.js\". Please, bear in mind that your javascript code may break other functionalities of the site and that the behavior may not be consistent across different browsers (<strong>to enable your custom code</strong>, check \"Add custom javascript\" option above)."
 
-#: conf/skin_general_settings.py:305
+#: conf/skin_general_settings.py:309
 msgid "Skin media revision number"
 msgstr "主题修正数字"
 
-#: conf/skin_general_settings.py:307
+#: conf/skin_general_settings.py:311
 msgid "Will be set automatically but you can modify it if necessary."
 msgstr "将自定设置但如果需要您可以修改。"
 
-#: conf/skin_general_settings.py:318
+#: conf/skin_general_settings.py:322
 msgid "Hash to update the media revision number automatically."
 msgstr "自动更新媒体版本号所用 hash。"
 
-#: conf/skin_general_settings.py:322
+#: conf/skin_general_settings.py:326
 msgid "Will be set automatically, it is not necesary to modify manually."
 msgstr "将自动设置，不必手动修改。"
 
@@ -2918,6 +2887,16 @@ msgstr "请访问 <a href=\"%(url)s\">Akismet 网站</a> 获取 Akismet key"
 #: conf/spam_and_moderation.py:31
 msgid "Akismet key for spam detection"
 msgstr "垃圾侦测所需的 Akismet key"
+
+#: conf/static_settings.py:21
+msgctxt "urls"
+msgid "questions"
+msgstr "问题"
+
+#: conf/static_settings.py:30
+msgctxt "urls"
+msgid "question"
+msgstr "问题"
 
 #: conf/super_groups.py:5
 msgid "Reputation, Badges, Votes & Flags"
@@ -3078,428 +3057,368 @@ msgstr "网站专用术语和词汇表"
 msgid "Ask Your Question"
 msgstr "发起问题"
 
-#: conf/words.py:24 conf/words.py:45 conf/words.py:56 conf/words.py:67
-#: conf/words.py:136
+#: conf/words.py:24 conf/words.py:35 conf/words.py:46 conf/words.py:57
+#: conf/words.py:127
 msgid "Used on a button"
 msgstr "在按钮上使用"
 
-#: conf/words.py:33 conf/words.py:34 conf/words.py:542 conf/words.py:543
-msgid "Please enter your question"
-msgstr "请输入问题"
-
-#: conf/words.py:43 conf/words.py:44
+#: conf/words.py:33 conf/words.py:34
 msgid "Ask the Group"
 msgstr "询问群组"
 
-#: conf/words.py:54 conf/words.py:55
+#: conf/words.py:44 conf/words.py:45
 msgid "Post Your Answer"
 msgstr "回答"
 
-#: conf/words.py:65 conf/words.py:66
+#: conf/words.py:55 conf/words.py:56
 msgid "Answer Your Own Question"
 msgstr "回答你自己的问题"
 
-#: conf/words.py:77
+#: conf/words.py:67
 msgid ""
 "<span class=\"big strong\">You are welcome to answer your own "
 "question</span>, but please make sure to give an <strong>answer</strong>. "
 "Remember that you can always <strong>revise your original question</strong>."
 msgstr ""
 
-#: conf/words.py:81
+#: conf/words.py:71
 msgid "Instruction to answer own questions"
 msgstr "回答自己问题的方法"
 
-#: conf/words.py:92
+#: conf/words.py:82
 msgid ""
 "<span class=\"strong big\">Please start posting anonymously</span> - your "
 "entry will be published after you log in or create a new account."
 msgstr ""
 
-#: conf/words.py:95
+#: conf/words.py:85
 msgid "Instruction to post anonymously"
 msgstr "匿名提问方法"
 
-#: conf/words.py:106
+#: conf/words.py:96
 msgid ""
-"Please try to <strong>give a substantial answer</strong>, for discussions, "
-"<strong>please use comments</strong> and <strong>do remember to "
-"vote</strong>."
+"This space is reserved only for answers. If you would like to engage in a "
+"discussion, please instead post a comment under the question or an answer "
+"that you would like to discuss"
 msgstr ""
 
-#: conf/words.py:110
+#: conf/words.py:101
 msgid "Instruction to give answers"
 msgstr "提供答案的方法"
 
-#: conf/words.py:121
+#: conf/words.py:112
 msgid ""
 "Categorize your question using this tag selector or entering text in tag "
 "box."
 msgstr ""
 
-#: conf/words.py:124
+#: conf/words.py:115
 msgid "Instruction for the category selector"
 msgstr ""
 
-#: conf/words.py:125
+#: conf/words.py:116
 msgid "Plain text only"
 msgstr "仅允许纯文本"
 
-#: conf/words.py:134 conf/words.py:135
+#: conf/words.py:125 conf/words.py:126
 msgid "Edit Your Previous Answer"
 msgstr "编辑你自己的答案"
 
-#: conf/words.py:145 conf/words.py:146
+#: conf/words.py:141 conf/words.py:142
 msgid "ask questions"
 msgstr "提问"
 
-#: conf/words.py:155 conf/words.py:156
+#: conf/words.py:152 conf/words.py:153
 msgid "post answers"
 msgstr ""
 
-#: conf/words.py:165 conf/words.py:166
+#: conf/words.py:162 conf/words.py:163
 msgid "Merge duplicate questions"
 msgstr "合并重复问题"
 
-#: conf/words.py:175 conf/words.py:176
+#: conf/words.py:172 conf/words.py:173
 msgid "Enter duplicate question ID"
 msgstr "输入重复问题的ID"
 
-#: conf/words.py:185 conf/words.py:186
+#: conf/words.py:182 conf/words.py:183
 msgid "asked"
 msgstr "提问于"
 
-#: conf/words.py:195 conf/words.py:196
+#: conf/words.py:192 conf/words.py:193
 msgid "Asked first question"
 msgstr "提出的第一个问题"
 
-#: conf/words.py:205 conf/words.py:206
+#: conf/words.py:202 conf/words.py:203
 msgid "Asked by me"
 msgstr "我的提问"
 
-#: conf/words.py:215 conf/words.py:216
+#: conf/words.py:212 conf/words.py:213
 msgid "Asked a question"
 msgstr "提问"
 
-#: conf/words.py:225 conf/words.py:226
+#: conf/words.py:222 conf/words.py:223
 msgid "Answered a question"
 msgstr "回答问题"
 
-#: conf/words.py:235 conf/words.py:236
+#: conf/words.py:232 conf/words.py:233
 msgid "Answered by me"
 msgstr "我的回答"
 
-#: conf/words.py:246 conf/words.py:247
+#: conf/words.py:243 conf/words.py:244
 msgid "accepted an answer"
 msgstr "接受回答"
 
-#: conf/words.py:256 conf/words.py:257
+#: conf/words.py:253 conf/words.py:254
 msgid "Gave accepted answer"
 msgstr ""
 
-#: conf/words.py:266 conf/words.py:267
+#: conf/words.py:263 conf/words.py:264
 msgid "answered"
 msgstr "回答"
 
-#: conf/words.py:276
+#: conf/words.py:273
 msgid ""
 "question\n"
 "questions"
 msgstr ""
 
-#: conf/words.py:277
+#: conf/words.py:274
 msgid "Countable plural forms for \"question\""
 msgstr "\"问题\"的复数形式"
 
-#: conf/words.py:278 conf/words.py:289
+#: conf/words.py:275 conf/words.py:286
 msgid "Enter one form per line, pay attention"
 msgstr ""
 
-#: conf/words.py:287
+#: conf/words.py:284
 msgid ""
 "answer\n"
 "answers"
 msgstr ""
 
-#: conf/words.py:288
+#: conf/words.py:285
 msgid "Countable plural forms for \"answer\""
 msgstr "\"回答\"复数形式"
 
-#: conf/words.py:298
+#: conf/words.py:295
 msgid "question"
 msgstr "问题"
 
-#: conf/words.py:299
+#: conf/words.py:296
 msgid "question (noun, singular)"
 msgstr "问题(名词，单数)"
 
-#: conf/words.py:308
-msgid "questions"
-msgstr "问题"
-
-#: conf/words.py:309
-msgid "questions (noun, plural)"
-msgstr "问题(名词，复数)"
-
-#: conf/words.py:318
+#: conf/words.py:305
 msgid "unanswered question"
 msgstr "未回答问题"
 
-#: conf/words.py:319
+#: conf/words.py:306
 msgid "unanswered question (singular)"
 msgstr "未回答问题 (singular)"
 
-#: conf/words.py:328
+#: conf/words.py:315
 msgid "unanswered questions"
 msgstr "未回答问题"
 
-#: conf/words.py:329
+#: conf/words.py:316
 msgid "unanswered questions (plural)"
 msgstr "未回答问题(复数)"
 
-#: conf/words.py:338
+#: conf/words.py:325
 msgid "answer"
 msgstr "回答"
 
-#: conf/words.py:339
-msgid "answer (noun, sungular)"
-msgstr "回答(名词，单数)"
+#: conf/words.py:326
+msgid "answer (noun, singular)"
+msgstr ""
 
-#: conf/words.py:348 conf/words.py:349
+#: conf/words.py:335 conf/words.py:336
 msgid "Question voted up"
 msgstr "被赞的提问"
 
-#: conf/words.py:358 conf/words.py:359
+#: conf/words.py:345 conf/words.py:346
 msgid "Answer voted up"
 msgstr "被赞的回答"
 
-#: conf/words.py:368 conf/words.py:369
-msgid "upvoted answer"
-msgstr "投赞票的回答"
-
-#: conf/words.py:380 conf/words.py:391 conf/words.py:402 conf/words.py:413
-#: conf/words.py:424 conf/words.py:435 conf/words.py:446 conf/words.py:457
-#: conf/words.py:468 conf/words.py:479 conf/words.py:490
+#: conf/words.py:357 conf/words.py:368 conf/words.py:379 conf/words.py:390
+#: conf/words.py:401 conf/words.py:412 conf/words.py:423 conf/words.py:434
+#: conf/words.py:445 conf/words.py:456 conf/words.py:467
 msgid "Badge name"
 msgstr ""
 
-#: conf/words.py:499 conf/words.py:500
-msgid "upvoted answers"
-msgstr "投赞票的回答"
-
-#: conf/words.py:509 conf/words.py:510
+#: conf/words.py:476 conf/words.py:477
 msgid "Show only questions from"
 msgstr "希望看到的问题"
 
-#: conf/words.py:519 conf/words.py:520
+#: conf/words.py:486 conf/words.py:487
 msgid "Please ask your question here"
 msgstr "请在此提问"
 
-#: conf/words.py:530
-msgid "Sorry, this question has been deleted and is no longer accessible"
-msgstr "对不起,此问题已删除"
+#: conf/words.py:496 conf/words.py:497
+msgid "Please enter your question"
+msgstr "请输入问题"
 
-#: conf/words.py:533
-msgid "This question has been deleted"
-msgstr "该问题已经被删除"
-
-#: conf/words.py:552 conf/words.py:553
-msgid "delete your question"
-msgstr "删除问题"
-
-#: conf/words.py:562 conf/words.py:563
+#: conf/words.py:506 conf/words.py:507
 msgid "ask a question interesting to this community"
 msgstr "请，尝试着提一个有趣的问题。"
 
-#: conf/words.py:572 conf/words.py:573
-msgid "No questions here."
-msgstr "还没有提问"
-
-#: conf/words.py:582 conf/words.py:583
-msgid "Please follow some questions or follow some users."
-msgstr "请关注一些问题或用户。"
-
-#: conf/words.py:592 conf/words.py:593
-msgid "Please feel free to ask your question!"
-msgstr "请随意提问！"
-
-#: conf/words.py:602 conf/words.py:603
-msgid "swap with question"
-msgstr "与提问对调"
-
-#: conf/words.py:612 conf/words.py:613
+#: conf/words.py:516 conf/words.py:517
 msgid "repost as a question comment"
 msgstr "重新作为一个问题的评论"
 
-#: conf/words.py:622
+#: conf/words.py:526
 msgid "(only one answer per user is allowed)"
 msgstr "(每个用户只允许有一个答案)"
 
-#: conf/words.py:623
+#: conf/words.py:527
 msgid "Only one answer per user is allowed"
 msgstr "每个用户只允许回答一次"
 
-#: conf/words.py:632 conf/words.py:633
+#: conf/words.py:536 conf/words.py:537
 msgid "Accept the best answers for your questions"
 msgstr "请接受此问题的最佳答案:"
 
-#: conf/words.py:642 conf/words.py:643
+#: conf/words.py:546 conf/words.py:547
 msgid "author of the question"
 msgstr "提问者"
 
-#: conf/words.py:652 conf/words.py:653
+#: conf/words.py:556 conf/words.py:557
 msgid "accept or unaccept the best answer"
 msgstr "接受或不接受最佳答案"
 
-#: conf/words.py:662 conf/words.py:663
+#: conf/words.py:566 conf/words.py:567
 msgid "accept or unaccept your own answer"
 msgstr "接受或不接受你自己的答案"
 
-#: conf/words.py:672 conf/words.py:673
+#: conf/words.py:576 conf/words.py:577
 msgid "you already gave an answer"
 msgstr "你已经回答过"
 
-#: conf/words.py:682 conf/words.py:683
-msgid "gave an answer"
-msgstr "给个答案"
-
-#: conf/words.py:692 conf/words.py:693
+#: conf/words.py:586 conf/words.py:587
 msgid "answer own questions"
 msgstr "回答自己的问题"
 
-#: conf/words.py:702 conf/words.py:703
+#: conf/words.py:596 conf/words.py:597
 msgid "Answered own question"
 msgstr "回答自己的问题"
 
-#: conf/words.py:712 conf/words.py:713
+#: conf/words.py:606 conf/words.py:607
 msgid "repost as a comment under older answer"
 msgstr "转变成旧问题的评论"
 
-#: conf/words.py:722 conf/words.py:723
+#: conf/words.py:616 conf/words.py:617
 msgid "invite other to help answer this question"
 msgstr "邀请别人来帮忙回答这个问题"
 
-#: conf/words.py:732 conf/words.py:733
+#: conf/words.py:626 conf/words.py:627
 msgid "Related questions"
 msgstr "相似的问题"
 
-#: conf/words.py:742 conf/words.py:743
+#: conf/words.py:636 conf/words.py:637
 msgid "Question Tools"
 msgstr "提问工具"
 
-#: conf/words.py:752 conf/words.py:753
+#: conf/words.py:646 conf/words.py:647
 msgid "Phrase: this question is currently shared only with:"
 msgstr ""
 
-#: conf/words.py:762 conf/words.py:763
+#: conf/words.py:656 conf/words.py:657
 msgid "Be the first one to answer this question!"
 msgstr "成为第一个回答此问题的人!"
 
-#: conf/words.py:772 conf/words.py:773
-msgid "followed questions"
-msgstr "已关注问题"
-
-#: conf/words.py:782 conf/words.py:783
+#: conf/words.py:666 conf/words.py:667
 msgid "follow questions"
 msgstr "已关注问题"
 
-#: conf/words.py:784
+#: conf/words.py:668
 msgid "Indefinite form"
 msgstr ""
 
-#: conf/words.py:794
-msgid "Phrase: comments and answers to others questions"
-msgstr ""
+#: conf/words.py:677 conf/words.py:678
+msgid "followed questions"
+msgstr "已关注问题"
 
-#: conf/words.py:803 conf/words.py:804
+#: conf/words.py:687 conf/words.py:688
 msgid "You can post questions by emailing them at"
 msgstr "你可以通过电子邮件提交问题"
 
-#: conf/words.py:813 conf/words.py:814
+#: conf/words.py:697 conf/words.py:698
 msgid "List of questions"
 msgstr "问题列表"
 
-#: conf/words.py:823 conf/words.py:824
+#: conf/words.py:707 conf/words.py:708
 msgid "Community gives you awards for your questions, answers and votes"
 msgstr ""
 
-#: conf/words.py:833 conf/words.py:834
+#: conf/words.py:717 conf/words.py:718
 msgid "Close question"
 msgstr "关闭问题"
 
-#: conf/words.py:843 conf/words.py:844
+#: conf/words.py:727 conf/words.py:728
 msgid "close questions"
 msgstr "关闭问题"
 
-#: conf/words.py:853 conf/words.py:854
+#: conf/words.py:737 conf/words.py:738
 msgid "Edit question"
 msgstr "修改问题"
 
-#: conf/words.py:863 conf/words.py:864
+#: conf/words.py:747 conf/words.py:748
 msgid "Question - in one sentence"
 msgstr "问题--用一句话来描述"
 
-#: conf/words.py:873 conf/words.py:874
+#: conf/words.py:757 conf/words.py:758
 msgid "Retag question"
 msgstr "整理问题的标签"
 
-#: conf/words.py:883 conf/words.py:884
+#: conf/words.py:767 conf/words.py:768
 msgid "retag questions"
 msgstr "整理标签"
 
-#: conf/words.py:893 conf/words.py:894
+#: conf/words.py:777 conf/words.py:778
 msgid "Reopen question"
 msgstr "重新打开问题"
 
-#: conf/words.py:903 conf/words.py:904
-msgid "There are no unanswered questions here"
-msgstr "没有未回答的问题"
-
-#: conf/words.py:913 conf/words.py:914
+#: conf/words.py:787 conf/words.py:788
 msgid "this answer has been selected as correct"
 msgstr "该回答已被设为最佳答案"
 
-#: conf/words.py:923 conf/words.py:924
+#: conf/words.py:797 conf/words.py:798
 msgid "mark this answer as correct"
 msgstr "标记为正确答案"
 
-#: conf/words.py:933 conf/words.py:934
+#: conf/words.py:807 conf/words.py:808
 msgid "Login/Signup to Answer"
 msgstr "登录/注册后回答"
 
-#: conf/words.py:943 conf/words.py:944
+#: conf/words.py:817 conf/words.py:818
 msgid "Your Answer"
 msgstr "你的回答"
 
-#: conf/words.py:953 conf/words.py:954
+#: conf/words.py:827 conf/words.py:828
 msgid "Add Answer"
 msgstr "开始回答"
 
-#: conf/words.py:963 conf/words.py:964
+#: conf/words.py:837 conf/words.py:838
 msgid "give an answer interesting to this community"
 msgstr "请，尝试着给一个有趣的答案。"
 
-#: conf/words.py:973 conf/words.py:974
-msgid "give a substantial answer"
-msgstr "给出详实的答案"
-
-#: conf/words.py:983 conf/words.py:984
+#: conf/words.py:847 conf/words.py:848
 msgid "try to give an answer, rather than engage into a discussion"
 msgstr "建议您提的问题是可以被答复的，而不仅仅是可以讨论。"
 
-#: conf/words.py:993 conf/words.py:994
+#: conf/words.py:857 conf/words.py:858
 msgid "show only selected answers to enquirers"
 msgstr ""
 
-#: conf/words.py:1003 conf/words.py:1004
+#: conf/words.py:867 conf/words.py:868
 msgid "UNANSWERED"
 msgstr "未回答"
 
-#: conf/words.py:1013 conf/words.py:1014
+#: conf/words.py:877 conf/words.py:878
 msgid "Edit Answer"
 msgstr "编辑回答"
 
-#: conf/words.py:1023 conf/words.py:1024
+#: conf/words.py:887 conf/words.py:888
 msgid "Answered"
 msgstr "已回答"
 
@@ -3555,12 +3474,12 @@ msgstr "我的帖子"
 msgid "all posts"
 msgstr "所有帖子"
 
-#: const/__init__.py:55 templates/question/answer_tab_bar.html:12
+#: const/__init__.py:55 templates/question/answer_tab_bar.html:14
 msgid "newest"
 msgstr "最新问题"
 
 #: const/__init__.py:56 templates/users.html:54
-#: templates/question/answer_tab_bar.html:10
+#: templates/question/answer_tab_bar.html:12
 msgid "oldest"
 msgstr "按最早加入"
 
@@ -3580,7 +3499,7 @@ msgstr "热门问题"
 msgid "coldest"
 msgstr "最酷"
 
-#: const/__init__.py:61 templates/question/answer_tab_bar.html:14
+#: const/__init__.py:61 templates/question/answer_tab_bar.html:16
 msgid "most voted"
 msgstr "最有价值的问题"
 
@@ -3928,7 +3847,7 @@ msgstr "点击查看最相关问题"
 
 #: const/message_keys.py:17
 msgid "by relevance"
-msgstr "按相关性"
+msgstr ""
 
 #: const/message_keys.py:18
 msgid "click to see the oldest questions"
@@ -3936,7 +3855,7 @@ msgstr "最新问题"
 
 #: const/message_keys.py:19
 msgid "by date"
-msgstr "按日期"
+msgstr ""
 
 #: const/message_keys.py:20
 msgid "click to see the newest questions"
@@ -3948,7 +3867,7 @@ msgstr "最近被更新的问题"
 
 #: const/message_keys.py:22
 msgid "by activity"
-msgstr "按活跃程度"
+msgstr ""
 
 #: const/message_keys.py:23
 msgid "click to see the most recently updated questions"
@@ -3960,7 +3879,7 @@ msgstr "点击查看回答数最少的问题"
 
 #: const/message_keys.py:25
 msgid "by answers"
-msgstr "按回答数"
+msgstr ""
 
 #: const/message_keys.py:26
 msgid "click to see the most answered questions"
@@ -3972,7 +3891,7 @@ msgstr "投票次数最多的问题"
 
 #: const/message_keys.py:28
 msgid "by votes"
-msgstr "按票数"
+msgstr ""
 
 #: const/message_keys.py:29
 msgid "click to see most voted questions"
@@ -4323,29 +4242,29 @@ msgstr "答复："
 
 #: deps/livesettings/models.py:107 deps/livesettings/models.py:152
 msgid "Site"
-msgstr "网站"
+msgstr ""
 
 #: deps/livesettings/values.py:79
 msgid "Main"
-msgstr "主"
+msgstr ""
 
 #: deps/livesettings/values.py:140
 msgid "Base Settings"
-msgstr "基本设置"
+msgstr ""
 
 #: deps/livesettings/values.py:256 deps/livesettings/values.py:290
 msgid "Default value: "
-msgstr "默认值:"
+msgstr ""
 
 #: deps/livesettings/values.py:258
 #, python-format
 msgid "Default value: %s"
-msgstr "默认值: %s"
+msgstr ""
 
 #: deps/livesettings/values.py:752
 #, python-format
 msgid "Allowed image file types are %(types)s"
-msgstr "只允许上传'%(types)s'类型的文件！"
+msgstr ""
 
 #: importers/stackexchange/management/commands/load_stackexchange.py:150
 msgid "Congratulations, you are now an Administrator"
@@ -4401,14 +4320,14 @@ msgid ""
 "privileges of your user account</p>"
 msgstr ""
 
-#: mail/lamson_handlers.py:160 mail/messages.py:383
+#: mail/lamson_handlers.py:169 mail/messages.py:383
 msgid ""
 "You were replying to an email address             unknown to the system or "
 "you were replying from a different address from the one where you"
 "             received the notification."
 msgstr ""
 
-#: mail/lamson_handlers.py:257
+#: mail/lamson_handlers.py:266
 msgid "Please reply to the welcome email without editing it"
 msgstr ""
 
@@ -4440,154 +4359,154 @@ msgstr ""
 msgid "Sent to newly registered user when replying by email is disabled"
 msgstr ""
 
-#: mail/messages.py:397 mail/messages.py:417
+#: mail/messages.py:397 mail/messages.py:421
 msgid "At least one user is required generate a preview"
 msgstr ""
 
-#: mail/messages.py:414
+#: mail/messages.py:418
 msgid "Respondable \"welcome\" message"
 msgstr ""
 
-#: mail/messages.py:415
+#: mail/messages.py:419
 msgid "Sent to newly registered user when replying by email is enabled"
 msgstr ""
 
-#: mail/messages.py:449
+#: mail/messages.py:454
 msgid "Reply to the user response to the \"welcome\" message"
 msgstr ""
 
-#: mail/messages.py:450
+#: mail/messages.py:455
 msgid "Sent to newly registered user who replied to the welcome message"
 msgstr ""
 
-#: mail/messages.py:452 mail/messages.py:484 mail/messages.py:512
-#: mail/messages.py:562
+#: mail/messages.py:457 mail/messages.py:489 mail/messages.py:517
+#: mail/messages.py:567
 msgid "At least one user on the site is necessary to generate the preview"
 msgstr ""
 
-#: mail/messages.py:478
+#: mail/messages.py:483
 msgid "Request to reply to get a sample of email the signature"
 msgstr ""
 
-#: mail/messages.py:480
+#: mail/messages.py:485
 msgid ""
 "Sent when the system does not have a record of email signature for the user"
 msgstr ""
 
-#: mail/messages.py:506
+#: mail/messages.py:511
 msgid "Insufficient karma to post by email"
 msgstr ""
 
-#: mail/messages.py:508
+#: mail/messages.py:513
 msgid "Sent when user does not have enough karma upon posting by email"
 msgstr ""
 
-#: mail/messages.py:537
+#: mail/messages.py:542
 msgid "Post was rejected"
 msgstr ""
 
-#: mail/messages.py:539
+#: mail/messages.py:544
 msgid "Sent when post was rejected by a moderator with a reason given"
 msgstr ""
 
-#: mail/messages.py:557
+#: mail/messages.py:562
 msgid "Moderation queue has items"
 msgstr ""
 
-#: mail/messages.py:559
+#: mail/messages.py:564
 msgid "Sent to moderators when the moderation queue is not empty"
 msgstr ""
 
-#: mail/messages.py:583
+#: mail/messages.py:588
 msgid "Batch email alert"
-msgstr ""
+msgstr "批量邮件提醒"
 
-#: mail/messages.py:584
+#: mail/messages.py:589
 msgid "Contains daily of weekly batches of email updates"
 msgstr ""
 
-#: mail/messages.py:586
+#: mail/messages.py:591
 msgid ""
 "At least one user on the site and two questions are necessary to generate "
 "the preview"
 msgstr ""
 
-#: mail/messages.py:614 management/commands/send_email_alerts.py:484
+#: mail/messages.py:619 management/commands/send_email_alerts.py:484
 msgid "new question"
 msgstr "提问"
 
-#: mail/messages.py:643
+#: mail/messages.py:648
 msgid "Accept answers reminder"
-msgstr ""
+msgstr "接受回答提醒"
 
-#: mail/messages.py:644
+#: mail/messages.py:649
 msgid "Sent to author of questions without accepted answers"
 msgstr ""
 
-#: mail/messages.py:646 mail/messages.py:663 mail/messages.py:727
-#: mail/messages.py:752
+#: mail/messages.py:651 mail/messages.py:668 mail/messages.py:732
+#: mail/messages.py:757
 msgid "At least one user and one question are required to generate a preview"
 msgstr ""
 
-#: mail/messages.py:660
+#: mail/messages.py:665
 msgid "Unanswered questions reminder"
 msgstr ""
 
-#: mail/messages.py:661
+#: mail/messages.py:666
 msgid "Sent to users when there are unanswered questions"
 msgstr ""
 
-#: mail/messages.py:691
+#: mail/messages.py:696
 msgid "Email validation"
 msgstr ""
 
-#: mail/messages.py:692
+#: mail/messages.py:697
 msgid "Sent when user validates email or recovers account"
 msgstr ""
 
-#: mail/messages.py:711
+#: mail/messages.py:716
 msgid "Unsubscribe link"
 msgstr ""
 
-#: mail/messages.py:712
+#: mail/messages.py:717
 msgid "Sent when email key expired, but user is identified"
 msgstr ""
 
-#: mail/messages.py:724
+#: mail/messages.py:729
 msgid "Approved post notification"
 msgstr ""
 
-#: mail/messages.py:725 mail/messages.py:750
+#: mail/messages.py:730 mail/messages.py:755
 msgid "Sent when post revision is approved by the moderator"
 msgstr ""
 
-#: mail/messages.py:749
+#: mail/messages.py:754
 msgid "Respondable approved post notification"
 msgstr ""
 
-#: mail/messages.py:780
+#: mail/messages.py:785
 msgid "To add to your post EDIT ABOVE THIS LINE"
 msgstr "在本行前面编辑以补充你提交的内容"
 
-#: mail/messages.py:793
+#: mail/messages.py:798
 msgid "Private message notification"
 msgstr ""
 
-#: mail/messages.py:794
+#: mail/messages.py:799
 msgid "Sent when a private message is sent to the user"
 msgstr ""
 
-#: mail/messages.py:796
+#: mail/messages.py:801
 msgid ""
 "At least one user and one personal message are required to generate a "
 "preview"
 msgstr ""
 
-#: mail/messages.py:821
+#: mail/messages.py:826
 msgid "Feedback email"
 msgstr ""
 
-#: mail/messages.py:822
+#: mail/messages.py:827
 msgid "Sent when user submits feedback form"
 msgstr ""
 
@@ -4619,7 +4538,7 @@ msgstr ""
 msgid "Please <a href=\"%(url)s\">change your email</a>."
 msgstr ""
 
-#: models/__init__.py:751 models/__init__.py:1547 views/writers.py:211
+#: models/__init__.py:751 models/__init__.py:1539 views/writers.py:211
 msgid "Sorry, but you have only read access"
 msgstr "对不起，你只有访问的权限"
 
@@ -4747,60 +4666,59 @@ msgstr[0] ""
 msgid "At least %d karma point is required to delete own questions"
 msgstr ""
 
-#: models/__init__.py:1260
-#, python-format
+#: models/__init__.py:1255
 msgid ""
-"Sorry, cannot %(delete_your_question)s since it has an %(upvoted_answers)s "
-"posted by someone else"
+"Sorry, cannot delete this since it has an upvoted response posted by someone"
+" else"
 msgid_plural ""
-"Sorry, cannot %(delete_your_question)s since it has some %(upvoted_answers)s"
-" posted by other users"
+"Sorry, cannot delete this since it has some upvoted responses posted by "
+"someone else"
 msgstr[0] ""
 
-#: models/__init__.py:1282
+#: models/__init__.py:1274
 msgid "delete posts"
 msgstr "删除文章"
 
-#: models/__init__.py:1310
+#: models/__init__.py:1302
 msgid "reopen questions"
 msgstr "重新打开问题"
 
-#: models/__init__.py:1324
+#: models/__init__.py:1316
 msgid "You have flagged this post before and cannot do it more than once"
 msgstr ""
 
-#: models/__init__.py:1336
+#: models/__init__.py:1328
 msgid "flag posts as offensive"
-msgstr ""
+msgstr "将帖子标记为攻击性的"
 
-#: models/__init__.py:1348
+#: models/__init__.py:1340
 #, python-format
 msgid ""
 "Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
 "offensive flags per day."
 msgstr "对不起，你已经用完了每天的攻击性标记的最大数目%(max_flags_per_day)s "
 
-#: models/__init__.py:1370
+#: models/__init__.py:1362
 msgid "cannot remove non-existing flag"
 msgstr "无法移除不存在的标记"
 
-#: models/__init__.py:1379
+#: models/__init__.py:1371
 msgid "remove flags"
 msgstr "移除标签"
 
-#: models/__init__.py:1388
+#: models/__init__.py:1380
 msgid "you don't have the permission to remove all flags"
 msgstr "您无权移除所有标记"
 
-#: models/__init__.py:1389
+#: models/__init__.py:1381
 msgid "no flags for this entry"
 msgstr "本条目无标记"
 
-#: models/__init__.py:1428
+#: models/__init__.py:1420
 msgid "delete comments"
 msgstr "删除评论"
 
-#: models/__init__.py:1445
+#: models/__init__.py:1437
 #, python-format
 msgid ""
 "Sorry, comments (except the last one) are deletable only within %(minutes)s "
@@ -4810,119 +4728,119 @@ msgid_plural ""
 "minutes from posting"
 msgstr[0] ""
 
-#: models/__init__.py:1463
+#: models/__init__.py:1455
 msgid "sorry, but older votes cannot be revoked"
 msgstr "这个投票已经过时，不能撤销。"
 
-#: models/__init__.py:2373 utils/functions.py:136
+#: models/__init__.py:2365 utils/functions.py:136
 #, python-format
 msgid "on %(date)s"
 msgstr "在%(date)s"
 
-#: models/__init__.py:2375
+#: models/__init__.py:2367
 msgid "in two days"
 msgstr "两天内"
 
-#: models/__init__.py:2377
+#: models/__init__.py:2369
 msgid "tomorrow"
 msgstr "明天"
 
-#: models/__init__.py:2379
+#: models/__init__.py:2371
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
 msgstr[0] "%(hr)d小时前"
 
-#: models/__init__.py:2381
+#: models/__init__.py:2373
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
 msgstr[0] "%(min)d分钟前"
 
-#: models/__init__.py:2382
+#: models/__init__.py:2374
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
 msgstr[0] "%(days)d 天"
 
-#: models/__init__.py:2384
+#: models/__init__.py:2376
 #, python-format
 msgid ""
 "New users must wait %(days)s to %(answer_own_questions)s.  You can post an "
 "answer %(left)s"
 msgstr ""
 
-#: models/__init__.py:2670
+#: models/__init__.py:2662
 msgid "Registered User"
 msgstr "注册用户"
 
-#: models/__init__.py:2672
+#: models/__init__.py:2664
 msgid "Administrator"
 msgstr "管理员"
 
-#: models/__init__.py:2674
+#: models/__init__.py:2666
 msgid "Moderator"
 msgstr "版主"
 
-#: models/__init__.py:2676
+#: models/__init__.py:2668
 msgid "Suspended User"
 msgstr "暂停账户"
 
-#: models/__init__.py:2678
+#: models/__init__.py:2670
 msgid "Blocked User"
 msgstr "冻结账户"
 
-#: models/__init__.py:2680
+#: models/__init__.py:2672
 msgid "New User"
 msgstr "新用户"
 
-#: models/__init__.py:2906
+#: models/__init__.py:2898
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr "%(username)s 积分是 %(reputation)s"
 
-#: models/__init__.py:2919
+#: models/__init__.py:2911
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] "%(count)d 金牌"
 
-#: models/__init__.py:2926
+#: models/__init__.py:2918
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] "%(count)d 银牌"
 
-#: models/__init__.py:2933
+#: models/__init__.py:2925
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] "%(count)d 铜牌"
 
-#: models/__init__.py:2944
+#: models/__init__.py:2936
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr "%(item1)s 和 %(item2)s"
 
-#: models/__init__.py:2946
+#: models/__init__.py:2938
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr "%(user)s 有 %(badges)s"
 
-#: models/__init__.py:3094
+#: models/__init__.py:3086
 #, python-format
 msgid "At least %d karma point is required to post links"
 msgid_plural "At least %d karma points is required to post links"
 msgstr[0] "必须至少有%d声望值才能发表链接"
 
-#: models/__init__.py:3741
+#: models/__init__.py:3733
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr "恭喜，你获得一块'%(badge_name)s'徽章,查看<a\n href=\"%(user_profile)s\">你的资料</a>."
 
-#: models/__init__.py:4025 views/commands.py:494
+#: models/__init__.py:4029 views/commands.py:494
 msgid "Your tag subscription was saved, thanks!"
 msgstr "您的标签订阅已保存，非常感谢!"
 
@@ -5068,52 +4986,52 @@ msgstr "在一个标签里非常活跃的人"
 msgid "message"
 msgstr "信息"
 
-#: models/post.py:904 models/question.py:1562
+#: models/post.py:921 models/question.py:1562
 msgid "Sharing did not work, because group is unknown"
 msgstr ""
 
-#: models/post.py:925
+#: models/post.py:942
 msgid "merged revision"
 msgstr ""
 
-#: models/post.py:1125 templates/question/answer_controls.html:60
+#: models/post.py:1142 templates/question/answer_controls.html:57
 #: templatetags/extra_filters_jinja.py:147
 msgid "more"
 msgstr "更多"
 
-#: models/post.py:1800
+#: models/post.py:1820
 msgid "Sorry, this content is not available"
 msgstr "对不起，此内容不可用"
 
-#: models/post.py:1802 models/post.py:1815 models/post.py:1818
+#: models/post.py:1822 models/post.py:1835 models/post.py:1838
 msgid "Sorry, this content is no longer available"
 msgstr "对不起，此内容不再可用"
 
-#: models/post.py:1831 models/post.py:1834
+#: models/post.py:1851 models/post.py:1854
 msgid "Sorry, this comment is no longer available"
 msgstr "对不起，此评论不再可用"
 
-#: models/post.py:1853
+#: models/post.py:1873
 msgid "This post is temporarily not available"
 msgstr "此帖暂时不可用"
 
-#: models/post.py:2295
+#: models/post.py:2304
 msgid "Suggested edit"
 msgstr ""
 
-#: models/post.py:2422
+#: models/post.py:2431
 #, python-format
 msgid ""
 "Thank you for your post to %(site)s. It will be published after the "
 "moderators review."
 msgstr ""
 
-#: models/post.py:2426
+#: models/post.py:2435
 #, python-format
 msgid "your post to %(site)s"
 msgstr ""
 
-#: models/post.py:2433
+#: models/post.py:2442
 msgid ""
 "Your post was placed on the moderation queue and will be published after the"
 " moderator approval."
@@ -5151,59 +5069,59 @@ msgstr "通过电子邮件编辑"
 msgid "<em>Changed by moderator. Reason:</em> %(reason)s"
 msgstr "<em>被版主修改. 原因:</em> %(reason)s"
 
-#: models/user.py:347
+#: models/user.py:335
 msgid "Entire forum"
 msgstr "忽略的"
 
-#: models/user.py:348
+#: models/user.py:336
 msgid "Questions that I asked"
 msgstr "我问的问题"
 
-#: models/user.py:349
+#: models/user.py:337
 msgid "Questions that I answered"
 msgstr "我答的问题"
 
-#: models/user.py:350
+#: models/user.py:338
 msgid "Individually selected questions"
 msgstr "我选择的问题"
 
-#: models/user.py:351
+#: models/user.py:339
 msgid "Mentions and comment responses"
 msgstr "提醒及留言回复"
 
-#: models/user.py:354
+#: models/user.py:342
 msgid "Instantly"
 msgstr "立即"
 
-#: models/user.py:355
+#: models/user.py:343
 msgid "Daily"
 msgstr "每日"
 
-#: models/user.py:356
+#: models/user.py:344
 msgid "Weekly"
 msgstr "每周"
 
-#: models/user.py:357
+#: models/user.py:345
 msgid "No email"
 msgstr "没有邮件"
 
-#: models/user.py:615
+#: models/user.py:603
 msgid "Can join when they want"
 msgstr ""
 
-#: models/user.py:616
+#: models/user.py:604
 msgid "Users ask permission"
 msgstr ""
 
-#: models/user.py:617
+#: models/user.py:605
 msgid "Moderator adds users"
 msgstr ""
 
-#: models/user.py:667
+#: models/user.py:655
 msgid "Please give a list of valid email addresses."
 msgstr ""
 
-#: models/user.py:678
+#: models/user.py:666
 msgid "Please give a list of valid email domain names."
 msgstr ""
 
@@ -5211,11 +5129,11 @@ msgstr ""
 msgid "css for the widget"
 msgstr "小工具的CSS"
 
-#: setup_templates/settings.py:245
+#: setup_templates/settings.py:208
 msgid "account/"
 msgstr "账户/"
 
-#: setup_templates/settings.py:245
+#: setup_templates/settings.py:208
 msgid "signin/"
 msgstr "登录/"
 
@@ -5291,21 +5209,21 @@ msgid "Cancel"
 msgstr ""
 
 #: templates/answer_edit.html:85 templates/answer_edit.html.py:88
-#: templates/ask.html:60 templates/ask.html.py:63
+#: templates/ask.html:66 templates/ask.html.py:69
 #: templates/question_edit.html:103 templates/question_edit.html.py:106
-#: templates/editors/rich_text.html:18 templates/question/javascript.html:129
-#: templates/question/javascript.html:132
+#: templates/editors/rich_text.html:18 templates/question/javascript.html:132
+#: templates/question/javascript.html:135
 msgid "hide preview"
 msgstr ""
 
-#: templates/answer_edit.html:88 templates/ask.html:63
-#: templates/question_edit.html:106 templates/question/javascript.html:132
+#: templates/answer_edit.html:88 templates/ask.html:69
+#: templates/question_edit.html:106 templates/question/javascript.html:135
 msgid "show preview"
 msgstr ""
 
 #: templates/badge.html:5 templates/badge.html.py:9
 #: templates/user_profile/user_recent.html:18
-#: templates/user_profile/user_stats.html:77
+#: templates/user_profile/user_stats.html:79
 #, python-format
 msgid "%(name)s"
 msgstr ""
@@ -5320,7 +5238,7 @@ msgid "Badge \"%(name)s\""
 msgstr ""
 
 #: templates/badge.html:9 templates/user_profile/user_recent.html:16
-#: templates/user_profile/user_stats.html:75
+#: templates/user_profile/user_stats.html:77
 #, python-format
 msgid "%(description)s"
 msgstr ""
@@ -5361,11 +5279,6 @@ msgstr ""
 
 #: templates/badges.html:48 templates/badges.html.py:52
 msgid "bronze badge: often given as a special honor"
-msgstr ""
-
-#: templates/base.html:16
-#, python-format
-msgid "RSS feed from %(site_title)s"
 msgstr ""
 
 #: templates/close.html:12
@@ -5813,10 +5726,6 @@ msgstr ""
 msgid "anonymous user"
 msgstr ""
 
-#: templates/macros.html:80
-msgid "posted"
-msgstr ""
-
 #: templates/macros.html:86
 msgid "this post is marked as community wiki"
 msgstr ""
@@ -5856,7 +5765,7 @@ msgid "Ask to join"
 msgstr ""
 
 #: templates/macros.html:337 templates/macros.html.py:348
-#: templates/question.html:420
+#: templates/question.html:419
 msgid "add a comment"
 msgstr ""
 
@@ -5878,7 +5787,7 @@ msgid "This post is awaiting moderation"
 msgstr ""
 
 #: templates/macros.html:395 templates/revisions.html:38
-#: templates/revisions.html.py:41 templates/question/answer_controls.html:5
+#: templates/revisions.html.py:41 templates/question/answer_controls.html:2
 #: templates/question/question_card.html:22
 #: templates/question/question_controls.html:1
 #: templates/user_profile/user_info.html:171
@@ -5950,6 +5859,11 @@ msgstr ""
 #: templates/macros.html:736 templates/macros.html.py:737
 #, python-format
 msgid "%(seen)s flagged posts"
+msgstr ""
+
+#: templates/macros.html:753
+#, python-format
+msgid "%(action_performed)s %(when)s"
 msgstr ""
 
 #: templates/main_page.html:15
@@ -6056,30 +5970,30 @@ msgstr ""
 
 #: templates/users.html:48
 msgid "recent"
-msgstr ""
+msgstr "最近"
 
 #: templates/users.html:60
 msgid "by username"
-msgstr ""
+msgstr "根据用户名"
 
 #: templates/users.html:66
 #, python-format
 msgid "users matching query %(search_query)s:"
-msgstr ""
+msgstr "符合如下查询的用户：%(search_query)s"
 
 #: templates/users.html:69
 msgid "No users found."
-msgstr ""
+msgstr "用户未找到"
 
 #: templates/authopenid/account_recovery_form.html:2
 #: templates/authopenid/signin.html:181
 #: templates/authopenid/widget_signin.html:169
 msgid "Enter your email"
-msgstr ""
+msgstr "输入您的email"
 
 #: templates/authopenid/account_recovery_form.html:5
 msgid "Send a new recovery key"
-msgstr ""
+msgstr "发送新的恢复密钥"
 
 #: templates/authopenid/account_recovery_form.html:7
 #: templates/authopenid/complete.html:95
@@ -6088,31 +6002,31 @@ msgstr ""
 #: templates/authopenid/signin.html:182
 #: templates/authopenid/widget_signin.html:170
 msgid "Recover account"
-msgstr ""
+msgstr "恢复账户"
 
 #: templates/authopenid/authopenid_macros.html:60
 msgid "Please enter your <span>user name</span>, then sign in"
-msgstr ""
+msgstr "请输入您的<span>用户名</span>，然后登录"
 
 #: templates/authopenid/authopenid_macros.html:61
 #: templates/authopenid/widget_signin.html:72
 msgid "(or select another login method above)"
-msgstr ""
+msgstr "（或者在上方选择另外的登录方式）"
 
 #: templates/authopenid/authopenid_macros.html:63
 #: templates/authopenid/signin.html:98
 #: templates/authopenid/widget_signin.html:88
 msgid "Sign in"
-msgstr ""
+msgstr "登录"
 
 #: templates/authopenid/complete.html:21 templates/authopenid/complete.html:30
 msgid "Complete registration"
-msgstr ""
+msgstr "完整注册"
 
 #: templates/authopenid/complete.html:27
 #: templates/authopenid/signup_with_password.html:16
 msgid "New user registrations are disabled"
-msgstr ""
+msgstr "新用户注册功能已禁用"
 
 #: templates/authopenid/complete.html:60
 #: templates/authopenid/signup_with_password.html:30 utils/forms.py:95
@@ -6123,29 +6037,29 @@ msgstr "昵称"
 #: templates/authopenid/signup_with_password.html:40
 #: templates/widgets/proxy_author_fields.html:18
 msgid "Email address"
-msgstr ""
+msgstr "Email地址"
 
 #: templates/authopenid/complete.html:88
 #: templates/authopenid/signup_with_password.html:5
 #: templates/authopenid/signup_with_password.html:68
 msgid "Signup"
-msgstr ""
+msgstr "注册"
 
 #: templates/authopenid/complete.html:100
 msgid "Already have an account?"
-msgstr ""
+msgstr "已经有账户了？"
 
 #: templates/authopenid/complete.html:101
 msgid "Recover it by email."
-msgstr ""
+msgstr "通过email找回"
 
 #: templates/authopenid/complete.html:104
 msgid "Prefer to create a new account?"
-msgstr ""
+msgstr "想要创建一个新账户？"
 
 #: templates/authopenid/complete.html:105
 msgid "Return to registration."
-msgstr ""
+msgstr "返回注册界面。"
 
 #: templates/authopenid/confirm_email.txt:1
 msgid "Thank you for registering at our Q&A forum!"
@@ -6172,26 +6086,26 @@ msgstr "请登录："
 msgid ""
 "Sincerely,\n"
 "Q&A Forum Administrator"
-msgstr ""
+msgstr "此致\nQ&A 论坛管理团队"
 
 #: templates/authopenid/logout.html:3
 msgid "Logout"
-msgstr ""
+msgstr "退出登录"
 
 #: templates/authopenid/logout.html:5
 msgid "You have successfully logged out"
-msgstr ""
+msgstr "您已经成功退出登录"
 
 #: templates/authopenid/logout.html:7
 msgid ""
 "However, you still may be logged in to your OpenID provider. Please logout "
 "of your provider if you wish to do so."
-msgstr ""
+msgstr "但是，您的OpenID账户可能仍然处于登录状态。如果愿意，请退出您的OpenID账户登录。"
 
 #: templates/authopenid/signin.html:5
 #: templates/authopenid/widget_signin.html:5
 msgid "User login"
-msgstr ""
+msgstr "用户登录"
 
 #: templates/authopenid/signin.html:17
 #: templates/authopenid/widget_signin.html:22
@@ -6296,7 +6210,7 @@ msgstr ""
 
 #: templates/authopenid/signin.html:163
 #: templates/authopenid/widget_signin.html:151
-#: templates/question/answer_controls.html:33
+#: templates/question/answer_controls.html:30
 #: templates/question/question_controls.html:34
 #: templates/user_inbox/responses.html:10
 msgid "delete"
@@ -6323,30 +6237,30 @@ msgstr ""
 
 #: templates/authopenid/signup_with_password.html:21
 msgid "Create login name and password"
-msgstr ""
+msgstr "创建登录用户名和密码"
 
 #: templates/authopenid/signup_with_password.html:60 utils/forms.py:293
 msgid "Password retyped"
-msgstr ""
+msgstr "重新键入的密码"
 
 #: templates/authopenid/tos_field.html:4
 msgid "Terms of service:"
-msgstr ""
+msgstr "服务条款："
 
 #: templates/authopenid/verify_email.html:2
 #: templates/authopenid/verify_email.html:4
 msgid "Confirm email address"
-msgstr ""
+msgstr "确认email地址"
 
 #: templates/authopenid/verify_email.html:6
 msgid ""
 "Validation email sent. Please find it and follow the enclosed link.<br/>\n"
 "        If the link doesn't work - enter the code below:"
-msgstr ""
+msgstr "已经给您发送了一封激活邮件。请查收邮件，并点击邮件中的激活链接。<br/>\n如果激活链接没有反应，请在下方输入激活代码："
 
 #: templates/authopenid/verify_email.html:11
 msgid "Confirm email"
-msgstr ""
+msgstr "确认email地址"
 
 #: templates/authopenid/widget_signin.html:19
 msgid ""
@@ -6445,7 +6359,7 @@ msgstr ""
 
 #: templates/avatar/show_list.html:52
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #: templates/avatar/show_list.html:56
 msgid "Primary avatar"
@@ -6499,12 +6413,17 @@ msgstr ""
 msgid "List of emails sent by Askbot"
 msgstr ""
 
-#: templates/email/macros.html:34 templates/email/macros.html.py:65
+#: templates/email/macros.html:34 templates/email/macros.html.py:66
 #, python-format
-msgid "In reply to %(author)s's <a href=\"%(post_url)s\">%(post_type)s</a>"
+msgid "In reply to %(author)s's %(post_type)s"
 msgstr ""
 
-#: templates/email/macros.html:51
+#: templates/email/macros.html:37 templates/email/macros.html.py:68
+#, python-format
+msgid "%(author)s %(performed_action)s"
+msgstr ""
+
+#: templates/email/macros.html:52
 msgid "Tags:"
 msgstr ""
 
@@ -6947,11 +6866,14 @@ msgid "Uncollapse all"
 msgstr ""
 
 #: templates/main_page/headline.html:6
+#: templates/question/answer_tab_bar.html:5
+#: templates/user_profile/user_stats.html:15
+#: templates/user_profile/user_stats.html:24
 #, python-format
-msgid "with %(author_name)s's contributions"
+msgid "<span class=\"count\">%(item_count)s</span> %(pluralized_item_term)s"
 msgstr ""
 
-#: templates/main_page/headline.html:11
+#: templates/main_page/headline.html:10
 msgid "Tagged"
 msgstr ""
 
@@ -6964,8 +6886,8 @@ msgid "reset author"
 msgstr ""
 
 #: templates/main_page/headline.html:27 templates/main_page/headline.html:30
-#: templates/main_page/nothing_found.html:18
-#: templates/main_page/nothing_found.html:21
+#: templates/main_page/nothing_found.html:12
+#: templates/main_page/nothing_found.html:15
 msgid " or "
 msgstr ""
 
@@ -6989,20 +6911,24 @@ msgstr ""
 msgid "add tags and a query to focus your search"
 msgstr ""
 
-#: templates/main_page/nothing_found.html:13
+#: templates/main_page/nothing_found.html:3
+msgid "Oops, looks like there is nothing here yet!"
+msgstr ""
+
+#: templates/main_page/nothing_found.html:7
 msgid "You can expand your search by "
 msgstr ""
 
-#: templates/main_page/nothing_found.html:16
+#: templates/main_page/nothing_found.html:10
 msgid "resetting author"
 msgstr ""
 
-#: templates/main_page/nothing_found.html:19
+#: templates/main_page/nothing_found.html:13
 msgid "resetting tags"
 msgstr ""
 
-#: templates/main_page/nothing_found.html:22
-#: templates/main_page/nothing_found.html:25
+#: templates/main_page/nothing_found.html:16
+#: templates/main_page/nothing_found.html:19
 msgid "starting over"
 msgstr ""
 
@@ -7120,17 +7046,17 @@ msgstr ""
 msgid "This response is published"
 msgstr ""
 
-#: templates/question/answer_controls.html:11
+#: templates/question/answer_controls.html:8
 msgid "remove offensive flag"
 msgstr ""
 
-#: templates/question/answer_controls.html:13
+#: templates/question/answer_controls.html:10
 #: templates/question/question_controls.html:9
 msgid "remove flag"
 msgstr ""
 
-#: templates/question/answer_controls.html:18
-#: templates/question/answer_controls.html:26
+#: templates/question/answer_controls.html:15
+#: templates/question/answer_controls.html:23
 #: templates/question/question_controls.html:7
 #: templates/question/question_controls.html:13
 #: templates/question/question_controls.html:20
@@ -7138,36 +7064,36 @@ msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr ""
 
-#: templates/question/answer_controls.html:20
-#: templates/question/answer_controls.html:28
+#: templates/question/answer_controls.html:17
+#: templates/question/answer_controls.html:25
 #: templates/question/question_controls.html:15
 #: templates/question/question_controls.html:22
 msgid "flag offensive"
 msgstr ""
 
-#: templates/question/answer_controls.html:33
+#: templates/question/answer_controls.html:30
 #: templates/question/question_controls.html:34
 msgid "undelete"
 msgstr ""
 
-#: templates/question/answer_controls.html:44
+#: templates/question/answer_controls.html:41
 msgid "unpublish"
 msgstr ""
 
-#: templates/question/answer_controls.html:49
+#: templates/question/answer_controls.html:46
 msgid "publish"
 msgstr ""
 
-#: templates/question/answer_controls.html:56
+#: templates/question/answer_controls.html:53
 msgid "permanent link"
 msgstr ""
 
-#: templates/question/answer_controls.html:57
+#: templates/question/answer_controls.html:54
 #: templates/widgets/markdown_help.html:20
 msgid "link"
 msgstr ""
 
-#: templates/question/answer_tab_bar.html:7
+#: templates/question/answer_tab_bar.html:9
 msgid "Sort by »"
 msgstr ""
 
@@ -7270,7 +7196,7 @@ msgstr ""
 msgid "You"
 msgstr ""
 
-#: templates/question/sidebar.html:96 templates/question/sidebar.html:116
+#: templates/question/sidebar.html:96 templates/question/sidebar.html.py:116
 msgid "and"
 msgstr ""
 
@@ -7310,11 +7236,8 @@ msgid "Last updated"
 msgstr "最后更新"
 
 #: templates/tags/form_bulk_tag_subscription.html:4
-msgid "Tag subscriptions"
-msgstr ""
-
 #: templates/tags/form_bulk_tag_subscription.html:6
-msgid "Tag Subscriptions"
+msgid "Tag subscriptions"
 msgstr ""
 
 #: templates/tags/header.html:7
@@ -7339,16 +7262,16 @@ msgid "manage subscriptions"
 msgstr "管理订阅"
 
 #: templates/tags/list_bulk_tag_subscription.html:4
-msgid "Manage Tag subscriptions"
-msgstr "管理标签订阅"
+msgid "Manage tag subscriptions"
+msgstr ""
 
 #: templates/tags/list_bulk_tag_subscription.html:7
-msgid "Manage Tag subscription"
-msgstr "管理标签订阅"
+msgid "Manage tag subscription"
+msgstr ""
 
 #: templates/tags/list_bulk_tag_subscription.html:8
-msgid "Create New"
-msgstr "新建"
+msgid "Create new"
+msgstr ""
 
 #: templates/tags/list_bulk_tag_subscription.html:11
 msgid "Date"
@@ -7372,11 +7295,6 @@ msgid "forum responses (<span class=\"response-count\">%(re_count)s</span>)"
 msgstr ""
 
 #: templates/user_inbox/base.html:30
-#, python-format
-msgid "flagged items (<span class=\"mod-memo-count\">%(flags_count)s</span>)"
-msgstr ""
-
-#: templates/user_inbox/base.html:37
 msgid "group join requests"
 msgstr ""
 
@@ -7671,12 +7589,12 @@ msgstr ""
 
 #: templates/user_profile/user_moderate.html:43
 msgid "Add"
-msgstr ""
+msgstr "添加"
 
 #: templates/user_profile/user_moderate.html:47
 #, python-format
 msgid "Send message to %(username)s"
-msgstr ""
+msgstr "发信息给 %(username)s"
 
 #: templates/user_profile/user_moderate.html:48
 msgid ""
@@ -7686,11 +7604,11 @@ msgstr ""
 
 #: templates/user_profile/user_moderate.html:50
 msgid "Message sent"
-msgstr ""
+msgstr "消息已发送"
 
 #: templates/user_profile/user_moderate.html:68
 msgid "Send message"
-msgstr ""
+msgstr "已发送的消息"
 
 #: templates/user_profile/user_moderate.html:78
 msgid ""
@@ -7769,27 +7687,27 @@ msgstr ""
 #: templates/user_profile/user_stats.html:6
 #: templates/user_profile/user_tabs.html:6
 msgid "overview"
-msgstr ""
+msgstr "概览"
 
-#: templates/user_profile/user_stats.html:28
+#: templates/user_profile/user_stats.html:30
 #, python-format
 msgid "<span class=\"count\">%(cnt)s</span> Vote"
 msgid_plural "<span class=\"count\">%(cnt)s</span> Votes "
 msgstr[0] ""
 
-#: templates/user_profile/user_stats.html:36
+#: templates/user_profile/user_stats.html:38
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Tag"
 msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
 msgstr[0] ""
 
-#: templates/user_profile/user_stats.html:69
+#: templates/user_profile/user_stats.html:71
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Badge"
 msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
 msgstr[0] ""
 
-#: templates/user_profile/user_stats.html:88
+#: templates/user_profile/user_stats.html:90
 msgid "Answer to:"
 msgstr ""
 
@@ -7812,7 +7730,7 @@ msgstr ""
 msgid "be clear and concise"
 msgstr ""
 
-#: templates/widgets/ask_form.html:56
+#: templates/widgets/ask_form.html:77
 msgid "Login/Signup to Post"
 msgstr ""
 
@@ -7942,6 +7860,11 @@ msgstr ""
 msgid "text"
 msgstr ""
 
+#: templates/widgets/markdown_help.html:20
+#: templates/widgets/markdown_help.html:24
+msgid "title"
+msgstr "标题"
+
 #: templates/widgets/markdown_help.html:24
 msgid "image"
 msgstr ""
@@ -8021,7 +7944,7 @@ msgid "FOLLOWED"
 msgstr ""
 
 #: templates/widgets/search_bar.html:20
-msgid "search or ask your question"
+msgid "Search or ask your question"
 msgstr ""
 
 #: templates/widgets/tag_selector.html:4
@@ -8131,16 +8054,16 @@ msgstr "对不起，系统错误"
 msgid "Please login to post"
 msgstr "请登录后发帖"
 
-#: utils/decorators.py:201 views/commands.py:641 views/commands.py:675
-#: views/users.py:672 views/writers.py:342 views/writers.py:806
+#: utils/decorators.py:206 views/commands.py:641 views/commands.py:675
+#: views/users.py:673 views/writers.py:342 views/writers.py:809
 msgid "Spam was detected on your post, sorry for if this is a mistake"
 msgstr "您的帖子中侦测到垃圾内容，如果是误报，我们非常抱歉"
 
-#: utils/decorators.py:225
+#: utils/decorators.py:230
 msgid "This function is limited to moderators and administrators"
 msgstr "该功能仅限于版主和管理员"
 
-#: utils/decorators.py:238
+#: utils/decorators.py:243
 msgid "This function is limited to administrators"
 msgstr ""
 
@@ -8234,7 +8157,7 @@ msgstr ""
 
 #: views/avatar_views.py:183
 msgid "Please choose file to upload"
-msgstr ""
+msgstr "请选择要上传的文件"
 
 #: views/commands.py:65
 msgid "Sorry, anonymous users cannot vote"
@@ -8255,11 +8178,11 @@ msgstr "对不起，这里出了些问题"
 
 #: views/commands.py:160
 msgid "Sorry, but anonymous users cannot perform this action."
-msgstr ""
+msgstr "对不起，匿名用户不能执行该操作。"
 
 #: views/commands.py:167 views/commands.py:178
 msgid "Request mode is not supported. Please try again."
-msgstr ""
+msgstr "当前不支持请求模式。请重试。"
 
 #: views/commands.py:220 views/commands.py:617 views/commands.py:633
 #: views/commands.py:682
@@ -8287,39 +8210,39 @@ msgstr "创建"
 
 #: views/commands.py:634 views/commands.py:683
 msgid "make edits"
-msgstr ""
+msgstr "编辑"
 
-#: views/commands.py:846
+#: views/commands.py:827
 msgid "Please sign in to vote"
 msgstr "请登录后投票"
 
-#: views/commands.py:867
+#: views/commands.py:848
 msgid "Please sign in to delete/restore posts"
 msgstr "请登录后的删除/恢复帖子"
 
-#: views/commands.py:929
+#: views/commands.py:910
 #, python-format
 msgid "Group %(name)s does not exist"
 msgstr "不存在 %(name)s 小组"
 
-#: views/commands.py:1314 views/commands.py:1347
+#: views/commands.py:1295 views/commands.py:1328
 msgid "Sorry, looks like sharing request was invalid"
 msgstr "对不起，分享请求无效"
 
-#: views/commands.py:1370
+#: views/commands.py:1351
 #, python-format
 msgid "%(user)s, welcome to group %(group)s!"
 msgstr "%(user)s，欢迎加入 %(group)s 小组"
 
-#: views/commands.py:1427 views/commands.py:1457
+#: views/commands.py:1408 views/commands.py:1438
 msgid "Sorry, only thread moderators can use this function"
 msgstr "对不起，只有版主才能使用这个功能"
 
-#: views/commands.py:1442
+#: views/commands.py:1423
 msgid "The answer is now unpublished"
 msgstr "已经取消答案发布"
 
-#: views/commands.py:1446
+#: views/commands.py:1427
 msgid "The answer is now published"
 msgstr "已经发布答案"
 
@@ -8340,7 +8263,7 @@ msgstr "要发送反馈，请先登录或注册"
 
 #: views/meta.py:148
 msgid "unknown"
-msgstr ""
+msgstr "未知"
 
 #: views/meta.py:165
 msgid "Thanks for the feedback!"
@@ -8374,7 +8297,7 @@ msgid "%d user approved"
 msgid_plural "%d users approved"
 msgstr[0] "有 %d 个用户经过验证"
 
-#: views/moderation.py:293 views/moderation.py:369 views/users.py:277
+#: views/moderation.py:293 views/moderation.py:369 views/users.py:278
 #, python-format
 msgid "%d post deleted"
 msgid_plural "%d posts deleted"
@@ -8403,7 +8326,7 @@ msgstr[0] "%(q_num)s 个问题"
 msgid ""
 "Please go to Settings -> %s and set the base url for your site to function "
 "properly"
-msgstr ""
+msgstr "要想网站正常工作，请到“设置 -> %s”中设定根url"
 
 #: views/readers.py:478
 msgid ""
@@ -8411,63 +8334,63 @@ msgid ""
 "accessible"
 msgstr "对不起，你找的这个评论已经被删除"
 
-#: views/users.py:259
+#: views/users.py:260
 msgid "User status changed"
 msgstr "用户状态已修改"
 
-#: views/users.py:335
+#: views/users.py:336
 msgid "moderate user"
 msgstr "管理用户"
 
-#: views/users.py:600
+#: views/users.py:601
 msgid "user profile overview"
 msgstr "用户资料概览"
 
-#: views/users.py:770
+#: views/users.py:789
 msgid "profile - recent activity"
 msgstr "用户资料 - 最近活动"
 
-#: views/users.py:801
+#: views/users.py:820
 msgid "profile - moderation"
 msgstr "用户资料  - 管理"
 
-#: views/users.py:850
+#: views/users.py:871
 msgid "profile - messages"
 msgstr "用户资料 - 消息"
 
-#: views/users.py:938
+#: views/users.py:966
 msgid "profile - responses"
 msgstr "用户资料 - 回应"
 
-#: views/users.py:952
+#: views/users.py:979
 msgid "profile - network"
 msgstr "用户资料 - 社交网络"
 
-#: views/users.py:981
+#: views/users.py:1008
 msgid "profile - votes"
 msgstr "用户资料 - 投票"
 
-#: views/users.py:1022
+#: views/users.py:1049
 msgid "Profile - User's Karma"
 msgstr "用户资料 - 积分"
 
-#: views/users.py:1059
+#: views/users.py:1086
 msgid "profile - favorites"
 msgstr "用户资料 - 收藏"
 
-#: views/users.py:1190 views/users.py:1194
+#: views/users.py:1217 views/users.py:1221
 msgid "changes saved"
 msgstr "修改已保存"
 
-#: views/users.py:1200
+#: views/users.py:1227
 msgid "email updates canceled"
 msgstr "邮件更新取消"
 
-#: views/users.py:1218
+#: views/users.py:1245
 msgid "profile - email subscriptions"
 msgstr "用户配置 - 邮件订阅"
 
-#: views/users.py:1241
+#: views/users.py:1268
 #, python-format
 msgid "profile - %(section)s"
 msgstr "用户配置 - %(section)s"
@@ -8495,55 +8418,55 @@ msgstr "在文件上传过程中产生了错误，请联系管理员，谢谢^_^
 msgid "Please log in to make posts"
 msgstr "请登录后发帖"
 
-#: views/writers.py:748
+#: views/writers.py:751
 msgid "This content is forbidden"
 msgstr "禁止此内容"
 
-#: views/writers.py:758
+#: views/writers.py:761
 msgid "Post not found"
 msgstr "未找到帖子"
 
-#: views/writers.py:766
+#: views/writers.py:769
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "对不起，你已经退出，无法发表评论，请<a href=\"%(sign_in_url)s\">登录</a>."
 
-#: views/writers.py:795
+#: views/writers.py:798
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr "匿名用户不能编辑评论"
 
-#: views/writers.py:859
+#: views/writers.py:862
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "对不起，你已经退出，不恩那个在发表评论，请<a href=\"%(sign_in_url)s\">登录</a>."
 
-#: views/writers.py:889
+#: views/writers.py:892
 msgid "sorry, we seem to have some technical difficulties"
 msgstr "对不起，好像有一些技术上的错误。"
 
-#: views/writers.py:902
+#: views/writers.py:905
 #, python-format
 msgid ""
 "Sorry, only logged in users can convert comments to answers. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "对不起，只有登录后才能将评论转换为答案，请先<a href=\"%(sign_in_url)s\">登录</a>。"
 
-#: views/writers.py:933
+#: views/writers.py:936
 #, python-format
 msgid ""
 "Sorry, only logged in users can convert answers to comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "对不起，只有登录后才能将答案转换为评论，请先<a href=\"%(sign_in_url)s\">登录</a>。"
 
-#: views/writers.py:958
+#: views/writers.py:961
 msgid "Error - could not find the destination post"
 msgstr "错误 - 无法找到目标帖"
 
-#: views/writers.py:982
+#: views/writers.py:985
 #, python-format
 msgid ""
 "Cannot convert, because text has more characters than %(max_chars)s - "

@@ -665,7 +665,7 @@ settings.register(
         'WORDS_FOLLOW_QUESTIONS',
         default=_('follow questions'),
         description=_('follow questions'),
-        help_text=_('Indefinite form'),
+        help_text=_('Verb in the infinitive form'),
         localized=True
     )
 )

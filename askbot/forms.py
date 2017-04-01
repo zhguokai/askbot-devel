@@ -861,7 +861,7 @@ class FeedbackForm(forms.Form):
             need_email = not bool(self.cleaned_data.get('no_email', False))
             email = self.cleaned_data.get('email', '').strip()
             if need_email and email == '':
-                msg = _("""Either provide email address or mark "I don' want to give my email" below""")
+                msg = _("""Either provide email address or mark "I don't want to give my email" below""")
                 self._errors['email'] = self.error_class([msg])
 
         return self.cleaned_data
