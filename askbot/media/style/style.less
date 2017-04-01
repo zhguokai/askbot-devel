@@ -538,6 +538,17 @@ body.user-messages {
     }
 }
 
+.dropdown-toggle {
+    position: relative;
+}
+
+span.dropdown:hover,
+.dropdown-toggle:hover {
+        ul.dropdown-menu {
+            display: block;    
+        }
+}
+
 #metaNav {/* Top Navigation bar containing links for tags, people and badges, check widgets/header.html */
     float: right;/* for #header.with-logo it is modified */
     margin-right: 7px;
@@ -607,10 +618,6 @@ body.user-messages {
 
     a.group-name:hover{
         background-color: transparent;
-    }
-
-    span.dropdown:hover ul.dropdown-menu {
-        display: block;    
     }
 
     div.dropdown-container:hover ul.dropdown-menu {

@@ -72,7 +72,7 @@ class RssIndividualQuestionFeed(Feed):
 
     def link(self):
         search_state = SearchState()
-        search_state.set_space(self.space)
+        search_state.change_space(self.space)
         return site_url(search_state.full_url())
 
     def item_pubdate(self, item):

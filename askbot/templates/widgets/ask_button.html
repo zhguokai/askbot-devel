@@ -1,16 +1,38 @@
 {% if active_tab != "ask" %}
+
     {% if not search_state %}  {#  get empty SearchState() if there's none #}
-        {% set search_state=search_state|get_empty_search_state %}
+        {% set search_state=empty_search_state %}
     {% endif %}
-    <a
-        id="askButton"
-        class="button"
-        {% if space_slug %}
+
+    {% if group %}
+        {% set button_text=settings.WORDS_ASK_THE_GROUP|escape %}
+    {% else %}
+        {% set button_text=settings.WORDS_ASK_YOUR_QUESTION|escape %}
+    {% endif %}
+
+    {% if space_slug or spaces.count() == 1 %}
+        {% set space_slug = space_slug or spaces[0].slug %}
+        {% set search_state = search_state.change_space(space_slug) %}
+        <a
+            id="askButton"
+            class="button"
             href="{{ search_state.full_ask_url() }}{% if group %}{% if '?' in search_state.full_ask_url() %}&amp;{% else %}?{% endif %}group_id={{ group.id }}{% endif %}"
-        {% endif %}
-        >{% if group %}
-            {{ settings.WORDS_ASK_THE_GROUP|escape }}
-        {% else %}
-            {{ settings.WORDS_ASK_YOUR_QUESTION|escape }}
-        {% endif %}</a>
+        >
+            {{ button_text }}
+        </a>
+    {% else %}
+        <span id="askButton" class="button dropdown-toggle">
+            <ul class="dropdown-menu">
+            {% for space in spaces %}
+                {% set search_state = search_state.change_space(space) %}
+                <li>
+                    <a href="{{ search_state.full_ask_url() }}"
+                        >{{ space.name|escape }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+            <span>{{ button_text }}</span>
+            <span class="toggle">&#9660;</span>
+        </span>
+    {% endif %}
 {% endif %}

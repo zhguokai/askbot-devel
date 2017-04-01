@@ -25,8 +25,8 @@
     {% if settings.MULTILINGUAL %}
         askbot['urls']['translateUrl'] = '{% url "translate_url" %}';
     {% endif %}
+    askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" %}';
     {% if space_slug %}
-        askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" %}';
         askbot['urls']['ask'] = '{% url "ask" space_slug %}';
         askbot['urls']['questions'] = '{% url "questions" space_slug %}';
     {% endif %}

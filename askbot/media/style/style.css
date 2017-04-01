@@ -498,6 +498,13 @@ body.user-messages {
 #userToolsNav #signin-form input:hover {
   color: #ebff88;
 }
+.dropdown-toggle {
+  position: relative;
+}
+span.dropdown:hover ul.dropdown-menu,
+.dropdown-toggle:hover ul.dropdown-menu {
+  display: block;
+}
 #metaNav {
   /* Top Navigation bar containing links for tags, people and badges, check widgets/header.html */
   float: right;
@@ -559,9 +566,6 @@ body.user-messages {
 }
 #metaNav a.group-name:hover {
   background-color: transparent;
-}
-#metaNav span.dropdown:hover ul.dropdown-menu {
-  display: block;
 }
 #metaNav div.dropdown-container:hover ul.dropdown-menu {
   display: block;

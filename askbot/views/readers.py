@@ -104,7 +104,7 @@ def questions(request, **kwargs):
 
     space, redirect = resolve_space_or_404(kwargs['space_name'])
     if redirect:
-        search_state.set_space(space)
+        search_state.change_space(space)
         return HttpResponseRedirect(search_state.full_url())
 
 

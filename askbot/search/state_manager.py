@@ -253,7 +253,7 @@ class SearchState(object):
         ss.page = 1
         return ss
 
-    def set_space(self, space):
+    def change_space(self, space):
         if isinstance(space, basestring):
             space_slug = space
             self.space = get_space(space_slug)# what if space is none?
@@ -261,6 +261,7 @@ class SearchState(object):
             self.space = space
         else:
             raise TypeError('space argument must be instance of Space model or space slug')
+        return self
 
     def change_scope(self, new_scope):
         ss = self.deepcopy()

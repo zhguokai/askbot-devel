@@ -82,8 +82,11 @@ def application_settings(request):
         'settings': my_settings,
         'moderation_items': api.get_info_on_moderation_items(request.user),
         'need_scope_links': need_scope_links,
-        'noscript_url': const.DEPENDENCY_URLS['noscript'],
+        'noscript_url': const.DEPENDENCY_URLS['noscript']
     }
+
+    spaces = models.Space.objects.all()
+    context['spaces'] = spaces
 
     use_askbot_login = 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS
     my_settings['USE_ASKBOT_LOGIN_SYSTEM'] = use_askbot_login

@@ -30,9 +30,6 @@
                 <tr>
                     {# width 1 means that cell will expand just enough to fit the contents #}
                     <td width="1"><a id="homeButton" href="{{ get_home_url() }}"><i class="fa fa-home"></i></a></td>
-                    {% if space_slug %}
-                    <td width="1">{% include "widgets/scope_nav.html" %}</td>
-                    {% endif %}
                     {# width * means that the cell takes the remaining table width #}
                     <td width="*" class="search-bar">{% include "widgets/search_bar.html" %}</td> 
                     {% if settings.ASK_BUTTON_ENABLED %}

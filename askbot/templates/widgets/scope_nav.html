@@ -1,8 +1,9 @@
+{# TODO: change this to breadcrumbps #}
 <div id="scopeNav">
 {% if need_scope_links %}
     {% if active_tab != "ask" %}
         {% if not search_state %}  {#  get empty SearchState() if there's none #}
-            {% set search_state=search_state|get_empty_search_state %}
+            {% set search_state=empty_search_state %}
         {% endif %}
         {% if settings.ALL_SCOPE_ENABLED %}
         <a class="scope-selector {% if scope == 'all' %}on{% endif %}"
