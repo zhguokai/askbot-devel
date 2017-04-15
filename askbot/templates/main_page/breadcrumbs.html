@@ -1,0 +1,22 @@
+{% import "macros.html" as macros %}
+{% if search_state.tags %}
+    <li id="listSearchTags">
+        {{ sep() }}
+        {% trans %}Tags: {% endtrans %}
+        {{ macros.tag_list_widget(
+                search_state.tags,
+                id='searchTags',
+                deletable=True,
+                make_links=False,
+                search_state=search_state
+            )
+        }}
+    </li> 
+{% endif %}
+{% if search_state.author %}
+    {{ sep() }}
+    <li>
+        {% trans %}Author: {{ author_name }}{% endtrans %}
+        <a href="{{ search_state.remove_author().full_url() }}">x</a>
+    </li>
+{% endif %}

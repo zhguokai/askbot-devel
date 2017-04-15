@@ -25,7 +25,7 @@
             {{ settings.CUSTOM_HTML_HEAD }}
         {% endif %}
     </head>
-    <body class="{% block body_class %}{% endblock %}{% if user_messages %} user-messages{% endif %}{% if page_class %} {{page_class}}{% endif %}{% if request.user.is_anonymous() %} anon{% endif %} lang-{{ current_language_code }}">
+    <body class="{% block body_class %}{% endblock %}{% if user_messages %} user-messages{% endif %}{% if page_class %} {{page_class}}{% endif %}{% if request.user.is_anonymous() %} anon{% endif %} lang-{{ current_language_code }}{% if settings.SPACES_ENABLED %} spaces-enabled{% endif %}">
         {% include "widgets/system_messages.html" %}
         {% include "debug_header.html" %}
         {% include "custom_header.html" ignore missing %}
@@ -35,7 +35,11 @@
         </div>
         {% endif %}
         {% include "widgets/header.html" %} {# Logo, user tool navigation and meta navitation #}
-        {% include "widgets/secondary_header.html" %} {# Scope selector, search input and ask button #}
+        {% if not (page_class == 'ask-page' and settings.SPACES_ENABLED) %}
+            {# Scope selector, search input and ask button
+               Disable on ask page when spaces feature is used. #}
+            {% include "widgets/secondary_header.html" %}
+        {% endif %}
         {% if settings.ENABLE_LEADING_SIDEBAR %}
         <div id="leading-sidebar">
             {{ settings.LEADING_SIDEBAR }}

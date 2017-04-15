@@ -10,7 +10,7 @@
         {% set button_text=settings.WORDS_ASK_YOUR_QUESTION|escape %}
     {% endif %}
 
-    {% if space_slug or spaces.count() == 1 %}
+    {% if space_slug or spaces.count() == 1 or not settings.SPACES_ENABLED %}
         {% set space_slug = space_slug or spaces[0].slug %}
         {% set search_state = search_state.change_space(space_slug) %}
         <a

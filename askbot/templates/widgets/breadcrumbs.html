@@ -1,0 +1,24 @@
+<ul class="breadcrumbs">
+    {% set sep = joiner(gettext('&gt;')) %}{{ sep() }}
+    <li>
+        <a href="{{ get_home_url() }}">{% trans %}Home{% endtrans %}</a>
+    </li>
+    {% if settings.SPACES_ENABLED %}
+        {{ sep() }}
+        <li>
+            <a href="{{ space.get_absolute_url() }}">{{ space.name|escape }}</a>
+        </li>
+    {% endif %}
+    {% if page_class == 'questions-page' %}
+        {% include "main_page/breadcrumbs.html" %}
+    {% elif page_class == 'question-page' %}
+        {{ sep() }}
+        <li>...</li>
+    {% elif page_class == 'ask-page' %}
+        {{ sep() }}
+        <li>
+            {{ settings.WORDS_ASK_YOUR_QUESTION }}
+        </li>
+    {% endif %}
+    {# todo - add breadcrumbs to all other pages #}
+</ul>

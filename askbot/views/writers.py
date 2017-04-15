@@ -323,6 +323,7 @@ def ask(request, space_name):#view used to ask a new question
     data = {
         'active_tab': 'ask',
         'page_class': 'ask-page',
+        'space': space,
         'space_slug': space.slug,
         'form' : form,
         'editor_is_folded': editor_is_folded,

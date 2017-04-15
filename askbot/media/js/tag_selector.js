@@ -164,7 +164,7 @@ function pickedTags() {
                 function (reData) {
                     if (reData.success) {
                         deleteTagLocally();
-                        if ($('body').hasClass('main-page')) {
+                        if ($('body').hasClass('questions-page')) {
                             askbot.controllers.fullTextSearch.refresh();
                         }
                     } else if (reData.message) {

@@ -84,6 +84,7 @@ def index(request):#generates front page - shows listing of questions sorted in 
     spaces = Space.objects.filter(**space_filter).order_by('order_number')
     template_data = {
         'spaces': spaces,
+        'page_class': 'home-page'
     }
     return render(request, 'index_page.html', template_data)
 
@@ -267,7 +268,7 @@ def questions(request, **kwargs):
             'subscribed_tag_names': meta_data.get('subscribed_tag_names', None),
             'language_code': translation.get_language(),
             'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
-            'page_class': 'main-page',
+            'page_class': 'questions-page',
             'page_size': search_state.page_size,
             'query': search_state.query,
             'threads' : page,
@@ -277,6 +278,7 @@ def questions(request, **kwargs):
             'show_sort_by_relevance': conf.should_show_sort_by_relevance(),
             'search_tags' : search_state.tags,
             'sort': search_state.sort,
+            'space': space,
             'space_slug': space.slug,
             'tab_id' : search_state.sort,
             'tags' : related_tags,
@@ -699,6 +701,7 @@ def question(request, space_name, id):#refactor - long subroutine. display quest
         'show_post': show_post,
         'similar_threads' : thread.get_similar_threads(),
         'space_slug': space_name,
+        'space': space,
         'tab_id' : answer_sort_method,
         'thread': thread,
         'thread_is_moderated': thread.is_moderated(),

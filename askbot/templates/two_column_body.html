@@ -2,6 +2,11 @@
 {% block body_class %}two-col{% endblock %}
 {% block body %}
 <div id="ContentLeft">
+    {% if settings.SPACES_ENABLED 
+          and page_class 
+          in ('questions-page', 'question-page', 'ask-page') %}
+        {% include "widgets/breadcrumbs.html" %}
+    {% endif %}
     {% block content%}
     {% endblock%}
 </div>

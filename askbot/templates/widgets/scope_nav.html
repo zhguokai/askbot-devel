@@ -1,9 +1,12 @@
-{# TODO: change this to breadcrumbps #}
+{# used only with spaces disabled #}
 <div id="scopeNav">
 {% if need_scope_links %}
     {% if active_tab != "ask" %}
         {% if not search_state %}  {#  get empty SearchState() if there's none #}
             {% set search_state=empty_search_state %}
+            {# always use space 0 b/c this nav is used only with
+               spaces disabled #}
+            {% set search_state=search_state.change_space(spaces[0]) %}
         {% endif %}
         {% if settings.ALL_SCOPE_ENABLED %}
         <a class="scope-selector {% if scope == 'all' %}on{% endif %}"

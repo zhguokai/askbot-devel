@@ -663,6 +663,22 @@ span.dropdown:hover,
     margin-top: 9px;
 }
 
+ul.breadcrumbs {
+    color: #777;
+    font-family: @main-font;
+    list-style: none;
+    margin: -2px 0 2px 0;
+    li {
+        display: inline-block;
+    }
+    a, a:visited {
+        color: #777;
+    }
+}
+.ask-page ul.breadcrumbs {
+    margin-bottom: 8px;
+}
+
 
 #secondaryHeader{ /* Div containing Home button, scope navigation, search form and ask button, check blocks/secondary_header.html */
     height:55px;
@@ -676,8 +692,9 @@ span.dropdown:hover,
     -webkit-box-sizing: border-box;
     td {
         padding: 0;
+        height: 54px;
         &.search-bar {
-            padding: 0 32px 0 15px;
+            padding: 0 32px 0 0;
             position: relative;
         }
     }
@@ -702,10 +719,9 @@ span.dropdown:hover,
 
 .scope-selector {
     display: inline-block;
-    font-size: 20px;
+    font-size: 20px !important;
     color: #7a7a6b;
-    height: 55px;
-    line-height: 55px;
+    line-height: 54px;
     margin-left: 16px;
     &.on {
         background: url(../images/scopearrow.png) no-repeat center 41px;
@@ -1071,6 +1087,7 @@ body.anon.ask-page .search-drop-menu {
 #scopeNav {
     height: 54px;
     display: inline-block;
+    margin-right: 15px;
     white-space: nowrap;
     a:hover {
         color: #5a5a5a;
@@ -1099,6 +1116,14 @@ body.anon.ask-page .search-drop-menu {
 #ContentFull {
     float: left;
     width: 960px;
+}
+
+.ask-page.spaces-enabled {
+    #ContentLeft,
+    #ContentRight,
+    #ContentFull {
+        padding-top: 10px;
+    }
 }
 
 /* ----- Sidebar Widgets Box, check main_page/sidebar.html or question/sidebar.html ----- */
@@ -1283,7 +1308,7 @@ body.anon.ask-page .search-drop-menu {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     padding: 7px 10px 9px 0;
-    margin-bottom: 10px;
+    margin: 4px 0 10px;
     width: 100%;
     ul {
         margin: 0 0 0 27px;
@@ -1354,7 +1379,7 @@ body.anon.ask-page .search-drop-menu {
     margin:4px 5px 0px 8px;
 }
 
-.main-page .tabsA .label {
+.questions-page .tabsA .label {
     margin-left: 8px;
 }
 
@@ -1414,10 +1439,7 @@ body.anon.ask-page .search-drop-menu {
 }
 
 #listSearchTags{
-    margin-top:3px;
-    color:@info-text;
-    font-size:16px;
-    font-family:@main-font;
+    font-family: @main-font;
     ul.tags li {
         margin: 0 5px 0 0;
         padding: 0;
@@ -1430,6 +1452,10 @@ ul#searchTags {
     display: inline-block;
     margin-left: 6px;
     min-width: 43px;
+    margin-bottom: -5px;
+    li {
+        margin-bottom: 0;
+    }
 }
 
 .search-tips {
@@ -1608,7 +1634,7 @@ ul#searchTags {
 .pager {
     margin: 10px 0;
 }
-.main-page .pager {
+.questions-page .pager {
     margin-bottom: 0;
 }
 
@@ -1917,7 +1943,7 @@ ul.js-related-tags li {
     }
 }
 
-.main-page h1 {
+.questions-page h1 {
     margin-right: 5px;
 }
 
@@ -3970,7 +3996,7 @@ ins .post-tag, ins p, ins {
 }
 
 body.question-page ins,
-body.main-page ins {
+body.questions-page ins {
     /* a hack for google adwords
      * todo: make rule above more specific
      * and remove this one */
@@ -4753,7 +4779,7 @@ img.flag {
     vertical-align: text-top;
 }
 
-.main-page img.flag {
+.questions-page img.flag {
     vertical-align: text-bottom;
 }
 
@@ -5339,7 +5365,7 @@ td.setting-input {
             padding: 0 10px;
         }
     }
-    .main-page h1,
+    .questions-page h1,
     #askButton,
     #metaNav #navBadges,
     .copyright,
