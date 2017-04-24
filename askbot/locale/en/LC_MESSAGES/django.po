@@ -2954,7 +2954,7 @@ msgstr ""
 
 #: const/message_keys.py:23
 msgid "by relevance"
-msgstr ""
+msgstr "Relevance"
 
 #: const/message_keys.py:24
 msgid "click to see the oldest questions"
@@ -2962,7 +2962,7 @@ msgstr ""
 
 #: const/message_keys.py:25
 msgid "by date"
-msgstr ""
+msgstr "Date"
 
 #: const/message_keys.py:26
 msgid "click to see the newest questions"
@@ -2974,7 +2974,7 @@ msgstr ""
 
 #: const/message_keys.py:28
 msgid "by activity"
-msgstr ""
+msgstr "Activity"
 
 #: const/message_keys.py:29
 msgid "click to see the most recently updated questions"
@@ -2986,7 +2986,7 @@ msgstr ""
 
 #: const/message_keys.py:31
 msgid "by answers"
-msgstr ""
+msgstr "Answers"
 
 #: const/message_keys.py:32
 msgid "click to see the most answered questions"
@@ -2998,7 +2998,7 @@ msgstr ""
 
 #: const/message_keys.py:34
 msgid "by votes"
-msgstr ""
+msgstr "Votes"
 
 #: const/message_keys.py:35
 msgid "click to see most voted questions"

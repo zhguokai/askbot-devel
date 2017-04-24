@@ -125,4 +125,9 @@ def application_settings(request):
             group_list.append({'name': group['name'], 'link': link})
         context['group_list'] = simplejson.dumps(group_list)
 
+    context['COUNTRY_CODES'] = {
+        'en': 'us',
+        'ja': 'jp'
+    }
+
     return context

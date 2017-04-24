@@ -306,63 +306,6 @@ TagWarningBox.prototype.showWarning = function(){
 
 /**
  * @constructor
- * tool tip to be shown on top of the search input
- */
-var InputToolTip = function() {
-    WrappedElement.call(this);
-    this._promptText = gettext('search or ask your question');
-};
-inherits(InputToolTip, WrappedElement);
-
-InputToolTip.prototype.show = function() {
-    this._element.removeClass('dimmed');
-    this._element.show();
-};
-
-InputToolTip.prototype.hide = function() {
-    this._element.removeClass('dimmed');
-    this._element.hide();
-};
-
-InputToolTip.prototype.dim = function() {
-    this._element.addClass('dimmed');
-};
-
-InputToolTip.prototype.setPromptText = function(text) {
-    this._promptText = text;
-};
-
-InputToolTip.prototype.setClickHandler = function(handler) {
-    this._clickHandler = handler;
-};
-
-InputToolTip.prototype.createDom = function() {
-    var element = this.makeElement('div');
-    this._element = element;
-    element.addClass('input-tool-tip');
-    element.html(this._promptText);
-    this.decorate(element);
-};
-
-InputToolTip.prototype.decorate = function(element) {
-    this._element = element;
-    var handler = this._clickHandler;
-    var me = this;
-    element.click(function() { 
-        handler();
-        me.dim();
-        return false;
-    });
-    $(document).click(function() {
-        if (element.css('display') === 'block') {
-            element.removeClass('dimmed');
-        }
-    });
-};
-    
-
-/**
- * @constructor
  * provides full text search functionality
  * which re-draws contents of the main page
  * in response to the search query
@@ -629,7 +572,6 @@ FullTextSearch.prototype.reset = function() {
     this._element.val('');
     this._element.focus();
     this._xButton.hide();
-    this._toolTip.show();
 };
 
 FullTextSearch.prototype.refreshXButton = function() {
@@ -787,15 +729,6 @@ FullTextSearch.prototype.makeAskHandler = function() {
     };
 };
 
-FullTextSearch.prototype.updateToolTip = function() {
-    var query = this.getSearchQuery();
-    if (query === '') {
-        this._toolTip.show();
-    } else {
-        this._toolTip.hide();
-    }
-};
-
 FullTextSearch.prototype.setFullTextSearchEnabled = function(enabled) {
     this._fullTextSearchEnabled = enabled;
 };
@@ -805,14 +738,11 @@ FullTextSearch.prototype.getFullTextSearchEnabled = function() {
 };
 
 /**
- * keydown handler operates on the tooltip and the X button
+ * keydown handler operates on the X button
  * also opens and closes drop menu according to the min search word threshold
- * keyup is not good enough, because in that case
- * tooltip will be displayed with the input box simultaneously
  */
 FullTextSearch.prototype.makeKeyDownHandler = function() {
     var me = this;
-    var toolTip = this._toolTip;
     var xButton = this._xButton;
     var dropMenu = this._dropMenu;
     var formSubmitHandler = this.makeFormSubmitHandler();
@@ -834,12 +764,7 @@ FullTextSearch.prototype.makeKeyDownHandler = function() {
         }
 
         var query = me.getSearchQuery();
-        if (query.length === 0) {
-            if (keyCode !== 8 && keyCode !== 48) {//del and backspace
-                toolTip.hide();//hide tooltip
-            }
-        } else {
-            me.updateToolTip();
+        if (query.length > 0) {
             me.refreshXButton();
             var minQueryLength = askbot['settings']['minSearchWordLength'];
             if (query.length === minQueryLength) {
@@ -877,19 +802,6 @@ FullTextSearch.prototype.decorate = function(element) {
     this._xButton = $('input[name=reset_query]');
     this._prevText = this.getSearchQuery();
     this._tag_warning_box = new TagWarningBox();
-
-    var toolTip = new InputToolTip();
-    toolTip.setClickHandler(function() {
-        element.focus();
-    });
-
-    element.after(toolTip.getElement());
-
-    //below is called after getElement, b/c element must be defined
-    if (this._prevText !== '') {
-        toolTip.hide();//hide if search query is not empty
-    }
-    this._toolTip = toolTip;
 
     var dropMenu = new SearchDropMenu();
     dropMenu.setSearchWidget(this);
@@ -932,7 +844,6 @@ FullTextSearch.prototype.decorate = function(element) {
     var main_page_eval_handle;
     this._query.keydown(this.makeKeyDownHandler());
     this._query.keyup(function(e){
-        me.updateToolTip();
         me.refreshXButton();
         if (me.isRunning() === false){
             clearTimeout(main_page_eval_handle);
@@ -1017,10 +928,6 @@ TagSearch.prototype.runSearch = function() {
     me.setIsRunning(true);
 };
 
-TagSearch.prototype.getToolTip = function() {
-    return this._toolTip;
-};
-
 TagSearch.prototype.makeKeyUpHandler = function() {
     var me = this;
     return function(evt) {
@@ -1037,20 +944,16 @@ TagSearch.prototype.makeKeyDownHandler = function() {
     return function(evt) {
         var query = me.getQuery();
         var keyCode = getKeyCode(evt);
-        var toolTip = me.getToolTip();
         if (keyCode === 27) {//escape
             me.setQuery('');
-            toolTip.show();
             xButton.hide();
             return;
         }
         if (keyCode === 8 || keyCode === 48) {//del or backspace
             if (query.length === 1) {
-                toolTip.show();
                 xButton.hide();
             }
         } else {
-            toolTip.hide();
             xButton.show();
         }
     };
@@ -1059,7 +962,6 @@ TagSearch.prototype.makeKeyDownHandler = function() {
 TagSearch.prototype.reset = function() {
     if (this.getIsRunning() === false) {
         this.setQuery('');
-        this._toolTip.show();
         this._xButton.hide();
         this.runSearch();
         this._element.focus();
@@ -1075,16 +977,4 @@ TagSearch.prototype.decorate = function(element) {
 
     var me = this;
     this._xButton.click(function(){ me.reset() });
-
-    var toolTip = new InputToolTip();
-    toolTip.setPromptText(askbot['data']['tagSearchPromptText']);
-    toolTip.setClickHandler(function() {
-        element.focus();
-    });
-    element.after(toolTip.getElement());
-    //below is called after getElement, b/c element must be defined
-    if (this.getQuery() !== '') {
-        toolTip.hide();//hide if search query is not empty
-    }
-    this._toolTip = toolTip;
 };

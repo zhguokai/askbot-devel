@@ -15,6 +15,7 @@
         class="searchInput" 
         type="text" 
         autocomplete="off"
+        placeholder="{% trans %}Ask your question...{% endtrans %}"
         value="{{ query|default_if_none('')|escape }}" 
         name="query" 
         id="keywords"
