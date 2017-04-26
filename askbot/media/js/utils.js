@@ -3515,6 +3515,7 @@ AutoCompleter.prototype.setCaret = function(pos) {
     var data = prepareData(this);
     if (!isNaN(data.datetime)) {
       $(this).text(inWords(data.datetime));
+      $(this).show();
     }
     return this;
   }
