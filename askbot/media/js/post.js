@@ -1818,6 +1818,14 @@ EditCommentForm.prototype.createDom = function(){
         label.attr('for', 'suppress_email');
         label.html(gettext("minor edit (don't send alerts)"));
         this._minorEditBox.append(label);
+
+        setupButtonEventHandlers(label, function () {
+            if (checkBox.is(':checked')) {
+                checkBox.prop('checked', false);
+            } else {
+                checkBox.prop('checked', true);
+            }
+        });
     }
 
 };
