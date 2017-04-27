@@ -21,7 +21,7 @@
     <div class="tabBar">
         <div class="tabsA">
         {#% if settings.GROUPS_ENABLED and user_groups %}
-            <span class="label">{% trans %}Select/Sort by &raquo;{% endtrans %}</span>
+            <span class="label">{% trans %}Select/Sort by:{% endtrans %}</span>
             {% for a_group in user_groups %}
                 <a 
                     href="{% url users_by_group group_id=a_group.id, group_slug=a_group.name|slugify %}"

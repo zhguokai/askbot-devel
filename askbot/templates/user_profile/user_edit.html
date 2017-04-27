@@ -6,9 +6,8 @@
 <h1 class="section-title">
     {{ request.user.username|escape }} - {% trans %}edit profile{% endtrans %}
 </h1>
-<div id="main-body" style="width:100%;padding-top:10px">
     <form name="" action="{% url edit_user request.user.id %}" method="post">{% csrf_token %}
-        <div id="left" style="float:left;width:180px">
+        <div class="left">
             <div class='avatar'>
                 {{ macros.gravatar(view_user, 128) }}
                 {% if request.user == view_user %}
@@ -28,7 +27,7 @@
                 {% endif %}
             </div>
         </div>
-        <div style="float:right;width:750px;text-align:left;">
+        <div>
             <h2>{% trans %}Registered user{% endtrans %}</h2>
             <table class="user-details">
                 <tr>
@@ -76,7 +75,7 @@
                     <td>{{ form.country.label_tag() }}:</td>
                     <td>{{ form.country }} <span class="form-error"> {{ form.country.errors }} </span></td>
                 </tr>
-                <tr>
+                <tr class="show-country">
                     <td>{{ form.show_country.label_tag() }}:</td>
                     <td>{{ form.show_country }} <span class="form-error"> {{ form.show_country.errors }} </span></td>
                 </tr>
@@ -104,14 +103,17 @@
                     </td>
                 </tr>
                 {% endif %}
+                <tr><td></td>
+                    <td class="button-cell">
+                        <input type="submit" class="submit"
+                            value="{% trans %}Update{% endtrans %}"
+                        /><input id="cancel" type="button" class="submit"
+                            value="{% trans %}Cancel{% endtrans %}"/>
+                    </td>
+                </tr>
             </table>
-            <div style="margin:30px 0 60px 0">
-                <input type="submit" value="{% trans %}Update{% endtrans %}" class="submit" >&nbsp;
-                <input id="cancel" type="button" value="{% trans %}Cancel{% endtrans %}" class="submit" >
-            </div>
         </div>
     </form>
-</div>
 {% endblock %}
 {% block endjs %}
         <script type="text/javascript">
