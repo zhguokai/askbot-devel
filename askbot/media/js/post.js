@@ -97,8 +97,8 @@ var cleanTag = function(tag_name, settings) {
     if (tag_name.length > max_length) {
         throw interpolate(
             ngettext(
-                'must be shorter than %(max_chars)s character',
-                'must be shorter than %(max_chars)s characters',
+                'Must be shorter than %(max_chars)s character',
+                'Must be shorter than %(max_chars)s characters',
                 max_length
             ),
             {'max_chars': max_length },
@@ -151,28 +151,28 @@ var CPValidator = function() {
         getQuestionFormMessages: function(){
             return {
                 tags: {
-                    required: " " + gettext('tags cannot be empty'),
+                    required: " " + gettext('Tags cannot be empty'),
                     maxlength: askbot['messages']['tagLimits'],
                     limit_tag_count: askbot['messages']['maxTagsPerPost'],
                     limit_tag_length: askbot['messages']['maxTagLength']
                 },
                 text: {
-                    required: " " + gettext('details are required'),
+                    required: " " + gettext('Details are required'),
                     minlength: interpolate(
                                     ngettext(
-                                        'details must have > %s character',
-                                        'details must have > %s characters',
+                                        'Details must have > %s character',
+                                        'Details must have > %s characters',
                                         askbot['settings']['minQuestionBodyLength']
                                     ),
                                     [askbot['settings']['minQuestionBodyLength'], ]
                                 )
                 },
                 title: {
-                    required: " " + gettext('enter your question'),
+                    required: " " + gettext('Enter your question'),
                     minlength: interpolate(
                                     ngettext(
-                                        'question must have > %s character',
-                                        'question must have > %s characters',
+                                        'Question must have > %s character',
+                                        'Question must have > %s characters',
                                         askbot['settings']['minTitleLength']
                                     ),
                                     [askbot['settings']['minTitleLength'], ]
@@ -190,7 +190,7 @@ var CPValidator = function() {
         getAnswerFormMessages: function(){
             return {
                 text: {
-                    required: " " + gettext('content cannot be empty'),
+                    required: " " + gettext('Content cannot be empty'),
                     minlength: interpolate(
                                     ngettext(
                                         'answer must be > %s character',
@@ -1266,7 +1266,7 @@ var questionRetagger = function(){
             },
             messages: {
                 tags: {
-                    required: gettext('tags cannot be empty'),
+                    required: gettext('Tags cannot be empty'),
                     maxlength: askbot['messages']['tagLimits'],
                     limit_tag_count: askbot['messages']['maxTagsPerPost'],
                     limit_tag_length: askbot['messages']['maxTagLength']
@@ -1423,7 +1423,7 @@ VoteControls.prototype.getVoteHandler = function(voteType) {
     var me = this;
     return function() {
         if (askbot['data']['userIsAuthenticated'] === false) {
-            var message = me.getAnonymousMessage(gettext('anonymous users cannot vote'));
+            var message = me.getAnonymousMessage(gettext('Anonymous users cannot vote'));
             showMessage(me.getElement(), message);
         } else {
             //this function submits votes
@@ -1442,7 +1442,7 @@ VoteControls.prototype.getVoteHandler = function(voteType) {
                     "postId": me.getPostId()
                 },
                 error: function() {
-                    showMessage(me.getElement(), gettext('sorry, something is not right here'));
+                    showMessage(me.getElement(), gettext('Sorry, something is not right here'));
                 },
                 success: function(data) {
                     if (data['success']) {
@@ -1658,13 +1658,13 @@ EditCommentForm.prototype.attachTo = function(comment, mode){
     this._commentsWidget.hideButton();//hide add comment button
     //fix up the comment submit button, depending on the mode
     if (this._type == 'add'){
-        this._submit_btn.html(gettext('add comment'));
+        this._submit_btn.html(gettext('Add Comment'));
         if (this._minorEditBox) {
             this._minorEditBox.hide();
         }
     }
     else {
-        this._submit_btn.html(gettext('save comment'));
+        this._submit_btn.html(gettext('Save Comment'));
         if (this._minorEditBox) {
             this._minorEditBox.show();
         }
@@ -1704,9 +1704,9 @@ EditCommentForm.prototype.getCounterUpdater = function(){
         var color = 'maroon';
         var chars = 10;
         if (length === 0){
-            var feedback = interpolate(gettext('enter at least %s characters'), [chars]);
+            var feedback = interpolate(gettext('Enter at least %s characters'), [chars]);
         } else if (length < 10){
-            var feedback = interpolate(gettext('enter at least %s more characters'), [chars - length]);
+            var feedback = interpolate(gettext('Enter at least %s more characters'), [chars - length]);
         } else {
             if (length > length2) {
                 color = '#f00';
@@ -1802,7 +1802,7 @@ EditCommentForm.prototype.createDom = function(){
     this._submit_btn = $('<button class="submit"></button>');
     this._controlsBox.append(this._submit_btn);
     this._cancel_btn = $('<button class="submit cancel"></button>');
-    this._cancel_btn.html(gettext('cancel'));
+    this._cancel_btn.html(gettext('Cancel'));
     this._controlsBox.append(this._cancel_btn);
 
     //if email alerts are enabled, add a checkbox "suppress_email"
@@ -1816,7 +1816,7 @@ EditCommentForm.prototype.createDom = function(){
         this._minorEditBox.append(checkBox);
         var label = this.makeElement('label');
         label.attr('for', 'suppress_email');
-        label.html(gettext("minor edit (don't send alerts)"));
+        label.html(gettext("Minor edit (don't send alerts)"));
         this._minorEditBox.append(label);
 
         setupButtonEventHandlers(label, function () {
@@ -2320,7 +2320,7 @@ PostCommentsWidget.prototype.createDom = function() {
     var btn = this.makeElement('a');
     btn.attr('id', 'add-' + commentType + '-to-post-' + this.getPostId());
     btn.addClass('button');
-    btn.html(gettext('add a comment'));
+    btn.html(gettext('Add a comment'));
     controls.append(btn);
 
     //required for the widget to function
@@ -3136,7 +3136,7 @@ TagWikiEditor.prototype.decorate = function(element){
     this._save_btn = save_btn;
 
     var cancel_btn = this.makeElement('a');
-    cancel_btn.html(gettext('cancel'));
+    cancel_btn.html(gettext('Cancel'));
     save_btn.after(cancel_btn);
     cancel_btn.hide();
     this._cancel_btn = cancel_btn;
@@ -4656,7 +4656,7 @@ CategorySelectorLoader.prototype.decorate = function(element) {
     this._empty_comments_control = $('.post.question .comments.empty');
 
     this._cancel_button = this.makeElement('button');
-    this._cancel_button.html(gettext('cancel'));
+    this._cancel_button.html(gettext('Cancel'));
     this._editor_buttons.append(this._cancel_button);
     this._editor_buttons.find('button').addClass('submit');
     this._editor_buttons.addClass('retagger-buttons');
@@ -4920,7 +4920,7 @@ $(document).ready(function() {
         this._element = elem;
         elem.addClass('admin-comments-btn');
         elem.data('postId', this._postId);
-        elem.attr('title', gettext('see/add admin comments'));
+        elem.attr('title', gettext('See/add admin comments'));
         elem.text(this._count);
         var me = this;
         this.setHandler(function() { me.loadComments() });
