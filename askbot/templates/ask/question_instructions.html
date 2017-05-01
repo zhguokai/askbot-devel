@@ -1,0 +1,14 @@
+<ul>
+    {% if not request.user.is_authenticated() %}
+    <li class="warning">{% trans %}Since you are not logged in right now, you will be asked to sign in or register after posting your question{% endtrans %}</li>
+    {% else %}
+        {% if settings.EMAIL_VALIDATION %}
+            {% if not request.user.email_isvalid %}
+            <li class="warning">{% trans email=request.user.email %}Your email, {{ email }} has not yet been validated. To post messages you must verify your email, please see <a href='{{ email_validation_faq_url }}'>more details here</a>. You can submit your question now and validate email after that. Meanwhile, your question will saved as pending.{% endtrans %}</li>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    <li>{% trans %}Please, try to make your question interesting to this community{% endtrans %}</li>
+    <li>{% trans %}Provide enough details{% endtrans %}</li>
+    <li>{% trans %}Be clear and concise{% endtrans %}</li>
+</ul>
