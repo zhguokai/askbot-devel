@@ -2609,12 +2609,12 @@ msgstr ""
 
 #: const/__init__.py:54 templates/question/answer_tab_bar.html:18
 msgid "newest"
-msgstr ""
+msgstr "Newest"
 
 #: const/__init__.py:55 templates/users.html:54
 #: templates/question/answer_tab_bar.html:15
 msgid "oldest"
-msgstr ""
+msgstr "Oldest"
 
 #: const/__init__.py:56
 msgid "active"
@@ -2634,15 +2634,15 @@ msgstr ""
 
 #: const/__init__.py:60 templates/question/answer_tab_bar.html:21
 msgid "most voted"
-msgstr ""
+msgstr "Most voted"
 
 #: const/__init__.py:61
 msgid "least voted"
-msgstr ""
+msgstr "Least voted"
 
 #: const/__init__.py:62
 msgid "relevance"
-msgstr ""
+msgstr "Relevance"
 
 #: const/__init__.py:74
 msgid "Never"
@@ -6718,7 +6718,7 @@ msgstr ""
 
 #: templates/tags/header.html:20
 msgid "by name"
-msgstr ""
+msgstr "Name"
 
 #: templates/tags/header.html:25
 msgid "sorted by frequency of tag use"
@@ -6726,7 +6726,7 @@ msgstr ""
 
 #: templates/tags/header.html:26
 msgid "by popularity"
-msgstr ""
+msgstr "Popularity"
 
 #: templates/tags/header.html:34 templates/tags/header.html.py:35
 msgid "suggested"
@@ -6734,7 +6734,7 @@ msgstr ""
 
 #: templates/tags/header.html:42 templates/tags/header.html.py:43
 msgid "manage subscriptions"
-msgstr ""
+msgstr "Manage subscriptions"
 
 #: templates/tags/list_bulk_tag_subscription.html:4
 msgid "Manage Tag subscriptions"
