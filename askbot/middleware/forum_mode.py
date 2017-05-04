@@ -61,10 +61,10 @@ class ForumModeMiddleware(object):
                 return
 
             if is_view_protected(resolver_match.func):
-                request.user.message_set.create(
-                    _('Please log in to use %s') % \
-                    askbot_settings.APP_SHORT_NAME
-                )
+                #request.user.message_set.create(
+                #    _('Please log in to use %s') % \
+                #    askbot_settings.APP_SHORT_NAME
+                #)
                 try:
                     url = request.get_full_path()
                     set_savepoint_url(request, url)
