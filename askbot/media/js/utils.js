@@ -212,6 +212,7 @@ var notify = function() {
                 par.html(html);
                 $(".notify").prepend(par);
             }          
+            $('#closeNotify').show();
             $(".notify").fadeIn("slow");
             visible = true;
             if (autohide) {
@@ -234,8 +235,12 @@ var notify = function() {
                    { formdata: "required" }
                );
             }
-            $(".notify").fadeOut("fast");
+            $(".notify .notification-deletable").fadeOut("fast");
+            $('#closeNotify').fadeOut('fast');
             $('body').removeClass('user-messages');
+            if ($('.notify .notification-permanent').length === 0) {
+                $('.notify').fadeOut('fast');
+            }
             visible = false;
         },     
         isVisible: function() { return visible; }     

@@ -130,4 +130,7 @@ def application_settings(request):
         'ja': 'jp'
     }
 
+    #request.user.message_set.create(message='Hello <strong>Evgeny</strong>')
+    #context['announcements'] = ['Hello this in a <strong>permanent message</strong>!']
+
     return context
