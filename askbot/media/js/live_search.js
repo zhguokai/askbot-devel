@@ -808,7 +808,7 @@ FullTextSearch.prototype.decorate = function(element) {
     dropMenu.setAskHandler(this.makeAskHandler());
     dropMenu.setAskButtonEnabled(this._askButtonEnabled);
     this._dropMenu = dropMenu;
-    element.parent().after(this._dropMenu.getElement());
+    element.parent().append(this._dropMenu.getElement());
 
     $(element).click(function(e) { return false });
     $(document).click(function() { dropMenu.reset(); });
