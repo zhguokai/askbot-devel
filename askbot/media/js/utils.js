@@ -6,6 +6,50 @@ var mediaUrl = function(resource){
     return askbot['settings']['static_url'] + 'default' + '/' + resource;
 };
 
+var csrfSafeMethod = function(method) {
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+};
+
+var sameOrigin = function(url) {
+    var host = document.location.host;
+    var protocol = document.location.protocol;
+    var sr_origin = '//' + host;
+    var origin = protocol + sr_origin;
+    return (
+        (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+        !(/^(\/\/|http:|https:).*/.test(url))
+
+    );
+};
+
+var getCookie = function (name) { 
+    var cookieValue = null; 
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = $.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                return decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        }
+    }
+    return cookieValue;
+};
+
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+            // Send the token to same-origin, relative URLs only.
+            // Send the token only if the method warrants CSRF protection
+            // Using the CSRFToken value acquired earlier
+            var csrfCookieName = askbot['settings']['csrfCookieName'];
+            xhr.setRequestHeader("X-CSRFToken", getCookie(csrfCookieName));
+        }
+    }
+});
+
 var cleanUrl = function(url){
     var re = new RegExp('//', 'g');
     return url.replace(re, '/');
