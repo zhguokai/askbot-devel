@@ -298,6 +298,16 @@ class UserLikeTagTests(AskbotTestCase):
         self.assert_affinity_is('like', False)
         self.assert_affinity_is('dislike', False)
 
+    def test_mark_nonexisting_tags(self):
+        models.Tag.objects.create_in_bulk(user=self.user,
+                                          tag_names=('TAg1', 'TAg2'))
+        self.user.mark_tags(tagnames=('tag2', 'tag3'),
+                          reason='good', action='add')
+        self.assertEquals(models.Tag.objects.filter(name='tag2').count(), 0)
+        self.assertEquals(models.Tag.objects.filter(name='TAg2').count(), 1)
+        self.assertEquals(models.Tag.objects.filter(name='tag3').count(), 1)
+
+
 class GlobalTagSubscriberGetterTests(AskbotTestCase):
     """tests for the :meth:`~askbot.models.Question.get_global_tag_based_subscribers`
     """

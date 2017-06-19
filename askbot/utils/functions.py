@@ -11,6 +11,12 @@ def get_from_dict_or_object(source, key):
     except:
         return getattr(source, key)
 
+def case_insensitive_subtract_sets(set1, set2):
+    """subtracts sets of strings in case-insensitive fashion"""
+    set1 = set(set1)
+    set2 = set(set2)
+    lower2 = map(lambda v: v.lower(), set2)
+    return filter(lambda v: v.lower() not in lower2, set1)
 
 def enumerate_string_list(strings):
     """for a list or a tuple ('one', 'two',) return

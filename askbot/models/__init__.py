@@ -1459,39 +1459,46 @@ def user_mark_tags(
             assert(reason in ('good', 'bad'))
     if wildcards:
         cleaned_wildcards = self.update_wildcard_tag_selections(
-            action = action,
-            reason = reason,
-            wildcards = wildcards
+            action=action,
+            reason=reason,
+            wildcards=wildcards
         )
     if tagnames is None:
         tagnames = list()
 
     #figure out which tags don't yet exist
-    existing_tagnames = Tag.objects.filter(
-                            name__in=tagnames
-                        ).values_list(
-                            'name', flat=True
-                        )
-    non_existing_tagnames = set(tagnames) - set(existing_tagnames)
+    filt = map(lambda v: models.Q(name__iexact=v), tagnames)
+    filt = reduce(lambda a, b: a | b, filt)
+    existing_tagnames = Tag.objects.filter(filt).values_list('name', flat=True)
+
+    from askbot.utils.functions import case_insensitive_subtract_sets
+    non_existing_tagnames = case_insensitive_subtract_sets(
+                                            tagnames, existing_tagnames)
+
     #create those tags, and if tags are moderated make them suggested
     if (len(non_existing_tagnames) > 0):
-        Tag.objects.create_in_bulk(tag_names=tagnames, user=self)
+        if askbot_settings.FORCE_LOWERCASE_TAGS:
+            non_existing_tagnames = map(lambda v: v.lower(),
+                                        non_existing_tagnames)
+
+        Tag.objects.create_in_bulk(tag_names=non_existing_tagnames, user=self)
 
     #below we update normal tag selections
-    marked_ts = MarkedTag.objects.filter(
-                                    user = self,
-                                    tag__name__in = tagnames
-                                )
+    filt = map(lambda v: models.Q(tag__name__iexact=v), tagnames)
+    filt = reduce(lambda a, b: a | b, filt)
+    filt = filt & models.Q(user=self)
+    marked_ts = MarkedTag.objects.filter(filt)
+
     #Marks for "good" and "bad" reasons are exclusive,
     #to make it impossible to "like" and "dislike" something at the same time
     #but the subscribed set is independent - e.g. you can dislike a topic
     #and still subscribe for it.
     if reason == 'subscribed':
         #don't touch good/bad marks
-        marked_ts = marked_ts.filter(reason = 'subscribed')
+        marked_ts = marked_ts.filter(reason='subscribed')
     else:
         #and in this case don't touch subscribed tags
-        marked_ts = marked_ts.exclude(reason = 'subscribed')
+        marked_ts = marked_ts.exclude(reason='subscribed')
 
     #todo: use the user api methods here instead of the straight ORM
     cleaned_tagnames = list() #those that were actually updated
@@ -1499,22 +1506,26 @@ def user_mark_tags(
         logging.debug('deleting tag marks: %s' % ','.join(tagnames))
         marked_ts.delete()
     else:
-        marked_names = marked_ts.values_list('tag__name', flat = True)
+        marked_names = marked_ts.values_list('tag__name', flat=True)
         if len(marked_names) < len(tagnames):
-            unmarked_names = set(tagnames).difference(set(marked_names))
-            ts = Tag.objects.filter(name__in = unmarked_names)
+            #create new marked tags
+            unmarked_names = case_insensitive_subtract_sets(
+                                            tagnames, marked_names)
+
+            filt = map(lambda v: models.Q(name__iexact=v), unmarked_names)
+            filt = reduce(lambda a, b: a | b, filt)
+            ts = Tag.objects.filter(filt)
+
             new_marks = list()
             for tag in ts:
-                MarkedTag(
-                    user = self,
-                    reason = reason,
-                    tag = tag
-                ).save()
+                MarkedTag(user=self, reason=reason, tag=tag).save()
                 new_marks.append(tag.name)
+
             cleaned_tagnames.extend(marked_names)
             cleaned_tagnames.extend(new_marks)
         else:
-            if reason in ('good', 'bad'):#to maintain exclusivity of 'good' and 'bad'
+            if reason in ('good', 'bad'):
+                #to maintain exclusivity of 'good' and 'bad' marks
                 marked_ts.update(reason=reason)
             cleaned_tagnames = tagnames
 
