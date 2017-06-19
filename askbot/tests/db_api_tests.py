@@ -51,6 +51,9 @@ class DBApiTests(AskbotTestCase):
         self.assertTrue(post.deleted_by == None)
         self.assertTrue(post.deleted_at == None)
 
+    def test_update_avatar_type(self):
+        self.user.update_avatar_type()
+
     def test_blank_tags_impossible(self):
         self.post_question(tags='')
         self.assertEqual(

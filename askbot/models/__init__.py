@@ -322,15 +322,21 @@ def user_update_avatar_type(self):
     avatar application is installed.
     Saves the object.
     """
-
-    if 'avatar' in django_settings.INSTALLED_APPS:
-        if self.avatar_set.count() > 0:
-            self.avatar_type = 'a'
+    import socket, urllib2
+    try:
+        if 'avatar' in django_settings.INSTALLED_APPS:
+            if self.avatar_set.count() > 0:
+                self.avatar_type = 'a'
+            else:
+                self.avatar_type = _check_gravatar(self.gravatar)
         else:
-            self.avatar_type = _check_gravatar(self.gravatar)
+                self.avatar_type = _check_gravatar(self.gravatar)
+    except urllib2.URLError, e:
+        if e.reason.__class__ == socket.timeout:
+            #ignore the timeout error
+            return
     else:
-            self.avatar_type = _check_gravatar(self.gravatar)
-    self.save()
+        self.save()
 
 def user_strip_email_signature(self, text):
     """strips email signature from the end of the text"""
@@ -344,8 +350,9 @@ def user_strip_email_signature(self, text):
 
 def _check_gravatar(gravatar):
     gravatar_url = "http://www.gravatar.com/avatar/%s?d=404" % gravatar
-    code = urllib.urlopen(gravatar_url).getcode()
-    if urllib.urlopen(gravatar_url).getcode() != 404:
+    import urllib2 #need urllib2 for the timeout
+    code = urllib2.urlopen(gravatar_url, timeout=2).getcode()
+    if code != 404:
         return 'g' #gravatar
     else:
         return 'n' #none
