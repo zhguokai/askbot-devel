@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 09:41-0600\n"
-"PO-Revision-Date: 2017-03-26 15:12+0000\n"
+"POT-Creation-Date: 2017-03-29 01:57-0500\n"
+"PO-Revision-Date: 2017-06-20 07:22+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew (Israel) (http://www.transifex.com/askbot/askbot/language/he_IL/)\n"
 "MIME-Version: 1.0\n"
@@ -242,7 +242,7 @@ msgstr "ההודעה שלך:"
 
 #: forms.py:872
 msgid "I don't want to give my email or receive a response:"
-msgstr "אין לי עניין למסור את כתובת הדוא״ל שלי או לקבל תגובות:"
+msgstr "אעדיף שלא למסור את כתובת הדוא״ל שלי או לקבל תגובות:"
 
 #: forms.py:886
 msgid "Message is required"
@@ -254,8 +254,8 @@ msgstr "אלמוני"
 
 #: forms.py:902
 msgid ""
-"Either provide email address or mark \"I don' want to give my email\" below"
-msgstr "נא לספק כתובת דוא״ל או לסמן את האפשרות „אין לי עניין למסור את כתובת הדוא״ל שלי“ להלן"
+"Either provide email address or mark \"I don't want to give my email\" below"
+msgstr "או לספק את כתובת הדוא״ל או לסמן את „אעדיף שלא למסור את כתובת הדוא״ל שלי“ להלן"
 
 #: forms.py:935
 msgid "keep private within your groups"
@@ -1412,8 +1412,8 @@ msgstr "הפעלת הטמעת סרטונים."
 
 #: conf/forum_data_rules.py:68
 #, python-format
-msgid "<em>Note: please read <a href=\"%(url)s\">read this</a> first.</em>"
-msgstr "<em>לתשומת לבך: יש לקרוא <a href=\"%(url)s\">את זה</a> תחילה.</em>"
+msgid "<em>Note: please <a href=\"%(url)s\">read this</a> first.</em>"
+msgstr "<em>לתשומת לבך: נא <a href=\"%(url)s\">לקרוא זאת</a> תחילה.</em>"
 
 #: conf/forum_data_rules.py:78
 msgid "Check to enable community wiki feature"
@@ -1737,7 +1737,7 @@ msgid "All users belong to this group automatically"
 msgstr "כל המשתמשים שייכים לקבוצה זו אוטומטית"
 
 #: conf/group_settings.py:55
-msgid "Enable group email adddresses"
+msgid "Enable group email addresses"
 msgstr "הפעלת כתובות דוא״ל קבוצתיות"
 
 #: conf/group_settings.py:57
@@ -2140,18 +2140,18 @@ msgstr "ביטויים רגולריים לזיהוי תבניות קישור"
 
 #: conf/markup.py:108
 msgid ""
-"Enter valid regular expressions for the patters, one per line. For example "
+"Enter valid regular expressions for the patterns, one per line. For example "
 "to detect a bug pattern like #bug123, use the following regex: #bug(\\d+). "
 "The numbers captured by the pattern in the parentheses will be transferred "
 "to the link url template. Please look up more information about regular "
-"expressions elsewhere."
-msgstr "נא להזין ביטוי רגולרי תקני עבור התבניות, אחד בכל שורה. למשל, כדי לזהות תבנית של באג כגון ‎#bug123, יש להשתמש בביטוי הרגולרי הבא: ‎#bug(\\d+)‎. ניתן ללכוד את המספרים באמצעות התבנית שבסוגריים שתועבר לתבנית של כתובת מותאמת. נא לחפש מידע נוסף על ביטויים רגולריים במקורות נוספים."
+"expressions elsewhere. Invalid expressions will not be accepted."
+msgstr "נא להזין ביטוי רגולרי תקני עבור התבניות, אחד בכל שורה. למשל, כדי לזהות תבנית של באג כגון ‎#bug123, יש להשתמש בביטוי הרגולרי הבא: ‎#bug(\\d+)‎. ניתן ללכוד את המספרים באמצעות התבנית שבסוגריים שתועבר לתבנית של כתובת מותאמת. נא לחפש מידע נוסף על ביטויים רגולריים במקורות נוספים. ביטויים בלתי תקניים לא יתקבלו."
 
-#: conf/markup.py:127
+#: conf/markup.py:128
 msgid "URLs for autolinking"
 msgstr "כתובות לקישור אוטומטי"
 
-#: conf/markup.py:129
+#: conf/markup.py:130
 msgid ""
 "Here, please enter url templates for the patterns entered in the previous "
 "setting, also one entry per line. <strong>Make sure that number of lines in "
@@ -3325,8 +3325,8 @@ msgid "follow questions"
 msgstr "מעקב אחר שאלות"
 
 #: conf/words.py:668
-msgid "Indefinite form"
-msgstr ""
+msgid "Verb in the infinitive form"
+msgstr "שם פועל"
 
 #: conf/words.py:677 conf/words.py:678
 msgid "followed questions"
@@ -3402,7 +3402,7 @@ msgstr "כדאי לחתור לספק תשובה מאשר לפתוח בדיון"
 
 #: conf/words.py:857 conf/words.py:858
 msgid "show only selected answers to enquirers"
-msgstr ""
+msgstr "הצגת תשובות נבחרות בלבד לשואלים"
 
 #: conf/words.py:867 conf/words.py:868
 msgid "UNANSWERED"
@@ -3909,7 +3909,7 @@ msgstr "תגיות נדרשות"
 
 #: const/message_keys.py:35
 msgid "please use letters, numbers and characters \"-+.#\""
-msgstr "נא להשתמש באותיות באנגלית, מספרים והתווים „-+.#“"
+msgstr "נא להשתמש באותיות, מספרים והתווים „-+.#“"
 
 #: const/message_keys.py:38
 msgid ""
@@ -5046,11 +5046,11 @@ msgstr "הפרסום שלך הוצב בתור הפיקוח ויפורסם לאח
 #: models/question.py:155
 #, python-format
 msgid "\" and \"%s\""
-msgstr ""
+msgstr "“ וגם „%s“"
 
 #: models/question.py:158
 msgid "\" and more"
-msgstr ""
+msgstr "“ ועוד"
 
 #: models/question.py:1679
 #, python-format
@@ -5385,7 +5385,7 @@ msgid ""
 "points that can be accumulated for a question or answer per day. The table "
 "below explains reputation point requirements for each type of moderation "
 "task."
-msgstr ""
+msgstr "לדוגמה, אם שאלת שאלה מעניינת או ענית תשובה מועילה, הקלט שלך יקבל הצבעות חיוביות. מצד שני אם השאלה מטעה - היא תקבל הצבעה שלילית. כל הצבעה בעד תייצר <strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> נקודות, כל הצבעה נגד תחסיר <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> נקודות. קיימת מגבלה של <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> נקודות שניתן לצבור על שאלה ביום. הטבלה שלהלן מסבירה את דרישות נקודות המוניטין עבור כל סוג של פעילות פיקוח."
 
 #: templates/faq_static.html:37
 msgid "add comments"
@@ -5797,7 +5797,7 @@ msgstr "פרסום זה ממתין לפיקוח"
 #: templates/revisions.html.py:41 templates/question/answer_controls.html:2
 #: templates/question/question_card.html:22
 #: templates/question/question_controls.html:1
-#: templates/user_profile/user_info.html:171
+#: templates/user_profile/user_info.html:170
 msgid "edit"
 msgstr "עריכה"
 
@@ -5872,7 +5872,7 @@ msgstr "%(seen)s פרסומים שסומנו בדגל"
 #: templates/macros.html:753
 #, python-format
 msgid "%(action_performed)s %(when)s"
-msgstr ""
+msgstr "%(action_performed)s %(when)s"
 
 #: templates/main_page.html:15
 msgid "Questions"
@@ -5958,7 +5958,7 @@ msgstr "משתמשים בקבוצה %(name)s"
 
 #: templates/users.html:24
 msgid "Select/Sort by &raquo;"
-msgstr "בחירה/מיון לפי &raquo;"
+msgstr "בחירה/מיון לפי &laquo;"
 
 #: templates/users.html:29
 #, python-format
@@ -6459,8 +6459,8 @@ msgstr "הודעות דוא״ל של Askbot"
 
 #: templates/email/preview_email.html:13
 #, python-format
-msgid "Example %%(num)d"
-msgstr ""
+msgid "Example %(num)s"
+msgstr "דוגמה %(num)s"
 
 #: templates/email/preview_email.html:19
 msgid "Subject"
@@ -6551,7 +6551,7 @@ msgstr "משוב על %(site_name)s"
 
 #: templates/email/feedback/body.html:10 templates/email/feedback/body.html:12
 msgid "wrote:"
-msgstr ""
+msgstr "כתב/ה:"
 
 #: templates/email/feedback/subject.txt:1
 #, python-format
@@ -6562,9 +6562,9 @@ msgstr "הודעת משוב על %(site_name)s"
 #, python-format
 msgid ""
 "Note: to reply with a comment, please use \n"
-"                <a href=\"mailto:%(addr)ss?subject=%(subject)s\">this link</a>\n"
+"                <a href=\"mailto:%(addr)s?subject=%(subject)s\">this link</a>\n"
 "            "
-msgstr "לתשומת לך: כדי להגיב עם הערה, נא להשתמש \n                <a href=\"mailto:%(addr)ss?subject=%(subject)s\">בקישור הזה</a>\n            "
+msgstr "לתשומת לבך: כדי להשיב, נא להשתמש \n                <a href=\"mailto:%(addr)s?subject=%(subject)s\">בקישור הזה</a>\n            "
 
 #: templates/email/instant_notification/body.html:23
 #, python-format
@@ -6629,7 +6629,7 @@ msgstr "נא לבקר באתר %(site_name)s בכתובת <a href=\"%(site_url)s
 #: templates/email/re_welcome/subject.txt:1
 #, python-format
 msgid "Re: Welcome to %(site_name)s"
-msgstr ""
+msgstr "Re: ברוך בואך אל %(site_name)s"
 
 #: templates/email/rejected_post/body.html:2
 #: templates/email/rejected_post/body.html:3
@@ -6660,7 +6660,7 @@ msgstr "פרסום התגובה שלך כשל"
 #, python-format
 msgid ""
 "%(question_count)s %(unanswered_questions_phrase)s about %(tag_summary)s"
-msgstr ""
+msgstr "%(question_count)s %(unanswered_questions_phrase)s בנושא %(tag_summary)s"
 
 #: templates/email/unsubscribe_link/subject.txt:1
 #, python-format
@@ -6696,7 +6696,7 @@ msgstr "עד שנקבל ממך תגובה, לא תהיה לך אפשרות לפ�
 #: templates/embed/list_widgets.html:5
 #, python-format
 msgid "%(type)s widget list"
-msgstr ""
+msgstr "רשימת וידג׳טים מסוג %(type)s"
 
 #: templates/embed/list_widgets.html:8
 msgid "Widget Title"
@@ -6733,7 +6733,7 @@ msgstr "עליך פשוט להעתיק את התגית &lt;script&gt; שסופק
 #: templates/embed/widget_form.html:3 templates/embed/widget_form.html.py:5
 #, python-format
 msgid "%(action)s an %(widget_name)s widget"
-msgstr ""
+msgstr "%(action)s הווידג׳ט %(widget_name)s"
 
 #: templates/embed/widget_form.html:14
 #: templates/livesettings/group_settings.html:47
@@ -6862,7 +6862,7 @@ msgstr "עריכת הגדרות האתר"
 
 #: templates/livesettings/site_settings.html:44
 msgid "Livesettings are disabled for this site."
-msgstr ""
+msgstr "ה־Livesettings מנוטרלים לאתר זה."
 
 #: templates/livesettings/site_settings.html:45
 msgid "All configuration options must be edited in the site settings.py file"
@@ -6883,7 +6883,7 @@ msgstr "הרחבת הכול"
 #: templates/user_profile/user_stats.html:24
 #, python-format
 msgid "<span class=\"count\">%(item_count)s</span> %(pluralized_item_term)s"
-msgstr ""
+msgstr "<span class=\"count\">%(item_count)s</span> %(pluralized_item_term)s"
 
 #: templates/main_page/headline.html:10
 msgid "Tagged"
@@ -6990,7 +6990,7 @@ msgstr[1] "נא להשתמש ב־%(tag_count)s תגיות לכל היותר"
 #, python-format
 msgid ""
 "please use up to %(tag_count)s tags, less than %(max_chars)s characters each"
-msgstr ""
+msgstr "נא להשתמש ב־%(tag_count)s תגיות לכל היותר, לא מעבר ל־%(max_chars)s תווים בכל אחת."
 
 #: templates/moderation/manage_reject_reasons_dialog.html:4
 msgid "Manage post flag/reject reasons"
@@ -7209,7 +7209,7 @@ msgstr "משתמשים בודדים"
 
 #: templates/question/sidebar.html:89
 msgid "You"
-msgstr ""
+msgstr "את/ה"
 
 #: templates/question/sidebar.html:96 templates/question/sidebar.html.py:116
 msgid "and"
@@ -7532,20 +7532,15 @@ msgstr "אתר"
 msgid "location"
 msgstr "מיקום"
 
-#: templates/user_profile/user_info.html:139
-msgid "age"
-msgstr "גיל"
+#: templates/user_profile/user_info.html:138
+msgid "age, years"
+msgstr "גיל בשנים"
 
-#: templates/user_profile/user_info.html:140
-#, python-format
-msgid "%(age)s years old"
-msgstr ""
-
-#: templates/user_profile/user_info.html:145
+#: templates/user_profile/user_info.html:144
 msgid "todays unused votes"
 msgstr "ההצבעות היומיות שטרם נוצלו"
 
-#: templates/user_profile/user_info.html:146
+#: templates/user_profile/user_info.html:145
 msgid "votes left"
 msgstr "הצבעות נותרו"
 
@@ -7805,7 +7800,7 @@ msgstr "הוספת לוגו"
 
 #: templates/widgets/group_info.html:46
 msgid "moderate emailed content"
-msgstr ""
+msgstr "פיקוח על תוכן שהגיע בדוא״ל"
 
 #: templates/widgets/group_info.html:63
 msgid "How users join this group?"
@@ -8151,7 +8146,7 @@ msgstr "נא להקליד את ססמתך מחדש"
 
 #: utils/functions.py:140
 msgid "2 days ago"
-msgstr "לפני יומיים"
+msgstr "שלשום"
 
 #: utils/functions.py:142
 msgid "yesterday"
@@ -8370,7 +8365,7 @@ msgstr "מצב המשתמש"
 
 #: views/users.py:336
 msgid "moderate user"
-msgstr ""
+msgstr "פיקוח על המשתמש"
 
 #: views/users.py:601
 msgid "user profile overview"

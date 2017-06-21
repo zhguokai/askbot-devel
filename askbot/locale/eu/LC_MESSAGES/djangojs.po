@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Ander Elortondo, 2016
-# assar <asier.sarasua@gmail.com>, 2016
+# assar <asier.sarasua@gmail.com>, 2016-2017
 # Gorka Azkarate Zubiaur <gorkaazkarate@gmail.com>, 2016
 # Iñigo Salvador Azurmendi <xalba@euskalnet.net>, 2016
 # julen <julenx@gmail.com>, 2016
@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-03 09:49-0600\n"
-"PO-Revision-Date: 2017-03-03 16:06+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2017-06-06 10:54+0000\n"
+"Last-Translator: assar <asier.sarasua@gmail.com>\n"
 "Language-Team: Basque (http://www.transifex.com/askbot/askbot/language/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,8 +77,8 @@ msgstr "kargatzen..."
 #: media/js/post.js:253
 msgid "enter > %(length)s character"
 msgid_plural "enter > %(length)s characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "sartu > karaktere %(length)s"
+msgstr[1] "sartu > %(length)s karaktere"
 
 #: media/js/post.js:155 media/js/post.js.c:218
 #, c-format
