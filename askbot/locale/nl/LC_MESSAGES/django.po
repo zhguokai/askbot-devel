@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 09:41-0600\n"
-"PO-Revision-Date: 2017-03-03 16:06+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"POT-Creation-Date: 2017-03-29 01:57-0500\n"
+"PO-Revision-Date: 2017-04-05 06:45+0000\n"
+"Last-Translator: cor nouws <nouwsc@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/askbot/askbot/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -164,7 +164,7 @@ msgstr "Vul het aantal punten in om toe te voegen of af te trekken"
 
 #: forms.py:719
 msgid "Comment"
-msgstr "Commentaar"
+msgstr "Opmerking"
 
 #: forms.py:731 const/__init__.py:497
 msgid "approved"
@@ -255,7 +255,7 @@ msgstr "Anoniem"
 
 #: forms.py:902
 msgid ""
-"Either provide email address or mark \"I don' want to give my email\" below"
+"Either provide email address or mark \"I don't want to give my email\" below"
 msgstr ""
 
 #: forms.py:935
@@ -966,7 +966,7 @@ msgstr "Optie voor het instellen van de frequentie van mails met updates over: V
 msgid ""
 "Default notification frequency for mentions                        and "
 "comments"
-msgstr "Standaard melding frequentie voor vermeldingen en commentaar"
+msgstr "Standaard melding frequentie voor vermeldingen en opmerkingen"
 
 #: conf/email.py:208
 msgid ""
@@ -1395,7 +1395,7 @@ msgstr "Editor voor berichten"
 
 #: conf/forum_data_rules.py:42
 msgid "Editor for the comments"
-msgstr "Editor voor commentaar"
+msgstr "Editor voor opmerkingen"
 
 #: conf/forum_data_rules.py:51
 msgid "Enable big Ask button"
@@ -1413,7 +1413,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:68
 #, python-format
-msgid "<em>Note: please read <a href=\"%(url)s\">read this</a> first.</em>"
+msgid "<em>Note: please <a href=\"%(url)s\">read this</a> first.</em>"
 msgstr ""
 
 #: conf/forum_data_rules.py:78
@@ -1738,7 +1738,7 @@ msgid "All users belong to this group automatically"
 msgstr "Alle gebruikers behoren automatisch tot deze groep"
 
 #: conf/group_settings.py:55
-msgid "Enable group email adddresses"
+msgid "Enable group email addresses"
 msgstr ""
 
 #: conf/group_settings.py:57
@@ -2141,18 +2141,18 @@ msgstr ""
 
 #: conf/markup.py:108
 msgid ""
-"Enter valid regular expressions for the patters, one per line. For example "
+"Enter valid regular expressions for the patterns, one per line. For example "
 "to detect a bug pattern like #bug123, use the following regex: #bug(\\d+). "
 "The numbers captured by the pattern in the parentheses will be transferred "
 "to the link url template. Please look up more information about regular "
-"expressions elsewhere."
+"expressions elsewhere. Invalid expressions will not be accepted."
 msgstr ""
 
-#: conf/markup.py:127
+#: conf/markup.py:128
 msgid "URLs for autolinking"
 msgstr ""
 
-#: conf/markup.py:129
+#: conf/markup.py:130
 msgid ""
 "Here, please enter url templates for the patterns entered in the previous "
 "setting, also one entry per line. <strong>Make sure that number of lines in "
@@ -3326,8 +3326,8 @@ msgid "follow questions"
 msgstr "volg vragen"
 
 #: conf/words.py:668
-msgid "Indefinite form"
-msgstr "Onbepaalde vorm"
+msgid "Verb in the infinitive form"
+msgstr ""
 
 #: conf/words.py:677 conf/words.py:678
 msgid "followed questions"
@@ -5016,7 +5016,7 @@ msgstr "Sorry, deze inhoud is niet meer beschikbaar"
 
 #: models/post.py:1851 models/post.py:1854
 msgid "Sorry, this comment is no longer available"
-msgstr "Sorry, dit commentaar is niet meer beschikbaar"
+msgstr "Sorry, deze opmerkingen is niet meer beschikbaar"
 
 #: models/post.py:1873
 msgid "This post is temporarily not available"
@@ -5390,7 +5390,7 @@ msgstr ""
 
 #: templates/faq_static.html:37
 msgid "add comments"
-msgstr "commentaar toevoegen"
+msgstr "opmerking toevoegen"
 
 #: templates/faq_static.html:46
 msgid " accept own answer to own questions"
@@ -5410,7 +5410,7 @@ msgstr "beantwoord een vraag"
 
 #: templates/faq_static.html:64
 msgid "delete any comment"
-msgstr "verwijder een commentaar"
+msgstr "verwijder een opmerking"
 
 #: templates/faq_static.html:68
 msgid "How to change my picture (gravatar) and what is gravatar?"
@@ -5775,7 +5775,7 @@ msgstr ""
 #: templates/macros.html:337 templates/macros.html.py:348
 #: templates/question.html:419
 msgid "add a comment"
-msgstr "commentaar roevoegen"
+msgstr "opmerking toevoegen"
 
 #: templates/macros.html:341
 msgid "load older comments"
@@ -5787,7 +5787,7 @@ msgstr "meer commentaren weergeven"
 
 #: templates/macros.html:376
 msgid "delete this comment"
-msgstr "verwijder dit commentaar"
+msgstr "verwijder deze opmerking"
 
 #: templates/macros.html:379 templates/question/answer_card.html:25
 #: templates/question/question_card.html:34
@@ -5798,7 +5798,7 @@ msgstr ""
 #: templates/revisions.html.py:41 templates/question/answer_controls.html:2
 #: templates/question/question_card.html:22
 #: templates/question/question_controls.html:1
-#: templates/user_profile/user_info.html:171
+#: templates/user_profile/user_info.html:170
 msgid "edit"
 msgstr "bewerken"
 
@@ -6460,8 +6460,8 @@ msgstr ""
 
 #: templates/email/preview_email.html:13
 #, python-format
-msgid "Example %%(num)d"
-msgstr "Voorbeeld %%(num)d"
+msgid "Example %(num)s"
+msgstr ""
 
 #: templates/email/preview_email.html:19
 msgid "Subject"
@@ -6563,7 +6563,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Note: to reply with a comment, please use \n"
-"                <a href=\"mailto:%(addr)ss?subject=%(subject)s\">this link</a>\n"
+"                <a href=\"mailto:%(addr)s?subject=%(subject)s\">this link</a>\n"
 "            "
 msgstr ""
 
@@ -7533,20 +7533,15 @@ msgstr "website"
 msgid "location"
 msgstr "locatie"
 
-#: templates/user_profile/user_info.html:139
-msgid "age"
-msgstr "leeftijd"
+#: templates/user_profile/user_info.html:138
+msgid "age, years"
+msgstr ""
 
-#: templates/user_profile/user_info.html:140
-#, python-format
-msgid "%(age)s years old"
-msgstr "%(age)s jaar"
-
-#: templates/user_profile/user_info.html:145
+#: templates/user_profile/user_info.html:144
 msgid "todays unused votes"
 msgstr "ungebruikte stemmen voor vandaag"
 
-#: templates/user_profile/user_info.html:146
+#: templates/user_profile/user_info.html:145
 msgid "votes left"
 msgstr "stemmen over"
 
@@ -8462,18 +8457,18 @@ msgstr "Bericht niet gevonden"
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
-msgstr "Sorry, je lijkt te zijn uitgelogged en kan geen commentaar plaatsen. Graag <a href=\"%(sign_in_url)s\">inloggen</a>."
+msgstr "Sorry, je lijkt te zijn uitgelogged en kan geen opmerking plaatsen. Graag <a href=\"%(sign_in_url)s\">inloggen</a>."
 
 #: views/writers.py:798
 msgid "Sorry, anonymous users cannot edit comments"
-msgstr "Sorry, anonieme gebruikers kunnen geen commentaar bewerken"
+msgstr "Sorry, anonieme gebruikers kunnen geen opmerkingen bewerken"
 
 #: views/writers.py:862
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
-msgstr "Sorry, je lijkt te zijn uitgelogged en kan geen commentaar verwijderen Graag <a href=\"%(sign_in_url)s\">inloggen</a>."
+msgstr "Sorry, je lijkt te zijn uitgelogd en kan geen opmerking verwijderen. Graag <a href=\"%(sign_in_url)s\">inloggen</a>."
 
 #: views/writers.py:892
 msgid "sorry, we seem to have some technical difficulties"
@@ -8484,14 +8479,14 @@ msgstr "sorry, we hebben wat technische problemen"
 msgid ""
 "Sorry, only logged in users can convert comments to answers. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
-msgstr "Sorry, alleen ingelogde gebruikers kunnen commentaar omzetten naar antwoorden. Graag <a href=\"%(sign_in_url)s\">inloggen</a>."
+msgstr "Sorry, alleen ingelogde gebruikers kunnen opmerkingen omzetten naar antwoorden. Graag <a href=\"%(sign_in_url)s\">inloggen</a>."
 
 #: views/writers.py:936
 #, python-format
 msgid ""
 "Sorry, only logged in users can convert answers to comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
-msgstr "Sorry, alleen ingelogde gebruikers kunnen antwoorden omzetten naar commentaar. Graag <a href=\"%(sign_in_url)s\">inloggen</a>."
+msgstr "Sorry, alleen ingelogde gebruikers kunnen antwoorden omzetten naar opmerkingen. Graag <a href=\"%(sign_in_url)s\">inloggen</a>."
 
 #: views/writers.py:961
 msgid "Error - could not find the destination post"
@@ -8502,4 +8497,4 @@ msgstr "Fout - kan bericht niet vinden"
 msgid ""
 "Cannot convert, because text has more characters than %(max_chars)s - "
 "maximum allowed for comments"
-msgstr "Kan niet converteren omdat tekst %(max_chars)s meer tekens bevat dan voor commentaar is toegestaan"
+msgstr "Kan niet converteren omdat tekst %(max_chars)s meer tekens bevat dan voor opmerkingen is toegestaan"

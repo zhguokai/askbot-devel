@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Artem Litvinov <tema.litvinov@gmail.com>, 2017
 # Ivan Petukhov <satels@gmail.com>, 2017
 # Леонид <masdzen@gmail.com>, 2013
 # olloff <olloff@gmail.com>, 2012
@@ -15,8 +16,8 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-03 09:49-0600\n"
-"PO-Revision-Date: 2017-03-03 16:06+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2017-06-08 07:53+0000\n"
+"Last-Translator: Artem Litvinov <tema.litvinov@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/askbot/askbot/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,11 +27,11 @@ msgstr ""
 
 #: media/js/group_messaging.js:132
 msgid "Type a message"
-msgstr ""
+msgstr "Введите сообщение"
 
 #: media/js/group_messaging.js:141
 msgid "Add a recipient"
-msgstr ""
+msgstr "Добавить получателя"
 
 #: media/js/group_messaging.js:171
 msgid "message sent"
@@ -40,7 +41,7 @@ msgstr "сообщение отправлено"
 msgid ""
 "Did you mean to send your message to muliple users? Use comma instead of "
 "whitespaces"
-msgstr ""
+msgstr "Вы хотели отправить свое сообщение нескольким пользователям? Вместо пробелов используйте запятую."
 
 #: media/js/group_messaging.js:191
 msgid "user {{str}} does not exist"
@@ -82,10 +83,10 @@ msgstr "загрузка..."
 #: media/js/post.js:253
 msgid "enter > %(length)s character"
 msgid_plural "enter > %(length)s characters"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "введите > %(length)s символа"
+msgstr[1] "введите > %(length)s символов"
+msgstr[2] "введите > %(length)s символов"
+msgstr[3] "введите > %(length)s символов"
 
 #: media/js/post.js:155 media/js/post.js.c:218
 #, c-format
@@ -140,7 +141,7 @@ msgid_plural "%s followers"
 msgstr[0] "%s закладка"
 msgstr[1] "%s закладки"
 msgstr[2] "%s закладок"
-msgstr[3] "%s закладок"
+msgstr[3] "%s закладки"
 
 #: media/js/post.js:819
 msgid "insufficient privilege"
@@ -204,7 +205,7 @@ msgstr "к сожалению, что-то здесь не так"
 
 #: media/js/post.js:1865
 msgid "Preview: (hide)"
-msgstr ""
+msgstr "Предпросмотр: (скрыть)"
 
 #: media/js/post.js:1866
 msgid "Show preview"
@@ -297,9 +298,9 @@ msgstr "тэг \"%s\" уже есть, не стоит повторять его
 msgid "a maximum of %s tag is allowed"
 msgid_plural "a maximum of %s tags are allowed"
 msgstr[0] "максимально поддерживается %s ключевое слово"
-msgstr[1] "максимально поддерживается %s ключевых слов"
+msgstr[1] "максимально поддерживается %s ключевых слова"
 msgstr[2] "максимально поддерживается %s ключевых слов"
-msgstr[3] "максимально поддерживается %s ключевых слов"
+msgstr[3] "максимально поддерживается %s ключевых слова"
 
 #: media/js/post.js:4114
 msgid "Delete category?"
@@ -358,9 +359,9 @@ msgstr "Пожалуйста <a href=\"%(signin_url)s\">авторизуйтес
 msgid "must be shorter than %(max_chars)s character"
 msgid_plural "must be shorter than %(max_chars)s characters"
 msgstr[0] "должно быть короче, чем %(max_chars)s символ"
-msgstr[1] "должно быть короче, чем %(max_chars)s символов"
+msgstr[1] "должно быть короче, чем %(max_chars)s символа"
 msgstr[2] "должно быть короче, чем %(max_chars)s символов"
-msgstr[3] "должно быть короче, чем %(max_chars)s символов"
+msgstr[3] "должно быть короче, чем %(max_chars)s символа"
 
 #: media/js/utils.js:274
 msgid "and"
@@ -613,19 +614,19 @@ msgstr "вчера"
 #, c-format
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
-msgstr[0] "%s часа тому назад"
-msgstr[1] "%s часов тому назад"
+msgstr[0] "%s час тому назад"
+msgstr[1] "%s часа тому назад"
 msgstr[2] "%s часов тому назад"
-msgstr[3] "%s часов тому назад"
+msgstr[3] "%s часа тому назад"
 
 #: media/jslib/timeago.js:130
 #, c-format
 msgid "%s min ago"
 msgid_plural "%s mins ago"
-msgstr[0] "%s минуты тому назад"
-msgstr[1] "%s минут тому назад"
+msgstr[0] "%s минуту тому назад"
+msgstr[1] "%s минуты тому назад"
 msgstr[2] "%s минут тому назад"
-msgstr[3] "%s минут тому назад"
+msgstr[3] "%s минуты тому назад"
 
 #: media/tinymce/plugins/askbot_attachment/editor_plugin.js:71
 msgid "Insert a file"
@@ -701,11 +702,11 @@ msgstr "загрузить файл"
 
 #: media/wmd/wmd.js:1686
 msgid "strong text"
-msgstr ""
+msgstr "жирный текст"
 
 #: media/wmd/wmd.js:1690
 msgid "emphasized text"
-msgstr ""
+msgstr "подчеркнутый текст"
 
 #: media/wmd/wmd.js:1844
 msgid "image description"
@@ -725,7 +726,7 @@ msgstr "введите код здесь"
 
 #: media/wmd/wmd.js:2398
 msgid "List item"
-msgstr ""
+msgstr "Элемент списка"
 
 #: media/wmd/wmd.js:2430
 msgid "Heading"

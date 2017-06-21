@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-28 07:18-0500\n"
-"PO-Revision-Date: 2017-03-28 12:25+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"POT-Creation-Date: 2017-03-29 01:57-0500\n"
+"PO-Revision-Date: 2017-03-31 16:18+0000\n"
+"Last-Translator: Osoitz <oelkoro@gmail.com>\n"
 "Language-Team: Basque (http://www.transifex.com/askbot/askbot/language/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -260,7 +260,7 @@ msgstr "Anonimoa"
 #: forms.py:902
 msgid ""
 "Either provide email address or mark \"I don't want to give my email\" below"
-msgstr ""
+msgstr "Eman posta helbide bat edo markatu \"Ez dut posta helbiderik hemen eman nahi\" azpian"
 
 #: forms.py:935
 msgid "keep private within your groups"
@@ -1418,7 +1418,7 @@ msgstr "Gaitu bideoak txertatzea."
 #: conf/forum_data_rules.py:68
 #, python-format
 msgid "<em>Note: please <a href=\"%(url)s\">read this</a> first.</em>"
-msgstr ""
+msgstr "<em>Oharra: <a href=\"%(url)s\">irakurri hau</a> aurretik mesedez.</em>"
 
 #: conf/forum_data_rules.py:78
 msgid "Check to enable community wiki feature"
@@ -1743,7 +1743,7 @@ msgstr "Erabiltzaile guztiak talde honetara elkartuko dira automatikoki"
 
 #: conf/group_settings.py:55
 msgid "Enable group email addresses"
-msgstr ""
+msgstr "Gaitu taldekako posta-helbideak"
 
 #: conf/group_settings.py:57
 msgid "If selected, users can post to groups by email \"group-name@domain.com\""
@@ -1916,7 +1916,7 @@ msgid ""
 "Use this area to enter content at the LEFT sidebarin HTML format.  When "
 "using this option, please use the HTML validation service to make sure that "
 "your input is valid and works well in all browsers."
-msgstr ""
+msgstr "Erabili toki hau EZKERREKO alboko barraren edukia sartzeko, HTML formatuan. Aukera hori erabiltzean, erabili HTMLa balidatzeko zerbitzua, zure sarrera baliozkoa dela ziurtatzeko eta nabigatzaile guztietan ongi dabilela egiaztatzeko."
 
 #: conf/license.py:13
 msgid "Content License"
@@ -2150,7 +2150,7 @@ msgid ""
 "The numbers captured by the pattern in the parentheses will be transferred "
 "to the link url template. Please look up more information about regular "
 "expressions elsewhere. Invalid expressions will not be accepted."
-msgstr ""
+msgstr "Idatzi baliozko espresio erregularrak ereduentzat, lerroko bat. Adibidez #bug123 bezalako eredu bat detektatzeko, erabili adierazpen hau #bug(\\d+). Parentesien arteko ereduak antzemandako zenbakiak estekaren URL txantiloira pasatuko dira. Ez dira baliogabeko espresioak onartuko."
 
 #: conf/markup.py:128
 msgid "URLs for autolinking"
@@ -2172,7 +2172,7 @@ msgstr "Karma atalaseak"
 
 #: conf/minimum_reputation.py:22
 msgid "To become an automatically approved user"
-msgstr ""
+msgstr "Automatikoki onartutako erabiltzailea bihurtu"
 
 #: conf/minimum_reputation.py:23
 msgid "Approved users bypass moderation and skip recaptcha"
@@ -2272,7 +2272,7 @@ msgstr "Berriak eragin posta elektronikoz"
 
 #: conf/minimum_reputation.py:225
 msgid "Users with smaller reputation will not be generating email alerts"
-msgstr ""
+msgstr "Ospe gutxiagoko erabiltzaileek ez dituzte posta bidezko abisuak eragingo."
 
 #: conf/minimum_reputation.py:234
 msgid "Trigger tweets on others accounts"
@@ -2448,13 +2448,13 @@ msgid ""
 "When using this option (as well as the sidebar footer), please use the HTML "
 "validation service to make sure that your input is valid and works well in "
 "all browsers."
-msgstr ""
+msgstr "Erabili eremu hau edukia sartzeko albo-barra GAINEAN HTML formatuan. Aukera hau erabiltzean (albo-barra oinean bezala), mesedez erabili HTML egiaztatze zerbitzua ziurtatzeko zure sarrera baliozkoa dela eta nabigatzaile guztietan ondo jardungo dela."
 
 #: conf/sidebar_main.py:37 conf/sidebar_main.py:113 conf/sidebar_profile.py:38
 #: conf/sidebar_question.py:35 conf/sidebar_question.py:60
 #: conf/sidebar_question.py:96 conf/sidebar_question.py:162
 msgid "Show the text entered above only to anonymous users"
-msgstr ""
+msgstr "Erakutsi goiko testua erabiltzaile anonimoei besterik ez"
 
 #: conf/sidebar_main.py:46
 msgid "Show avatar block in sidebar"
@@ -2476,7 +2476,7 @@ msgstr "Erakutsi etiketen hautatzailea alboko barran"
 msgid ""
 "Uncheck this if you want to hide the options for choosing interesting and "
 "ignored tags "
-msgstr ""
+msgstr "Desmarkatu hau etiketa interesgarriak edo ezikusiak hautatzeko aukerak ezkutatzeko"
 
 #: conf/sidebar_main.py:82
 msgid "Show tag list/cloud in sidebar"
@@ -2485,7 +2485,7 @@ msgstr "Erakutsi etiketen zerrenda/hodeia alboko barran"
 #: conf/sidebar_main.py:84
 msgid ""
 "Uncheck this if you want to hide the tag cloud or tag list from the sidebar "
-msgstr ""
+msgstr "Desmarkatu hau albo-barratik etiketen hodeia ezkutatzeko"
 
 #: conf/sidebar_main.py:95 conf/sidebar_question.py:144
 msgid "Custom sidebar footer"
@@ -2497,7 +2497,7 @@ msgid ""
 "   When using this option (as well as the sidebar header), please use the "
 "HTML validation service to make sure that your input is valid and works well"
 " in all browsers."
-msgstr ""
+msgstr "Erabili eremu hau edukia sartzeko albo-barra AZPIAN HTML formatuan. Aukera hau erabiltzean (albo-barra buruan bezala), mesedez erabili HTML egiaztatze zerbitzua ziurtatzeko zure sarrera baliozkoa dela eta nabigatzaile guztietan ondo jardungo dela."
 
 #: conf/sidebar_profile.py:12
 msgid "User profile sidebar"
@@ -2550,7 +2550,7 @@ msgstr "Erakutsi etiketa-zerrenda alboko barran"
 
 #: conf/sidebar_question.py:106
 msgid "Uncheck this if you want to hide the tag list from the sidebar "
-msgstr ""
+msgstr "Desmarkatu hau albo-barratik etiketen zerrenda ezkutatzeko"
 
 #: conf/sidebar_question.py:117
 msgid "Show meta information in sidebar"
@@ -2560,7 +2560,7 @@ msgstr "Erakutsi meta informazioa alboko barran"
 msgid ""
 "Uncheck this if you want to hide the meta information about the question "
 "(post date, views, last updated). "
-msgstr ""
+msgstr "Desmarkatu hau galderari buruzko meta-informazioa ezkutatzeko (bidalketa data, ikustaldiak, azken eguneratzea)."
 
 #: conf/sidebar_question.py:131
 msgid "Show related questions in sidebar"
@@ -2568,7 +2568,7 @@ msgstr "Erakutsi erlazionatutako galderak alboko barran"
 
 #: conf/sidebar_question.py:133
 msgid "Uncheck this if you want to hide the list of related questions. "
-msgstr ""
+msgstr "Desmarkatu hau zerikusia duten galderen zerrenda ezkutatzeko."
 
 #: conf/site_modes.py:62
 msgid "Bootstrap mode"
@@ -2744,7 +2744,7 @@ msgid ""
 "headerin the HTML format.   When customizing the site header (as well as "
 "footer and the HTML &lt;HEAD&gt;), use the HTML validation service to make "
 "sure that your input is valid and works well in all browsers."
-msgstr ""
+msgstr "Goiburua edukiaren gainean dagoen barra da, eta erabiltzaileari buruzko informazioa eta gunearen estekak ditu, eta orri guztietan berdina da. Erabili eremu hau goiburuaren edukiak HTML formatuan  sartzeko. Gunearen goiburua pertsonalizatzean  (edo orri-oina, edo &lt;HEAD&gt; atala), erabili HTML balidazio zerbitzu bat zure edukia baliozkoa dela eta nabigatzaile guztietan ondo ikusiko dela egiaztatzeko."
 
 #: conf/skin_general_settings.py:208
 msgid "Site footer mode"
@@ -3099,7 +3099,7 @@ msgid ""
 "This space is reserved only for answers. If you would like to engage in a "
 "discussion, please instead post a comment under the question or an answer "
 "that you would like to discuss"
-msgstr ""
+msgstr "Espazio hau erantzunetarako erreserbatuta dago. Eztabaida batean parte-hartu nahi baduzu, egin iruzkin bat galderari edo eztabaidatu nahi duzun erantzunari."
 
 #: conf/words.py:101
 msgid "Instruction to give answers"
@@ -3331,7 +3331,7 @@ msgstr "jarraitu galderak"
 
 #: conf/words.py:668
 msgid "Verb in the infinitive form"
-msgstr ""
+msgstr "Aditza forma infinitiboan"
 
 #: conf/words.py:677 conf/words.py:678
 msgid "followed questions"
@@ -6464,8 +6464,8 @@ msgstr "Askbot posta mezuak"
 
 #: templates/email/preview_email.html:13
 #, python-format
-msgid "Example %%(num)d"
-msgstr "%%(num)d adibidea"
+msgid "Example %(num)s"
+msgstr "%(num)s adibidea"
 
 #: templates/email/preview_email.html:19
 msgid "Subject"
@@ -6569,7 +6569,7 @@ msgid ""
 "Note: to reply with a comment, please use \n"
 "                <a href=\"mailto:%(addr)s?subject=%(subject)s\">this link</a>\n"
 "            "
-msgstr ""
+msgstr "Oharra: Iruzkin batekin erantzuteko, erabili \n                <a href=\"mailto:%(addr)s?subject=%(subject)s\">esteka hau</a>\n            "
 
 #: templates/email/instant_notification/body.html:23
 #, python-format
@@ -7539,7 +7539,7 @@ msgstr "kokapena"
 
 #: templates/user_profile/user_info.html:138
 msgid "age, years"
-msgstr ""
+msgstr "adina, urteak"
 
 #: templates/user_profile/user_info.html:144
 msgid "todays unused votes"
