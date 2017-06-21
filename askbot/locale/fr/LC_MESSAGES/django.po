@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 09:41-0600\n"
-"PO-Revision-Date: 2017-03-03 16:06+0000\n"
+"POT-Creation-Date: 2017-03-29 01:57-0500\n"
+"PO-Revision-Date: 2017-03-29 07:04+0000\n"
 "Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/askbot/askbot/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -274,7 +274,7 @@ msgstr "Anonyme"
 
 #: forms.py:902
 msgid ""
-"Either provide email address or mark \"I don' want to give my email\" below"
+"Either provide email address or mark \"I don't want to give my email\" below"
 msgstr ""
 
 #: forms.py:935
@@ -1432,7 +1432,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:68
 #, python-format
-msgid "<em>Note: please read <a href=\"%(url)s\">read this</a> first.</em>"
+msgid "<em>Note: please <a href=\"%(url)s\">read this</a> first.</em>"
 msgstr ""
 
 #: conf/forum_data_rules.py:78
@@ -1757,7 +1757,7 @@ msgid "All users belong to this group automatically"
 msgstr "Tous les utilisateurs appartiendront à ce groupe automatiquement"
 
 #: conf/group_settings.py:55
-msgid "Enable group email adddresses"
+msgid "Enable group email addresses"
 msgstr ""
 
 #: conf/group_settings.py:57
@@ -2160,18 +2160,18 @@ msgstr "Expression rationnelle pour détecter les correspondances de liens"
 
 #: conf/markup.py:108
 msgid ""
-"Enter valid regular expressions for the patters, one per line. For example "
+"Enter valid regular expressions for the patterns, one per line. For example "
 "to detect a bug pattern like #bug123, use the following regex: #bug(\\d+). "
 "The numbers captured by the pattern in the parentheses will be transferred "
 "to the link url template. Please look up more information about regular "
-"expressions elsewhere."
-msgstr "Saisissez des expressions rationnelles valides pour les motifs, une par ligne. Par exemple, pour détecter un motif de bogue comme #bug123, utilisez l'expression régulière suivante : #bug(\\d+). Les nombres capturés entre les parenthèses du motif seront transférés dans le modèle d'url de lien. Veuillez vous renseigner ailleurs pour plus d'informations sur les expressions rationxnelles."
+"expressions elsewhere. Invalid expressions will not be accepted."
+msgstr ""
 
-#: conf/markup.py:127
+#: conf/markup.py:128
 msgid "URLs for autolinking"
 msgstr "URL pour les auto-liens"
 
-#: conf/markup.py:129
+#: conf/markup.py:130
 msgid ""
 "Here, please enter url templates for the patterns entered in the previous "
 "setting, also one entry per line. <strong>Make sure that number of lines in "
@@ -3345,7 +3345,7 @@ msgid "follow questions"
 msgstr "suivre les questions"
 
 #: conf/words.py:668
-msgid "Indefinite form"
+msgid "Verb in the infinitive form"
 msgstr ""
 
 #: conf/words.py:677 conf/words.py:678
@@ -5817,7 +5817,7 @@ msgstr ""
 #: templates/revisions.html.py:41 templates/question/answer_controls.html:2
 #: templates/question/question_card.html:22
 #: templates/question/question_controls.html:1
-#: templates/user_profile/user_info.html:171
+#: templates/user_profile/user_info.html:170
 msgid "edit"
 msgstr ""
 
@@ -6479,7 +6479,7 @@ msgstr ""
 
 #: templates/email/preview_email.html:13
 #, python-format
-msgid "Example %%(num)d"
+msgid "Example %(num)s"
 msgstr ""
 
 #: templates/email/preview_email.html:19
@@ -6582,7 +6582,7 @@ msgstr "Message de remarque sur %(site_name)s"
 #, python-format
 msgid ""
 "Note: to reply with a comment, please use \n"
-"                <a href=\"mailto:%(addr)ss?subject=%(subject)s\">this link</a>\n"
+"                <a href=\"mailto:%(addr)s?subject=%(subject)s\">this link</a>\n"
 "            "
 msgstr ""
 
@@ -7552,20 +7552,15 @@ msgstr ""
 msgid "location"
 msgstr ""
 
-#: templates/user_profile/user_info.html:139
-msgid "age"
+#: templates/user_profile/user_info.html:138
+msgid "age, years"
 msgstr ""
 
-#: templates/user_profile/user_info.html:140
-#, python-format
-msgid "%(age)s years old"
-msgstr ""
-
-#: templates/user_profile/user_info.html:145
+#: templates/user_profile/user_info.html:144
 msgid "todays unused votes"
 msgstr ""
 
-#: templates/user_profile/user_info.html:146
+#: templates/user_profile/user_info.html:145
 msgid "votes left"
 msgstr ""
 

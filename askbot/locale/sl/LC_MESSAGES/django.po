@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 09:41-0600\n"
-"PO-Revision-Date: 2017-03-10 18:58+0000\n"
+"POT-Creation-Date: 2017-03-29 01:57-0500\n"
+"PO-Revision-Date: 2017-05-28 08:21+0000\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian (http://www.transifex.com/askbot/askbot/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -267,8 +267,8 @@ msgstr "Anonimni"
 
 #: forms.py:902
 msgid ""
-"Either provide email address or mark \"I don' want to give my email\" below"
-msgstr "Podajte e-naslov ali označite »Ne želim podati svojega e-naslova«"
+"Either provide email address or mark \"I don't want to give my email\" below"
+msgstr "Podajte e-naslov ali spodaj označite »Ne želim podati svojega e-naslova«"
 
 #: forms.py:935
 msgid "keep private within your groups"
@@ -690,7 +690,7 @@ msgstr "Avtobiograf"
 
 #: conf/badges.py:55 models/badges.py:628
 msgid "Citizen Patrol"
-msgstr ""
+msgstr "Samoorganizirana straža"
 
 #: conf/badges.py:59 models/badges.py:254
 msgid "Civic Duty"
@@ -702,7 +702,7 @@ msgstr "najmanj glasov"
 
 #: conf/badges.py:65 models/badges.py:644
 msgid "Cleanup"
-msgstr ""
+msgstr "Čistilna akcija"
 
 #: conf/badges.py:69 models/badges.py:831
 msgid "Commentator"
@@ -880,7 +880,7 @@ msgstr "Predpona za zadevo e-sporočila"
 msgid ""
 "This setting takes default from the django settingEMAIL_SUBJECT_PREFIX. A "
 "value entered here will overridethe default."
-msgstr ""
+msgstr "Ta nastavitev prevzame privzeto vrednost iz nastavitve za django, EMAIL_SUBJECT_PREFIX. Vnesena vrednost preglasi privzeto vrednost."
 
 #: conf/email.py:45
 msgid "Site administrator email address"
@@ -892,7 +892,7 @@ msgstr "Omogoči opomnike po e-pošti"
 
 #: conf/email.py:62
 msgid "Enable instant email alerts"
-msgstr ""
+msgstr "Omogoči sprotne opomnike po e-pošti"
 
 #: conf/email.py:71
 msgid "Enable welcome email"
@@ -904,7 +904,7 @@ msgstr "Omogoči opozorilo o zavrnjeni objavi"
 
 #: conf/email.py:81 conf/email.py:91
 msgid "Also, premoderation mode must be enabled"
-msgstr ""
+msgstr "Prav tako mora biti vključeno vnaprejšnje moderiranje"
 
 #: conf/email.py:90
 msgid "Enable approved post alert"
@@ -912,7 +912,7 @@ msgstr "Omogoči opomnik o odobreni objavi"
 
 #: conf/email.py:100
 msgid "Enable batch email alert"
-msgstr ""
+msgstr "Omogoči paketni opomnik po e-pošti"
 
 #: conf/email.py:109
 msgid "Enable private messaging alerts"
@@ -920,7 +920,7 @@ msgstr "Omogoči opomnike zasebnih sporočil"
 
 #: conf/email.py:118
 msgid "Enable moderation queue alerts"
-msgstr ""
+msgstr "Omogoči opomnike v vrsti moderiranja"
 
 #: conf/email.py:128
 msgid "Enable HTML-formatted email"
@@ -928,51 +928,51 @@ msgstr "Omogoči oblikovanje HTML v e-sporočilih"
 
 #: conf/email.py:129
 msgid "May not be supported by some email clients"
-msgstr ""
+msgstr "Nekateri e-poštni odjemalci tega morda ne podpirajo"
 
 #: conf/email.py:138
 msgid "Maximum number of news entries in an email alert"
-msgstr ""
+msgstr "Največje število novic v e-poštnem opomniku"
 
 #: conf/email.py:148
 msgid "Default notification frequency all questions"
-msgstr ""
+msgstr "Privzeta frekvenca obveščanja o vseh vprašanjih"
 
 #: conf/email.py:150
 msgid "Option to define frequency of emailed updates for: all questions."
-msgstr ""
+msgstr "Možnost za določanje frekvence e-poslanih posodobitev za: vsa vprašanja."
 
 #: conf/email.py:162
 msgid "Default notification frequency questions asked by the user"
-msgstr ""
+msgstr "Privzeta frekvenca obveščanja o zastavljenih vprašanjih uporabnika"
 
 #: conf/email.py:164
 msgid ""
 "Option to define frequency of emailed updates for: Question asked by the "
 "user."
-msgstr ""
+msgstr "Možnost za določanje frekvence e-poslanih posodobitev za: zastavljena vprašanja uporabnika."
 
 #: conf/email.py:176
 msgid "Default notification frequency questions answered by the user"
-msgstr ""
+msgstr "Privzeta frekvenca obveščanja o uporabnikovih odgovorjenih vprašanjih"
 
 #: conf/email.py:178
 msgid ""
 "Option to define frequency of emailed updates for: Question answered by the "
 "user."
-msgstr ""
+msgstr "Možnost za določanje frekvence e-poslanih posodobitev za: uporabnikova odgovorjena vprašanja."
 
 #: conf/email.py:190
 msgid ""
 "Default notification frequency questions individually"
 "                        selected by the user"
-msgstr ""
+msgstr "Privzeta frekvenca obveščanja o uporabnikovih posamično izbranih vprašanjih"
 
 #: conf/email.py:193
 msgid ""
 "Option to define frequency of emailed updates for: Question individually "
 "selected by the user."
-msgstr ""
+msgstr "Možnost za določanje frekvence e-poslanih posodobitev za: uporabnikova posamično izbrana vprašanja."
 
 #: conf/email.py:205
 msgid ""
@@ -983,7 +983,7 @@ msgstr "Privzeta frekvenca obveščanja ob omembah in komentarjih"
 #: conf/email.py:208
 msgid ""
 "Option to define frequency of emailed updates for: Mentions and comments."
-msgstr ""
+msgstr "Možnost za določanje frekvence e-poslanih posodobitev za: omembe in komentarji."
 
 #: conf/email.py:219
 msgid "Enable reminders about unanswered questions"
@@ -1010,21 +1010,21 @@ msgstr "Koga opomniti o neodgovorjenih vprašanjih?"
 
 #: conf/email.py:249
 msgid "Days before starting to send reminders about unanswered questions"
-msgstr ""
+msgstr "Število dni pred pošiljanjem opomnikov o neodgovorjenih vprašanjih"
 
 #: conf/email.py:260
 msgid ""
 "How often to send unanswered question reminders (in days between the "
 "reminders sent)."
-msgstr ""
+msgstr "Kako pogosto poslati opomnike o neodgovorjenih vprašanjih (v dnevih med pošiljanjem opomnikov)."
 
 #: conf/email.py:272
 msgid "Max. number of reminders to send about unanswered questions"
-msgstr ""
+msgstr "Največje število opomnikov, poslanih o neodgovorjenem vprašanju"
 
 #: conf/email.py:283
 msgid "Enable accept the best answer reminders"
-msgstr ""
+msgstr "Omogoči opomnike o sprejemanju najboljšega odgovora"
 
 #: conf/email.py:285
 msgid ""
@@ -1035,17 +1035,17 @@ msgstr ""
 
 #: conf/email.py:298
 msgid "Days before starting to send reminders to accept an answer"
-msgstr ""
+msgstr "Število dni pred pošiljanjem opomnikov o sprejetih odgovorih"
 
 #: conf/email.py:309
 msgid ""
 "How often to send accept answer reminders (in days between the reminders "
 "sent)."
-msgstr ""
+msgstr "Kako pogosto poslati opomnike o sprejeth odgovorih (v dnevih med pošiljanjem opomnikov)."
 
 #: conf/email.py:321
 msgid "Max. number of reminders to send to accept the best answer"
-msgstr ""
+msgstr "Največje število opomnikov, poslanih o sprejemanju najboljšega odgovora"
 
 #: conf/email.py:332
 msgid "Allow blank email"
@@ -1053,11 +1053,11 @@ msgstr "Dovoli prazna e-sporočila"
 
 #: conf/email.py:334
 msgid "DANGER: makes impossible account recovery by email."
-msgstr ""
+msgstr "NEVARNO: obnovitev računa prek e-pošte naredi nemogoče."
 
 #: conf/email.py:337 conf/login_providers.py:273
 msgid "Must be not be required"
-msgstr ""
+msgstr "Ne sme biti obvezno"
 
 #: conf/email.py:348
 msgid "Fake email for anonymous user"
@@ -1065,7 +1065,7 @@ msgstr "Lažen e-naslov za anonimne uporabnike"
 
 #: conf/email.py:349
 msgid "Use this setting to control gravatar for email-less user"
-msgstr ""
+msgstr "Uporabite to nastavitev za nadzor gravatarjev za uporabnika brez e-naslova"
 
 #: conf/email.py:358
 msgid "Replace space in emailed tags with dash"
@@ -1075,11 +1075,11 @@ msgstr "Zamenjaj presledek v po e-pošti poslanih značkah z vezaji"
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
-msgstr ""
+msgstr "Nastavitev velja za značke, zapisane v vrstici zadeve za vprašanja, zastavljena prek e-pošte"
 
 #: conf/email.py:371
 msgid "Enable posting and replying by email"
-msgstr ""
+msgstr "Omogoči objavljanjein odgovarjanje po e-pošti"
 
 #: conf/email.py:374
 msgid "To enable this feature make sure lamson is running"
@@ -1101,7 +1101,7 @@ msgstr ""
 
 #: conf/email_text.py:8
 msgid "Email template phrases"
-msgstr ""
+msgstr "Fraze predlog za e-pošto"
 
 #: conf/email_text.py:16
 msgid "Short welcome message, for subject line"
@@ -1119,7 +1119,7 @@ msgstr ""
 
 #: conf/email_text.py:28
 msgid "Longer welcome message, for email body"
-msgstr ""
+msgstr "Dolgo sporočilo dobrodošlice, za telo besedila"
 
 #: conf/email_text.py:29
 msgid ""
@@ -1421,20 +1421,20 @@ msgstr ""
 
 #: conf/forum_data_rules.py:66
 msgid "Enable embedding videos. "
-msgstr ""
+msgstr "Omogoči vdelavo videa."
 
 #: conf/forum_data_rules.py:68
 #, python-format
-msgid "<em>Note: please read <a href=\"%(url)s\">read this</a> first.</em>"
+msgid "<em>Note: please <a href=\"%(url)s\">read this</a> first.</em>"
 msgstr ""
 
 #: conf/forum_data_rules.py:78
 msgid "Check to enable community wiki feature"
-msgstr ""
+msgstr "Potrdite za omogočenje funkcionalnosti wikija"
 
 #: conf/forum_data_rules.py:87
 msgid "Allow logged in users ask anonymously"
-msgstr ""
+msgstr "Dovoli prijavljenim uporabnikom spraševati anonimno"
 
 #: conf/forum_data_rules.py:89
 msgid ""
@@ -1625,7 +1625,7 @@ msgstr "Omogoči komentarje pod odgovori"
 
 #: conf/forum_data_rules.py:407
 msgid "Default max number of comments to display under posts"
-msgstr ""
+msgstr "Privzeto največje število komentarjev, prikazanih pod objavami"
 
 #: conf/forum_data_rules.py:417
 msgid "Reverse ordering of comments"
@@ -1750,7 +1750,7 @@ msgid "All users belong to this group automatically"
 msgstr "Vsi uporabniki so samodejno člani te skupine"
 
 #: conf/group_settings.py:55
-msgid "Enable group email adddresses"
+msgid "Enable group email addresses"
 msgstr ""
 
 #: conf/group_settings.py:57
@@ -1812,7 +1812,7 @@ msgstr "Različica protokola LDAP"
 msgid ""
 "Note that Version 2 protocol is not secure!!! Do not use it on unprotected "
 "network."
-msgstr ""
+msgstr "Upoštevajte, da protokol različice 2 ni varen! Ne uporabljajte ga na ne zaščitenem omrežju."
 
 #: conf/ldap.py:59
 msgid "LDAP URL"
@@ -1826,7 +1826,7 @@ msgstr "Kodiranje LDAP"
 msgid ""
 "This value in almost all cases is \"utf-8\". Change it if yours is "
 "different. This field is required"
-msgstr ""
+msgstr "Ta vrednost je skoraj v vseh primerih »utf-8«. Spremenite, če je vaša drugačna. Polje je obvezno."
 
 #: conf/ldap.py:82
 msgid "Base DN (distinguished name)"
@@ -1859,7 +1859,7 @@ msgstr ""
 msgid ""
 "This field is required. For Microsoft Active Directory this value usually is"
 " \"sAMAccountName\"."
-msgstr ""
+msgstr "To polje je obvezno. Za storitev Microsoft Active Directory je ta vrednost običajno »sAMAccountName«."
 
 #: conf/ldap.py:127
 msgid "\"Common Name\" field"
@@ -1998,7 +1998,7 @@ msgstr ""
 
 #: conf/login_providers.py:54
 msgid "WordPress login button image"
-msgstr ""
+msgstr "Slika gumba prijave WordPress"
 
 #: conf/login_providers.py:64
 msgid "Enable Fedora OpenID login"
@@ -2006,7 +2006,7 @@ msgstr "Omogoči prijavo Fedora OpenID"
 
 #: conf/login_providers.py:73
 msgid "Enable custom OpenID login"
-msgstr ""
+msgstr "Omogoči prijavo po meri OpenID"
 
 #: conf/login_providers.py:83
 msgid "Enable CAS authentication"
@@ -2026,7 +2026,7 @@ msgstr "Različica protokola CAS"
 
 #: conf/login_providers.py:116
 msgid "Upload CAS login icon"
-msgstr ""
+msgstr "Naloži prijavno ikono CAS"
 
 #: conf/login_providers.py:144
 msgid "Custom OpenID"
@@ -2034,11 +2034,11 @@ msgstr "OpenID po meri"
 
 #: conf/login_providers.py:145
 msgid "Short name for the custom OpenID provider"
-msgstr ""
+msgstr "Kratko ime za ponudnika OpenID po meri"
 
 #: conf/login_providers.py:150
 msgid "Direct button login"
-msgstr ""
+msgstr "Neposredna prijava z gumbom"
 
 #: conf/login_providers.py:151
 msgid "Requires username"
@@ -2050,11 +2050,11 @@ msgstr "Vrsta prijave OpenID"
 
 #: conf/login_providers.py:169
 msgid "Upload custom OpenID icon"
-msgstr ""
+msgstr "Naloži ikono OpenID po meri"
 
 #: conf/login_providers.py:179
 msgid "Custom OpenID endpoint"
-msgstr ""
+msgstr "Končna točka OpenID po meri"
 
 #: conf/login_providers.py:180
 #, python-format
@@ -2085,15 +2085,15 @@ msgstr ""
 
 #: conf/login_providers.py:257
 msgid "MediaWiki login button image"
-msgstr ""
+msgstr "Slika gumba prijave MediaWiki"
 
 #: conf/login_providers.py:267
 msgid "MediaWiki - enable one click registration"
-msgstr ""
+msgstr "MediaWiki - omogoči registracijo z enim klikom"
 
 #: conf/login_providers.py:269
 msgid "Allows skipping the registration page after the wiki authentication."
-msgstr ""
+msgstr "Omogoča preskok strani registracije po overitvi wiki"
 
 #: conf/login_providers.py:272
 msgid "Must be enabled"
@@ -2153,18 +2153,18 @@ msgstr ""
 
 #: conf/markup.py:108
 msgid ""
-"Enter valid regular expressions for the patters, one per line. For example "
+"Enter valid regular expressions for the patterns, one per line. For example "
 "to detect a bug pattern like #bug123, use the following regex: #bug(\\d+). "
 "The numbers captured by the pattern in the parentheses will be transferred "
 "to the link url template. Please look up more information about regular "
-"expressions elsewhere."
+"expressions elsewhere. Invalid expressions will not be accepted."
 msgstr ""
 
-#: conf/markup.py:127
+#: conf/markup.py:128
 msgid "URLs for autolinking"
 msgstr "URL-ji za samopovezovanje"
 
-#: conf/markup.py:129
+#: conf/markup.py:130
 msgid ""
 "Here, please enter url templates for the patterns entered in the previous "
 "setting, also one entry per line. <strong>Make sure that number of lines in "
@@ -2497,7 +2497,7 @@ msgstr ""
 
 #: conf/sidebar_main.py:95 conf/sidebar_question.py:144
 msgid "Custom sidebar footer"
-msgstr ""
+msgstr "Noga stranske vrstice po meri"
 
 #: conf/sidebar_main.py:99 conf/sidebar_question.py:148
 msgid ""
@@ -2517,11 +2517,11 @@ msgstr "Stranska vrstica po meri"
 
 #: conf/sidebar_question.py:11
 msgid "Question page banners and sidebar"
-msgstr ""
+msgstr "Pasice in stranska vrstica strani vprašanj"
 
 #: conf/sidebar_question.py:19
 msgid "Top banner"
-msgstr ""
+msgstr "Vrhnja pasica"
 
 #: conf/sidebar_question.py:23
 msgid ""
@@ -2531,7 +2531,7 @@ msgstr ""
 
 #: conf/sidebar_question.py:43
 msgid "Answers banner"
-msgstr ""
+msgstr "Pasica odgovorov"
 
 #: conf/sidebar_question.py:47
 msgid ""
@@ -2911,11 +2911,11 @@ msgstr "Ugled, priponke, glasovi in značke"
 
 #: conf/super_groups.py:6
 msgid "Static Content, URLS & UI"
-msgstr ""
+msgstr "Statična vsebina, URL-ji in vmesnik"
 
 #: conf/super_groups.py:7
 msgid "Data rules & Formatting"
-msgstr ""
+msgstr "Podatkovna pravila in oblikovanje"
 
 #: conf/super_groups.py:8
 msgid "External Services"
@@ -2955,19 +2955,19 @@ msgstr ""
 
 #: conf/user_settings.py:61
 msgid "Allow users change own email addresses"
-msgstr ""
+msgstr "Dovoli uporabnikom spreminjanje lastnega e-naslova"
 
 #: conf/user_settings.py:70
 msgid "Allow email address in user name"
-msgstr ""
+msgstr "Dovoli e-poštni naslov v uporabniškem imenu"
 
 #: conf/user_settings.py:79
 msgid "Allow account recovery by email"
-msgstr ""
+msgstr "Dovoli obnovitev računa prek e-pošte"
 
 #: conf/user_settings.py:88
 msgid "Allow adding and removing login methods"
-msgstr ""
+msgstr "Dovoli dodajanje in odstranjevanje metod prijave"
 
 #: conf/user_settings.py:98
 msgid "Minimum allowed length for screen name"
@@ -2975,7 +2975,7 @@ msgstr ""
 
 #: conf/user_settings.py:115
 msgid "Avatar type for new users"
-msgstr ""
+msgstr "Vrsta avatarja za nove uporabnike"
 
 #: conf/user_settings.py:126
 msgid "Default avatar for users"
@@ -2988,11 +2988,11 @@ msgstr ""
 
 #: conf/user_settings.py:146
 msgid "Base URL for the gravatar service"
-msgstr ""
+msgstr "Osnovni URL za storitev gravatar"
 
 #: conf/user_settings.py:158
 msgid "Use automatic avatars from gravatar service"
-msgstr ""
+msgstr "Uporabi samodejne avatarje iz storitve gravatar"
 
 #: conf/user_settings.py:160
 msgid ""
@@ -3005,7 +3005,7 @@ msgstr ""
 
 #: conf/user_settings.py:171
 msgid "Default Gravatar icon type"
-msgstr ""
+msgstr "Privzeta vrsta ikon Gravatar"
 
 #: conf/user_settings.py:173
 msgid ""
@@ -3024,15 +3024,15 @@ msgstr "Omejitve glasovanja in označevanja"
 
 #: conf/vote_rules.py:24
 msgid "Number of votes a user can cast per day"
-msgstr ""
+msgstr "Število glasov, ki jih lahko uporabnik odda na dan"
 
 #: conf/vote_rules.py:33
 msgid "Maximum number of flags per user per day"
-msgstr ""
+msgstr "Največje število značk na uporabnika na dan"
 
 #: conf/vote_rules.py:42
 msgid "Threshold for warning about remaining daily votes"
-msgstr ""
+msgstr "Prag opozorila o preostalih dnevnih glasovanjih"
 
 #: conf/vote_rules.py:51
 msgid "Number of days to allow canceling votes (-1 for no limit)"
@@ -3067,7 +3067,7 @@ msgstr "Postavite svoje vprašanje"
 #: conf/words.py:24 conf/words.py:35 conf/words.py:46 conf/words.py:57
 #: conf/words.py:127
 msgid "Used on a button"
-msgstr ""
+msgstr "Uporabljeno na gumbu"
 
 #: conf/words.py:33 conf/words.py:34
 msgid "Ask the Group"
@@ -3251,11 +3251,11 @@ msgstr ""
 #: conf/words.py:401 conf/words.py:412 conf/words.py:423 conf/words.py:434
 #: conf/words.py:445 conf/words.py:456 conf/words.py:467
 msgid "Badge name"
-msgstr ""
+msgstr "Ime značke"
 
 #: conf/words.py:476 conf/words.py:477
 msgid "Show only questions from"
-msgstr ""
+msgstr "Pokaži le vprašanja od"
 
 #: conf/words.py:486 conf/words.py:487
 msgid "Please ask your question here"
@@ -3338,8 +3338,8 @@ msgid "follow questions"
 msgstr ""
 
 #: conf/words.py:668
-msgid "Indefinite form"
-msgstr ""
+msgid "Verb in the infinitive form"
+msgstr "Glagol v nedoločniku"
 
 #: conf/words.py:677 conf/words.py:678
 msgid "followed questions"
@@ -3387,7 +3387,7 @@ msgstr "Ponovno odpri vprašanje"
 
 #: conf/words.py:787 conf/words.py:788
 msgid "this answer has been selected as correct"
-msgstr ""
+msgstr "ta odgovor je izbran kot pravilen"
 
 #: conf/words.py:797 conf/words.py:798
 msgid "mark this answer as correct"
@@ -3415,7 +3415,7 @@ msgstr ""
 
 #: conf/words.py:857 conf/words.py:858
 msgid "show only selected answers to enquirers"
-msgstr ""
+msgstr "iskalcem pokaži le izbrane odgovore"
 
 #: conf/words.py:867 conf/words.py:868
 msgid "UNANSWERED"
@@ -3467,7 +3467,7 @@ msgstr "preveč lokalizirano"
 
 #: const/__init__.py:30
 msgid "disable sharing"
-msgstr ""
+msgstr "onemogoči skupno rabo"
 
 #: const/__init__.py:31
 #: templates/user_profile/twitter_sharing_controls.html:13
@@ -3569,7 +3569,7 @@ msgstr ""
 #: const/__init__.py:138 templates/moderation/queue.html:11
 #: templates/user_inbox/responses.html:12
 msgid "all"
-msgstr ""
+msgstr "vse"
 
 #: const/__init__.py:139
 msgid "unanswered"
@@ -3597,15 +3597,15 @@ msgstr "Vprašanje nima sprejetih odgovorov"
 
 #: const/__init__.py:220
 msgid "asked a question"
-msgstr ""
+msgstr "postavil vprašanje"
 
 #: const/__init__.py:221
 msgid "answered a question"
-msgstr ""
+msgstr "odgovoril na vprašanje"
 
 #: const/__init__.py:222
 msgid "commented question"
-msgstr ""
+msgstr "komentiral vprašanje"
 
 #: const/__init__.py:223
 msgid "commented answer"
@@ -3621,11 +3621,11 @@ msgstr "urejen odgovor"
 
 #: const/__init__.py:226
 msgid "received badge"
-msgstr ""
+msgstr "prejel značko"
 
 #: const/__init__.py:227
 msgid "marked best answer"
-msgstr ""
+msgstr "označil najboljši odgovor"
 
 #: const/__init__.py:228
 msgid "upvoted"
@@ -3637,7 +3637,7 @@ msgstr ""
 
 #: const/__init__.py:230
 msgid "canceled vote"
-msgstr ""
+msgstr "preklical glas"
 
 #: const/__init__.py:231
 msgid "deleted question"
@@ -3661,7 +3661,7 @@ msgstr ""
 
 #: const/__init__.py:236
 msgid "completed user profile"
-msgstr ""
+msgstr "dokončal uporabniški profil"
 
 #: const/__init__.py:237
 msgid "email update sent to user"
@@ -3697,7 +3697,7 @@ msgstr ""
 
 #: const/__init__.py:259
 msgid "made an edit"
-msgstr ""
+msgstr "opravil urejanje"
 
 #: const/__init__.py:263
 msgid "created post reject reason"
@@ -3713,7 +3713,7 @@ msgstr "[zaključeno]"
 
 #: const/__init__.py:336
 msgid "[deleted]"
-msgstr ""
+msgstr "[izbrisano]"
 
 #: const/__init__.py:337 views/readers.py:685
 msgid "initial version"
@@ -4006,11 +4006,11 @@ msgstr "Geslo je obvezno"
 
 #: deps/django_authopenid/forms.py:365
 msgid "retype your password"
-msgstr ""
+msgstr "ponovno vnesite geslo"
 
 #: deps/django_authopenid/forms.py:385 utils/forms.py:295
 msgid "entered passwords did not match, please try again"
-msgstr ""
+msgstr "vneseni gesli se ne ujemata, poskusite znova"
 
 #: deps/django_authopenid/forms.py:437
 msgid "Sorry, we don't have this email address in the database"
@@ -4097,7 +4097,7 @@ msgstr ""
 
 #: deps/django_authopenid/util.py:588
 msgid "Sign in with Yahoo"
-msgstr ""
+msgstr "Prijava Yahoo"
 
 #: deps/django_authopenid/util.py:595
 msgid "AOL screen name"
@@ -4117,7 +4117,7 @@ msgstr ""
 
 #: deps/django_authopenid/util.py:657
 msgid "Technorati user name"
-msgstr ""
+msgstr "Uporabniško ime Technorati"
 
 #: deps/django_authopenid/util.py:665
 msgid "WordPress blog name"
@@ -4133,15 +4133,15 @@ msgstr ""
 
 #: deps/django_authopenid/util.py:689
 msgid "ClaimID user name"
-msgstr ""
+msgstr "Uporabniško ime ClaimID"
 
 #: deps/django_authopenid/util.py:697
 msgid "Vidoop user name"
-msgstr ""
+msgstr "Uporabniško ime Vidoop"
 
 #: deps/django_authopenid/util.py:705
 msgid "Verisign user name"
-msgstr ""
+msgstr "Uporabniško ime Verisign"
 
 #: deps/django_authopenid/util.py:759
 #, python-format
@@ -4275,7 +4275,7 @@ msgstr "Dovoljene vrste datotek so %(types)s"
 
 #: importers/stackexchange/management/commands/load_stackexchange.py:150
 msgid "Congratulations, you are now an Administrator"
-msgstr ""
+msgstr "Čestitamo, zdaj ste skrbnik"
 
 #: mail/__init__.py:150
 msgid "<p>To post by email, please:</p>"
@@ -5040,7 +5040,7 @@ msgstr ""
 #: models/post.py:1142 templates/question/answer_controls.html:57
 #: templatetags/extra_filters_jinja.py:147
 msgid "more"
-msgstr ""
+msgstr "dodatno"
 
 #: models/post.py:1820
 msgid "Sorry, this content is not available"
@@ -5170,7 +5170,7 @@ msgstr ""
 
 #: models/widgets.py:34
 msgid "css for the widget"
-msgstr ""
+msgstr "css za gradnik"
 
 #: setup_templates/settings.py:208
 msgid "account/"
@@ -5220,7 +5220,7 @@ msgstr ""
 
 #: templates/500.html:3 templates/500.html.py:5
 msgid "Internal server error"
-msgstr ""
+msgstr "Notranja napaka strežnika"
 
 #: templates/500.html:7
 msgid "system error log is recorded, error will be fixed as soon as possible"
@@ -5836,7 +5836,7 @@ msgstr "Ta objava čaka na moderiranje"
 #: templates/revisions.html.py:41 templates/question/answer_controls.html:2
 #: templates/question/question_card.html:22
 #: templates/question/question_controls.html:1
-#: templates/user_profile/user_info.html:171
+#: templates/user_profile/user_info.html:170
 msgid "edit"
 msgstr "uredi"
 
@@ -6502,7 +6502,7 @@ msgstr ""
 
 #: templates/email/preview_email.html:13
 #, python-format
-msgid "Example %%(num)d"
+msgid "Example %(num)s"
 msgstr ""
 
 #: templates/email/preview_email.html:19
@@ -6609,7 +6609,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Note: to reply with a comment, please use \n"
-"                <a href=\"mailto:%(addr)ss?subject=%(subject)s\">this link</a>\n"
+"                <a href=\"mailto:%(addr)s?subject=%(subject)s\">this link</a>\n"
 "            "
 msgstr ""
 
@@ -7587,20 +7587,15 @@ msgstr "spletišče"
 msgid "location"
 msgstr ""
 
-#: templates/user_profile/user_info.html:139
-msgid "age"
-msgstr "starost"
-
-#: templates/user_profile/user_info.html:140
-#, python-format
-msgid "%(age)s years old"
+#: templates/user_profile/user_info.html:138
+msgid "age, years"
 msgstr ""
 
-#: templates/user_profile/user_info.html:145
+#: templates/user_profile/user_info.html:144
 msgid "todays unused votes"
 msgstr ""
 
-#: templates/user_profile/user_info.html:146
+#: templates/user_profile/user_info.html:145
 msgid "votes left"
 msgstr "preostalih glasov"
 
@@ -8356,7 +8351,7 @@ msgstr "O %(site)s"
 
 #: views/meta.py:131
 msgid "Please sign in or register to send your feedback"
-msgstr ""
+msgstr "Prijavite se ali registrirajte, da boste lahko poslali svoj odziv."
 
 #: views/meta.py:148
 msgid "unknown"
@@ -8499,7 +8494,7 @@ msgstr "spremembe shranjene"
 
 #: views/users.py:1227
 msgid "email updates canceled"
-msgstr ""
+msgstr "posodobitve e-pošte preklicane"
 
 #: views/users.py:1245
 msgid "profile - email subscriptions"
@@ -8522,7 +8517,7 @@ msgstr "dovoljene vrste datotek so »%(file_types)s«"
 #: views/writers.py:96
 #, python-format
 msgid "maximum upload file size is %(file_size)sK"
-msgstr ""
+msgstr "največja velikost datoteke za nalaganje je %(file_size)s K"
 
 #: views/writers.py:104
 msgid ""
