@@ -62,9 +62,9 @@ class Command(NoArgsCommand):
         )
 
     def bad_stuff(self):
-        if self.options['nospam']:
-            return ''
-        return "<script>alert('hohoho')</script>"
+        if self.options['with_spam']:
+            return "<script>alert('hohoho')</script>"
+        return ''
 
     def backup_settings(self):
         settings = {}
