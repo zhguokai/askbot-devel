@@ -1028,6 +1028,8 @@ def user_reputation(request, user, context):
     reputes = models.Repute.objects.filter(
                                         user=user,
                                         language_code=get_language()
+                                    ).order_by(
+                                        '-reputed_at'
                                     ).select_related(
                                         'question',
                                         'question__thread',
@@ -1055,7 +1057,9 @@ def user_reputation(request, user, context):
         raw_graph_data = reputes
     else:
         #extract only a sampling of data to limit the number of data points
-        rep_qs = models.Repute.objects.filter(user=user).order_by('-id')
+        rep_qs = models.Repute.objects.filter(user=user,
+                                              language_code=get_language()
+                                             ).order_by('-reputed_at')
         #extract 300 points
         raw_graph_data = list()
         step = rep_length / float(sample_size)
