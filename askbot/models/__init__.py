@@ -4009,6 +4009,19 @@ def make_admin_if_first_user(user, **kwargs):
     if user_count == 1:
         user.set_status('d')
 
+def make_invited_moderator(user, **kwargs):
+    """If user's email matches one of the values in "INVITED_MODERATORS"
+    setting, change status of this user to "moderator"
+    """
+    from askbot.models.user import (get_invited_moderators,
+                                    remove_email_from_invited_moderators)
+
+    mods = get_invited_moderators(include_registered=True)
+    invited_emails = [m.email for m in mods]
+    if user.email in invited_emails:
+        remove_email_from_invited_moderators(user.email)
+        user.set_status('m')
+
 def moderate_group_joining(sender, instance=None, created=False, **kwargs):
     if created and instance.level == GroupMembership.PENDING:
         user = instance.user
@@ -4255,6 +4268,10 @@ signals.user_registered.connect(
     make_admin_if_first_user,
     dispatch_uid='make_amin_first_registrant'
 )
+signals.user_registered.connect(
+        make_invited_moderator,
+        dispatch_uid='make_invited_moderator'
+        )
 
 signals.user_logged_in.connect(
     complete_pending_tag_subscriptions,

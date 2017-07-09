@@ -163,3 +163,14 @@ class ManagementCommandTests(AskbotTestCase):
         #command sends alerts to three moderators at a time
         self.assertEqual(len(mail.outbox), 3)
         self.assertTrue('moderation' in mail.outbox[0].subject)
+
+    @with_settings(INVITED_MODERATORS='one@site.com Joe\ntwo@site.com Ben',
+                   CONTENT_MODERATION_MODE='premoderation')
+    def test_askbot_send_moderation_alerts1(self):
+        usr = self.create_user('usr', status='w')
+        self.post_question(user=usr)
+        mail.outbox = list()
+        management.call_command('askbot_send_moderation_alerts')
+        #command sends alerts to three moderators at a time
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertTrue('moderation' in mail.outbox[0].subject)

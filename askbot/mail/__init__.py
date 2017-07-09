@@ -60,9 +60,10 @@ def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=No
         message_class = mail.EmailMessage
 
     from askbot.models import User
+    from askbot.models.user import InvitedModerator
     email_list = list()
     for recipient in recipient_list:
-        if isinstance(recipient, User):
+        if isinstance(recipient, (User, InvitedModerator)):
             email_list.append(recipient.email)
         else:
             email_list.append(recipient)

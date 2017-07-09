@@ -21,20 +21,18 @@ class PermissionAssertionTestCase(AskbotTestCase):
     """
 
     def setUp(self):
-        self.user = utils.create_user(
-                            username = 'test',
-                            email = 'test@test.com'
-                        )
+        self.user = utils.create_user(username='test',
+                                      email='test@test.com',
+                                      status='a')
         self.extraSetUp()
 
     def extraSetUp(self):
         pass
 
     def create_other_user(self):
-        return utils.create_user(
-                        username = 'other',
-                        email = 'other@test.com'
-                    )
+        return utils.create_user(username='other',
+                                 email='other@test.com',
+                                 status='a')
 
     def post_question(self, author = None, timestamp = None):
         if author is None:
@@ -166,8 +164,8 @@ class SeeOffensiveFlagsPermissionAssertionTests(utils.AskbotTestCase):
 class DeleteAnswerPermissionAssertionTests(utils.AskbotTestCase):
 
     def setUp(self):
-        self.create_user()
-        self.create_user(username = 'other_user')
+        self.create_user(status='a')
+        self.create_user(username='other_user', status='a')
         self.question = self.post_question()
         self.min_rep = askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS
 
@@ -251,8 +249,8 @@ class DeleteQuestionPermissionAssertionTests(utils.AskbotTestCase):
     """
 
     def setUp(self):
-        self.create_user()
-        self.create_user(username = 'other_user')
+        self.create_user(status='a')
+        self.create_user(username='other_user', status='a')
         self.question = self.post_question()
 
     def assert_can_delete(self):
@@ -292,14 +290,10 @@ class DeleteQuestionPermissionAssertionTests(utils.AskbotTestCase):
         self.assert_can_delete()
 
     def test_owner_cannot_delete_question_with_upvoted_answer_posted_by_other(self):
-        answer = self.post_answer(
-                    user = self.other_user,
-                    question = self.question
-                )
-        self.upvote_answer(
-                    answer = answer,
-                    user = self.user
-                )
+        answer = self.post_answer(user=self.other_user,
+                                  question=self.question)
+        self.upvote_answer(answer=answer,
+                           user=self.user)
         self.assert_cannot_delete()
 
     def test_owner_can_delete_question_without_answers(self):
@@ -479,8 +473,8 @@ class ReopenQuestionPermissionAssertionTests(utils.AskbotTestCase):
 class EditQuestionPermissionAssertionTests(utils.AskbotTestCase):
 
     def setUp(self):
-        self.create_user()
-        self.create_user(username = 'other_user')
+        self.create_user(status='a')
+        self.create_user(username='other_user', status='a')
         self.post = self.post_question()
         self.min_rep = askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS
         self.min_rep_wiki = askbot_settings.MIN_REP_TO_EDIT_WIKI
@@ -1305,8 +1299,8 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
 class AcceptBestAnswerPermissionAssertionTests(utils.AskbotTestCase):
 
     def setUp(self):
-        self.create_user()
-        self.create_user(username = 'other_user')
+        self.create_user(status='a')
+        self.create_user(username='other_user', status='a')
         self.question = self.post_question()
 
     def other_post_answer(self):

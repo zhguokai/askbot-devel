@@ -7,6 +7,7 @@ from askbot import mail
 from askbot.mail.messages import ModerationQueueNotification
 from askbot.models import Activity
 from askbot.models import User
+from askbot.models.user import get_invited_moderators
 
 def get_moderators():
     return User.objects.filter(askbot_profile__status__in=('d', 'm'))
@@ -82,23 +83,27 @@ def remember_last_moderator(user):
 class Command(NoArgsCommand):
     def handle_noargs(self, *args, **kwargs):
         #get size of moderation queue
-        queue = Activity.objects.filter(activity_type__in=const.MODERATED_ACTIVITY_TYPES)
+        act_types = const.MODERATED_ACTIVITY_TYPES
+        queue = Activity.objects.filter(activity_type__in=act_types)
+
         if queue.count() == 0:
             return
 
         #get moderators
         mods = get_moderators().order_by('id')
-        if mods.count() == 0:
+        mods = select_moderators_to_notify(mods, 3)
+        mods = set(mods)
+        all_mods = mods | get_invited_moderators()
+
+        if len(all_mods) == 0:
             return
 
-        mods = select_moderators_to_notify(mods, 3)
+        for mod in all_mods:
+            email = ModerationQueueNotification({'user': mod})
+            email.send([mod,])
 
         if len(mods) == 0:
             return
-
-        for mod in mods:
-            email = ModerationQueueNotification({'user': mod})
-            email.send([mod,])
 
         last_mod = select_last_moderator(mods)
         remember_last_moderator(last_mod)
