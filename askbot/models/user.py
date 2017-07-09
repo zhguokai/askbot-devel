@@ -29,6 +29,12 @@ class InvitedModerator(object):
         self.reputation = 1
         self.invited_outside_moderator = True
 
+    def is_anonymous(self):
+        return False
+
+    def is_authenticated(self):
+        return True
+
     @classmethod
     def make_from_setting(cls, setting_line):
         """Takes one line formatted as <email> <name>
@@ -46,7 +52,7 @@ class InvitedModerator(object):
 
         return cls(name, email)
 
-def get_invited_moderators():
+def get_invited_moderators(include_registered=False):
     """Returns list of InvitedModerator instances
     corresponding to values of askbot_settings.INVITED_MODERATORS"""
     values = askbot_settings.INVITED_MODERATORS.strip()
@@ -57,6 +63,10 @@ def get_invited_moderators():
 
     # exclude existing users
     clean_emails = set([mod.email for mod in moderators])
+
+    if include_registered == True:
+        return moderators
+
     existing_users = User.objects.filter(email__in=clean_emails)
     existing_emails = set(existing_users.values_list('email', flat=True))
     outside_emails = clean_emails - existing_emails
@@ -65,6 +75,20 @@ def get_invited_moderators():
         return mod.email in outside_emails
 
     return set(filter(is_outside_mod, moderators))
+
+
+def remove_email_from_invited_moderators(email):
+    """Update the `INVITED_MODERATORS` setting by removing
+    the matching email entry"""
+    lines = askbot_settings.INVITED_MODERATORS.strip().split('\n')
+    clean_lines = list()
+    prefix = email + ' '
+    for line in lines:
+        if not line.startswith(prefix):
+            clean_lines.append(line)
+    if len(clean_lines) != len(lines):
+        value = '\n'.join(clean_lines)
+        askbot_settings.update('INVITED_MODERATORS', value)
 
 
 class MockUser(object):

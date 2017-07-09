@@ -2,14 +2,13 @@ from askbot.tests.utils import AskbotTestCase, with_settings
 from django.contrib.auth.models import User
 from askbot import models
 from askbot.conf import settings
+from askbot import signals
 from askbot.models.tag import format_personal_group_name
 from askbot.models.user import get_invited_moderators
 
-INVITED_MODS = """
-one@example.com One User
+INVITED_MODS = """one@example.com One User
 broken user without email
-two@example.com Two User
-"""
+two@example.com Two User"""
 
 class UserModelTests(AskbotTestCase):
     """test user model"""
@@ -41,6 +40,18 @@ class UserModelTests(AskbotTestCase):
 
         names = set([m.username for m in mods])
         self.assertEqual(names, set(['Two User',]))
+
+
+    @with_settings(INVITED_MODERATORS=INVITED_MODS)
+    def test_invited_mod_removed_from_setting_upon_joining(self):
+        # we need one more user so that it's made admin
+        # and that the next user is not automatically made an admin
+        admin = self.create_user('Admin', 'admin@example.com')
+        self.assertEqual(len(settings.INVITED_MODERATORS.split('\n')), 3)
+        u = self.create_user('One User', 'one@example.com')
+        self.assertEqual(len(settings.INVITED_MODERATORS.split('\n')), 2)
+        u = self.reload_object(u)
+        self.assertEqual(u.status, 'm')
 
 
     def test_new_user_has_personal_group(self):
