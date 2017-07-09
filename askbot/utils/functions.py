@@ -10,7 +10,6 @@ from django.utils import six
 from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
 from django.utils import timezone
-from django.utils import simplejson
 from django import forms
 
 
