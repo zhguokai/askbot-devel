@@ -45,7 +45,7 @@ def create_user(
             email = None,
             notification_schedule = None,
             date_joined = None,
-            status = 'a',
+            status = None,
             reputation = 1
         ):
     """Creates a user and sets default update subscription
@@ -91,7 +91,8 @@ def create_user(
         feed.save()
 
     signals.user_registered.send(None, user=user)
-    user.set_status(status)
+    if status:
+        user.set_status(status)
 
     return user
 
@@ -113,7 +114,7 @@ class AskbotTestCase(TestCase):
                 notification_schedule=None,
                 date_joined=None,
                 reputation=1,
-                status='a'
+                status=None
             ):
         """creates user with username, etc and
         makes the result accessible as

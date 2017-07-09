@@ -4,6 +4,8 @@ Changes in Askbot
 Develpment version
 ------------------
 * Updated Facebook login Api to v2.8
+* Implemented "Invited Moderators" feature available
+  via settings -> moderation -> invited moderators
 
 0.10.2 (Dec 21, 2016)
 ---------------------
