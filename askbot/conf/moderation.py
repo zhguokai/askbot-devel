@@ -46,6 +46,17 @@ settings.register(
 )
 
 settings.register(
+        LongStringValue(
+            MODERATION,
+            'INVITED_MODERATORS',
+            default='',
+            description=_('Invited moderators'),
+            help_text=_('Use one line per user; on each line enter '
+                        'email address and user name separated by spaces')
+            )
+        )
+
+settings.register(
     BooleanValue(
         MODERATION,
         'MODERATE_IMAGES',

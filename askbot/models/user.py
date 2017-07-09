@@ -21,6 +21,52 @@ from collections import defaultdict
 
 PERSONAL_GROUP_NAME_PREFIX = '_personal_'
 
+class InvitedModerator(object):
+    """Mock user class to represent invited moderators"""
+    def __init__(self, username, email):
+        self.username = username
+        self.email = email
+        self.reputation = 1
+        self.invited_outside_moderator = True
+
+    @classmethod
+    def make_from_setting(cls, setting_line):
+        """Takes one line formatted as <email> <name>
+        and if first value is a valid email,
+        returns an instance of InvitedModerator,
+        otherwise returns `None`"""
+        bits = setting_line.strip().split()
+        if len(bits) < 2:
+            return None
+
+        email = bits[0]
+        if not functions.is_email_valid(email):
+            return None
+        name = ' '.join(bits[1:])
+
+        return cls(name, email)
+
+def get_invited_moderators():
+    """Returns list of InvitedModerator instances
+    corresponding to values of askbot_settings.INVITED_MODERATORS"""
+    values = askbot_settings.INVITED_MODERATORS.strip()
+    moderators = list()
+    for user_line in values.split('\n'):
+        mod = InvitedModerator.make_from_setting(user_line)
+        if mod: moderators.append(mod)
+
+    # exclude existing users
+    clean_emails = set([mod.email for mod in moderators])
+    existing_users = User.objects.filter(email__in=clean_emails)
+    existing_emails = set(existing_users.values_list('email', flat=True))
+    outside_emails = clean_emails - existing_emails
+
+    def is_outside_mod(mod):
+        return mod.email in outside_emails
+
+    return set(filter(is_outside_mod, moderators))
+
+
 class MockUser(object):
     def __init__(self):
         self.username = ''

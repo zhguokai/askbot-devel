@@ -2,15 +2,26 @@ import datetime
 import re
 import random
 import time
+from django.core.validators import validate_email
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.html import escape
 from django.utils import six
 from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
+from django import forms
 
 
 mark_safe_lazy = lazy(mark_safe, six.text_type)
+
+
+def is_email_valid(email):
+    """Returns `True` if email is valid"""
+    try:
+        validate_email(email)
+    except forms.ValidationError:
+        return False
+    return True
 
 
 def timedelta_total_seconds(td):
