@@ -2,6 +2,7 @@ import re
 import random
 import simplejson
 import time
+from django.core.validators import validate_email
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.html import escape
@@ -9,6 +10,8 @@ from django.utils import six
 from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
 from django.utils import timezone
+from django.utils import simplejson
+from django import forms
 
 
 mark_safe_lazy = lazy(mark_safe, six.text_type)
@@ -17,6 +20,14 @@ mark_safe_lazy = lazy(mark_safe, six.text_type)
 def decode_and_loads(input_str):
     """utf-8 decodes the input, then runs json loads"""
     return simplejson.loads(input_str.decode('utf-8'))
+
+def is_email_valid(email):
+    """Returns `True` if email is valid"""
+    try:
+        validate_email(email)
+    except forms.ValidationError:
+        return False
+    return True
 
 
 def timedelta_total_seconds(td):

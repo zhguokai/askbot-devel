@@ -4081,6 +4081,20 @@ def init_language_settings(user, **kwargs):
     user.askbot_profile.save()
 
 
+def make_invited_moderator(user, **kwargs):
+    """If user's email matches one of the values in "INVITED_MODERATORS"
+    setting, change status of this user to "moderator"
+    """
+    from askbot.models.user import (get_invited_moderators,
+                                    remove_email_from_invited_moderators)
+
+    mods = get_invited_moderators(include_registered=True)
+    invited_emails = [m.email for m in mods]
+    if user.email in invited_emails:
+        remove_email_from_invited_moderators(user.email)
+        user.set_status('m')
+
+
 def moderate_group_joining(sender, instance=None, created=False, **kwargs):
     if created and instance.level == GroupMembership.PENDING:
         user = instance.user
@@ -4323,6 +4337,10 @@ signals.user_registered.connect(
     init_language_settings,
     dispatch_uid='update_language_settings_upon_registration'
 )
+signals.user_registered.connect(
+        make_invited_moderator,
+        dispatch_uid='make_invited_moderator'
+        )
 
 signals.user_logged_in.connect(
     complete_pending_tag_subscriptions,

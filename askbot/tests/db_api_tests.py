@@ -709,7 +709,7 @@ class LinkPostingTests(AskbotTestCase):
     )
     def test_admin_can_help_low_rep_user_insert_link(self):
         #create a low rep user
-        low = self.create_user('low', reputation=10)
+        low = self.create_user('low', reputation=10, status='a')
         #create an admin
         admin = self.create_user('admin', status='d')
         #low re user posts a question with a link
@@ -725,7 +725,7 @@ class ForbiddenTextPostingTests(AskbotTestCase):
         FORBIDDEN_PHRASES='bad\tstuff'
     )
     def test_spam_question_fails(self):
-        user = self.create_user()
+        user = self.create_user(status='a')
         self.assertRaises(
             ValueError,
             self.post_question,

@@ -48,6 +48,7 @@ from askbot.models import (
     User,
     ReplyAddress,
 )
+from askbot.models.user import get_invited_moderators
 from askbot.models.badges import award_badges_signal
 from askbot import exceptions as askbot_exceptions
 from askbot.utils.twitter import Twitter
@@ -251,6 +252,11 @@ def send_instant_notifications_about_activity_in_post(
                                             ):
 
     if recipients is None:
+        recipients = list()
+
+    recipients.update(get_invited_moderators())
+
+    if len(recipients) == 0:
         return
 
     acceptable_types = const.RESPONSE_ACTIVITY_TYPES_FOR_INSTANT_NOTIFICATIONS
