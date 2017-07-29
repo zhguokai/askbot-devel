@@ -16,13 +16,14 @@
         });
     })();
 </script>
+{% if settings.EDITOR_TYPE == 'tinymce' %}
+    {% include "editors/tinymce_scripts.html" %}
+{% endif %}
 {% compress js %}
 <script type="text/javascript" src="{{ '/jslib/editor.js'|media }}"></script>
 <script type="text/javascript" src="{{ '/bootstrap/js/bootstrap.js'|media }}"></script>
 {% if settings.EDITOR_TYPE == 'markdown' %}
     {% include "meta/markdown_javascript.html" %}
-{% elif settings.EDITOR_TYPE == 'tinymce' %}
-    {% include "editors/tinymce_scripts.html" %}
 {% endif %}
 <script type="text/javascript" src="{{ '/jslib/jquery.validate.min.js'|media }}"></script>
 <script type="text/javascript" src="{{ '/jslib/prettify.js'|media }}"></script>
