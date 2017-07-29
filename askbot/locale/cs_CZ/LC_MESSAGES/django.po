@@ -8,15 +8,16 @@
 # Kettner Vít <vit.usela@gmail.com>, 2012
 # sifkka <sifkka@gmail.com>, 2014
 # sifkka <sifkka@gmail.com>, 2014
-# Stanislav Horáček <strepon@centrum.cz>, 2016-2017
+# Stanislav Horáček <stanislav.horacek@gmail.com>, 2017
+# Stanislav Horáček <stanislav.horacek@gmail.com>, 2016-2017
 # Kettner Vít <vit.usela@gmail.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-29 01:57-0500\n"
-"PO-Revision-Date: 2017-03-29 07:04+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2017-07-27 19:31+0000\n"
+"Last-Translator: Stanislav Horáček <stanislav.horacek@gmail.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/askbot/askbot/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +35,7 @@ msgstr " - "
 
 #: feed.py:36 feed.py:108
 msgid "RSS feed"
-msgstr ""
+msgstr "Kanál RSS"
 
 #: forms.py:100
 msgid "Wildcard tag must have only one '*' symbol"
@@ -95,20 +96,20 @@ msgstr[2] "musí obsahovat > %d neinterpunkčních znaků"
 #: forms.py:341
 #, python-format
 msgid "The input is too long, maximum %(length)d characters is allowed"
-msgstr ""
+msgstr "Vstup je příliš dlouhý, maximálně je povoleno %(length)d znaků"
 
 #: forms.py:346
 #, python-format
 msgid "The input is too long, maximum %(length)d bytes is allowed"
-msgstr ""
+msgstr "Vstup je příliš dlouhý, maximálně je povoleno %(length)d bajtů"
 
 #: forms.py:386
 #, python-format
 msgid "enter > %(length)d character"
 msgid_plural "enter > %(length)d characters"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "zadejte > %(length)d znak"
+msgstr[1] "zadejte > %(length)d znaky"
+msgstr[2] "zadejte > %(length)d znaků"
 
 #: forms.py:433
 #, python-format
@@ -139,7 +140,7 @@ msgid_plural ""
 "be used."
 msgstr[0] "Štítky jsou krátká klíčová slova neobsahující mezery. Může být použit až %(max_tags)d štítek."
 msgstr[1] "Štítky jsou krátká klíčová slova neobsahující mezery. Mohou být použity až %(max_tags)d štítky."
-msgstr[2] "Štítky jsou krátká klíčová slova neobsahující mezery. Může být použito až %(max_tags)d štítků."
+msgstr[2] "Štítky jsou krátká klíčová slova neobsahující mezery. Můžete použít až %(max_tags)d štítků."
 
 #: forms.py:511
 #, python-format
@@ -266,7 +267,7 @@ msgstr "Anonym"
 #: forms.py:902
 msgid ""
 "Either provide email address or mark \"I don't want to give my email\" below"
-msgstr ""
+msgstr "Zadejte e-mailovou adresu, nebo níže zaškrtněte „Nechci zadat svůj e-mail“."
 
 #: forms.py:935
 msgid "keep private within your groups"
@@ -878,7 +879,7 @@ msgstr "Předpona pro předmět e-mailu"
 msgid ""
 "This setting takes default from the django settingEMAIL_SUBJECT_PREFIX. A "
 "value entered here will overridethe default."
-msgstr ""
+msgstr "Toto nastavení převezme výchozí hodnotu z nastavení pro Django EMAIL_SUBJECT_PREFIX. Sem zadaná hodnota výchozí přepíše."
 
 #: conf/email.py:45
 msgid "Site administrator email address"
@@ -1077,7 +1078,7 @@ msgstr "Volba platí pro štítky zadané v předmětu otázek zaslaných prost�
 
 #: conf/email.py:371
 msgid "Enable posting and replying by email"
-msgstr ""
+msgstr "Povolit zadávání příspěvků a odpovědí e-mailem"
 
 #: conf/email.py:374
 msgid "To enable this feature make sure lamson is running"
@@ -1419,12 +1420,12 @@ msgstr "Zakážete-li toto tlačítko, snížíte počet nových otázek. I kdy�
 
 #: conf/forum_data_rules.py:66
 msgid "Enable embedding videos. "
-msgstr ""
+msgstr "Povolit vkládání videí."
 
 #: conf/forum_data_rules.py:68
 #, python-format
 msgid "<em>Note: please <a href=\"%(url)s\">read this</a> first.</em>"
-msgstr ""
+msgstr "<em>Poznámka: nejdříve si <a href=\"%(url)s\">přečtěte toto</a>.</em>"
 
 #: conf/forum_data_rules.py:78
 msgid "Check to enable community wiki feature"
@@ -1749,7 +1750,7 @@ msgstr "K této skupině automaticky náleží všichni uživatelé"
 
 #: conf/group_settings.py:55
 msgid "Enable group email addresses"
-msgstr ""
+msgstr "Povolit e-mailové adresy skupin"
 
 #: conf/group_settings.py:57
 msgid "If selected, users can post to groups by email \"group-name@domain.com\""
@@ -1922,7 +1923,7 @@ msgid ""
 "Use this area to enter content at the LEFT sidebarin HTML format.  When "
 "using this option, please use the HTML validation service to make sure that "
 "your input is valid and works well in all browsers."
-msgstr ""
+msgstr "V tomto poli zadejte obsah LEVÉHO panelu ve formátu HTML. Při využití této volby použijte HTML validátor k ujištění, že váš vstup je validní a funguje ve všech prohlížečích."
 
 #: conf/license.py:13
 msgid "Content License"
@@ -2156,7 +2157,7 @@ msgid ""
 "The numbers captured by the pattern in the parentheses will be transferred "
 "to the link url template. Please look up more information about regular "
 "expressions elsewhere. Invalid expressions will not be accepted."
-msgstr ""
+msgstr "Zde zadejte regulární výrazy pro rozpoznávání výrazů, které mají být považovány za odkazy, každý na samostatném řádku. Například regulární výraz #bug(\\d+) rozpozná v textu výraz #bug123 jako odkaz na chybu. Část rozpoznaného výrazu uzavřená v kulatých závorkách bude předána jako parametr šabloně pro vytvoření odkazu. Neplatné výrazy nebudou přijaty."
 
 #: conf/markup.py:128
 msgid "URLs for autolinking"
@@ -2178,7 +2179,7 @@ msgstr "Prahové hodnoty pro karmu"
 
 #: conf/minimum_reputation.py:22
 msgid "To become an automatically approved user"
-msgstr ""
+msgstr "Stát se automaticky schváleným uživatelem"
 
 #: conf/minimum_reputation.py:23
 msgid "Approved users bypass moderation and skip recaptcha"
@@ -2278,7 +2279,7 @@ msgstr "Spouštět e-mailová upozornění"
 
 #: conf/minimum_reputation.py:225
 msgid "Users with smaller reputation will not be generating email alerts"
-msgstr ""
+msgstr "Uživatelé s menší reputací nebudou spouštět e-mailová upozornění"
 
 #: conf/minimum_reputation.py:234
 msgid "Trigger tweets on others accounts"
@@ -2454,13 +2455,13 @@ msgid ""
 "When using this option (as well as the sidebar footer), please use the HTML "
 "validation service to make sure that your input is valid and works well in "
 "all browsers."
-msgstr ""
+msgstr "Slouží pro vložení obsahu ve formátu HTML do horní části postranního panelu. Při použití této možnosti (a také pro zápatí postranního panelu) ověřte správnost zadaného obsahu pomocí validátoru HTML, aby bylo jisté, že je funkční a bude správně zobrazen ve všech prohlížečích."
 
 #: conf/sidebar_main.py:37 conf/sidebar_main.py:113 conf/sidebar_profile.py:38
 #: conf/sidebar_question.py:35 conf/sidebar_question.py:60
 #: conf/sidebar_question.py:96 conf/sidebar_question.py:162
 msgid "Show the text entered above only to anonymous users"
-msgstr ""
+msgstr "Zobrazit výše zadaný text pouze anonymním uživatelům"
 
 #: conf/sidebar_main.py:46
 msgid "Show avatar block in sidebar"
@@ -2482,7 +2483,7 @@ msgstr "Zobrazit v postranním panelu výběr štítků"
 msgid ""
 "Uncheck this if you want to hide the options for choosing interesting and "
 "ignored tags "
-msgstr ""
+msgstr "Zrušte zaškrtnutí, pokud nechcete v postranním panelu zobrazovat možnosti pro výběr zajímavých a ignorovaných štítků"
 
 #: conf/sidebar_main.py:82
 msgid "Show tag list/cloud in sidebar"
@@ -2491,7 +2492,7 @@ msgstr "Zobrazit v postranním panelu seznam/shluk štítků"
 #: conf/sidebar_main.py:84
 msgid ""
 "Uncheck this if you want to hide the tag cloud or tag list from the sidebar "
-msgstr ""
+msgstr "Zrušte zaškrtnutí, pokud nechcete v postranním panelu zobrazovat shluk nebo seznam štítků"
 
 #: conf/sidebar_main.py:95 conf/sidebar_question.py:144
 msgid "Custom sidebar footer"
@@ -2503,7 +2504,7 @@ msgid ""
 "   When using this option (as well as the sidebar header), please use the "
 "HTML validation service to make sure that your input is valid and works well"
 " in all browsers."
-msgstr ""
+msgstr "Slouží pro vložení obsahu do spodní části postranního panelu, obsah zadejte jako HTML. Při použití tohoto pole (a pole pro záhlaví postranního panelu) ověřte správnost zadaného obsahu pomocí validátoru HTML, aby bylo jisté, že je funkční a bude správně zobrazen ve všech prohlížečích."
 
 #: conf/sidebar_profile.py:12
 msgid "User profile sidebar"
@@ -2556,7 +2557,7 @@ msgstr "Zobrazit v postranním panelu seznam štítků"
 
 #: conf/sidebar_question.py:106
 msgid "Uncheck this if you want to hide the tag list from the sidebar "
-msgstr ""
+msgstr "Zrušte zaškrtnutí, pokud nechcete v postranním panelu zobrazovat seznam štítků"
 
 #: conf/sidebar_question.py:117
 msgid "Show meta information in sidebar"
@@ -2566,7 +2567,7 @@ msgstr "Zobrazit v postranním panelu meta informace"
 msgid ""
 "Uncheck this if you want to hide the meta information about the question "
 "(post date, views, last updated). "
-msgstr ""
+msgstr "Zrušte zaškrtnutí, pokud nechcete v postranním panelu zobrazovat meta informace týkající se otázky (datum vytvoření, počet zobrazení, poslední aktualizace)."
 
 #: conf/sidebar_question.py:131
 msgid "Show related questions in sidebar"
@@ -2574,7 +2575,7 @@ msgstr "Zobrazit v postranním panelu související otázky"
 
 #: conf/sidebar_question.py:133
 msgid "Uncheck this if you want to hide the list of related questions. "
-msgstr ""
+msgstr "Zrušte zaškrtnutí, pokud nechcete v postranním panelu zobrazovat seznam souvisejících otázek"
 
 #: conf/site_modes.py:62
 msgid "Bootstrap mode"
@@ -2750,7 +2751,7 @@ msgid ""
 "headerin the HTML format.   When customizing the site header (as well as "
 "footer and the HTML &lt;HEAD&gt;), use the HTML validation service to make "
 "sure that your input is valid and works well in all browsers."
-msgstr ""
+msgstr "Záhlaví je lišta s údaji o uživateli a odkazy umístěná v horní části stránky a je společná pro všechny stránky. Do tohoto pole můžete zadat obsah záhlaví v HTML formátu. Po přizpůsobení záhlaví (stejně tak i zápatí a HTML sekce &lt;HEAD&gt;) nezapomeňte stránku zkontrolovat pomocí validátoru HTML, abyste se ujistili, že zadaný obsah není chybný a funguje ve všech prohlížečích."
 
 #: conf/skin_general_settings.py:208
 msgid "Site footer mode"
@@ -3105,7 +3106,7 @@ msgid ""
 "This space is reserved only for answers. If you would like to engage in a "
 "discussion, please instead post a comment under the question or an answer "
 "that you would like to discuss"
-msgstr ""
+msgstr "Toto místo je určeno pouze pro odpovědi. Pokud si přejete diskutovat, vložte pod otázku nebo odpověď, na kterou chcete reagovat, komentář."
 
 #: conf/words.py:101
 msgid "Instruction to give answers"
@@ -3147,7 +3148,7 @@ msgstr "Vložit ID duplicitní otázky"
 
 #: conf/words.py:182 conf/words.py:183
 msgid "asked"
-msgstr "položil otázku"
+msgstr "otázka položena"
 
 #: conf/words.py:192 conf/words.py:193
 msgid "Asked first question"
@@ -3179,7 +3180,7 @@ msgstr "Poskytl přijatou odpověď"
 
 #: conf/words.py:263 conf/words.py:264
 msgid "answered"
-msgstr "zodpovězena otázka"
+msgstr "otázka zodpovězena"
 
 #: conf/words.py:273
 msgid ""
@@ -3235,7 +3236,7 @@ msgstr "odpověď"
 
 #: conf/words.py:326
 msgid "answer (noun, singular)"
-msgstr ""
+msgstr "otázka (podstatné jméno, jednotné číslo)"
 
 #: conf/words.py:335 conf/words.py:336
 msgid "Question voted up"
@@ -3329,7 +3330,7 @@ msgstr "Slovní spojení: tato otázka je aktuálně sdílena pouze s:"
 
 #: conf/words.py:656 conf/words.py:657
 msgid "Be the first one to answer this question!"
-msgstr "Buďte prvním, kdo tuto otázku zodpoví!"
+msgstr "Buďte první, kdo tuto otázku zodpoví!"
 
 #: conf/words.py:666 conf/words.py:667
 msgid "follow questions"
@@ -3337,7 +3338,7 @@ msgstr "sledovat otázky"
 
 #: conf/words.py:668
 msgid "Verb in the infinitive form"
-msgstr ""
+msgstr "Sloveso v infinitivu"
 
 #: conf/words.py:677 conf/words.py:678
 msgid "followed questions"
@@ -3852,7 +3853,7 @@ msgstr "kliknutím zobrazíte nejrelevantnější otázky"
 
 #: const/message_keys.py:17
 msgid "by relevance"
-msgstr ""
+msgstr "relevance"
 
 #: const/message_keys.py:18
 msgid "click to see the oldest questions"
@@ -3860,7 +3861,7 @@ msgstr "kliknutím zobrazíte nejstarší otázky"
 
 #: const/message_keys.py:19
 msgid "by date"
-msgstr ""
+msgstr "datum"
 
 #: const/message_keys.py:20
 msgid "click to see the newest questions"
@@ -3872,7 +3873,7 @@ msgstr "kliknutím zobrazíte otázky, které nebyly dlouho aktualizovány"
 
 #: const/message_keys.py:22
 msgid "by activity"
-msgstr ""
+msgstr "aktivita"
 
 #: const/message_keys.py:23
 msgid "click to see the most recently updated questions"
@@ -3884,7 +3885,7 @@ msgstr "kliknutím zobrazíte otázky s nejmenším počtem odpovědí"
 
 #: const/message_keys.py:25
 msgid "by answers"
-msgstr ""
+msgstr "odpovědi"
 
 #: const/message_keys.py:26
 msgid "click to see the most answered questions"
@@ -3896,7 +3897,7 @@ msgstr "kliknutím zobrazíte otázky s nejhorším hodnocením"
 
 #: const/message_keys.py:28
 msgid "by votes"
-msgstr ""
+msgstr "hodnocení"
 
 #: const/message_keys.py:29
 msgid "click to see most voted questions"
@@ -4682,9 +4683,9 @@ msgid ""
 msgid_plural ""
 "Sorry, cannot delete this since it has some upvoted responses posted by "
 "someone else"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Tuto položku nelze smazat, protože obsahuje odpověď od jiného uživatele, která byla kladně ohodnocena."
+msgstr[1] "Tuto položku nelze smazat, protože obsahuje odpovědi od jiných uživatelů, které byly kladně ohodnoceny."
+msgstr[2] "Tuto položku nelze smazat, protože obsahuje odpovědi od jiných uživatelů, které byly kladně ohodnoceny."
 
 #: models/__init__.py:1274
 msgid "delete posts"
@@ -5897,7 +5898,7 @@ msgstr "%(seen)s označených příspěvků"
 #: templates/macros.html:753
 #, python-format
 msgid "%(action_performed)s %(when)s"
-msgstr ""
+msgstr "%(action_performed)s %(when)s"
 
 #: templates/main_page.html:15
 msgid "Questions"
@@ -6449,12 +6450,12 @@ msgstr "Seznam e-mailů odesílaných Askbotem"
 #: templates/email/macros.html:34 templates/email/macros.html.py:66
 #, python-format
 msgid "In reply to %(author)s's %(post_type)s"
-msgstr ""
+msgstr "Jako odpověď na %(post_type)s uživatele %(author)s"
 
 #: templates/email/macros.html:37 templates/email/macros.html.py:68
 #, python-format
 msgid "%(author)s %(performed_action)s"
-msgstr ""
+msgstr "%(author)s %(performed_action)s"
 
 #: templates/email/macros.html:52
 msgid "Tags:"
@@ -6486,7 +6487,7 @@ msgstr "E-maily Askbotu"
 #: templates/email/preview_email.html:13
 #, python-format
 msgid "Example %(num)s"
-msgstr ""
+msgstr "Příklad %(num)s"
 
 #: templates/email/preview_email.html:19
 msgid "Subject"
@@ -6592,7 +6593,7 @@ msgid ""
 "Note: to reply with a comment, please use \n"
 "                <a href=\"mailto:%(addr)s?subject=%(subject)s\">this link</a>\n"
 "            "
-msgstr ""
+msgstr "Poznámka: Chcete-li odpovědět komentářem, použijte \n                <a href=\"mailto:%(addr)s?subject=%(subject)s\">tento odkaz</a>\n            "
 
 #: templates/email/instant_notification/body.html:23
 #, python-format
@@ -6912,7 +6913,7 @@ msgstr "Rozbalit vše"
 #: templates/user_profile/user_stats.html:24
 #, python-format
 msgid "<span class=\"count\">%(item_count)s</span> %(pluralized_item_term)s"
-msgstr ""
+msgstr "<span class=\"count\">%(item_count)s</span> %(pluralized_item_term)s"
 
 #: templates/main_page/headline.html:10
 msgid "Tagged"
@@ -6954,7 +6955,7 @@ msgstr "zadejte štítky a dotaz pro upřesnění hledání"
 
 #: templates/main_page/nothing_found.html:3
 msgid "Oops, looks like there is nothing here yet!"
-msgstr ""
+msgstr "Zřejmě zde ještě není žádný obsah."
 
 #: templates/main_page/nothing_found.html:7
 msgid "You can expand your search by "
@@ -7268,11 +7269,11 @@ msgstr "Statistika"
 
 #: templates/question/sidebar.html:138
 msgid "Asked"
-msgstr "Položené"
+msgstr "Otázka položena"
 
 #: templates/question/sidebar.html:141
 msgid "Seen"
-msgstr "Přečtené"
+msgstr "Přečtena"
 
 #: templates/question/sidebar.html:141
 msgid "times"
@@ -7280,7 +7281,7 @@ msgstr "krát"
 
 #: templates/question/sidebar.html:144
 msgid "Last updated"
-msgstr "Naposledy aktualizované"
+msgstr "Naposledy aktualizována"
 
 #: templates/tags/form_bulk_tag_subscription.html:4
 #: templates/tags/form_bulk_tag_subscription.html:6
@@ -7310,15 +7311,15 @@ msgstr "spravovat odebírání"
 
 #: templates/tags/list_bulk_tag_subscription.html:4
 msgid "Manage tag subscriptions"
-msgstr ""
+msgstr "Spravovat odebírání štítků"
 
 #: templates/tags/list_bulk_tag_subscription.html:7
 msgid "Manage tag subscription"
-msgstr ""
+msgstr "Spravovat odebírání štítků"
 
 #: templates/tags/list_bulk_tag_subscription.html:8
 msgid "Create new"
-msgstr ""
+msgstr "Vytvořit nové"
 
 #: templates/tags/list_bulk_tag_subscription.html:11
 msgid "Date"
@@ -7566,7 +7567,7 @@ msgstr "umístění"
 
 #: templates/user_profile/user_info.html:138
 msgid "age, years"
-msgstr ""
+msgstr "věk, roky"
 
 #: templates/user_profile/user_info.html:144
 msgid "todays unused votes"
@@ -7574,7 +7575,7 @@ msgstr "nevyužitá dnešní hodnocení"
 
 #: templates/user_profile/user_info.html:145
 msgid "votes left"
-msgstr "zbývající hodnocení"
+msgstr "zbývajících hodnocení"
 
 #: templates/user_profile/user_languages.html:3
 #: templates/user_profile/user_tabs.html:18
@@ -7987,9 +7988,9 @@ msgstr[2] "zobrazení"
 #: templates/widgets/question_summary.html:41
 msgid "vote"
 msgid_plural "votes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "hlas"
+msgstr[1] "hlasy"
+msgstr[2] "hlasů"
 
 #: templates/widgets/scope_nav.html:10
 msgid "ALL"
@@ -8069,7 +8070,7 @@ msgstr "widgety"
 #: templates/widgets/user_perms.html:1
 #, python-format
 msgid "Your karma is %(karma)s"
-msgstr ""
+msgstr "Vaše karma je %(karma)s"
 
 #: templates/widgets/user_perms.html:4
 msgid "Karma reflects the value of your contribution to this community."
