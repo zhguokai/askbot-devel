@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-29 01:57-0500\n"
-"PO-Revision-Date: 2017-06-19 07:20+0000\n"
+"PO-Revision-Date: 2017-06-28 17:57+0000\n"
 "Last-Translator: Artem Litvinov <tema.litvinov@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/askbot/askbot/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -434,13 +434,13 @@ msgstr "редактировать по электронной почте"
 #: urls.py:64 urls.py:390 urls.py:396 urls.py:405 urls.py:414
 msgctxt "urls"
 msgid "tags/"
-msgstr "tehgi/"
+msgstr "tegi/"
 
 #: urls.py:69 urls.py:75 urls.py:84 urls.py:105 urls.py:114 urls.py:122
 #: urls.py:129
 msgctxt "urls"
 msgid "users/"
-msgstr "pol'zovateli/"
+msgstr "polzovateli/"
 
 #: urls.py:76
 msgctxt "urls"
@@ -450,7 +450,7 @@ msgstr "po-gruppam/"
 #: urls.py:84 urls.py:190 urls.py:297 urls.py:416 urls.py:636
 msgctxt "urls"
 msgid "edit/"
-msgstr "redaktirovat'/"
+msgstr "redaktirovat/"
 
 #: urls.py:106 urls.py:390 urls.py:397 urls.py:406 urls.py:415
 msgctxt "urls"
@@ -460,17 +460,17 @@ msgstr "podpiski/"
 #: urls.py:115
 msgctxt "urls"
 msgid "unsubscribe/"
-msgstr "otpisat'sya/"
+msgstr "otpisatsya/"
 
 #: urls.py:123
 msgctxt "urls"
 msgid "select_languages/"
-msgstr "vybrat' yazyk/"
+msgstr "vybrat-yazyk/"
 
 #: urls.py:134
 msgctxt "urls"
 msgid "groups/"
-msgstr "gruppy"
+msgstr "gruppy/"
 
 #: urls.py:139 urls.py:144
 msgctxt "urls"
@@ -485,17 +485,17 @@ msgstr "otzyvy/"
 #: urls.py:179
 msgctxt "urls"
 msgid "about/"
-msgstr "o nas/"
+msgstr "o-nas/"
 
 #: urls.py:180
 msgctxt "urls"
 msgid "faq/"
-msgstr "chasto zadavaemye voprosy/"
+msgstr "chasto-zadavaemye-voprosy/"
 
 #: urls.py:181
 msgctxt "urls"
 msgid "privacy/"
-msgstr "privatnost'/"
+msgstr "privatnost/"
 
 #: urls.py:183
 msgctxt "urls"
@@ -505,7 +505,7 @@ msgstr "usloviya/"
 #: urls.py:188
 msgctxt "urls"
 msgid "help/"
-msgstr "pomoshch'/"
+msgstr "pomoshch/"
 
 #: urls.py:190 urls.py:195
 msgctxt "urls"
@@ -520,42 +520,42 @@ msgstr "izmeneniya/"
 #: urls.py:227
 msgctxt "urls"
 msgid "moderation-queue/"
-msgstr "ochered' moderacii/"
+msgstr "ochered-moderacii/"
 
 #: urls.py:292 urls.py:595 urls.py:603 urls.py:611 urls.py:619
 msgctxt "urls"
 msgid "ask/"
-msgstr "sprosit'/"
+msgstr "sprosit/"
 
 #: urls.py:302
 msgctxt "urls"
 msgid "retag/"
-msgstr "zmenit' tehg/"
+msgstr "zamenit-teg/"
 
 #: urls.py:307
 msgctxt "urls"
 msgid "close/"
-msgstr "zakryt'/"
+msgstr "zakryt/"
 
 #: urls.py:312
 msgctxt "urls"
 msgid "reopen/"
-msgstr "otkryt' zanovo/"
+msgstr "otkryt-zanovo/"
 
 #: urls.py:317
 msgctxt "urls"
 msgid "answer/"
-msgstr "otvetit'/"
+msgstr "otvetit/"
 
 #: urls.py:398 urls.py:644
 msgctxt "urls"
 msgid "delete/"
-msgstr "udalit'/"
+msgstr "udalit/"
 
 #: urls.py:407 urls.py:628
 msgctxt "urls"
 msgid "create/"
-msgstr "sozdat'/"
+msgstr "sozdat/"
 
 #: urls.py:422
 msgctxt "urls"
@@ -571,17 +571,17 @@ msgstr "vidzhety/"
 #: urls.py:620 deps/django_authopenid/urls.py:27
 msgctxt "urls"
 msgid "complete/"
-msgstr "zavershit'/"
+msgstr "zavershit/"
 
 #: urls.py:681
 msgctxt "urls"
 msgid "upload/"
-msgstr "zagruzit'/"
+msgstr "zagruzit/"
 
 #: urls.py:712
 msgctxt "urls"
 msgid "account/"
-msgstr "vojti/"
+msgstr "uchetnaya-zapis/"
 
 #: conf/access_control.py:11
 msgid "Access control settings"
@@ -4060,17 +4060,17 @@ msgstr "vyjti/"
 #: deps/django_authopenid/urls.py:31
 msgctxt "urls"
 msgid "complete-cas/"
-msgstr "zavershit'-cas/"
+msgstr "zavershit-cas/"
 
 #: deps/django_authopenid/urls.py:44
 msgctxt "urls"
 msgid "register/"
-msgstr "zaregistrirovat'sya/"
+msgstr "zaregistrirovatsya/"
 
 #: deps/django_authopenid/urls.py:46
 msgctxt "urls"
 msgid "signup/"
-msgstr "podpisat'sya/"
+msgstr "podpisatsya/"
 
 #: deps/django_authopenid/urls.py:55
 msgctxt "urls"
@@ -4080,12 +4080,12 @@ msgstr "vyjti/"
 #: deps/django_authopenid/urls.py:57
 msgctxt "urls"
 msgid "recover/"
-msgstr "vosstanovit'/"
+msgstr "vosstanovit/"
 
 #: deps/django_authopenid/urls.py:62
 msgctxt "urls"
 msgid "verify-email/"
-msgstr "podtverdit' email/"
+msgstr "podtverdit-email/"
 
 #: deps/django_authopenid/util.py:431
 #, python-format
