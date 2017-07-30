@@ -80,13 +80,17 @@ Editable.prototype.getAttributeName = function() {
 };
 
 Editable.prototype.startEditingText = function (text) {
+    var ed = this._editor;
     this.setState('edit');
-    this._editor.setText(text);
     if (this.isEditorLoaded() === false){
-        this._editor.start();
+        ed.start();
         this.setEditorLoaded();
     }
-    this._editor.putCursorAtEnd();
+    var onFocus = function () {
+        ed.setText(text);
+        ed.putCursorAtEnd();
+    };
+    ed.focus(onFocus);
 }
 
 /**
