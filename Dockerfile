@@ -12,8 +12,7 @@ WORKDIR /site/
 RUN askbot-setup --dir-name=. --db-engine=${ASKBOT_DATABASE_ENGINE:-2} \
     --db-name=${ASKBOT_DATABASE_NAME:-db.sqlite} \
     --db-user="${ASKBOT_DATABASE_USER}" \
-    --db-password="${ASKBOT_DATABASE_PASSWORD}" \
-    --domain="${ASKBOT_DOMAIN:-example.com}"
+    --db-password="${ASKBOT_DATABASE_PASSWORD}"
 
 RUN sed "s/ROOT_URLCONF.*/ROOT_URLCONF = 'urls'/"  settings.py -i
 
