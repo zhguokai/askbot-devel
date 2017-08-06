@@ -70,6 +70,20 @@ def askbot_setup():
             )
 
     parser.add_option(
+                "--db-host",
+                dest = "database_host",
+                default = None,
+                help = "the database host"
+            )
+
+    parser.add_option(
+                "--db-port",
+                dest = "database_port",
+                default = None,
+                help = "the database host"
+            )
+
+    parser.add_option(
                 "--append-settings",
                 dest = "local_settings",
                 default = '',
@@ -221,7 +235,14 @@ def collect_missing_options(options_dict):
                 return options_dict
 
     else:#others
-        for key in ('database_name', 'database_user', 'database_password'):
+        db_keys = (
+            'database_name',
+            'database_user',
+            'database_password',
+            'database_host',
+            'database_port'
+            )
+        for key in db_keys:
             if options_dict[key] is None:
                 key_name = key.replace('_', ' ')
                 value = console.simple_dialog(
