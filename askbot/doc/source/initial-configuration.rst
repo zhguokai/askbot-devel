@@ -64,6 +64,10 @@ in the same project.
     +----------------------------------+------------------------------------------------------------+
     | -p <DATABASE_PASSWORD>           | The database password for the user.                        |
     +----------------------------------+------------------------------------------------------------+
+    | --db-host <DATABASE_HOST>        | The database host to which askbot will connect             |
+    +----------------------------------+------------------------------------------------------------+
+    | --db-port <DATABASE_PORT>        | The database port to which askbot will connect.            |
+    +----------------------------------+------------------------------------------------------------+
     | --append-settings=<SETTINGS_FILE>| Allows to append a setting file content to the             |
     |                                  | settings file, the parameter is the file to use.           |
     +----------------------------------+------------------------------------------------------------+
