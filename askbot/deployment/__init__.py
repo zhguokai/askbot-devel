@@ -5,6 +5,7 @@ from __future__ import print_function
 import os.path
 import sys
 import django
+from collections import OrderedDict
 from optparse import OptionParser
 from askbot.deployment import messages
 from askbot.deployment.messages import print_message
@@ -235,19 +236,19 @@ def collect_missing_options(options_dict):
                 return options_dict
 
     else:#others
-        db_keys = (
-            'database_name',
-            'database_user',
-            'database_password',
-            'database_host',
-            'database_port'
-            )
-        for key in db_keys:
+        db_keys = OrderedDict([
+            ('database_name', True),
+            ('database_user', True),
+            ('database_password', True),
+            ('database_host', False),
+            ('database_port', False)
+        ])
+        for key in db_keys.iterkeys():
             if options_dict[key] is None:
                 key_name = key.replace('_', ' ')
                 value = console.simple_dialog(
                     '\nPlease enter %s' % key_name,
-                    required=True
+                    required=db_keys[key]
                 )
                 options_dict[key] = value
         return options_dict
