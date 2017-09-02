@@ -233,6 +233,11 @@ urlpatterns = patterns('',
         views.moderation.moderate_post_edits,
         name='moderate_post_edits'
     ),
+    url(
+        r'^%s$' % pgettext('urls', 'moderation-log/'),
+        views.moderation.moderation_log,
+        name='moderation_log'
+    ),
     service_url(
         r'^set-question-title/',
         views.commands.set_question_title,

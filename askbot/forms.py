@@ -685,6 +685,10 @@ class ShowTagsForm(forms.Form):
     query = forms.CharField(required=False)
 
 
+class ModLogForm(forms.Form):
+    page = PageField()
+
+
 class ShowUsersForm(forms.Form):
     page = PageField()
     sort = SortField(

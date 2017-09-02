@@ -1117,7 +1117,7 @@ def user_assert_can_see_deleted_post(self, post=None):
             admin_or_moderator_required=True,
             owner_can=True
         )
-    except django_exceptions.PermissionDenied, e:
+    except django_exceptions.PermissionDenied:
         #re-raise the same exception with a different message
         error_message = _(
             'This post has been deleted and can be seen only '
@@ -1893,17 +1893,17 @@ def user_delete_question(
 
 def user_delete_all_content_authored_by_user(self, author, timestamp=None):
     """Deletes all questions, answers and comments made by the user"""
-    count = 0
 
     #delete answers
     answers = Post.objects.get_answers().filter(author=author, deleted=False)
     timestamp = timestamp or datetime.datetime.now()
-    count += answers.update(deleted_at=timestamp, deleted_by=self, deleted=True)
+    answers.update(deleted_at=timestamp, deleted_by=self, deleted=True)
+    post_ids = list(answers.values_list('pk', flat=True))
 
     #delete questions
     questions = Post.objects.get_questions().filter(author=author, deleted=False)
-    count += questions.count()
     for question in questions:
+        post_ids.append(question.pk)
         self.delete_question(question=question, timestamp=timestamp)
 
     threads = Thread.objects.filter(last_activity_by=author)
@@ -1919,8 +1919,8 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
         thread.reset_cached_data()
 
     #delete comments
+    #todo: handle deletion of comments better
     comments = Post.objects.get_comments().filter(author=author)
-    count += comments.count()
     comments.delete()
 
     #delete all unused tags created by this user
@@ -1931,7 +1931,7 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
     #        tag_ids.append(tag.id)
     #Tag.objects.filter(id__in=tag_ids).delete()
 
-    return count
+    return post_ids
 
 
 @auto_now_timestamp

@@ -1,0 +1,11 @@
+{% extends "one_column_body.html" %}
+{% from "macros.html" import "macros" %}
+<!-- moderation/log.html -->
+{% block title %}{% trans %}Moderation log{% endtrans %}{% endblock %}
+{% block content %}
+    {% for act in acts %}
+    {% endfor %}
+    <div class="pager">
+        {{ macros.paginator(paginator_context, anchor='#sort-top') }}
+    </div>
+{% endblock %}

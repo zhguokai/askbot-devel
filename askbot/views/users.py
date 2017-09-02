@@ -273,7 +273,8 @@ def user_moderate(request, subject, context):
             if user_status_form.is_valid():
                 subject.set_status( user_status_form.cleaned_data['user_status'] )
                 if user_status_form.cleaned_data['delete_content'] == True:
-                    num_deleted = request.user.delete_all_content_authored_by_user(subject)
+                    post_ids = request.user.delete_all_content_authored_by_user(subject)
+                    num_deleted = len(post_ids)
                     if num_deleted:
                         num_deleted_message = ungettext('%d post deleted', '%d posts deleted', num_deleted) % num_deleted
                         user_status_changed_message = string_concat(user_status_changed_message, ', ', num_deleted_message)
