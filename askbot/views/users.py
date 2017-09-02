@@ -168,8 +168,6 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                                     )
                     return HttpResponseRedirect(group_page_url)
 
-    is_paginated = True
-
     form = forms.ShowUsersForm(request.REQUEST)
     form.full_clean()#always valid
     sort_method = form.cleaned_data['sort']
@@ -201,16 +199,9 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                         )
         base_url = request.path + '?name=%s&sort=%s&' % (search_query, sort_method)
 
-    try:
-        users_page = objects_list.page(page)
-    except (EmptyPage, InvalidPage):
-        users_page = objects_list.page(objects_list.num_pages)
-
     paginator_data = {
-        'is_paginated' : is_paginated,
-        'pages': objects_list.num_pages,
+        'paginator': objects_list,
         'current_page_number': page,
-        'page_object': users_page,
         'base_url' : base_url
     }
     paginator_context = functions.setup_paginator(paginator_data) #
@@ -227,6 +218,11 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
     else:
         user_groups = None
         group_openness_choices = None
+
+    try:
+        users_page = objects_list.page(page)
+    except (EmptyPage, InvalidPage):
+        users_page = objects_list.page(objects_list.num_pages)
 
     data = {
         'active_tab': 'users',
@@ -457,10 +453,8 @@ def user_stats(request, user, context):
     question_count = q_paginator.count
 
     q_paginator_context = functions.setup_paginator({
-                    'is_paginated' : (question_count > const.USER_POSTS_PAGE_SIZE),
-                    'pages': q_paginator.num_pages,
+                    'paginator': q_paginator,
                     'current_page_number': 1,
-                    'page_object': q_paginator.page(1),
                     'base_url' : '?' #this paginator will be ajax
                 })
     #
@@ -471,10 +465,8 @@ def user_stats(request, user, context):
     top_answer_count = a_paginator.count
 
     a_paginator_context = functions.setup_paginator({
-                    'is_paginated' : (top_answer_count > const.USER_POSTS_PAGE_SIZE),
-                    'pages': a_paginator.num_pages,
+                    'paginator': a_paginator,
                     'current_page_number': 1,
-                    'page_object': a_paginator.page(1),
                     'base_url' : '?' #this paginator will be ajax
                 })
     #
@@ -1073,10 +1065,8 @@ def user_favorites(request, user, context):
     question_count = q_paginator.count
 
     q_paginator_context = functions.setup_paginator({
-                    'is_paginated' : (question_count > const.USER_POSTS_PAGE_SIZE),
-                    'pages': q_paginator.num_pages,
+                    'paginator': q_paginator,
                     'current_page_number': page,
-                    'page_object': q_paginator.page(page),
                     'base_url' : request.path + '?sort=favorites&' #this paginator will be ajax
                 })
 

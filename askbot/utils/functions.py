@@ -3,6 +3,7 @@ import re
 import random
 import time
 from django.core.validators import validate_email
+from django.core.paginator import EmptyPage, InvalidPage
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.html import escape
@@ -164,7 +165,7 @@ def diff_date(date, use_on_prefix = False):
             minutes
         ) % {'min':minutes}
 
-#todo: this function may need to be removed to simplify the paginator functionality
+#todo: this needs to be redone as part of Paginator subclass
 LEADING_PAGE_RANGE_DISPLAYED = TRAILING_PAGE_RANGE_DISPLAYED = 5
 LEADING_PAGE_RANGE = TRAILING_PAGE_RANGE = 4
 NUM_PAGES_OUTSIDE_RANGE = 1
@@ -174,28 +175,35 @@ def setup_paginator(context):
     custom paginator tag
     Inspired from http://blog.localkinegrinds.com/2007/09/06/digg-style-pagination-in-django/
     """
-    if (context["is_paginated"]):
-        " Initialize variables "
+    paginator = context['paginator']
+    try:
+        page_object = paginator.page(context['current_page_number'])
+    except (EmptyPage, InvalidPage):
+        page_object = paginator.page(paginator.num_pages)
+
+    is_paginated = paginator.num_pages > 1
+    if not is_paginated:
+        return {"object_list": page_object.object_list}
+    else:
         in_leading_range = in_trailing_range = False
         pages_outside_leading_range = pages_outside_trailing_range = range(0)
 
-        if (context["pages"] <= LEADING_PAGE_RANGE_DISPLAYED):
+        if (paginator.num_pages <= LEADING_PAGE_RANGE_DISPLAYED):
             in_leading_range = in_trailing_range = True
-            page_numbers = [n for n in range(1, context["pages"] + 1) if n > 0 and n <= context["pages"]]
+            page_numbers = [n for n in range(1, paginator.num_pages + 1) if n > 0 and n <= paginator.num_pages]
         elif (context["current_page_number"] <= LEADING_PAGE_RANGE):
             in_leading_range = True
-            page_numbers = [n for n in range(1, LEADING_PAGE_RANGE_DISPLAYED + 1) if n > 0 and n <= context["pages"]]
-            pages_outside_leading_range = [n + context["pages"] for n in range(0, -NUM_PAGES_OUTSIDE_RANGE, -1)]
-        elif (context["current_page_number"] > context["pages"] - TRAILING_PAGE_RANGE):
+            page_numbers = [n for n in range(1, LEADING_PAGE_RANGE_DISPLAYED + 1) if n > 0 and n <= paginator.num_pages]
+            pages_outside_leading_range = [n + paginator.num_pages for n in range(0, -NUM_PAGES_OUTSIDE_RANGE, -1)]
+        elif (context["current_page_number"] > paginator.num_pages - TRAILING_PAGE_RANGE):
             in_trailing_range = True
-            page_numbers = [n for n in range(context["pages"] - TRAILING_PAGE_RANGE_DISPLAYED + 1, context["pages"] + 1) if n > 0 and n <= context["pages"]]
+            page_numbers = [n for n in range(paginator.num_pages - TRAILING_PAGE_RANGE_DISPLAYED + 1, paginator.num_pages + 1) if n > 0 and n <= paginator.num_pages]
             pages_outside_trailing_range = [n + 1 for n in range(0, NUM_PAGES_OUTSIDE_RANGE)]
         else:
-            page_numbers = [n for n in range(context["current_page_number"] - ADJACENT_PAGES, context["current_page_number"] + ADJACENT_PAGES + 1) if n > 0 and n <= context["pages"]]
-            pages_outside_leading_range = [n + context["pages"] for n in range(0, -NUM_PAGES_OUTSIDE_RANGE, -1)]
+            page_numbers = [n for n in range(context["current_page_number"] - ADJACENT_PAGES, context["current_page_number"] + ADJACENT_PAGES + 1) if n > 0 and n <= paginator.num_pages]
+            pages_outside_leading_range = [n + paginator.num_pages for n in range(0, -NUM_PAGES_OUTSIDE_RANGE, -1)]
             pages_outside_trailing_range = [n + 1 for n in range(0, NUM_PAGES_OUTSIDE_RANGE)]
 
-        page_object = context['page_object']
         #patch for change in django 1.5
         if page_object.has_previous():
             previous_page_number = page_object.previous_page_number()
@@ -209,14 +217,15 @@ def setup_paginator(context):
 
         return {
             "base_url": escape(context["base_url"]),
-            "is_paginated": context["is_paginated"],
+            "is_paginated": is_paginated,
             "previous": previous_page_number,
             "has_previous": page_object.has_previous(),
             "next": next_page_number,
             "has_next": page_object.has_next(),
             "page": context["current_page_number"],
-            "pages": context["pages"],
+            "pages": paginator.num_pages,
             "page_numbers": page_numbers,
+            "object_list": page_object.object_list,
             "in_leading_range" : in_leading_range,
             "in_trailing_range" : in_trailing_range,
             "pages_outside_leading_range": pages_outside_leading_range,

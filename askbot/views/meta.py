@@ -6,7 +6,7 @@ This module contains a collection of views displaying all sorts of secondary and
 from django.shortcuts import render_to_response, get_object_or_404
 from django.conf import settings as django_settings
 from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.template import RequestContext
 from django.template import Template
@@ -245,22 +245,14 @@ def list_suggested_tags(request):
     paginator = Paginator(tags, 20)
 
     page_no = PageField().clean(request.GET.get('page'))
-
-    try:
-        page = paginator.page(page_no)
-    except (EmptyPage, InvalidPage):
-        page = paginator.page(paginator.num_pages)
-
     paginator_context = functions.setup_paginator({
-        'is_paginated' : True,
-        'pages': paginator.num_pages,
+        'paginator': paginator,
         'current_page_number': page_no,
-        'page_object': page,
         'base_url' : request.path
     })
 
     data = {
-        'tags': page.object_list,
+        'tags': paginator_context['object_list'],
         'active_tab': 'tags',
         'tab_id': 'suggested',
         'page_class': 'moderate-tags-page',

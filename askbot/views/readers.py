@@ -17,7 +17,7 @@ from django.http import HttpResponse
 from django.http import Http404
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseBadRequest
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from django.core.paginator import Paginator
 from django.template.loader import get_template
 from django.template import Context, RequestContext
 from django.utils import simplejson
@@ -114,12 +114,9 @@ def questions(request, **kwargs):
                         )
 
     paginator_context = {
-        'is_paginated' : (paginator.count > search_state.page_size),
-        'pages': paginator.num_pages,
+        'paginator': paginator,
         'current_page_number': search_state.page,
-        'page_object': page,
-        'base_url' : search_state.query_string(),
-        'page_size' : search_state.page_size,
+        'base_url' : search_state.query_string()
     }
 
     #get url for the rss feed
@@ -345,16 +342,9 @@ def tags(request):#view showing a listing of available tags - plain list
     if tag_list_type == 'list':
         #plain listing is paginated
         objects_list = Paginator(tags_qs, const.TAGS_PAGE_SIZE)
-        try:
-            tags = objects_list.page(page)
-        except (EmptyPage, InvalidPage):
-            tags = objects_list.page(objects_list.num_pages)
-
         paginator_data = {
-            'is_paginated' : (objects_list.num_pages > 1),
-            'pages': objects_list.num_pages,
+            'paginator': objects_list,
             'current_page_number': page,
-            'page_object': tags,
             'base_url' : reverse('tags') + '?sort=%s&' % sort_method
         }
         paginator_context = functions.setup_paginator(paginator_data)
@@ -365,7 +355,7 @@ def tags(request):#view showing a listing of available tags - plain list
         font_size = extra_tags.get_tag_font_size(tags)
         data['font_size'] = font_size
 
-    data['tags'] = tags
+    data['tags'] = paginator_context['object_list']
     data.update(context.get_extra('ASKBOT_TAGS_PAGE_EXTRA_CONTEXT', request, data))
 
     if request.is_ajax():
@@ -558,8 +548,6 @@ def question(request, id):#refactor - long subroutine. display question body, an
     objects_list = Paginator(answers, const.ANSWERS_PAGE_SIZE)
     if show_page > objects_list.num_pages:
         return HttpResponseRedirect(question_post.get_absolute_url())
-    page_objects = objects_list.page(show_page)
-
     #count visits
     signals.question_visited.send(None,
                     request=request,
@@ -567,10 +555,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
                 )
 
     paginator_data = {
-        'is_paginated' : (objects_list.count > const.ANSWERS_PAGE_SIZE),
-        'pages': objects_list.num_pages,
+        'paginator': objects_list,
         'current_page_number': show_page,
-        'page_object': page_objects,
         'base_url' : request.path + '?sort=%s&' % answer_sort_method,
     }
     paginator_context = functions.setup_paginator(paginator_data)
@@ -624,6 +610,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     else:
         group_read_only = False
 
+    page_objects = objects_list.page(show_page)
     data = {
         'active_tab': 'questions',
         'answer' : answer_form,

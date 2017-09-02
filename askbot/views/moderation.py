@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 from django.template.loader import get_template
 from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.utils.encoding import force_text
@@ -487,21 +488,20 @@ def moderation_log(request):
 	    const.TYPE_ACTIVITY_MODERATOR_DELETED_USER_POSTS,
 	)
     notifs = request.user.get_notifications(act_types).select_related('activity')
+    acts = models.Activity.objects.filter(activity_type__in=act_types)
 
-    form = forms.ModLogFord(request.REQUEST)
+    form = forms.ModLogForm(request.REQUEST)
     form.full_clean()
-    cur_page = form.cleaned_data['page']
 
     paginator = Paginator(acts, 50)
     paginator_data = {
-        'is_paginated' : (paginator.num_pages > 1),
-        'pages': paginator.num_pages,
-        'current_page_number': cur_page,
-        'page_object': paginator.page(form.cleaned_data['page'])
+        'paginator': paginator,
+        'current_page_number': form.cleaned_data['page'],
         'base_url' : reverse('moderation_log')
     }
+    paginator_context = functions.setup_paginator(pdata)
     context = { 
-        'acts': acts,
+        'acts': paginator_contect['object_list'],
         'paginator_context': functions.setup_paginator(pdata)
     }
     return render(request, 'moderation/log.html', context)
