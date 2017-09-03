@@ -1,10 +1,12 @@
 import sys
+from datetime import datetime
+from askbot import const
 from askbot.conf import settings as askbot_settings
-from askbot.models import User
+from askbot.models import User, Activity
 from askbot.utils.console import choice_dialog
 from django.core.management.base import NoArgsCommand
 from django.conf import settings as django_settings
-from django.utils import translation
+from django.utils import translation, simplejson
 from optparse import make_option
 
 
@@ -92,6 +94,7 @@ class Command(NoArgsCommand):
         #add admin with the same password - this user will be admin automatically
         admin = User.objects.create_user('admin', 'admin@example.com')
         admin.set_password('admin')
+        admin.set_status('d')
         admin.save()
         self.print_if_verbose("Created User 'admin'")
         users.append(admin)
@@ -245,6 +248,109 @@ class Command(NoArgsCommand):
         return active_question_comment, active_answer_comment
 
 
+    def moderate_some_content(self):
+        """Simulate some moderation queue activity
+        for the purpose of debugging the moderation log page.
+        """
+        admin = User.objects.get(pk=1)
+        admin.flag_post(self.question)
+
+        # Cancel flag on a post
+        admin.flag_post(self.question, cancel_all=True, force=True)
+        act = Activity(
+            activity_type=const.TYPE_ACTIVITY_MODERATOR_UNFLAGGED_POST,
+            active_at=datetime.now(),
+            content_object=self.question,
+            user=admin
+        )
+        act.save()
+
+        # post a question
+        user = self.users[-1]
+        question = user.post_question(
+                    title='moderated question title',
+                    body_text='moderated question content',
+                    tags='one two three')
+
+        # get latest question revision
+
+        # Approve post revision
+        admin.approve_post_revision(question.current_revision)
+        act = Activity(
+            activity_type=const.TYPE_ACTIVITY_MODERATOR_APPROVED_POST_REVISION,
+            active_at=datetime.now(),
+            content_object=question.current_revision,
+            user=admin
+        )
+        act.save()
+
+        # Approve user
+        user = self.users[-2]
+        prev_status = user.set_status('a')
+        act = Activity(
+            activity_type=const.TYPE_ACTIVITY_MODERATOR_APPROVED_USER,
+            active_at=datetime.now(),
+            content_object=user,
+            user=admin,
+            summary=simplejson.dumps({'prev_status': prev_status})
+        )
+        act.save()
+
+        title = "I dont like this post."
+        details = "When I dislike something I reject it, you are welcome."
+        reject_reason = admin.create_post_reject_reason(title=title,
+                                                        details=details)
+        act = Activity(
+            activity_type=const.TYPE_ACTIVITY_MODERATOR_DELETED_POST,
+            active_at=datetime.now(),
+            content_object=self.answer,
+            user=admin,
+            summary=simplejson.dumps({'reject_reason_id': reject_reason.pk})
+        )
+        act.save()
+
+        # Block IP address
+        try:
+            from stopforumspam.models import Cache
+        except ImportError:
+            pass
+        else:
+            ips = ('99.99.99.99',)
+            cache = Cache(ip=ips[0], permanent=True)
+            cache.save()
+            act = Activity(
+                activity_type=const.TYPE_ACTIVITY_MODERATOR_BLOCKED_IP,
+                active_at=datetime.now(),
+                content_object=cache,
+                user=admin,
+                summary=simplejson.dumps({'blocked_ip': ips[0]})
+            )
+            act.save()
+
+        # Block user
+        user = self.users[-3]
+        prev_status = user.set_status('b')
+        act = Activity(
+            activity_type=const.TYPE_ACTIVITY_MODERATOR_BLOCKED_USER,
+            active_at=datetime.now(),
+            content_object=user,
+            user=admin,
+            summary=simplejson.dumps({'prev_status': prev_status})
+        )
+        act.save()
+
+        # Delete all user's content
+        post_ids = admin.delete_all_content_authored_by_user(user)
+        act = Activity(
+            activity_type=const.TYPE_ACTIVITY_MODERATOR_DELETED_USER_POSTS,
+            active_at=datetime.now(),
+            content_object=user,
+            user=admin,
+            summary=simplejson.dumps({'deleted_post_ids': post_ids})
+        )
+        act.save()
+
+
     def handle_noargs(self, **options):
         self.verbosity = int(options.get("verbosity", 1))
         self.interactive = options.get("interactive")
@@ -263,6 +369,7 @@ class Command(NoArgsCommand):
 
         # Create Users
         users = self.create_users()
+        self.users = users
 
         # Create a bunch of questions and answers by a single user
         # to test pagination in the user profile
@@ -270,12 +377,14 @@ class Command(NoArgsCommand):
 
         # Create Questions, vote for questions by all other users
         active_question = self.create_questions(users)
+        self.question = active_question
 
         active_answer = self.create_answers(users[0:1], active_question)
 
         # Create Answers, vote for the answers, vote for the active question
         # vote for the active answer
         active_answer = self.create_answers(users, active_question)
+        self.answer = active_answer
 
         # Create Comments, vote for the active answer
         active_question_comment, active_answer_comment = self.create_comments(
@@ -316,5 +425,11 @@ class Command(NoArgsCommand):
                             force = True,
                         )
         self.print_if_verbose("User has accepted a best answer")
+
+        askbot_settings.update('CONTENT_MODERATION_MODE', 'premoderation')
+        self.moderate_some_content()
+        askbot_settings.update('CONTENT_MODERATION_MODE', 'flags')
+        self.print_if_verbose("Added moderation content")
+
         self.restore_settings()
         self.print_if_verbose("DONE")

@@ -4,7 +4,10 @@
     {% trans %}Moderation queue{% endtrans %}
 {% endblock %}
 {% block content %}
-    <h1 class="section-title">{% trans %}Moderation queue{% endtrans %}</h1>
+    <h1 class="section-title">
+        {% trans %}Moderation queue{% endtrans %}
+        (<a href="{% url 'moderation_log' %}">see log records</a>)
+    </h1>
     <div class="tools">
         {#<div class="select-items">
             <strong>{% trans %}Select:{% endtrans %}</strong>
@@ -51,6 +54,10 @@
         >
             {{ macros.moderation_queue_message(message) }}
         </div>
+    {% else %}
+    <div class="empty-list">
+        <p class="message">{% trans %}Hurray!!! The moderation queue is empty.{% endtrans %}</p>
+    </div>
     {% endfor %}
     </div>
 {% endblock %}

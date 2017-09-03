@@ -1,11 +1,22 @@
 {% extends "one_column_body.html" %}
-{% from "macros.html" import "macros" %}
+{% import "macros.html" as macros %}
 <!-- moderation/log.html -->
 {% block title %}{% trans %}Moderation log{% endtrans %}{% endblock %}
 {% block content %}
+<h1 class="section-title">
+    {% trans %}Moderation log{% endtrans %}
+    (<a href="{% url 'moderation_queue' %}">see queue</a>)
+</h1>
+<div class="moderation-log">
     {% for act in acts %}
-    {% endfor %}
-    <div class="pager">
-        {{ macros.paginator(paginator_context, anchor='#sort-top') }}
+    <div class="moderation-activity">
+        <p>{{ act.id }}</p>
     </div>
+    {% else %}
+    <div class="empty-list">
+        <p>{% trans %}The moderation activity log is empty.{% endtrans %}</p>
+    </div>
+    {% endfor %}
+</div>
+<div class="pager">{{ macros.paginator(paginator_context) }}</div>
 {% endblock %}

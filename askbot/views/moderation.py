@@ -5,6 +5,7 @@ from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import mail
 from askbot import forms
+from askbot.utils import functions
 from datetime import datetime
 from django.http import Http404
 from django.utils.translation import string_concat
@@ -22,6 +23,7 @@ from django.template import RequestContext
 from django.views.decorators import csrf
 from django.utils.encoding import force_text
 from django.core import exceptions
+from django.core.urlresolvers import reverse
 from django.utils import simplejson
 
 #some utility functions
@@ -292,12 +294,13 @@ def moderate_post_edits(request):
             editors = exclude_admins(get_editors(memo_set))
             assert(request.user not in editors)
             for editor in editors:
-                editor.set_status('a')
+                prev_status = editor.set_status('a')
                 act = models.Activity(
                     activity_type=const.TYPE_ACTIVITY_MODERATOR_APPROVED_USER,
                     active_at=datetime.now(),
                     content_object=editor,
-                    user=request.user
+                    user=request.user,
+                    summary=simplejson.dumps({'prev_status': prev_status})
                 )
                 moderator_activities.append(act)
 
@@ -314,13 +317,15 @@ def moderate_post_edits(request):
         for memo in memo_set:
             post = get_object(memo)
             request.user.delete_post(post)
-            reject_reason = models.PostFlagReason.objects.get(id=post_data['reason'])
+            reject_reason = models.PostFlagReason.objects.get(
+                                                pk=post_data['reason'])
 
             act = models.Activity(
                 activity_type=const.TYPE_ACTIVITY_MODERATOR_DELETED_POST,
                 active_at=datetime.now(),
                 content_object=post,
-                user=request.user
+                user=request.user,
+                summary=simplejson.dumps({'reject_reason_id': reject_reason.pk})
             )
             moderator_activities.append(act)
 
@@ -379,7 +384,8 @@ def moderate_post_edits(request):
                     activity_type=const.TYPE_ACTIVITY_MODERATOR_BLOCKED_IP,
                     active_at=datetime.now(),
                     content_object=cache,
-                    user=request.user
+                    user=request.user,
+                    summary=simplejson.dumps({'blocked_ip': ip})
                 )
                 moderator_activities.append(act)
 
@@ -388,24 +394,26 @@ def moderate_post_edits(request):
             num_users = 0
             for user in users:
                 if user.status != 'b':
-                    user.set_status('b')
+                    prev_status = user.set_status('b')
                     num_users += 1
                     act = models.Activity(
                         activity_type=const.TYPE_ACTIVITY_MODERATOR_BLOCKED_USER,
                         active_at=datetime.now(),
                         content_object=user,
-                        user=request.user
+                        user=request.user,
+                        summary=simplejson.dumps({'prev_status': prev_status})
                     )
                     moderator_activities.append(act)
                 #delete all content by the user
                 post_ids = request.user.delete_all_content_authored_by_user(user)
                 num_posts += len(post_ids)
+                mod_act_type = const.TYPE_ACTIVITY_MODERATOR_DELETED_USER_POSTS
                 act = models.Activity(
-                    activity_type=const.TYPE_ACTIVITY_MODERATOR_DELETED_USER_POSTS,
+                    activity_type=mod_act_type,
                     active_at=datetime.now(),
                     content_object=user,
                     user=request.user,
-                    summary=simplejson.dumps(post_ids)
+                    summary=simplejson.dumps({'deleted_post_ids': post_ids})
                 )
                 moderator_activities.append(act)
 
@@ -419,13 +427,14 @@ def moderate_post_edits(request):
             for editor in editors:
                 #block user
                 if editor.status != 'b':
-                    editor.set_status('b')
+                    prev_status = editor.set_status('b')
                     num_users += 1
                     act = models.Activity(
                         activity_type=const.TYPE_ACTIVITY_MODERATOR_BLOCKED_USER,
                         active_at=datetime.now(),
                         content_object=editor,
-                        user=request.user
+                        user=request.user,
+                        summary=simplejson.dumps({'prev_status': prev_status})
                     )
                     moderator_activities.append(act)
                 #delete all content by the user
@@ -487,21 +496,22 @@ def moderation_log(request):
 	    const.TYPE_ACTIVITY_MODERATOR_BLOCKED_USER,
 	    const.TYPE_ACTIVITY_MODERATOR_DELETED_USER_POSTS,
 	)
-    notifs = request.user.get_notifications(act_types).select_related('activity')
     acts = models.Activity.objects.filter(activity_type__in=act_types)
+    acts = acts.order_by('-id')
 
     form = forms.ModLogForm(request.REQUEST)
     form.full_clean()
 
-    paginator = Paginator(acts, 50)
-    paginator_data = {
+    paginator = Paginator(acts, 4)
+    pdata = {
         'paginator': paginator,
         'current_page_number': form.cleaned_data['page'],
-        'base_url' : reverse('moderation_log')
+        'base_url' : reverse('moderation_log') + '?'
     }
     paginator_context = functions.setup_paginator(pdata)
     context = { 
-        'acts': paginator_contect['object_list'],
-        'paginator_context': functions.setup_paginator(pdata)
+        'acts': paginator_context['object_list'],
+        'paginator_context': functions.setup_paginator(pdata),
+        'page_class': 'moderation-log-page',
     }
     return render(request, 'moderation/log.html', context)

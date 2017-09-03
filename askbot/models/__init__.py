@@ -2583,6 +2583,7 @@ def user_set_status(self, new_status):
     #b - blocked
     #w - watched
     #a - approved (regular user)
+    old_status = self.status
     assert(new_status in ('d', 'm', 's', 'b', 'w', 'a'))
     if new_status == self.status:
         return
@@ -2611,6 +2612,7 @@ def user_set_status(self, new_status):
 
     self.status = new_status
     self.save()
+    return old_status
 
 @auto_now_timestamp
 def user_moderate_user_reputation(
