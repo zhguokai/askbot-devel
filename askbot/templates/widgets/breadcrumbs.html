@@ -3,7 +3,7 @@
     <li>
         <a href="{{ get_home_url() }}">{% trans %}Home{% endtrans %}</a>
     </li>
-    {% if settings.SPACES_ENABLED %}
+    {% if settings.SPACES_ENABLED and space %}
         {{ sep() }}
         <li>
             <a href="{{ space.get_absolute_url() }}">{{ space.name|escape }}</a>
@@ -19,6 +19,9 @@
         <li>
             {{ settings.WORDS_ASK_YOUR_QUESTION }}
         </li>
+    {% elif page_class != 'home-page' and page_title %}
+        {{ sep() }}
+        <li>{{ page_title }}</li>
     {% endif %}
     {# todo - add breadcrumbs to all other pages #}
 </ul>

@@ -159,43 +159,6 @@ def __import_se_data(dump_file):
     yield '<p>Done. Please, <a href="%s">Visit Your Forum</a></p></body></html>' % reverse('index')
 
 @csrf.csrf_protect
-def import_data(request):
-    """a view allowing the site administrator
-    upload stackexchange data
-    """
-    #allow to use this view to site admins
-    #or when the forum in completely empty
-    if request.user.is_anonymous() or (not request.user.is_administrator()):
-        if models.Post.objects.get_questions().exists():
-            raise Http404
-
-    if request.method == 'POST':
-        #if not request.is_ajax():
-        #    raise Http404
-
-        form = forms.DumpUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            dump_file = form.cleaned_data['dump_file']
-            dump_storage = tempfile.NamedTemporaryFile()
-
-            #save the temp file
-            for chunk in dump_file.chunks():
-                dump_storage.write(chunk)
-            dump_storage.flush()
-
-            return HttpResponse(__import_se_data(dump_storage))
-            #yield HttpResponse(_('StackExchange import complete.'), content_type='text/plain')
-            #dump_storage.close()
-    else:
-        form = forms.DumpUploadForm()
-
-    data = {
-        'dump_upload_form': form,
-        'need_configuration': (not stackexchange.is_ready())
-    }
-    return render(request, 'import_data.html', data)
-
-@csrf.csrf_protect
 @decorators.check_authorization_to_post(ugettext_lazy('Please log in to make posts'))
 @decorators.check_spam('text')
 def ask(request, space_name):#view used to ask a new question

@@ -204,6 +204,7 @@ def moderation_queue(request):
     data = {
         'active_tab': 'users',
         'page_class': 'moderation-queue-page',
+        'page_title': _('Moderation queue'),
         'post_reject_reasons': reject_reasons,
         'messages' : queue,
     }

@@ -500,7 +500,8 @@ def subscribe_for_tags(request):
                 request.user.message_set.create(message = message)
             return HttpResponseRedirect(reverse('index'))
         else:
-            data = {'tags': tag_names}
+            data = {'tags': tag_names,
+                    'page_class': _('Tag subscriptions')}
             return render(request, 'subscribe_for_tags.html', data)
     else:
         all_tag_names = pure_tag_names + wildcards
@@ -515,7 +516,8 @@ def list_bulk_tag_subscription(request):
     if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED is False:
         raise Http404
     object_list = models.BulkTagSubscription.objects.all()
-    data = {'object_list': object_list}
+    data = {'object_list': object_list,
+            'page_class': _('Tag subscriptions')}
     return render(request, 'tags/list_bulk_tag_subscription.html', data)
 
 @decorators.moderators_only
@@ -555,7 +557,8 @@ def edit_bulk_tag_subscription(request, pk):
 
     bulk_subscription = get_object_or_404(models.BulkTagSubscription,
                                           pk=pk)
-    data = {'action': _('Edit')}
+    data = {'action': _('Edit'),
+            'page_title': _('Tag subscriptions')}
     if request.method == "POST":
         form = forms.BulkTagSubscriptionForm(request.POST)
         if form.is_valid():
@@ -780,6 +783,7 @@ def close(request, id):#close question
             request.user.assert_can_close_question(question)
             form = forms.CloseForm()
             data = {
+                'page_title': _('Close'),
                 'question': question,
                 'form': form,
             }
@@ -808,6 +812,7 @@ def reopen(request, id):#re-open question
             closed_by_profile_url = question.thread.closed_by.get_profile_url()
             closed_by_username = question.thread.closed_by.username
             data = {
+                'page_title': _('Reopen'),
                 'question' : question,
                 'closed_by_profile_url': closed_by_profile_url,
                 'closed_by_username': closed_by_username,

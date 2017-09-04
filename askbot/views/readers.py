@@ -366,6 +366,7 @@ def tags(request):#view showing a listing of available tags - plain list
     data = {
         'active_tab': 'tags',
         'page_class': 'tags-page',
+        'page_title': _('Tags'),
         'tag_list_type' : tag_list_type,
         'query' : query,
         'tab_id' : sort_method,
@@ -746,6 +747,7 @@ def revisions(request, id):
 
     data = {
         'page_class':'revisions-page',
+        'page_title': _('Revisions'),
         'active_tab':'questions',
         'post': post,
         'revisions': revisions,

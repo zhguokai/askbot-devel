@@ -2,9 +2,7 @@
 {% block body_class %}one-col{% endblock %}
 {% block body %}
 <div id="ContentFull">
-    {% if settings.SPACES_ENABLED 
-          and page_class 
-          in ('questions-page', 'question-page', 'ask-page') %}
+    {% if settings.SPACES_ENABLED and page_class != 'home-page' %}
         {% include "widgets/breadcrumbs.html" %}
     {% endif %}
     {% block content %}

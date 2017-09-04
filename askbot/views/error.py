@@ -6,12 +6,14 @@ import django
 def internal_error(request):
     """Error 500 view with context"""
     template = get_template('500.html')
+    data = {'page_title': _('Internal server error')}
     try:
-        result = template.render(RequestContext(request))
+        context = RequestContext(request, data)
+        result = template.render(context)
     except Exception:
         #if context loading fails, we try to get settings separately
         from askbot.conf import settings as askbot_settings
-        data = {'settings': askbot_settings.as_dict()}
+        data['settings'] = askbot_settings.as_dict()
 
         if django.VERSION[:2] == (1, 8):
             result = template.render(request=request, context=data)

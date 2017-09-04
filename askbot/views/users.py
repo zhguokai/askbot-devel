@@ -246,6 +246,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         'group_email_moderation_enabled': group_email_moderation_enabled,
         'group_openness_choices': group_openness_choices,
         'page_class': 'users-page',
+        'page_title': _('Users'),
         'paginator_context' : paginator_context,
         'search_query' : search_query,
         'tab_id' : sort_method,
@@ -435,6 +436,7 @@ def edit_user(request, id):
     data = {
         'active_tab': 'users',
         'page_class': 'user-profile-edit-page',
+        'page_title': _('Edit user profile'),
         'form' : form,
         'marked_tags_setting': askbot_settings.MARKED_TAGS_ARE_PUBLIC_WHEN,
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),

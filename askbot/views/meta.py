@@ -52,7 +52,7 @@ def markdown_flatpage(request, page_class=None, setting_name=None):
     content = markdown_input_converter(value)
     context = {
         'content': content,
-        'title': askbot_settings.get_description(setting_name)
+        'page_title': askbot_settings.get_description(setting_name)
     }
     return generic_view(
         request, template='askbot_flatpage.html',
@@ -76,7 +76,7 @@ def config_variable(request, variable_name = None, content_type=None):
 def about(request, template='static_page.html'):
     title = _('About %(site)s') % {'site': askbot_settings.APP_SHORT_NAME}
     data = {
-        'title': title,
+        'page_title': title,
         'page_class': 'meta',
         'content': askbot_settings.FORUM_ABOUT
     }
@@ -91,7 +91,7 @@ def server_error(request, template='500.html'):
 def help(request):
     if askbot_settings.FORUM_HELP.strip() != '':
         data = {
-            'title': _('Help'),
+            'page_title': _('Help'),
             'content': askbot_settings.FORUM_HELP,
             'page_class': 'meta',
             'active_tab': 'help',
@@ -108,7 +108,7 @@ def help(request):
 def faq(request):
     if askbot_settings.FORUM_FAQ.strip() != '':
         data = {
-            'title': _('FAQ'),
+            'page_title': _('FAQ'),
             'content': askbot_settings.FORUM_FAQ,
             'page_class': 'meta',
             'active_tab': 'faq',
@@ -176,7 +176,7 @@ feedback.CANCEL_MESSAGE=ugettext_lazy('We look forward to hearing your feedback!
 
 def privacy(request):
     data = {
-        'title': _('Privacy policy'),
+        'page_title': _('Privacy policy'),
         'page_class': 'meta',
         'content': askbot_settings.FORUM_PRIVACY
     }
@@ -203,6 +203,7 @@ def badges(request):#user status/reputation system
         'active_tab': 'badges',
         'badges' : badges,
         'page_class': 'meta',
+        'page_title': _('Badges'),
         'my_badge_ids' : my_badge_ids
     }
     return render(request, 'badges.html', data)
@@ -225,6 +226,7 @@ def badge(request, id):
         'badge_recipients' : badge_recipients,
         'badge' : badge,
         'page_class': 'meta',
+        'page_title': _('Badges'),
     }
     return render(request, 'badge.html', data)
 
