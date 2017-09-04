@@ -181,6 +181,7 @@ def logout(request):
 def logout_page(request):
     data = {
         'page_class': 'meta',
+        'page_title': _('Sign out'),
         'have_federated_login_methods': util.have_enabled_federated_login_methods()
     }
     return render(request, 'authopenid/logout.html', data)
@@ -809,25 +810,30 @@ def show_signin_view(
 
 
     if view_subtype == 'default':
-        page_title = _('Please click any of the icons below to sign in')
+        page_title = _('Signin')
+        page_subtitle = _('Please click any of the icons below to sign in')
     elif view_subtype == 'email_sent':
-        page_title = _('Account recovery email sent')
+        page_title = _('Account recovery')
+        page_subtitle = _('Account recovery email sent')
     elif view_subtype == 'change_openid':
+        page_title = _('Login methods')
         if len(existing_login_methods) == 0:
-            page_title = _('Add at least one login method')
+            page_subtitle = _('Add at least one login method')
         else:
-            page_title = _('If you wish, please add, remove or re-validate your login methods')
+            page_subtitle = _('If you wish, please add, remove or re-validate your login methods')
     elif view_subtype == 'add_openid':
         if len(existing_login_methods) == 0:
-            page_title = _('Add at least one login method')
+            page_title = _('Login methods')
+            page_subtitle = _('Add at least one login method')
         else:
-            page_title = _('Please wait a second! Your account is recovered, but ...')
+            page_title = _('Account recovery')
+            page_subtitle = _('Please wait a second! Your account is recovered, but ...')
 
-    logging.debug('showing signin view')
     data = {
         'page_class': 'openid-signin',
         'view_subtype': view_subtype, #add_openid|default
         'page_title': page_title,
+        'page_subtitle': page_subtitle,
         'question': question,
         'answer': answer,
         'login_form': login_form,
@@ -1234,6 +1240,7 @@ def register(request, login_provider_name=None,
     logging.debug('printing authopenid/complete.html output')
     data = {
         'openid_register_form': register_form,
+        'page_title': _('Registration'),
         'account_recovery_form': forms.AccountRecoveryForm(),
         'default_form_action': django_settings.LOGIN_URL,
         'provider': mark_safe(provider_logo),
@@ -1366,6 +1373,7 @@ def signup_with_password(request):
     context_data = {
         'form': form,
         'page_class': 'openid-signin',
+        'page_title': _('Signup'),
         'major_login_providers': major_login_providers.values(),
         'minor_login_providers': minor_login_providers.values(),
         'login_form': login_form
@@ -1490,6 +1498,7 @@ def recover_account(request):
                             )
         else:
             data = {
+                'page_title': _('Account recovery'),
                 'account_recovery_form': forms.AccountRecoveryForm(),
                 'message': _('Sorry, this account recovery key has expired or is invalid'),
                 'bad_key': True

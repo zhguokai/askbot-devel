@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.template import RequestContext
 from django.views.decorators.cache import never_cache
+from django.utils.translation import ugettext as _
 from django.contrib import messages
 
 from askbot.deps.livesettings import ConfigurationSettings, forms
@@ -66,6 +67,7 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
     return render(request, template, {
         'all_super_groups': mgr.get_super_groups(),
         'page_class': 'settings',
+        'page_title': _('Settings'),
         'title': title,
         'settings_group': settings,
         'form': form,

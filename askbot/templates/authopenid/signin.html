@@ -8,7 +8,7 @@
 {% endblock %}
 {% block content %}
 {% if have_buttons or view_subtype == 'email_sent' %}
-    <h1 class="section-title">{{ page_title }}</h1>
+    <h1 class="section-title">{{ page_subtitle }}</h1>
 {% endif %}
     {% if not (view_subtype == 'default' and have_buttons) %}
     <p class="js-login-intro">
