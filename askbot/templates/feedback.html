@@ -9,44 +9,70 @@
   {{form.errors.__all__}}
 </span>
 {%endif%}
+
 <form method="post" action="{% url feedback %}" accept-charset="utf-8">{% csrf_token %}
-    <div class="message">{{ settings.FEEDBACK_PAGE_MESSAGE|sub_vars(user)|convert_markdown }}</div>
-    {% if user.is_anonymous() %}
-        <div class="form-row"><label>{{form.name.label}}</label><br/>{{form.name}}</div>
-        <div class="form-row">
-            <label>{{form.email.label}} 
+    <div class="alert alert-info" role="alert">{{ settings.FEEDBACK_PAGE_MESSAGE|sub_vars(user)|convert_markdown }}
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            {% if user.is_anonymous() %}
+
+            <div class="form-group">
+                <label for="id_name">{{form.name.label}}</label>
+                <input id="id_name" class="form-control" name="name" type="text"
+                       value="{{ form.name.value()|default('') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">{{form.email.label}}</label>
+                <input id="id_email" class="form-control {% if form.errors.email %}is-invalid{% endif %}" name="email"
+                       type="text" value="{{ form.email.value()|default('') }}">
                 {% if form.errors.email %}
-                    <span class='error'>{% trans %}(to hear from us please enter a valid email or check the box below){% endtrans %}</span>
+                <div class="invalid-feedback">
+                    {% trans %}(to hear from us please enter a valid email or check the box below){% endtrans %}
+                </div>
                 {% endif %}
-            </label><br/>{{form.email}}
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <span class="custom-control-description">{{form.no_email.label}}</span>
+                    {{ form.no_email }}
+                    {% if form.errors.no_email %}
+                    <div class="invalid-feedback">
+                        {% trans %}(this field is required){% endtrans %}
+                    </div>
+                    {% endif %}
+                </label>
+            </div>
+            {% endif %}
+
+              <div class="form-group">
+                <label for="id_message">{{form.message.label}}</label>
+                <textarea class="form-control {% if form.errors.message %}is-invalid{% endif %}"
+                          id="id_message"
+                          name="message"
+                          cols="60" rows="10"
+                          value="{{ form.message.value()|default('') }}"></textarea>
+                {% if form.errors.message %}
+                <div class="invalid-feedback">
+                    {% trans %}(this field is required){% endtrans %}
+                </div>
+                {% endif %}
+              </div>
+
+            {% if form.recaptcha %}
+            <div class="form-group">
+                {{ macros.form_field_with_errors(form.recaptcha) }}
+            </div>
+            {% endif %}
+            {{form.next}}
+            <div class="form-group submit-row">
+                <input type="submit" class="btn btn-info btn-sm" value="{% trans %}Send Feedback{% endtrans %}"/>&nbsp;
+                <input type="submit" class="btn btn-secondary btn-sm" name="cancel" value="{% trans %}Cancel{% endtrans %}"/>
+            </div>
         </div>
-        <div class="form-row">
-        <label>{{form.no_email.label}}
-        {% if form.errors.no_email %}
-        <span class="error">{% trans %}(this field is required){% endtrans %}</span>
-        {% endif %}
-        {{form.no_email}}
-        </label>
-        </div>
-    {% endif %}
-    <div class="form-row">
-        <label>{{form.message.label}}
-        {% if form.errors.message %}
-        <span class="error">{% trans %}(this field is required){% endtrans %}</span>
-        </label>
-        {% endif %}
-        <br/>
-        {{form.message}}
-    </div>
-    {% if form.recaptcha %}
-    <div class="form-row">
-        {{ macros.form_field_with_errors(form.recaptcha) }}
-    </div>
-    {% endif %}
-    {{form.next}}
-    <div class="submit-row">
-        <input type="submit" value="{% trans %}Send Feedback{% endtrans %}"/>&nbsp;
-        <input type="submit" class="cancel" name="cancel" value="{% trans %}Cancel{% endtrans %}"/>
     </div>
 </form>
 {% endblock %}
