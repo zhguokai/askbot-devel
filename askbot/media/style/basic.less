@@ -20,6 +20,37 @@
     background: @hor @vert @back no-repeat;
 }
 
+.box-shadow (@hor: 0px, @vert: 0px, @blur: 5px, @shadow: #929292){
+    -webkit-box-shadow: @arguments ;
+    -moz-box-shadow: @arguments;
+    box-shadow: @arguments;
+}
+.rounded-corners(@radio: 5px){
+    border-radius: @radio;
+    -ms-border-radius: @radio;
+    -moz-border-radius: @radio;
+    -webkit-border-radius: @radio;
+    -khtml-border-radius: @radio;
+}
+
+.rounded-corners-top(@radio:5px){
+    border-top-right-radius:@radio;
+    border-top-left-radius:@radio;
+    -moz-border-radius-topright:@radio;
+    -moz-border-radius-topleft:@radio;
+    -webkit-border-top-left-radius:@radio;
+    -webkit-border-top-right-radius:@radio;
+}
+
+.rounded-corners-right(@radio:5px){
+    border-top-right-radius:@radio;
+    border-bottom-right-radius:@radio;
+    -moz-border-radius-topright:@radio;
+    -moz-border-radius-bottomright:@radio;
+    -webkit-border-bottom-right-radius:@radio;
+    -webkit-border-top-right-radius:@radio;
+}
+
 body {
     background: #FFF;
     font-size: 14px;

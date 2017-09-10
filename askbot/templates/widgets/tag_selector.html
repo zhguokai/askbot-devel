@@ -1,8 +1,8 @@
 {# todo - maybe disable navigation from ignored tags here when "hide" is on - with js? #}
 {% import "macros.html" as macros %}
-<div id="tagSelector" class="box">
+<div id="tagSelector">
     <h2>{% trans %}Interesting tags{% endtrans %}</h2>
-    {{ 
+    {{
         macros.tag_list_widget(
             interesting_tag_names,
             deletable = True,
@@ -15,9 +15,10 @@
         format(tag_name = tag_name)
     #}
     <div class="clearfix"></div>
-    <div class="inputs">
-        <input id="interestingTagInput" autocomplete="off" type="text"/>
-        <input id="interestingTagAdd" type="submit" value="{% trans %}add{% endtrans %}"/>
+
+    <div class="form-group">
+        <input id="interestingTagInput" class="form-control d-inline-block" autocomplete="off" type="text"/>
+        <input id="interestingTagAdd" class="btn btn-info" type="submit" value="{% trans %}add{% endtrans %}"/>
     </div>
     <h2>{% trans %}Ignored tags{% endtrans %}</h2>
     {{
@@ -28,13 +29,13 @@
             search_state = search_state
         )
     }}
-    {# todo: add this via javascript 
+    {# todo: add this via javascript
         "remove '%(tag_name)s' from the list of ignored tags"|
         format(tag_name = tag_name)
     #}
-    <div class="inputs">
-        <input id="ignoredTagInput" autocomplete="off" type="text"/>
-        <input id="ignoredTagAdd" type="submit" value="{% trans %}add{% endtrans%}"/>
+    <div class="form-group">
+        <input id="ignoredTagInput" class="form-control d-inline-block" autocomplete="off" type="text"/>
+        <input id="ignoredTagAdd" class="btn btn-info" type="submit" value="{% trans %}add{% endtrans%}"/>
     </div>
     {% if settings.SUBSCRIBED_TAG_SELECTOR_ENABLED %}
         <h2>{% trans %}Subscribed tags{% endtrans %}</h2>
@@ -46,7 +47,7 @@
                 search_state = search_state
             )
         }}
-        {# todo: add this via javascript 
+        {# todo: add this via javascript
             "remove '%(tag_name)s' from the list of ignored tags"|
             format(tag_name = tag_name)
         #}
@@ -78,10 +79,10 @@
             }}
             {% if request.user.is_authenticated() %}
             <p>
-                <a 
-                    href="{% 
-                        url user_profile 
-                        request.user.id, request.user.username|slugify 
+                <a
+                    href="{%
+                        url user_profile
+                        request.user.id, request.user.username|slugify
                     %}?sort=email_subscriptions"
                 >{% trans %}Change frequency of emails{% endtrans %}</a>
             </p>

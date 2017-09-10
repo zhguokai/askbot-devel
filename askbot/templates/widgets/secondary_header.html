@@ -31,7 +31,7 @@ Please suggest if there is a better way.
     <div class="container">
         <div class="row">
 
-            <div class="{% if settings.ASK_BUTTON_ENABLED %}col-md-9{% else %}col-md-12{% endif %}">
+            <div class="{% if settings.ASK_BUTTON_ENABLED %}col-lg-9 col-md-8{% else %}col-lg-12{% endif %}">
                 <div class="inner-q">
                     <div class="home-btn">
                         <a id="homeButton" href="{% url questions %}"><i class="fa fa-home"></i></a>
@@ -41,7 +41,7 @@ Please suggest if there is a better way.
                 </div>
             </div>
             {% if settings.ASK_BUTTON_ENABLED %}
-            <div class="col-md-3 d-none d-md-block">
+            <div class="col-lg-3 col-md-4 d-none d-md-block">
                 <div class="ask-question">
                     {% include "widgets/ask_button.html" %}
                     </dib>
