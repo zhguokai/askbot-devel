@@ -1,10 +1,113 @@
 @import "basic.less";
+@import "nav.less";
 /* Variables for fonts*/
 
-
-.alert{
-    p:last-child{
+.alert {
+    p:last-child {
         margin-bottom: 0;
     }
 }
 
+
+
+.tabBar {
+    background-color: #eff5f6;
+    height: 30px;
+    margin-bottom: 3px;
+    margin-top: 3px;
+    float:right;
+    font-family: @sort-font;
+    font-size:16px;
+    border-radius: 5px;
+}
+
+.tabBar h2 {
+    float: left;
+}
+.tabsA, .tabsC {
+    float: right;
+    position: relative;
+    display: block;
+    height: 20px;
+}
+
+/* tabsA - used for sorting */
+.tabsA { float: right; }
+.tabsC { float: left; }
+
+.tabsA a, .tabsC a{
+
+    border-left: 1px solid #d0e1e4;
+    color: @section-title;
+    display: block;
+    float: left;
+    height: 20px;
+    line-height: 20px;
+    padding:4px 7px 4px 7px;
+    text-decoration: none;
+}
+
+.tabsA a.on, .tabsC a.on, .tabsA a:hover, .tabsC a:hover {
+    color: @button-label;
+}
+
+.tabsA a.rev.on, tabsA a.rev.on:hover {
+}
+
+.tabsA .label, .tabsC .label {
+    float: left;
+    color: #646464;
+    margin:4px 5px 0px 8px;
+}
+
+.main-page .tabsA .label {
+    margin-left: 8px;
+}
+
+.tabsB a {
+    background: #eee;
+    border: 1px solid #eee;
+    color: #777;
+    display: block;
+    float: left;
+    height: 22px;
+    line-height: 28px;
+    margin: 5px 0px 0 4px;
+    padding: 0 11px 0 11px;
+    text-decoration: none;
+}
+.tabsC .first{
+    border:none;
+}
+.rss {
+    float: right;
+    font-size: 16px;
+    color: #f57900;
+    margin: 5px 0 3px 7px;
+    width:52px;
+    padding-left: 2px;
+    padding-top:3px;
+    background: url(../images/feed-icon-small.png) no-repeat center right;
+    font-family: @sort-font;
+}
+
+.rss:hover {
+    color: #F4A731 !important;
+}
+#questionCount{
+    font-weight:bold;
+    font-size:20px;
+    color:@section-title;
+    float:left;
+    margin-bottom:6px;
+    padding-top: 6px;
+    font-family:@main-font;
+    .count {
+        font-weight:bold;
+        font-size:20px;
+        color:@section-title;
+        margin-bottom: 0;
+        padding-top: 0;
+        font-family:@main-font;
+    }
+}
