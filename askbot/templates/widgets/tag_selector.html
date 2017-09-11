@@ -16,9 +16,11 @@
     #}
     <div class="clearfix"></div>
 
-    <div class="form-group">
+    <div class="input-group mb-2">
         <input id="interestingTagInput" class="form-control d-inline-block" autocomplete="off" type="text"/>
-        <input id="interestingTagAdd" class="btn btn-info" type="submit" value="{% trans %}add{% endtrans %}"/>
+        <span class="input-group-btn">
+            <input id="interestingTagAdd" class="btn btn-info" type="submit" value="{% trans %}add{% endtrans %}"/>
+        </span>
     </div>
     <h2>{% trans %}Ignored tags{% endtrans %}</h2>
     {{
@@ -33,9 +35,11 @@
         "remove '%(tag_name)s' from the list of ignored tags"|
         format(tag_name = tag_name)
     #}
-    <div class="form-group">
+    <div class="input-group mb-2">
         <input id="ignoredTagInput" class="form-control d-inline-block" autocomplete="off" type="text"/>
-        <input id="ignoredTagAdd" class="btn btn-info" type="submit" value="{% trans %}add{% endtrans%}"/>
+        <span class="input-group-btn">
+            <input id="ignoredTagAdd" class="btn btn-info" type="submit" value="{% trans %}add{% endtrans%}"/>
+        </span>
     </div>
     {% if settings.SUBSCRIBED_TAG_SELECTOR_ENABLED %}
         <h2>{% trans %}Subscribed tags{% endtrans %}</h2>

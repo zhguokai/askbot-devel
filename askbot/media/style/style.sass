@@ -230,7 +230,14 @@ ul.tags
         +box-shadow(0px,0px,5px,#d3d6d7)
         border-top: none
         +rounded-corners-right(4px)
-
+        height: 22px
+        width: 18px
+        display: inline-block
+        line-height: 20px
+        text-align: center
+        background: #bbcdcd
+        cursor: default
+        color: #fff
     .tag-number
         float: none
 
@@ -249,7 +256,7 @@ ul.tags
     outline: #cfdbdb 1px solid !important
     +box-shadow(0 px, 0 px, 5 px, #d3d6d7)
     display: inline-block
-    height: 17px
+    height: 20px
     line-height: 17px
     font-weight: normal
     font-size: 11px
@@ -259,7 +266,7 @@ ul.tags
     white-space: nowrap
     vertical-align: middle
     font-family: $body-font
-    color: #717179
+    color: #585858
 
 .js-deletable-tag
     margin-right: 3px
@@ -355,8 +362,6 @@ ul.tags li
 #tagSelector
     .form-control
         width: auto
-    .btn
-        margin-top: -3px
     h2
         background: #eceeeb
         text-align: right
