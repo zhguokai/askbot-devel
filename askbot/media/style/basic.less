@@ -25,36 +25,20 @@
     -moz-box-shadow: @arguments;
     box-shadow: @arguments;
 }
-.rounded-corners(@radio: 5px){
-    border-radius: @radio;
-    -ms-border-radius: @radio;
-    -moz-border-radius: @radio;
-    -webkit-border-radius: @radio;
-    -khtml-border-radius: @radio;
-}
 
 .rounded-corners-top(@radio:5px){
     border-top-right-radius:@radio;
     border-top-left-radius:@radio;
-    -moz-border-radius-topright:@radio;
-    -moz-border-radius-topleft:@radio;
-    -webkit-border-top-left-radius:@radio;
-    -webkit-border-top-right-radius:@radio;
 }
 
 .rounded-corners-right(@radio:5px){
     border-top-right-radius:@radio;
     border-bottom-right-radius:@radio;
-    -moz-border-radius-topright:@radio;
-    -moz-border-radius-bottomright:@radio;
-    -webkit-border-bottom-right-radius:@radio;
-    -webkit-border-top-right-radius:@radio;
 }
 
 body {
     background: #FFF;
     font-size: 14px;
-    //line-height: 150%;
     margin: 0;
     padding: 0;
     color: #666;
@@ -114,7 +98,7 @@ body {
         color: #8ebcc7;
     }
     img.license-logo {
-        margin: 6px 0px 20px 10px;
+        margin: 6px 0 20px 10px;
         float: right;
     }
 }
