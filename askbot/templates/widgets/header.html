@@ -1,28 +1,39 @@
 <!-- template header.html -->
 {% import "macros.html" as macros %}
-<div
-    id="header"
-    class="{% if settings.SHOW_LOGO %}with-logo{% else %}without-logo{% endif %}"
->
-    <div class="container" >
-        <div id="userToolsNav">
-            {% include "widgets/user_navigation.html" %}
-            {% if settings.MULTILINGUAL %}
-                {% include "widgets/language_nav.html" %}
-            {% endif %}
-        </div>
+
+<nav id="header"
+     class="navbar navbar-expand-lg navbar-dark bg-dark {% if settings.SHOW_LOGO %}with-logo{% else %}without-logo{% endif %}">
+    <div class="container">
         {% if settings.SHOW_LOGO %}
             {% include "widgets/logo.html" %}
         {% endif %}
-        <div id="metaNav">
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-top"
+                aria-controls="navbar-top" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbar-top">
+
+            <div id="userToolsNav">
+                <ul class="navbar-nav mr-auto">
+                    {% include "widgets/user_navigation.html" %}
+
+                    {% if settings.MULTILINGUAL %}
+                        {% include "widgets/language_nav.html" %}
+                    {% endif %}
+                </ul>
+            </div>
+
             {% include "widgets/meta_nav.html" %}
+
+            {% if settings.READ_ONLY_MODE_ENABLED %}
+                <div class="content-wrapper system-messages">
+                    {{ settings.READ_ONLY_MESSAGE }}
+                </div>
+            {% endif %}
         </div>
-        <div class="clearfix"></div>
     </div>
-    {% if settings.READ_ONLY_MODE_ENABLED %}
-        <div class="content-wrapper system-messages">
-            {{ settings.READ_ONLY_MESSAGE }}
-        </div>
-    {% endif %}
-</div>
+</nav>
+
 <!-- end template header.html -->

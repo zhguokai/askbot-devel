@@ -1,29 +1,25 @@
 {% import "macros.html" as macros%}
-<a
-  id="navTags"
-  href="{% url tags %}"
-  {% if active_tab == 'tags' %}class="on"{% endif %}
->{% trans %}tags{% endtrans %}</a>
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item {% if active_tab == 'tags' %}active{% endif %}">
+        <a class="nav-link"
+           href="{% url tags %}"><i class="fa fa-tags" aria-hidden="true"></i>{% trans %}tags{% endtrans %}</a>
+    </li>
 {% if settings.GROUPS_ENABLED %}
-<span class="dropdown groups-dropdown">
-<a
-  id="navGroups"
-  {% if active_tab == 'groups' %}class="on"{% endif %}
-  href="{% url groups %}" data-target="#" >
-  {% trans %}people & groups{% endtrans %}
-</a>
-</span>
+    <li class="nav-item {% if active_tab == 'groups' %}active{% endif %}">
+        <a class="nav-link"
+           href="{% url groups %}"
+           data-target="#"><i class="fa fa-users" aria-hidden="true"></i>{% trans %}people & groups{% endtrans %}</a>
+    </li>
 {%else%}
-<a
-  id="navUsers"
-  href="{% url users %}"
-  {% if active_tab == 'users' %}class="on"{% endif %}
->{% trans %}users{% endtrans %}</a>
+    <li class="nav-item {% if active_tab == 'users' %}active{% endif %}">
+        <a class="nav-link"
+           href="{% url users %}"><i class="fa fa-users" aria-hidden="true"></i>{% trans %}users{% endtrans %}</a>
+    </li>
 {% endif %}
 {% if settings.BADGES_MODE == 'public' %}
-<a
-  id="navBadges"
-  href="{% url badges %}"
-  {% if active_tab == 'badges' %}class="on"{% endif %}
->{% trans %}badges{% endtrans %}</a>
+    <li class="nav-item {% if active_tab == 'badges' %}active{% endif %}">
+        <a class="nav-link"
+           href="{% url badges %}"><i class="fa fa-cog" aria-hidden="true"></i>{% trans %}badges{% endtrans %}</a>
+    </li>
 {% endif %}
+</ul>
