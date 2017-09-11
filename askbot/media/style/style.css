@@ -662,6 +662,29 @@ ul.tags li {
   font-size: 15px;
   font-weight: 600; }
 
+.acResults {
+  padding: 0;
+  border: 1px solid WindowFrame;
+  background-color: #fff;
+  overflow: hidden;
+  box-shadow: 0 1px 1px #BFBFBF;
+  z-index: 100; }
+  .acResults ul {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style-type: none; }
+  .acResults li {
+    margin: 0;
+    padding: 2px 5px;
+    cursor: pointer;
+    display: block;
+    font-size: 14px;
+    overflow: hidden; }
+  .acResults .acSelect {
+    background-color: Highlight;
+    color: HighlightText; }
+
 @media screen and (max-width: 767px) {
   .views,
   .votes {
