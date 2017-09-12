@@ -308,19 +308,22 @@
 
 {%- macro radio_select(name = None, value = None, choices = None) -%}
     {% for choice in choices %}
-        <p class="choice">
-            {% set id = "id_" ~ name ~ "_" ~ choice[0] %}
-            <input
-                id="{{ id }}"
-                name="{{ name }}"
-                value="{{ choice[0] }}"
-                type="radio"
-                {% if value == choice[0] %}
-                checked="checked"
-                {% endif %}
-            />
-            <label for="{{ id }}">{{ choice[1] }}</label>
-        </p>
+        <div class="form-check">
+            <label class="form-check-label">
+                {% set id = "id_" ~ name ~ "_" ~ choice[0] %}
+                <input
+                        id="{{ id }}"
+                        name="{{ name }}"
+                        class="form-check-input"
+                        value="{{ choice[0] }}"
+                        type="radio"
+                        {% if value == choice[0] %}
+                        checked="checked"
+                        {% endif %}
+                />
+                {{ choice[1] }}
+            </label>
+        </div>
     {% endfor %}
 {%- endmacro -%}
 
@@ -671,40 +674,69 @@ for the purposes of the AJAX comment editor #}
 {%- macro paginator_main_page(p, position, search_state) -%} {# p is paginator context dictionary #}
     {% spaceless %}
         {% if p.is_paginated %}
-            <div class="paginator" style="float:{{position}}">
-                {% if p.has_previous %}
-                    <span class="prev"><a href="{{ search_state.change_page(p.previous).full_url() }}" title="{% trans %}previous{% endtrans %}">
-                        &laquo; {% trans %}previous{% endtrans %}</a></span>
-                {% endif %}
-                {% if not p.in_leading_range %}
-                    {% for num in p.pages_outside_trailing_range %}
-                        <span class="page"><a href="{{ search_state.change_page(num).full_url() }}" >{{ num }}</a></span>
-                    {% endfor %}
-                    ...
-                {% endif %}
 
-                {% for num in p.page_numbers %}
-                    {% if num == p.page and p.pages != 1%}
-                        <span class="curr page" title="{% trans %}current page{% endtrans %}"><a>{{ num }}</a></span>
-                    {% else %}
-                        <span class="page"><a href="{{ search_state.change_page(num).full_url() }}" title="{% trans %}page {{num}}{% endtrans %}">{{ num }}</a></span>
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination">
+                    {% if p.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="{{ search_state.change_page(p.previous).full_url() }}"
+                           aria-label="{% trans %}previous{% endtrans %}"
+                        >
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">{% trans %}previous{% endtrans %}</span>
+                        </a>
+                    </li>
                     {% endif %}
-                {% endfor %}
+                    {% if not p.in_leading_range %}
+                        {% for num in p.pages_outside_trailing_range %}
+                            <li class="page-item"><a
+                                    class="page-link"
+                                    href="{{ search_state.change_page(num).full_url() }}"
+                                    title="{% trans %}page {{ num }}{% endtrans %}"
+                            >{{ num }}</a></li>
+                        {% endfor %}
+                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                    {% endif %}
 
-                {% if not p.in_trailing_range %}
-                    ...
-                    {% for num in p.pages_outside_leading_range|reverse %}
-                        <span class="page"><a href="{{ search_state.change_page(num).full_url() }}" title="{% trans %}page {{ num }}{% endtrans %}">{{ num }}</a></span>
+                    {% for num in p.page_numbers %}
+                        <li class="page-item {% if num == p.page and p.pages != 1%}active{% endif %}"><a
+                                class="page-link"
+                                href="{{ search_state.change_page(num).full_url() }}"
+                                title="{% trans %}page {{num}}{% endtrans %}"
+                        >{{ num }}</a></li>
                     {% endfor %}
-                {% endif %}
-                {% if p.has_next %}
-                    <span class="next"><a href="{{ search_state.change_page(p.next).full_url() }}" title="{% trans %}next page{% endtrans %}">{% trans %}next page{% endtrans %} &raquo;</a></span>
-                {% endif %}
-            </div>
+
+                    {% if not p.in_trailing_range %}
+                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                        {% for num in p.pages_outside_leading_range|reverse %}
+                            <li class="page-item"><a
+                                    class="page-link"
+                                    href="{{ search_state.change_page(num).full_url() }}"
+                                    title="{% trans %}page {{ num }}{% endtrans %}"
+                            >{{ num }}</a></li>
+                        {% endfor %}
+                    {% endif %}
+                    {% if p.has_next %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="{{ search_state.change_page(p.next).full_url() }}"
+                               title="{% trans %}next page{% endtrans %}"
+                               aria-label="{% trans %}next page{% endtrans %}"
+                            >
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">{% trans %}next page{% endtrans %}</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+
+                </ul>
+            </nav>
+
         {% endif %}
     {% endspaceless %}
 {%- endmacro -%}
-
 
 {%- macro inbox_link(user) -%}
     {% if user.new_response_count %}

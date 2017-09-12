@@ -217,7 +217,7 @@ FullTextSearch.prototype.renderFullTextSearchResult = function (data) {
     );
     if (data.feed_url) {
         // Change RSS URL
-        $('#ContentLeft a.rss:first').attr('href', data.feed_url);
+        $('.main-col a.rss:first').attr('href', data.feed_url);
     }
 
     // Patch scope selectors

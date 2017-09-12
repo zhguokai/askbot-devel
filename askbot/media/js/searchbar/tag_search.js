@@ -17,7 +17,7 @@ TagSearch.prototype.setQuery = function (val) {
 
 TagSearch.prototype.getSort = function () {
     //todo: read it off the page
-    var link = $('.tabBar a.on');
+    var link = $('.tab-bar a.on');
     if (link.length === 1) {
         var sort = link.attr('id').replace('sort_', '');
         if (sort === 'name' || sort === 'used') {
@@ -109,7 +109,7 @@ TagSearch.prototype.reset = function () {
 
 TagSearch.prototype.decorate = function (element) {
     this._element = element;
-    this._contentBox = $('#ContentLeft');
+    this._contentBox = $('.main-col');
     this._xButton = $('input[name=reset_query]');
     element.keyup(this.makeKeyUpHandler());
     element.keydown(this.makeKeyDownHandler());

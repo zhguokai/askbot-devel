@@ -1,10 +1,10 @@
-<div class="tabBar tabBar-answer">
+<div class="tab-bar tab-bar-answer">
     <h2 id="questionCount">
         {% set pluralized_item_term=settings.WORDS_ANSWERS_COUNTABLE_FORMS|py_pluralize(answer_count)|capitalize|escape %}
         {% set item_count=answer_count %}
         {% trans %}<span class="count">{{ item_count }}</span> {{ pluralized_item_term }}{% endtrans %}
     </h2>
-    <div class="tabsA">
+    <div class="tabs-a">
                     <span class="label">
                     {% trans %}Sort by »{% endtrans %}
                     </span>
