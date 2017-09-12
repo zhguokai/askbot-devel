@@ -1,4 +1,4 @@
-<div class="post js-question" data-post-id="{{ question.id }}">
+<div style="border: 1px solid red" class="post js-question" data-post-id="{{ question.id }}">
     <div class="vote-buttons">
         {% include "question/question_vote_buttons.html" %}
 
@@ -18,8 +18,8 @@
             <div class="js-editable-content">{{ thread.get_title()|escape }}</div>
             <div class="js-editable-controls">
                 <button id="js-edit-btn-question-title-{{ question.pk }}"
-                    class="btn-link js-edit"
-                >{% trans %}edit{% endtrans %}</button>
+                    class="btn-link btn btn-sm js-edit"
+                >{% trans %}edit{% endtrans %}<i class="fa fa-pencil" aria-hidden="true"></i></button>
             </div>
         </h1>
         {% include "question/question_tags.html" %}
@@ -27,7 +27,7 @@
 
         <div class="post-body">
             <div class="js-editable-hide-post-body-{{ question.pk }}">
-                <div class="post-update-info-container">
+                <div class="post-update-info-container" style="border: 1px solid green">
                     {% include "question/question_author_info.html" %}
                 </div>
                 {% if question.needs_moderation() %}

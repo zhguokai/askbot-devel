@@ -288,7 +288,7 @@ var inArray = function (item, itemsList) {
 };
 
 var showMessage = function (element, msg, where) {
-    var div = $('<div class="vote-notification"><h3>' + msg + '</h3>(' +
+    var div = $('<div class="vote-notification alert alert-danger" role="alert"><h3>' + msg + '</h3>(' +
     gettext('click to close') + ')</div>');
     where = where || 'parent';
 

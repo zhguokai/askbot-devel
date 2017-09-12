@@ -2,9 +2,13 @@
 <div id="contrib-users" class="box">
     <h2 class="contributorback">{% trans %}Contributors{% endtrans %}</h2>
     {% spaceless %}
-    {% for person in contributors %}
-        {{ macros.gravatar(person, 48) }}
-    {% endfor %}
+        <div class="row">
+            {% for person in contributors %}
+                <div class="col-md-3 col-2 col-sm-1">
+                {{ macros.gravatar(person, 80) }}
+                </div>
+            {% endfor %}
+        </div>
     {% endspaceless %}
 </div>
 {#% endcache %#}
