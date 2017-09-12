@@ -8,63 +8,26 @@
 }
 
 .tab-bar {
-    background-color: #eff5f6;
     float: right;
-    font-family: $sort-font;
     font-size: 16px;
-    border-radius: 5px;
-
-    h2 {
-        float: left;
+    .input-group-addon{
+        padding: .3rem .5rem;
     }
-}
-
-.tabs-a, .tabs-c {
-    display: inline-block;
-}
-
-/* tabs-a - used for sorting */
-
-.tabs-a,
-.tabs-c {
-    a {
-        border-left: 1px solid #d0e1e4;
-        color: $section-title;
-        display: inline-block;
-        padding: 2px 7px;
+    span.input-group-addon{
+        color: grey;
+    }
+    a.input-group-addon{
         text-decoration: none;
+        &.on{
+            color: black;
+        }
+        &:hover{
+            text-decoration: none;
+            color: #0056b3;
+        }
     }
 }
 
-.tabs-a a.on,
-.tabs-c a.on,
-.tabs-a a:hover,
-.tabs-c a:hover {
-    color: $button-label;
-}
-
-.tabs-a .label,
-.tabs-c .label {
-    color: #646464;
-    margin: 4px 5px 0 8px;
-}
-
-.main-page .tabs-a .label {
-    margin-left: 8px;
-}
-
-.tabs-b a {
-    background: #eee;
-    border: 1px solid #eee;
-    color: #777;
-    display: block;
-    float: left;
-    height: 22px;
-    line-height: 28px;
-    margin: 5px 0 0 4px;
-    padding: 0 11px 0 11px;
-    text-decoration: none;
-}
 
 .rss {
     float: right;

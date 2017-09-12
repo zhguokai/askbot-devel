@@ -210,51 +210,19 @@ nav.question {
   margin-bottom: 0; }
 
 .tab-bar {
-  background-color: #eff5f6;
   float: right;
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  font-size: 16px;
-  border-radius: 5px; }
-  .tab-bar h2 {
-    float: left; }
-
-.tabs-a, .tabs-c {
-  display: inline-block; }
-
-/* tabs-a - used for sorting */
-.tabs-a a,
-.tabs-c a {
-  border-left: 1px solid #d0e1e4;
-  color: #7ea9b3;
-  display: inline-block;
-  padding: 2px 7px;
-  text-decoration: none; }
-
-.tabs-a a.on,
-.tabs-c a.on,
-.tabs-a a:hover,
-.tabs-c a:hover {
-  color: #4a757f; }
-
-.tabs-a .label,
-.tabs-c .label {
-  color: #646464;
-  margin: 4px 5px 0 8px; }
-
-.main-page .tabs-a .label {
-  margin-left: 8px; }
-
-.tabs-b a {
-  background: #eee;
-  border: 1px solid #eee;
-  color: #777;
-  display: block;
-  float: left;
-  height: 22px;
-  line-height: 28px;
-  margin: 5px 0 0 4px;
-  padding: 0 11px 0 11px;
-  text-decoration: none; }
+  font-size: 16px; }
+  .tab-bar .input-group-addon {
+    padding: .3rem .5rem; }
+  .tab-bar span.input-group-addon {
+    color: grey; }
+  .tab-bar a.input-group-addon {
+    text-decoration: none; }
+    .tab-bar a.input-group-addon.on {
+      color: black; }
+    .tab-bar a.input-group-addon:hover {
+      text-decoration: none;
+      color: #0056b3; }
 
 .rss {
   float: right;
