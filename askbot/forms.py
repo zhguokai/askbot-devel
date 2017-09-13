@@ -1242,7 +1242,7 @@ class VoteForm(forms.Form):
 
 
 class CloseForm(forms.Form):
-    reason = forms.ChoiceField(choices=const.CLOSE_REASONS)
+    reason = forms.ChoiceField(choices=const.CLOSE_REASONS, widget=forms.Select(attrs={'class':'form-control'}))
 
 
 class RetagQuestionForm(forms.Form):

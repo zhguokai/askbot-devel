@@ -21,6 +21,10 @@
     askbot['urls'] = {};
     askbot['settings'] = {};
     askbot['messages'] = {};
+    askbot['css'] = {
+        'cancelButtonClasses':'btn btn-sm btn-danger',
+        'primaryButtonClasses': 'btn btn-sm btn-success'
+    };
     {% if settings.EDITOR_TYPE == 'tinymce' %}
         askbot['settings']['tinymceEditorDeselector'] = '{{ settings.TINYMCE_EDITOR_DESELECTOR }}';
     {% endif %}

@@ -148,7 +148,7 @@ askbot.validators.questionDetailsValidator = function (text) {
     text = $.trim(text);
     var minLength = askbot.settings.minQuestionBodyLength;
     if (minLength && (text.length < minLength)) {
-        /* todo - for tinymce text extract text from html 
+        /* todo - for tinymce text extract text from html
             otherwise html tags will be counted and user misled */
         throw interpolate(
                     ngettext(
@@ -1098,7 +1098,7 @@ var Vote = (function () {
             }
 
             // Change the link text and rebind events
-            $(object).find('.question-flag').html(gettext('remove flag'));
+            $(object).find('.question-flag').html('<i class="fa fa-flag" aria-hidden="true"></i>'+gettext('remove flag'));
             var obj_id = $(object).attr('id');
             $(object).attr('id', obj_id.replace('flag-', 'remove-flag-'));
 
@@ -1132,7 +1132,7 @@ var Vote = (function () {
                 $(remove_all).remove();
             }
             // Change the link text and rebind events
-            $(object).find('.question-flag').html(gettext('flag offensive'));
+            $(object).find('.question-flag').html('<i class="fa fa-flag" aria-hidden="true"></i>'+gettext('flag offensive'));
             var obj_id = $(object).attr('id');
             $(object).attr('id', obj_id.replace('remove-flag-', 'flag-'));
 
@@ -1163,7 +1163,7 @@ var Vote = (function () {
             }
             // remove the link. All flags are gone
             var remove_own = $(object).siblings('span.offensive-flag[id*="-offensive-remove-flag-"]');
-            $(remove_own).find('.question-flag').html(gettext('flag offensive'));
+            $(remove_own).find('.question-flag').html('<i class="fa fa-flag" aria-hidden="true"></i>'+gettext('flag offensive'));
             $(remove_own).attr('id', $(remove_own).attr('id').replace('remove-flag-', 'flag-'));
 
             $(object).next('span.sep').remove();
@@ -1188,11 +1188,11 @@ var Vote = (function () {
         if (data.success == '1') {
             if (removeActionType == 'delete') {
                 postNode.addClass('deleted');
-                postRemoveLink.innerHTML = gettext('undelete');
+                postRemoveLink.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>'+gettext('undelete');
                 showMessage(object, deletedMessage);
             } else if (removeActionType == 'undelete') {
                 postNode.removeClass('deleted');
-                postRemoveLink.innerHTML = gettext('delete');
+                postRemoveLink.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>'+gettext('delete');
                 showMessage(object, recoveredMessage);
             }
         } else {
@@ -1415,7 +1415,7 @@ var questionRetagger = (function () {
 
     var createRetagForm = function (old_tags_string) {
         var div = $('<form method="post"></form>');
-        tagInput = $('<input id="retag_tags" type="text" autocomplete="off" name="tags" size="30"/>');
+        tagInput = $('<input id="retag_tags" class="form-control" type="text" autocomplete="off" name="tags" size="30"/>');
         addExtraCssClasses(tagInput, 'textInputClasses');
         //var tagLabel = $('<label for="retag_tags" class="error"></label>');
         //populate input
@@ -1684,11 +1684,11 @@ DeletePostLink.prototype.setPostDeleted = function (is_deleted) {
     if (is_deleted === true) {
         post.addClass('deleted');
         this._post_deleted = true;
-        this.getElement().html(gettext('undelete'));
+        this.getElement().html('<i class="fa fa-trash" aria-hidden="true"></i>'+gettext('undelete'));
     } else if (is_deleted === false) {
         post.removeClass('deleted');
         this._post_deleted = false;
-        this.getElement().html(gettext('delete'));
+        this.getElement().html('<i class="fa fa-trash" aria-hidden="true"></i>'+gettext('delete'));
     }
 };
 
@@ -1836,7 +1836,7 @@ SimpleEditor.prototype.createDom = function () {
 
     this._textarea = textarea;
     this._mirror = mirror;
-
+    textarea.addClass('form-control');
 
     if (askbot.settings.tinymceEditorDeselector) {
         textarea.addClass(askbot.settings.tinymceEditorDeselector);//suppress tinyMCE

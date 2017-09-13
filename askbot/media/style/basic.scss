@@ -8,6 +8,10 @@ $section-title: #7ea9b3;
 $info-text: #707070;
 $info-text-dark: #525252;
 
+$color-success: #28a745;
+$color-danger: #dc3545;
+$color-hover: #0056b3;
+$color-link-gray: #4b4b4b;
 /* Variables for fonts */
 $body-font: Arial;
 //$sort-font: Georgia, serif;
@@ -131,4 +135,32 @@ h2{
       margin-left: 10px;
       float: right;
   }
+}
+
+.hilite {
+    background-color: #ff0;
+}
+
+.hilite1 {
+    background-color: #ff0;
+}
+
+.hilite2 {
+    background-color: #f0f;
+}
+
+.hilite3 {
+    background-color: #0ff;
+}
+
+.gold, .badge1 {
+    color: #FFCC00;
+}
+
+.silver, .badge2 {
+    color: #CCCCCC;
+}
+
+.bronze, .badge3 {
+    color: #CC9933;
 }

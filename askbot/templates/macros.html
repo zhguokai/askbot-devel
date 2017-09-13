@@ -41,6 +41,7 @@
 {%- macro post_vote_buttons(post = None) -%}
 <div id="{{post.post_type}}-img-upvote-{{ post.id }}"
     class="{{post.post_type}}-img-upvote post-vote upvote">
+    <i class="fa fa-chevron-up" aria-hidden="true"></i>
 </div>
 <div
     id="{{post.post_type}}-vote-number-{{ post.id }}"
@@ -50,6 +51,7 @@
 <div
     id="{{post.post_type}}-img-downvote-{{ post.id }}"
     class="{{post.post_type}}-img-downvote post-vote downvote">
+    <i class="fa fa-chevron-down" aria-hidden="true"></i>
 </div>
 <script type="text/javascript">
     askbot['functions']['renderPostVoteButtons']('{{post.post_type}}', '{{post.id}}');
@@ -69,39 +71,41 @@
 {%- endmacro -%}
 
 {%- macro post_last_updater_and_creator_info(post) -%}
-    {% if post.wiki %}
-    <div class='post-update-info'>
-        <p>
-           {%- if post.post_type == 'question' -%}
-               {% set action_performed=settings.WORDS_ASKED|escape %}
-           {% elif post.post_type == 'answer' %}
-               {% set action_performed=settings.WORDS_ANSWERED|escape %}
-           {% else %}
-               {%- set action_performed=gettext('posted') %}
-           {% endif %}
-           <strong>{{ timeago(post.added_at, action_performed=action_performed) }}</strong>
-        </p>
-        <img width="35" height="35"
-            src="{{'/images/wiki.png'|media}}"
-            alt="{% trans %}this post is marked as community wiki{% endtrans %}"
-            style="float:left"
-        />
-        {% set wiki_min_rep = settings.MIN_REP_TO_EDIT_WIKI %}
-        <p class="tip">{% trans %}This post is a wiki.
-        Anyone with karma &gt;{{wiki_min_rep}} is welcome to improve it.{% endtrans %}</p>
-    </div>
-    {% else %}
-        {% set first_rev = post.get_earliest_revision() %}
-        {% set last_rev = post.get_latest_revision() %}
-        {{ post_contributor_info(first_rev, "original_author") }}
-        {% if first_rev != last_rev %}
-            {{ post_contributor_info(last_rev, "last_updater") }}
+    <div class="row">
+        {% if post.wiki %}
+        <div class='post-update-info col-xl-4 col-lg-5 col-md-12'>
+            <p>
+               {%- if post.post_type == 'question' -%}
+                   {% set action_performed=settings.WORDS_ASKED|escape %}
+               {% elif post.post_type == 'answer' %}
+                   {% set action_performed=settings.WORDS_ANSWERED|escape %}
+               {% else %}
+                   {%- set action_performed=gettext('posted') %}
+               {% endif %}
+               <strong>{{ timeago(post.added_at, action_performed=action_performed) }}</strong>
+            </p>
+            <img width="35" height="35"
+                src="{{'/images/wiki.png'|media}}"
+                alt="{% trans %}this post is marked as community wiki{% endtrans %}"
+                style="float:left"
+            />
+            {% set wiki_min_rep = settings.MIN_REP_TO_EDIT_WIKI %}
+            <p class="tip">{% trans %}This post is a wiki.
+            Anyone with karma &gt;{{wiki_min_rep}} is welcome to improve it.{% endtrans %}</p>
+        </div>
+        {% else %}
+            {% set first_rev = post.get_earliest_revision() %}
+            {% set last_rev = post.get_latest_revision() %}
+            {{ post_contributor_info(first_rev, "original_author") }}
+            {% if first_rev != last_rev %}
+                {{ post_contributor_info(last_rev, "last_updater") }}
+            {% endif %}
         {% endif %}
-    {% endif %}
+    </div>
 {%- endmacro -%}
 
 {%- macro post_contributor_info(revision, contributor_type) -%}
-<div class='post-update-info'>
+<div class='post-update-info col-xl-4 col-lg-5 col-md-12'>
 {% if contributor_type=="original_author" %}
     {% if revision.post.post_type == 'question' %}
         {% set action_label = settings.WORDS_ASKED|escape %}
@@ -118,15 +122,6 @@
     {% else %}
         {% set original_author = None %}
     {% endif %}
-    <p style="line-height:12px;">
-        <a
-        {% if revision.post.post_type == 'question' %}
-            href="{% url question_revisions revision.post.id %}"
-        {% else %}
-            href="{% url answer_revisions revision.post.id %}"
-        {% endif %}
-        ><strong>{{ timeago(revision.revised_at, action_performed=action_label) }}</strong></a>
-    </p>
     {% set show_user_info = (contributor_type == 'original_author' or
         (contributor_type == 'last_updater' and
         original_author != revision.author ))
@@ -134,6 +129,16 @@
     {% if show_user_info %}
         {{ post_contributor_avatar_and_credentials(revision) }}
     {% endif %}
+    <div class="action-date">
+        <a
+        {% if revision.post.post_type == 'question' %}
+            href="{% url question_revisions revision.post.id %}"
+        {% else %}
+            href="{% url answer_revisions revision.post.id %}"
+        {% endif %}
+        >{{ timeago(revision.revised_at, action_performed=action_label) }}</a>
+    </div>
+
 </div>
 {%- endmacro -%}
 
@@ -362,7 +367,10 @@ for the purposes of the AJAX comment editor #}
 {%- macro comment_widget(comment, csrf_token=None) -%}
     {# Warning! Any changes to the comment markup must be duplicated in post.js
        for the purposes of the AJAX comment editor #}
-    <div id="post-id-{{ comment.id }}" class="comment js-comment" data-post-id="{{ comment.id }}">
+    <div id="post-id-{{ comment.id }}"
+         data-post-id="{{ comment.id }}"
+         class="comment js-comment"
+    >
         <div class="comment-votes">
             <div
                 id="comment-img-upvote-{{ comment.id }}"
@@ -436,7 +444,6 @@ for the purposes of the AJAX comment editor #}
     {% set comments_count = comments|length %}
     {% if comments_count > 0 or settings.COMMENTS_REVERSED %}
         <h2 class="comment-title">{% trans %}Comments{% endtrans %}</h2>
-        <div class="clean"></div>
     {% endif %}
     <div class="comments{% if comments_count == 0 %} empty{% endif %} ordering-{% if settings.COMMENTS_REVERSED %}reversed{% else %}forward{% endif %}"
         data-parent-post-type="{{ post.post_type }}"
@@ -578,7 +585,7 @@ for the purposes of the AJAX comment editor #}
 {#todo: rename this to avatar #}
 {%- macro gravatar(user, size) -%}
 {% spaceless %}
-<a class="js-avatar-box"
+<a class="js-avatar-box float-left"
     href="{{ user.get_absolute_url() }}"
 ><img class="js-avatar gravatar"
     width="{{size}}" height="{{size}}"

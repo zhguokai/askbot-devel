@@ -1,5 +1,5 @@
 {% import "macros.html" as macros %}
-{# 
+{#
     thumbnail for the user - shown on the users listings
     and elsewhere
 #}
@@ -9,7 +9,6 @@
         <a href="{{ user.get_profile_url() }}">{{ user.username|escape }}</a>
         {{ macros.user_country_flag(user) }}
 
-        <br/>
 
         {% if settings.KARMA_MODE == 'public' %}
         <span class="reputation-score">{{ user.get_localized_profile().get_reputation() }}</span>

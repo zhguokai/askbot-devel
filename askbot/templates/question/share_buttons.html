@@ -1,5 +1,19 @@
-{% if settings.ENABLE_SHARING_TWITTER %}{{ macros.share(site = 'twitter', icon = True) }}{% endif %}
-{% if settings.ENABLE_SHARING_FACEBOOK %}{{ macros.share(site = 'facebook', icon = True) }}{% endif %}
-{% if settings.ENABLE_SHARING_LINKEDIN %}{{ macros.share(site = 'linkedin', icon = True) }}{% endif %}
-{% if settings.ENABLE_SHARING_IDENTICA %}{{ macros.share(site = 'identica', icon = True) }}{% endif %}
-{% if settings.ENABLE_SHARING_GOOGLE %}<g:plusone size="small" count="false"></g:plusone>{% endif %}
+{% if settings.ENABLE_SHARING_TWITTER %}
+<a  class="twitter-share icon"
+        title="{% trans %}Share this content on twitter{% endtrans %}"
+    ><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+{% endif %}
+{% if settings.ENABLE_SHARING_FACEBOOK %}
+    <a  class="facebook-share icon"
+        title="{% trans %}Share this content on facebook{% endtrans %}"
+    ><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
+{% endif %}
+{% if settings.ENABLE_SHARING_LINKEDIN %}
+    <a class="linkedin-share icon"
+       title="{% trans %}Share this content on linkedin{% endtrans %}"
+    ><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
+{% endif %}
+
+{#{% if settings.ENABLE_SHARING_IDENTICA %}{{ macros.share(site = 'identica', icon = True) }}{% endif %}#}
+{% if settings.ENABLE_SHARING_GOOGLE %}<g:plusone size="medium" count="false"></g:plusone>{% endif %}
+
