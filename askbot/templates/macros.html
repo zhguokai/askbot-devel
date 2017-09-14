@@ -1,7 +1,7 @@
 {% load extra_filters_jinja %}
 
 {%- macro share(site = None, site_label = None, icon = False) -%}
-    <a class="{{ site }}-share{% if icon == True %} icon{% endif %}"
+    <a  class="{{ site }}-share{% if icon == True %} icon{% endif %}"
         title="{% trans %}Share this content on {{site}}{% endtrans %}"
     >{% if icon == False %}{% if site_label %}{{ site_label }}{% else %}{{ site }}{% endif %}{% endif %}</a>
 {%- endmacro -%}
@@ -342,9 +342,11 @@ for the purposes of the AJAX comment editor #}
 {%- macro comments_widget_buttons(post = None, max_comments = None) -%}
     {% if post.comment_count > max_comments %}
         {% if settings.COMMENTS_REVERSED == False %}
-            <a class="hidden js-open-editor-btn">{% trans %}add a comment{% endtrans %}</a>
+            <a class="hidden js-open-editor-btn">
+                <i class="fa fa-comment-o" aria-hidden="true"></i>
+                {% trans %}add a comment{% endtrans %}</a>
         {% endif %}
-        <a class="js-load-comments-btn">
+        <a class="js-load-comments-btn"><i class="fa fa-comments-o" aria-hidden="true"></i>
             {% if settings.COMMENTS_REVERSED %}
                 {% trans %}load older comments{% endtrans %}
             {% else %}
@@ -353,7 +355,9 @@ for the purposes of the AJAX comment editor #}
         </a>
     {% else %}
         {% if settings.COMMENTS_REVERSED == False %}
-            <a class="js-open-editor-btn">{% trans %}add a comment{% endtrans %}</a>
+            <a class="js-open-editor-btn">
+                <i class="fa fa-comment-o" aria-hidden="true"></i>
+                {% trans %}add a comment{% endtrans %}</a>
         {% endif %}
     {% endif %}
 {%- endmacro -%}
@@ -384,7 +388,10 @@ for the purposes of the AJAX comment editor #}
         </div>
         <div class="comment-content">
             <div id="post-{{ comment.id }}-delete" class="comment-delete">
-                <span class="js-delete-icon" title="{% trans %}delete this comment{% endtrans %}"></span>
+                <span
+                        class="js-delete-icon"
+                        title="{% trans %}delete this comment{% endtrans %}"
+                ><i class="fa fa-trash-o" aria-hidden="true"></i></span>
             </div>
             {% if comment.needs_moderation() %}
                 <p class="moderated">{% trans %}This post is awaiting moderation{% endtrans %}</p>
@@ -451,6 +458,7 @@ for the purposes of the AJAX comment editor #}
     >
         {% if settings.COMMENTS_REVERSED %}
             <div class="js-open-editor-btn new-comment-box">
+                <i class="fa fa-comment-o" aria-hidden="true"></i>
                 {% set prompt=gettext('add a comment...') %}
                 {% include "widgets/mock_editor.html" %}
             </div>
@@ -613,66 +621,64 @@ for the purposes of the AJAX comment editor #}
 {%- macro paginator(p, position='left', anchor='') -%}{# p is paginator context dictionary #}
 {% spaceless %}
     {% if p.is_paginated %}
-        <div
-            class="paginator"
-            style="float:{{ position }}"
-            data-num-pages="{{ p.pages }}"
-        >
-        <span class="prev"
-            {% if not p.has_previous %}style="display: none"{% endif %}
-        ><a href="{{p.base_url}}page={{ p.previous }}{{ anchor }}"
-            title="{% trans %}previous{% endtrans %}"
-        >&laquo; {% trans %}previous{% endtrans %}</a></span>
+    <nav aria-label="Page navigation" class="mt-2" >
+        <ul class="pagination">
 
-        <span class="first-page-nav"
-            {% if p.in_leading_range %}style="display: none"{% endif %}
-        >
-            <span class="page first-page"
-                data-page="1"
-            >
-                <a href="{{p.base_url}}page={{1}}{{ anchor }}" >1</a>
-            </span>
-            <span class="leading-sep">...</span>
-        </span>
-
-        <span class="main-pages-nav">
-        {% for num in p.page_numbers %}
-            {% if num == p.page %}
-                <span class="curr page"
-                    data-page="{{ num }}"
-                    title="{% trans %}current page{% endtrans %}"
-                ><a>{{ num }}</a></span>
-            {% else %}
-                <span class="page"
-                    data-page="{{ num }}"
-                ><a href="{{p.base_url}}page={{ num }}{{ anchor }}"
-                    title="{% trans %}page {{num}}{% endtrans %}"
-                >{{ num }}</a></span>
+            {% if p.has_previous %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{p.base_url}}page={{ p.previous }}{{ anchor }}"
+                       title="{% trans %}previous{% endtrans %}"
+                       aria-label="{% trans %}previous{% endtrans %}"
+                    >
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">{% trans %}previous{% endtrans %}</span>
+                    </a>
+                </li>
             {% endif %}
-        {% endfor %}
-        </span>
 
-        {# the "last page" navigation #}
-        <span class="last-page-nav"
-            {% if p.in_trailing_range %}style="display: none"{% endif %}
-        >
-            <span class="trailing-sep">...</span>
-            <span class="page last-page" data-page="{{ p.pages }}">
-                <a href="{{ p.base_url }}page={{ p.pages }}{{ anchor }}"
-                    title="{% trans num=p.pages %}page {{ num }}{% endtrans %}"
-                >{{ p.pages }}</a>
-            </span>
-        </span>
+            {% if not p.in_leading_range %}
+                <li class="page-item first-page-nav">
+                    <a class="page-link"
+                       href="{{ p.base_url }}page={{ 1 }}{{ anchor }}">1</a>
+                </li>
+                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+            {% endif %}
 
-        {# "next" nav link #}
-        <span class="next"
-            {% if not p.has_next %}style="display: none"{% endif %}
-        ><a href="{{p.base_url}}page={{ p.next }}{{ anchor }}"
-                title="{% trans %}next page{% endtrans %}"
-        >{% trans %}next{% endtrans %} &raquo;</a>
-        </span>
+            {% for num in p.page_numbers %}
+                <li class="page-item {% if num == p.page %}active{% endif %}" data-page="{{ num }}"
+                    ><a class="page-link "
+                        href="{{ p.base_url }}page={{ num }}{{ anchor }}"
+                        data-page="{{ num }}"
+                        title="{% trans %}page {{ num }}{% endtrans %}"
+                    >{{ num }}</a>
+                </li>
+            {% endfor %}
 
-    </div>
+            {% if not p.in_trailing_range %}
+                <li class="page-item last-page-nav">
+                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                    <li class="page-item last-page" data-page="{{ p.pages }}">
+                        <a href="{{ p.base_url }}page={{ p.pages }}{{ anchor }}"
+                           class="page-link"
+                           title="{% trans num=p.pages %}page {{ num }}{% endtrans %}"
+                        >{{ p.pages }}</a>
+                    </li>
+                </li>
+            {% endif %}
+
+            {% if p.has_next %}
+                <li class="page-item">
+                    <a href="{{ p.base_url }}page={{ p.next }}{{ anchor }}"
+                       title="{% trans %}next page{% endtrans %}"
+                       class="page-link"
+                    ><span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">{% trans %}next page{% endtrans %}</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
     {% endif %}
 {% endspaceless %}
 {%- endmacro -%}

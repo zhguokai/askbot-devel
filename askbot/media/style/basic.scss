@@ -12,6 +12,7 @@ $color-success: #28a745;
 $color-danger: #dc3545;
 $color-hover: #0056b3;
 $color-link-gray: #4b4b4b;
+$color-answer-bg: rgba(255, 243, 205, 0.8);
 /* Variables for fonts */
 $body-font: Arial;
 //$sort-font: Georgia, serif;
@@ -86,6 +87,9 @@ h2{
 
 }
 
+.content-wrapper{
+    min-height: 70vh;
+}
 .section-title {
   color: #7ea9b3;
   font-family: "Open Sans Condensed", Arial, sans-serif;
@@ -163,4 +167,21 @@ h2{
 
 .bronze, .badge3 {
     color: #CC9933;
+}
+
+.invisible {
+    margin: -1px 0 0 -1px;
+    height: 1px;
+    overflow: hidden;
+    width: 1px;
+}
+
+.wmd-container {
+    textarea {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    img {
+        max-width: 100%;
+    }
 }

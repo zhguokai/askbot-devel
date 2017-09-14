@@ -2,26 +2,33 @@
 <!-- template close.html -->
 {% block title %}{% spaceless %}{{ settings.WORDS_CLOSE_QUESTION|escape }}{% endspaceless %}{% endblock %}
 {% block content %}
-<h1>{{ settings.WORDS_CLOSE_QUESTION|escape }}</h1>
-<p>{{ settings.WORDS_CLOSE_QUESTION|escape }}:
-    <a href="{{ question.get_absolute_url() }}">
-    <strong>{{ question.get_question_title()|escape }}</strong></a>
-</p>
-<form id="fmclose" action="{% url close question.id %}" method="post" >{% csrf_token %}
-    <p>
-        <strong>{% trans %}Reasons{% endtrans %}:</strong>
-        {{ form.reason }}
-    </p>
-    <p>
-        <input type="submit" class="btn btn-sm btn-success" value="{% trans %}OK to close{% endtrans %}"/>
-        <input id="btBack" type="button" class="btn btn-sm btn-danger" value="{% trans %}Cancel{% endtrans %}"/>
-    </p>
-</form>
+    <h1>{{ settings.WORDS_CLOSE_QUESTION|escape }}</h1>
+    <div class="alert alert-info">{{ settings.WORDS_CLOSE_QUESTION|escape }}:
+        <a href="{{ question.get_absolute_url() }}">
+            <strong>{{ question.get_question_title()|escape }}</strong></a>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            <form id="fmclose" action="{% url close question.id %}" method="post">{% csrf_token %}
+                <div class="form-group">
+                    <label for="id_reason">{% trans %}Reasons{% endtrans %}:</label>
+                    {{ form.reason }}
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-sm btn-success" value="{% trans %}OK to close{% endtrans %}"/>
+                    <input id="btBack" type="button" class="btn btn-sm btn-danger"
+                           value="{% trans %}Cancel{% endtrans %}"/>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 {% block endjs %}
     <script type="text/javascript">
-        $(document).ready(function(){
-            $('#btBack').bind('click', function(){ history.back(); });
+        $(document).ready(function () {
+            $('#btBack').bind('click', function () {
+                history.back();
+            });
         });
     </script>
 {% endblock %}

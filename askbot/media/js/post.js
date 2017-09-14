@@ -1946,7 +1946,6 @@ WMD.prototype.getEditorElement = function () {
 WMD.prototype.createDom = function () {
     this._element = this.makeElement('div');
     var clearfix = this.makeElement('div').addClass('clearfix');
-    this._element.append(clearfix);
 
     var wmd_container = this.makeElement('div');
     wmd_container.addClass('wmd-container');

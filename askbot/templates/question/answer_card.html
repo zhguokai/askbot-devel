@@ -39,13 +39,17 @@
                 <div class="js-editable-controls"></div>
             </div>
         </div>
+
+
         <div class="answer-controls post-controls">
             {% include "question/answer_controls.html" %}
         </div>
-        {% if settings.ANSWER_COMMENTS_ENABLED %}
-            {% include "question/answer_comments.html" %}
-        {% endif %}
+
+        <div>
+            {% if settings.ANSWER_COMMENTS_ENABLED %}
+                {% include "question/answer_comments.html" %}
+            {% endif %}
+        </div>
+
     </div>
-    <div class="clean"></div>
 </div>
-<div class="clean"></div>

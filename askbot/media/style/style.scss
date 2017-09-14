@@ -28,7 +28,6 @@
     }
 }
 
-
 .rss {
     float: right;
     font-size: 16px;
@@ -48,8 +47,6 @@
 #questionCount {
     font-size: 22px;
     color: $section-title;
-    float: left;
-    font-family: $main-font;
 
     .count {
         font-weight: bold;
@@ -499,17 +496,19 @@ ul.tags li {
     .vote-buttons {
         float: left;
         width: 45px;
+        margin-top: -10px;
         .fa{
             display: inherit;
+            line-height: 20px;
         }
     }
     .vote-number {
         font-family: $main-font;
-        font-size: 25px;
+        font-size: 23px;
         color: #777;
         display: inline-block;
-        margin-top: 5px;
-        line-height: 1em;
+        margin-top: 10px;
+        line-height: 15px;
     }
 
 }
@@ -518,6 +517,7 @@ ul.tags li {
 .answer-img-upvote,
 .answer-img-downvote {
     font-size: 26px;
+    line-height: 100%;
     cursor: pointer;
     &:hover{
         color: $color-success;
@@ -539,6 +539,10 @@ ul.tags li {
     .js-text-error {
         margin-bottom: 4px;
     }
+    .js-editable-controls .btn {
+        margin-right: 10px;
+    }
+
     h1 {
         font-family: $main-font;
         a {
@@ -552,9 +556,6 @@ ul.tags li {
         }
         .js-editable-controls {
             display: inline;
-            .btn {
-                margin-right: 10px;
-            }
         }
         textarea.form-control{
             padding-top: 0;
@@ -664,7 +665,10 @@ ul.tags li {
         min-width: 200px;
         padding-left: 5px;
         text-align: right;
-
+        margin-left: 130px;
+        @media screen and (max-width: 767px) {
+            margin-left: 0;
+        }
         a,
         span.dropdown-toggle {
             color: #777;
@@ -672,6 +676,9 @@ ul.tags li {
             font-size: 13px;
             margin-left: 5px;
             padding: 0 5px;
+            @media screen and (max-width: 767px) {
+                margin-left: 0;
+            }
             &:hover{
                 color: $color-hover;
                 text-decoration: none;
@@ -682,28 +689,26 @@ ul.tags li {
         }
 
         span.dropdown-toggle {
-            background: url(../images/sprites.png) no-repeat -7px -242px;
             position: relative;
         }
         span.dropdown-toggle:hover {
-            padding-right: 0;
-            background: url(../images/sprites.png) no-repeat -7px -274px;
             form {
                 margin: 0;
+                display: block;
+                width: 100%;
             }
             input {
                 display: block !important;
                 height: 20px !important;
                 line-height: 20px !important;
                 margin: 0;
-                padding: 0 5px;
-                width: 100% !important;
             }
             .dropdown-menu {
                 display: block;
                 padding: 5px 0;
                 right: -5px !important;
                 left: auto;
+                margin-top: -2px;
                 li,
                 li:hover {
                     display: block !important;
@@ -716,6 +721,7 @@ ul.tags li {
                 }
             }
         }
+
         .sep {
             color: #ccc;
             float:right;
@@ -729,9 +735,6 @@ ul.tags li {
         }
         .answer-unpublish{
             background: url(../images/unpublish.png) no-repeat 2px center;
-        }
-        .permant-link{
-            background: url(../images/link.png) no-repeat 2px 1px;
         }
 
         .answer-convert{
@@ -766,15 +769,6 @@ ul.tags li {
        width:100%;
     }
 
-    #questionCount{
-        float:left;
-        font-family:$main-font;
-        line-height:15px;
-    }
-
-    #fmanswer_button{
-        margin:8px 0px;
-    }
     .question-img-favorite:hover {
         background: url(../images/vote-favorite-on.png);
     }
@@ -782,6 +776,10 @@ ul.tags li {
     .comments.empty.ordering-forward {
         margin-top: -35px;
         float: left;
+        @media screen and (max-width: 767px) {
+            margin-top: 0;
+            float: none;
+        }
     }
     .comments {
         .truncated-post:nth-last-child(3) {
@@ -791,7 +789,6 @@ ul.tags li {
         div.controls {
             width: 100%;
             margin: 3px 0 20px 5px;
-            padding-left: 30px;
         }
 
         .edit-comment-buttons {
@@ -805,14 +802,16 @@ ul.tags li {
         }
 
         .controls a {
-            border: none;
             color: #988e4c;
-            padding: 0 3px 5px 22px;
-            font-family: $body-font;
-            font-size: 13px;
-            font-weight: normal;
-            background: url(../images/comment.png) no-repeat center left;
-
+            padding: 3px;
+            padding-right: 15px;
+            font-size: 14px;
+            &:hover{
+                color: $color-hover;
+            }
+            .fa{
+                font-size: 18px;
+            }
         }
 
         .controls a:hover {
@@ -838,12 +837,6 @@ ul.tags li {
             background-color: inherit;
             color: $link;
             padding: 0;
-        }
-
-        form.post-comments {
-            padding: 1px 6px 7px 31px;
-            border-bottom: 1px solid #edeeeb;
-            margin-bottom: 0;
         }
 
         textarea {
@@ -883,30 +876,17 @@ ul.tags li {
             float:right;
             vertical-align: top;
             font-family:$body-font;
-            float:right;
             text-align:right;
         }
         .comment {
             border-bottom: 1px solid #edeeeb;
-            display: table;
-            font-family: $body-font;
-            font-size: 11px;
-            margin: 0;
-            min-height: 25px;
-            overflow: auto;
-            padding-bottom: 4px;
-            width: 100%;
-
-            .comment-votes, /* layout fixed-fluid */
             .comment-content {
-                display: table-cell;
-                vertical-align: top;
-            }
-            .comment-content {
-                width: auto;
+                margin-left: 35px;
+                padding: 5px 15px 5px 0;
             }
             .comment-votes {
-                width: 25px;
+                width: 30px;
+                float: left;
             }
         }
         .comment:last-child {
@@ -920,19 +900,12 @@ ul.tags li {
             color: $link;
             padding: 0;
         }
-
         a.author:hover {
             text-decoration: underline;
         }
-        span.js-delete-icon{
-            background:url(../images/close-small.png) no-repeat;
-            border:0;
-            width:14px;
-            height:14px;
-        }
         span.js-delete-icon:hover{
-            border:#BC564B 2px solid;
-            margin: -3px 0px 0px -2px;
+            color: $color-danger;
+            cursor: pointer;
         }
         .content {
             margin-bottom: 7px;
@@ -944,19 +917,8 @@ ul.tags li {
         }
 
         .comment-body {
-            line-height: 1.3;
-            margin: 3px 26px 0 0;
-            padding: 5px 3px 0;
-            color: #666;
-            font-size:13px;
             p {
-                font-size:13px;
-                line-height:1.3;
-                margin-bottom: 3px;
-                padding: 0;
-            }
-            p:last-child {
-                margin-bottom: 0;
+                margin-bottom: 4px;
             }
         }
 
@@ -974,18 +936,16 @@ ul.tags li {
         .convert-comment {
             display: inline;
             white-space: nowrap;
-            padding-left: 0px;
+            padding-left: 0;
             input {
                 background: none;
-                padding: 0px;
+                padding: 0;
                 color: #1B79BD;
                 border:none;
                 height: 13px;
                 width:auto;
-                font-family: Arial;
-                font-size: 11px;
+                font-size: 12px;
                 font-weight: normal;
-                line-height: 15px;
                 margin: 0 0 3px 8px;
                 vertical-align: middle;
             }
@@ -998,14 +958,11 @@ ul.tags li {
 
         .comment-delete {
             float: right;
-            width: 14px;
-            line-height: 130%;
-            padding: 8px 0px;
+            padding-left: 10px;
         }
 
         .upvote {
-            margin: 0px;
-            padding-right: 11px;
+            margin: 0;
             padding-top: 2px;
             text-align: left;
             height: 20px;
@@ -1014,18 +971,27 @@ ul.tags li {
             color: #777;
         }
 
-        .upvote.upvoted {
-            color: #d64000;
-        }
-
         .upvote.hover {
-            background: url(../images/go-up-grey.png) no-repeat;
-            background-position: right 1px;
+            position: relative;
+            &:after {
+                position: absolute;
+                left: 0;
+                width: 27px;
+                text-align: right;
+                content: "\f062";
+                display: inline-block;
+                font: normal normal normal 14px/1 FontAwesome;
+                font-size: 15px;
+                text-rendering: auto;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                transform: translate(0, 0);
+            }
         }
 
-        .upvote:hover {
-            background: url(../images/go-up-orange.png) no-repeat;
-            background-position: right 1px;
+        .upvote:hover:after,
+        .upvote.upvoted{
+            color: $color-danger;
         }
 
         .help-text{
@@ -1073,8 +1039,8 @@ ul.tags li {
     }
 
     .accepted-answer {
-        background-color: #f7fecc;
-        border-bottom-color: #9BD59B;
+        background-color: $color-answer-bg;
+        padding: 10px;
     }
 
 
@@ -1105,14 +1071,14 @@ ul.tags li {
     }
 
     .answer-img-accept {
-        background: url(../images/vote-accepted.png);
-        width: 23px;
-        height: 23px;
+        font-size: 26px;
+        cursor: pointer;
+        margin-top: 8px;
     }
 
     .accepted-answer .answer-img-accept,
     .answer-img-accept:hover {
-        background: url(../images/vote-accepted-on.png)
+        color: $color-success;
     }
 
     #fmanswer{
@@ -1183,5 +1149,14 @@ ul.tags li {
     img{
         width: 100%;
         height: auto;
+    }
+}
+
+.wmd-previewer-toggle{
+    color: #007bff;
+    cursor: pointer;
+    &:hover{
+        color: $color-hover;
+
     }
 }

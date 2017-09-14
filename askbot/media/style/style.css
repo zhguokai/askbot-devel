@@ -35,6 +35,9 @@ h2 {
     text-decoration: underline;
     font-weight: bold; }
 
+.content-wrapper {
+  min-height: 70vh; }
+
 .section-title {
   color: #7ea9b3;
   font-family: "Open Sans Condensed", Arial, sans-serif;
@@ -89,6 +92,18 @@ h2 {
 
 .bronze, .badge3 {
   color: #CC9933; }
+
+.invisible {
+  margin: -1px 0 0 -1px;
+  height: 1px;
+  overflow: hidden;
+  width: 1px; }
+
+.wmd-container textarea {
+  width: 100% !important;
+  box-sizing: border-box; }
+.wmd-container img {
+  max-width: 100%; }
 
 .navbar .nav-link {
   font-size: 18px; }
@@ -261,9 +276,7 @@ nav.question {
 
 #questionCount {
   font-size: 22px;
-  color: #7ea9b3;
-  float: left;
-  font-family: "Helvetica Neue", Arial, sans-serif; }
+  color: #7ea9b3; }
   #questionCount .count {
     font-weight: bold;
     font-size: 20px;
@@ -585,22 +598,25 @@ ul.tags li {
       color: #4d79af; }
 .post .vote-buttons {
   float: left;
-  width: 45px; }
+  width: 45px;
+  margin-top: -10px; }
   .post .vote-buttons .fa {
-    display: inherit; }
+    display: inherit;
+    line-height: 20px; }
 .post .vote-number {
   font-family: "Helvetica Neue", Arial, sans-serif;
-  font-size: 25px;
+  font-size: 23px;
   color: #777;
   display: inline-block;
-  margin-top: 5px;
-  line-height: 1em; }
+  margin-top: 10px;
+  line-height: 15px; }
 
 .question-img-upvote,
 .question-img-downvote,
 .answer-img-upvote,
 .answer-img-downvote {
   font-size: 26px;
+  line-height: 100%;
   cursor: pointer; }
   .question-img-upvote:hover,
   .question-img-downvote:hover,
@@ -614,6 +630,8 @@ ul.tags li {
 
 .question-page .js-text-error {
   margin-bottom: 4px; }
+.question-page .js-editable-controls .btn {
+  margin-right: 10px; }
 .question-page h1 {
   font-family: "Helvetica Neue", Arial, sans-serif; }
   .question-page h1 a {
@@ -625,8 +643,6 @@ ul.tags li {
     display: inline; }
   .question-page h1 .js-editable-controls {
     display: inline; }
-    .question-page h1 .js-editable-controls .btn {
-      margin-right: 10px; }
   .question-page h1 textarea.form-control {
     padding-top: 0;
     padding-bottom: 0; }
@@ -696,7 +712,11 @@ ul.tags li {
   margin-bottom: 8px;
   min-width: 200px;
   padding-left: 5px;
-  text-align: right; }
+  text-align: right;
+  margin-left: 130px; }
+  @media screen and (max-width: 767px) {
+    .question-page .post-controls {
+      margin-left: 0; } }
   .question-page .post-controls a,
   .question-page .post-controls span.dropdown-toggle {
     color: #777;
@@ -704,6 +724,10 @@ ul.tags li {
     font-size: 13px;
     margin-left: 5px;
     padding: 0 5px; }
+    @media screen and (max-width: 767px) {
+      .question-page .post-controls a,
+      .question-page .post-controls span.dropdown-toggle {
+        margin-left: 0; } }
     .question-page .post-controls a:hover,
     .question-page .post-controls span.dropdown-toggle:hover {
       color: #0056b3;
@@ -712,33 +736,30 @@ ul.tags li {
     .question-page .post-controls span.dropdown-toggle .fa {
       padding-right: 3px; }
   .question-page .post-controls span.dropdown-toggle {
-    background: url(../images/sprites.png) no-repeat -7px -242px;
     position: relative; }
-  .question-page .post-controls span.dropdown-toggle:hover {
-    padding-right: 0;
-    background: url(../images/sprites.png) no-repeat -7px -274px; }
-    .question-page .post-controls span.dropdown-toggle:hover form {
-      margin: 0; }
-    .question-page .post-controls span.dropdown-toggle:hover input {
+  .question-page .post-controls span.dropdown-toggle:hover form {
+    margin: 0;
+    display: block;
+    width: 100%; }
+  .question-page .post-controls span.dropdown-toggle:hover input {
+    display: block !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    margin: 0; }
+  .question-page .post-controls span.dropdown-toggle:hover .dropdown-menu {
+    display: block;
+    padding: 5px 0;
+    right: -5px !important;
+    left: auto;
+    margin-top: -2px; }
+    .question-page .post-controls span.dropdown-toggle:hover .dropdown-menu li,
+    .question-page .post-controls span.dropdown-toggle:hover .dropdown-menu li:hover {
       display: block !important;
-      height: 20px !important;
-      line-height: 20px !important;
       margin: 0;
-      padding: 0 5px;
+      padding: 0;
       width: 100% !important; }
-    .question-page .post-controls span.dropdown-toggle:hover .dropdown-menu {
-      display: block;
-      padding: 5px 0;
-      right: -5px !important;
-      left: auto; }
-      .question-page .post-controls span.dropdown-toggle:hover .dropdown-menu li,
-      .question-page .post-controls span.dropdown-toggle:hover .dropdown-menu li:hover {
-        display: block !important;
-        margin: 0;
-        padding: 0;
-        width: 100% !important; }
-      .question-page .post-controls span.dropdown-toggle:hover .dropdown-menu li:hover {
-        background-color: #f5f0c9; }
+    .question-page .post-controls span.dropdown-toggle:hover .dropdown-menu li:hover {
+      background-color: #f5f0c9; }
   .question-page .post-controls .sep {
     color: #ccc;
     float: right;
@@ -748,8 +769,6 @@ ul.tags li {
   background: url(../images/publish.png) no-repeat center left; }
 .question-page .post-controls .answer-unpublish, .question-page .answer-controls .answer-unpublish {
   background: url(../images/unpublish.png) no-repeat 2px center; }
-.question-page .post-controls .permant-link, .question-page .answer-controls .permant-link {
-  background: url(../images/link.png) no-repeat 2px 1px; }
 .question-page .post-controls .answer-convert, .question-page .answer-controls .answer-convert {
   float: right;
   clear: left;
@@ -774,23 +793,20 @@ ul.tags li {
   background-color: #f5f0c9; }
 .question-page .tabBar {
   width: 100%; }
-.question-page #questionCount {
-  float: left;
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  line-height: 15px; }
-.question-page #fmanswer_button {
-  margin: 8px 0px; }
 .question-page .question-img-favorite:hover {
   background: url(../images/vote-favorite-on.png); }
 .question-page .comments.empty.ordering-forward {
   margin-top: -35px;
   float: left; }
+  @media screen and (max-width: 767px) {
+    .question-page .comments.empty.ordering-forward {
+      margin-top: 0;
+      float: none; } }
 .question-page .comments .truncated-post:nth-last-child(3) {
   float: left; }
 .question-page .comments div.controls {
   width: 100%;
-  margin: 3px 0 20px 5px;
-  padding-left: 30px; }
+  margin: 3px 0 20px 5px; }
 .question-page .comments .edit-comment-buttons {
   margin-top: 10px; }
   .question-page .comments .edit-comment-buttons .checkbox {
@@ -798,13 +814,14 @@ ul.tags li {
   .question-page .comments .edit-comment-buttons .btn {
     margin-right: 10px; }
 .question-page .comments .controls a {
-  border: none;
   color: #988e4c;
-  padding: 0 3px 5px 22px;
-  font-family: Arial;
-  font-size: 13px;
-  font-weight: normal;
-  background: url(../images/comment.png) no-repeat center left; }
+  padding: 3px;
+  padding-right: 15px;
+  font-size: 14px; }
+  .question-page .comments .controls a:hover {
+    color: #0056b3; }
+  .question-page .comments .controls a .fa {
+    font-size: 18px; }
 .question-page .comments .controls a:hover {
   text-decoration: none; }
 .question-page .comments .js-open-editor-btn,
@@ -821,10 +838,6 @@ ul.tags li {
   background-color: inherit;
   color: #1b79bd;
   padding: 0; }
-.question-page .comments form.post-comments {
-  padding: 1px 6px 7px 31px;
-  border-bottom: 1px solid #edeeeb;
-  margin-bottom: 0; }
 .question-page .comments textarea {
   box-sizing: border-box;
   color: #666;
@@ -855,26 +868,15 @@ ul.tags li {
   float: right;
   vertical-align: top;
   font-family: Arial;
-  float: right;
   text-align: right; }
 .question-page .comments .comment {
-  border-bottom: 1px solid #edeeeb;
-  display: table;
-  font-family: Arial;
-  font-size: 11px;
-  margin: 0;
-  min-height: 25px;
-  overflow: auto;
-  padding-bottom: 4px;
-  width: 100%; }
-  .question-page .comments .comment .comment-votes,
+  border-bottom: 1px solid #edeeeb; }
   .question-page .comments .comment .comment-content {
-    display: table-cell;
-    vertical-align: top; }
-  .question-page .comments .comment .comment-content {
-    width: auto; }
+    margin-left: 35px;
+    padding: 5px 15px 5px 0; }
   .question-page .comments .comment .comment-votes {
-    width: 25px; }
+    width: 30px;
+    float: left; }
 .question-page .comments .comment:last-child {
   border-bottom: none; }
 .question-page .comments div.comment:hover {
@@ -885,32 +887,16 @@ ul.tags li {
   padding: 0; }
 .question-page .comments a.author:hover {
   text-decoration: underline; }
-.question-page .comments span.js-delete-icon {
-  background: url(../images/close-small.png) no-repeat;
-  border: 0;
-  width: 14px;
-  height: 14px; }
 .question-page .comments span.js-delete-icon:hover {
-  border: #BC564B 2px solid;
-  margin: -3px 0px 0px -2px; }
+  color: #dc3545;
+  cursor: pointer; }
 .question-page .comments .content {
   margin-bottom: 7px; }
 .question-page .comments .comment-votes {
   line-height: 130%;
   padding: 6px 5px 6px 3px; }
-.question-page .comments .comment-body {
-  line-height: 1.3;
-  margin: 3px 26px 0 0;
-  padding: 5px 3px 0;
-  color: #666;
-  font-size: 13px; }
-  .question-page .comments .comment-body p {
-    font-size: 13px;
-    line-height: 1.3;
-    margin-bottom: 3px;
-    padding: 0; }
-  .question-page .comments .comment-body p:last-child {
-    margin-bottom: 0; }
+.question-page .comments .comment-body p {
+  margin-bottom: 4px; }
 .question-page .comments .comment-controls {
   padding-left: 3px; }
   .question-page .comments .comment-controls .js-avatar-box {
@@ -920,18 +906,16 @@ ul.tags li {
 .question-page .comments .convert-comment {
   display: inline;
   white-space: nowrap;
-  padding-left: 0px; }
+  padding-left: 0; }
   .question-page .comments .convert-comment input {
     background: none;
-    padding: 0px;
+    padding: 0;
     color: #1B79BD;
     border: none;
     height: 13px;
     width: auto;
-    font-family: Arial;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: normal;
-    line-height: 15px;
     margin: 0 0 3px 8px;
     vertical-align: middle; }
   .question-page .comments .convert-comment input:hover {
@@ -939,26 +923,33 @@ ul.tags li {
     cursor: pointer; }
 .question-page .comments .comment-delete {
   float: right;
-  width: 14px;
-  line-height: 130%;
-  padding: 8px 0px; }
+  padding-left: 10px; }
 .question-page .comments .upvote {
-  margin: 0px;
-  padding-right: 11px;
+  margin: 0;
   padding-top: 2px;
   text-align: left;
   height: 20px;
   font-size: 13px;
   font-weight: bold;
   color: #777; }
-.question-page .comments .upvote.upvoted {
-  color: #d64000; }
 .question-page .comments .upvote.hover {
-  background: url(../images/go-up-grey.png) no-repeat;
-  background-position: right 1px; }
-.question-page .comments .upvote:hover {
-  background: url(../images/go-up-orange.png) no-repeat;
-  background-position: right 1px; }
+  position: relative; }
+  .question-page .comments .upvote.hover:after {
+    position: absolute;
+    left: 0;
+    width: 27px;
+    text-align: right;
+    content: "\f062";
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 15px;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translate(0, 0); }
+.question-page .comments .upvote:hover:after,
+.question-page .comments .upvote.upvoted {
+  color: #dc3545; }
 .question-page .comments .help-text {
   float: right;
   text-align: right;
@@ -991,8 +982,8 @@ ul.tags li {
   width: 723px;
   margin-top: 10px; }
 .question-page .accepted-answer {
-  background-color: #f7fecc;
-  border-bottom-color: #9BD59B; }
+  background-color: rgba(255, 243, 205, 0.8);
+  padding: 10px; }
 .question-page .answered {
   background: #CCC;
   color: #999; }
@@ -1009,12 +1000,12 @@ ul.tags li {
     .question-page .answered-by-owner .comments .js-open-editor-btn {
       background-color: #E6ECFF; }
 .question-page .answer-img-accept {
-  background: url(../images/vote-accepted.png);
-  width: 23px;
-  height: 23px; }
+  font-size: 26px;
+  cursor: pointer;
+  margin-top: 8px; }
 .question-page .accepted-answer .answer-img-accept,
 .question-page .answer-img-accept:hover {
-  background: url(../images/vote-accepted-on.png); }
+  color: #28a745; }
 .question-page #fmanswer {
   color: #707070;
   line-height: 1.2;
@@ -1061,5 +1052,11 @@ ul.tags li {
 #contrib-users img {
   width: 100%;
   height: auto; }
+
+.wmd-previewer-toggle {
+  color: #007bff;
+  cursor: pointer; }
+  .wmd-previewer-toggle:hover {
+    color: #0056b3; }
 
 /*# sourceMappingURL=style.css.map */
