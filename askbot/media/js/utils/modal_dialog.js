@@ -113,29 +113,42 @@ ModalDialog.prototype.createDom = function () {
     }
 
     element.addClass('modal');
+
+    var modalDialog = this.makeElement('div');
+    modalDialog.addClass('modal-dialog');
+    modalDialog.attr('role', 'document');
+
+    var modalContent = this.makeElement('div');
+    modalContent.addClass('modal-content');
+
+    modalDialog.append(modalContent);
+    element.append(modalDialog);
+    //modal-dialog
     if (this._className) {
         element.addClass(this._className);
     }
 
     //1) create header
-    var close_link = this.makeElement('div');
+    var close_link = this.makeElement('button');
     if (this._headerEnabled) {
         var header = this.makeElement('div');
         header.addClass('modal-header');
-        element.append(header);
+        modalContent.append(header);
         close_link.addClass('close');
         close_link.attr('data-dismiss', 'modal');
-        close_link.html('x');
-        header.append(close_link);
-        var title = this.makeElement('h3');
+        close_link.attr('aria-label', 'Close');
+        close_link.attr('type', 'button');
+        close_link.html('<span aria-hidden="true">&times;</span>');
+        var title = this.makeElement('h5');
         title.html(this._heading_text);
         header.append(title);
+        header.append(close_link);
     }
 
     //2) create content
     var body = this.makeElement('div');
     body.addClass('modal-body');
-    element.append(body);
+    modalContent.append(body);
     this._content_element = body;
     if (this._initial_content) {
         this._content_element.append(this._initial_content);
@@ -144,20 +157,20 @@ ModalDialog.prototype.createDom = function () {
     //3) create footer with accept and reject buttons (ok/cancel).
     var footer = this.makeElement('div');
     footer.addClass('modal-footer');
-    element.append(footer);
+    modalContent.append(footer);
 
     var accept_btn = this.makeElement('button');
     if (this._acceptBtnEnabled === false) {
         accept_btn.prop('disabled', true);
     }
-    accept_btn.addClass('submit');
+    accept_btn.addClass('submit btn btn-sm btn-success');
     accept_btn.html(this._accept_button_text);
     footer.append(accept_btn);
     this._acceptBtn = accept_btn;
 
     var reject_btn = this.makeElement('button');
     if (this._reject_button_text) {
-        reject_btn.addClass('submit cancel');
+        reject_btn.addClass('submit cancel btn btn-sm btn-danger');
         reject_btn.html(this._reject_button_text);
         footer.append(reject_btn);
         this._rejectBtn = reject_btn;

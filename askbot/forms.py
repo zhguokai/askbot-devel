@@ -256,6 +256,7 @@ class LanguageField(forms.ChoiceField):
     def __init__(self, *args, **kwargs):
         kwargs['choices'] = django_settings.LANGUAGES
         kwargs['label'] = _('Select language')
+        kwargs['widget'] = forms.Select(attrs={'class': 'form-control'})
         super(LanguageField, self).__init__(*args, **kwargs)
 
 

@@ -14,14 +14,16 @@
     {% include "main_page/tag_search.html" %}
 {% endif %}
 
-{% if request.user.is_authenticated() and settings.SIDEBAR_MAIN_SHOW_TAG_SELECTOR %} 
+{% if request.user.is_authenticated() and settings.SIDEBAR_MAIN_SHOW_TAG_SELECTOR %}
     {% include "widgets/tag_selector.html" %}
 {% endif %}
 
 {% if tags and settings.SIDEBAR_MAIN_SHOW_TAGS %}
-<div class="box">
-    <h2>{% trans %}Tags{% endtrans %}</h2>
-    {% include "widgets/related_tags.html" %}
+<div class="card ">
+    <div class="card-header text-center">{% trans %}Tags{% endtrans %}</div>
+    <div class="card-body">
+        {% include "widgets/related_tags.html" %}
+    </div>
 </div>
 {% endif %}
 

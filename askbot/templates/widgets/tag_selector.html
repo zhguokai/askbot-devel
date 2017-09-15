@@ -55,10 +55,11 @@
             "remove '%(tag_name)s' from the list of ignored tags"|
             format(tag_name = tag_name)
         #}
-        <div class="clearfix"></div>
-        <div class="inputs">
-            <input id="subscribedTagInput" autocomplete="off" type="text"/>
-            <input id="subscribedTagAdd" type="submit" value="{% trans %}add{% endtrans%}"/>
+        <div class="input-group input-group-sm mt-1 mb-2">
+            <input id="subscribedTagInput" class="form-control d-inline-block" autocomplete="off" type="text"/>
+            <span class="input-group-btn">
+                <input id="subscribedTagAdd" class="btn btn-info" type="submit" value="{% trans %}add{% endtrans%}"/>
+            </span>
         </div>
     {% endif %}
     <h3>{{ settings.WORDS_SHOW_ONLY_QUESTIONS_FROM|escape }}</h3>

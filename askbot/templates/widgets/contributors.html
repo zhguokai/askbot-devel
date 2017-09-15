@@ -1,13 +1,15 @@
 {#% cache 600 "contributors" contributors language_code %#}
-<div id="contrib-users" class="box">
-    <h2 class="contributorback">{% trans %}Contributors{% endtrans %}</h2>
+<div id="contrib-users" class="card text-center mb-4">
+    <div class="card-header">{% trans %}Contributors{% endtrans %}</div>
     {% spaceless %}
-        <div class="row">
-            {% for person in contributors %}
-                <div class="col-md-3 col-2 col-sm-1">
-                {{ macros.gravatar(person, 80) }}
-                </div>
-            {% endfor %}
+        <div class="card-body">
+            <div class="row">
+                {% for person in contributors %}
+                    <div class="col-md-3 col-2 col-sm-1">
+                        {{ macros.gravatar(person, 80) }}
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     {% endspaceless %}
 </div>

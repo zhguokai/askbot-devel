@@ -1,5 +1,5 @@
-/*body 
-{ 
+/*body
+{
 	background-color: White
 }
 */
@@ -13,61 +13,62 @@
     display: block;
 }
 
-.wmd-input { 
+.wmd-input {
 	height: 500px;
 	background-color: Gainsboro;
 	border: 1px solid DarkGray;
 	margin-top: -20px;
 }
 
-.wmd-preview { 
-	background-color: #f5f5f5; 
+.wmd-preview {
+    padding: 10px 15px;
+	background-color: #e7e8ea;
 }
 
-.wmd-output { 
+.wmd-output {
 	background-color: Pink;
 }
 
 .wmd-button-row {
-	position: relative; 
+	position: relative;
     margin: 5px 2px !important;
-	padding: 0px;  
+	padding: 0;
 	height: 20px;
 }
 
 .wmd-spacer {
-	width: 1px; 
-	height: 20px; 
+	width: 1px;
+	height: 20px;
 	margin-left: 2px;
     margin-right: 4px;
 	/*position: absolute;*/
 	background-color: Silver;
-	display: inline-block; 
+	display: inline-block;
 	list-style: none;
 }
 
 .wmd-button {
-	width: 20px; 
-	height: 20px; 
+	width: 20px;
+	height: 20px;
 	margin-left: 5px;
 	margin-right: 5px;
-	
+
 	/*position: absolute;*/
 	background-image: url(images/wmd-buttons.png);
 	background-repeat: no-repeat;
 	background-position: 0px 0px;
-	display: inline-block; 
+	display: inline-block;
 	list-style: none;
 }
 
 .wmd-button > a {
-	width: 20px; 
-	height: 20px; 
+	width: 20px;
+	height: 20px;
 	margin-left: 5px;
 	margin-right: 5px;
-	
+
 	position: absolute;
-	display: inline-block; 
+	display: inline-block;
 }
 
 

@@ -4,15 +4,15 @@
     data-title-validator="askbot.validators.titleValidator"
     data-text-validator="askbot.validators.questionDetailsValidator"
     >{% csrf_token %}
-    <div class="form-item form-group ask-form-bar">
-        <label for="id_title">{{ form.title.label }}</label>
+    <div class="form-group">
+        <label for="id_title" class="font-italic">{{ form.title.label }}</label>
         <div class="js-title-error js-error">
             {% if form.title.errors %}
                 {{ form.title.errors }}
             {% endif %}
         </div>
         <div id="askFormBar" class="search-bar">
-            <input id="id_title" class="questionTitleInput" name="title" autocomplete="off"
+            <input id="id_title" class="questionTitleInput form-control" name="title" autocomplete="off"
                 value="{% if form.initial.title %}{{form.initial.title|escape}}{% endif %}"/>
         </div>
     </div>
@@ -21,8 +21,8 @@
     {% if editor_is_folded %}
         <a class="js-question-body-trigger">{{ form.text.label }}</a>
         <div class="folded-editor">
-            <label for="{{ text_field_id }}" 
-                class="js-text-label">{{ form.text.label }}</label>
+            <label for="{{ text_field_id }}"
+                class="js-text-label font-italic">{{ form.text.label }}</label>
             <div class="js-text-error js-error">
                 {% if form.text.errors %}
                     {{ form.text.errors }}
@@ -34,7 +34,7 @@
         </div>
     {% else %}
         <label for="{{ text_field_id }}"
-            class="js-text-label">{{ form.text.label }}</label>
+            class="js-text-label font-italic">{{ form.text.label }}</label>
         <div class="js-text-error js-error">
             {% if form.text.errors %}
                 {{ form.text.errors }}
@@ -44,7 +44,7 @@
     {% endif %}
 
     {% include "widgets/tags_field.html" %}
-    
+
     {{ form.group_id }}
 
     <div class="question-options">
@@ -63,9 +63,12 @@
             {{ macros.checkbox_in_div(form.post_privately) }}
         {% endif %}
         {% if settings.MULTILINGUAL %}
-        <div class="lang-selector">
-            <label for="id_language">{% trans %}Select language{% endtrans %}</label>
-            {{ form.language }}
+
+        <div class="form-group mb-4 lang-selector">
+            <label class="font-italic" for="id_language">{% trans %}Select language{% endtrans %}</label>
+            <div class="row"><div class="col-md-6">
+                {{ form.language }}
+            </div></div>
         </div>
         {% endif %}
     </div>
@@ -73,10 +76,11 @@
         <div>{{ macros.form_field_with_errors(form.recaptcha) }}</div>
         <div class="clearfix"></div>
     {% endif %}
-    {% if request.user.is_anonymous() and not settings.ALLOW_ASK_UNREGISTERED %}
-        <input type="submit" name="post_anon" value="{% trans %}Login/Signup to Post{% endtrans %}" />
-    {% else %}
-      <input type="submit" name="post" value="{{ settings.WORDS_ASK_YOUR_QUESTION|escape }}" />
-    {% endif %}
-    <div class="clean"></div>
+    <div class="mb-4">
+        {% if request.user.is_anonymous() and not settings.ALLOW_ASK_UNREGISTERED %}
+            <input type="submit" class="btn btn-success" name="post_anon" value="{% trans %}Login/Signup to Post{% endtrans %}" />
+        {% else %}
+          <input type="submit" class="btn btn-success" name="post" value="{{ settings.WORDS_ASK_YOUR_QUESTION|escape }}" />
+        {% endif %}
+    </div>
 </form>

@@ -147,6 +147,8 @@ AutoCompleter.prototype.decorate = function (element) {
      */
     this._element.attr('autocomplete', 'off');
 
+    this._element.addClass('form-control');
+
     /**
      * Set prompt text
      */

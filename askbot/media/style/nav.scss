@@ -48,15 +48,20 @@ nav.question {
             white-space: nowrap;
             font-size: 20px;
             padding-right: 16px;
-
             a {
                 color: #7a7a6b;
                 margin-left: 16px;
+                &:first-of-type{
+                    margin-left: 0;
+                }
             }
 
             a:hover {
                 color: #5a5a5a;
             }
+        }
+        .scope-nav{
+            padding-left: 15px;
         }
         .home-btn {
             border-right: #afaf9e 1px solid;

@@ -467,14 +467,18 @@ MergeQuestionsDialog.prototype.getRejectHandler = function() {
 MergeQuestionsDialog.prototype.createDom = function () {
     //make content
     var content = this.makeElement('div');
+    var formGroup = this.makeElement('div');
+    formGroup.addClass('form-group');
     var label = this.makeElement('label');
     label.attr('for', 'question_id');
     label.html(gettext(askbot.messages.enterDuplicateQuestionId));
-    content.append(label);
+    formGroup.append(label);
     var input = this.makeElement('input');
     input.attr('type', 'text');
     input.attr('name', 'question_id');
-    content.append(input);
+    input.addClass('form-control');
+    formGroup.append(input);
+    content.append(formGroup);
     this._idInput = input;
 
     var preview = this.makeElement('div');

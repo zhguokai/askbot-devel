@@ -4,46 +4,48 @@
     {{ settings.SIDEBAR_QUESTION_HEADER }}
 </div>
 {% endif %}
-<div class="box vote-buttons">
-  <h2>{{ settings.WORDS_QUESTION_TOOLS|escape }}</h2>
-    <button class="js-follow-question btn btn-info"
-        data-is-on="{{ favorited|as_js_bool }}"
-        data-off-prompt-text="{% trans %}Unfollow{% endtrans %}"
-        data-on-prompt-text="{% trans %}Follow{% endtrans %}"
-        data-on-state-text="{% trans %}Following{% endtrans %}"
-        data-off-state-text="{% trans %}Follow{% endtrans %}"
-        data-toggle-url="{% url 'toggle_follow_question' %}"
-    >
-        {% if favorited %}
-            {% trans %}Following{% endtrans %}
-        {% else %}
-            {% trans %}Follow{% endtrans %}
-        {% endif %}
-    </button>
-    <div class="clearfix"></div>
-    <div class="js-question-follower-count pt-1 pb-1">
-        {% set follower_count = thread.favourite_count %}
-        {% if follower_count > 0 %}
-            {% trans count=follower_count %}{{count}} follower{% pluralize %}{{count}} followers{% endtrans %}
-        {% endif %}
-    </div>
-    <div class="notify-sidebar">
-        {% if settings.RSS_ENABLED %}
-        <p class="rss">
-            <a
-                href="{% url 'individual_question_feed' question.id %}"
-                title="{% trans %}subscribe to the rss feed{% endtrans %}"
-                >{% trans %}subscribe to rss feed{% endtrans %}</a>
-        </p>
-        {% endif %}
+<div class="card text-center mb-3">
+    <div class="card-header">{{ settings.WORDS_QUESTION_TOOLS|escape }}</div>
+    <div class="card-body">
+{#        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>#}
+        <button class="js-follow-question btn btn-info"
+                data-is-on="{{ favorited|as_js_bool }}"
+                data-off-prompt-text="{% trans %}Unfollow{% endtrans %}"
+                data-on-prompt-text="{% trans %}Follow{% endtrans %}"
+                data-on-state-text="{% trans %}Following{% endtrans %}"
+                data-off-state-text="{% trans %}Follow{% endtrans %}"
+                data-toggle-url="{% url 'toggle_follow_question' %}"
+        >
+            {% if favorited %}
+                {% trans %}Following{% endtrans %}
+            {% else %}
+                {% trans %}Follow{% endtrans %}
+            {% endif %}
+        </button>
+        <div class="js-question-follower-count pt-1 pb-1 font-weight-bold">
+            {% set follower_count = thread.favourite_count %}
+            {% if follower_count > 0 %}
+                {% trans count=follower_count %}{{ count }} follower{% pluralize %}{{ count }} followers{% endtrans %}
+            {% endif %}
+        </div>
+        <div class="notify-sidebar">
+            {% if settings.RSS_ENABLED %}
+                <div class="rss">
+                    <a
+                            href="{% url 'individual_question_feed' question.id %}"
+                            title="{% trans %}subscribe to the rss feed{% endtrans %}"
+                    >{% trans %}subscribe to rss feed{% endtrans %}</a>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 
-<div class="clearfix"></div>
 {% if settings.GROUPS_ENABLED %}
-<div class="box sharing-widget">
+<div class="card text-center mb-3">
     {% if thread.is_private() %}
-        <h2>{% trans %}Invite{% endtrans %}</h2>
+        <div class="card-header">{% trans %}Invite{% endtrans %}</div>
+        <div class="card-body">
         <p style="margin: 16px 0">{{ settings.WORDS_INVITE_OTHERS_TO_HELP_ANSWER_THIS_QUESTION|escape }}</p>
         <form action="{% url share_question_with_user %}" method="post">{% csrf_token %}
             <input id="share_user_name" type="text" class="groups-input" name="recipient_name" />
@@ -123,39 +125,49 @@
                 {% endif %}
             </p>
         {% endif %}
+        </div>
     {% else %}
-        <h2>{% trans %}Public thread{% endtrans %}</h2>
-        <p>{% trans site_name=settings.APP_SHORT_NAME %}This thread is public, all members of {{ site_name }} can read this page.{% endtrans %}</p>
+        <div class="card-header">{% trans %}Public thread{% endtrans %}</div>
+        <div class="card-body">
+        <p>{% trans site_name=settings.APP_SHORT_NAME %}This thread is public,
+            all members of {{ site_name }} can read this page.{% endtrans %}</p>
+        </div>
     {% endif %}
 </div>
 {% endif %}
 
 {% if settings.SIDEBAR_QUESTION_SHOW_META %}
-<div class="box stats-widget">
-
-    <h2>{% trans %}Stats{% endtrans %}</h2>
-    <p>
-        {% trans %}Asked{% endtrans %}: <strong>{{ macros.timeago(question.added_at) }}</strong>
-    </p>
-    <p>
-        {% trans %}Seen{% endtrans %}: <strong>{{ thread.view_count|intcomma }} {% trans %}times{% endtrans %}</strong>
-    </p>
-    <p>
-        {% trans %}Last updated{% endtrans %}: <strong title="{{ thread.last_activity_at }}">{{thread.last_activity_at|diff_date}}</strong>
-    </p>
+<div class="card mb-3">
+    <div class="card-header text-center">{% trans %}Stats{% endtrans %}</div>
+    <div class="card-body">
+        <div class="row mb-2">
+            <div class="col-6">{% trans %}Asked{% endtrans %}:</div>
+            <div class="col-6 text-right font-weight-bold">{{ macros.timeago(question.added_at) }}</div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-6">{% trans %}Seen{% endtrans %}:</div>
+            <div class="col-6 text-right font-weight-bold">{{ thread.view_count|intcomma }} {% trans %}times{% endtrans %}</div>
+        </div>
+        <div class="row">
+            <div class="col-6">{% trans %}Last updated{% endtrans %}:</div>
+            <div class="col-6 text-right"><strong title="{{ thread.last_activity_at }}">{{thread.last_activity_at|diff_date}}</strong></div>
+        </div>
+    </div>
 </div>
 {% endif %}
 
 {% if similar_threads.data() and settings.SIDEBAR_QUESTION_SHOW_RELATED %}
     {#% cache 1800 "related_questions" related_questions question.id language_code %#}
-    <div class="box">
-      <h2>{{ settings.WORDS_RELATED_QUESTIONS|escape }}</h2>
-        <div class="questions-related">
-            {% for thread_dict in similar_threads.data() %}
-            <p>
-                <a href="{{ thread_dict.url }}">{{ thread_dict.title|escape }}</a>
-            </p>
-            {% endfor %}
+    <div class="card mb-3">
+        <div class="card-header">{{ settings.WORDS_RELATED_QUESTIONS|escape }}</div>
+        <div class="card-body">
+            <div class="questions-related">
+                {% for thread_dict in similar_threads.data() %}
+                    <p class="pb-2 mb-2">
+                        <a href="{{ thread_dict.url }}">{{ thread_dict.title|escape }}</a>
+                    </p>
+                {% endfor %}
+            </div>
         </div>
     </div>
     {#% endcache %#}
