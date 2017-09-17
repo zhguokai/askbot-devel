@@ -170,7 +170,7 @@ def ldap_authenticate_default(username, password):
     return user_info
 
 
-def ldap_create_user_default(user_info):
+def ldap_create_user_default(user_info, request):
     """takes the result returned by the :func:`ldap_authenticate`
 
     and returns a :class:`UserAssociation` object
@@ -186,7 +186,7 @@ def ldap_create_user_default(user_info):
     user.is_superuser = False
     user.is_active = True
     user.save()
-    user_registered.send(None, user = user)
+    user_registered.send(None, user=user, request=request)
     LOG.info('Created New User : [{0}]'.format(user_info['ldap_username']))
 
     assoc = UserAssociation()

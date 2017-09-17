@@ -99,14 +99,15 @@ def get_next_url_from_session(session):
 
 def create_authenticated_user_account(
     username=None, email=None, password=None,
-    user_identifier=None, login_provider_name=None
+    user_identifier=None, login_provider_name=None,
+    request=None
 ):
     """creates a user account, user association with
     the login method and the the default email subscriptions
     """
 
     user = User.objects.create_user(username, email)
-    user_registered.send(None, user=user)
+    user_registered.send(None, user=user, request=request)
 
     logging.debug('creating new openid user association for %s', username)
 
@@ -498,9 +499,10 @@ def signin(request, template_name='authopenid/signin.html'):
                     password = login_form.cleaned_data['password']
 
                     user = authenticate(
-                                    method = 'ldap',
+                                    method='ldap',
                                     username=username,
                                     password=password,
+                                    request=request
                                 )
 
                     if user:
@@ -513,7 +515,7 @@ def signin(request, template_name='authopenid/signin.html'):
                             if askbot_settings.LDAP_AUTOCREATE_USERS:
                                 #create new user or
                                 user = ldap_create_user(user_info).user
-                                user = authenticate(method='force', user_id=user.id)
+                                user = authenticate(method='force', user_id=user.pk)
                                 assert(user is not None)
                                 login(request, user)
                                 return HttpResponseRedirect(next_url)
@@ -1134,6 +1136,7 @@ def register(request, login_provider_name=None,
                             email=email,
                             user_identifier=user_identifier,
                             login_provider_name=login_provider_name,
+                            request=request
                         )
                 login(request, user)
                 cleanup_post_register_session(request)
@@ -1143,7 +1146,7 @@ def register(request, login_provider_name=None,
     user = None
     logging.debug('request method is %s' % request.method)
 
-    form_class = forms.get_registration_form_class()
+    form_class = forms.get_federated_registration_form_class()
     register_form = form_class(
                 initial={
                     'next': next_url,
@@ -1175,7 +1178,7 @@ def register(request, login_provider_name=None,
         login_provider_name = request.session['login_provider_name']
 
         logging.debug('trying to create new account associated with openid')
-        form_class = forms.get_registration_form_class()
+        form_class = forms.get_federated_registration_form_class()
         register_form = form_class(request.POST)
         if not register_form.is_valid():
             logging.debug('registration form is INVALID')
@@ -1203,6 +1206,7 @@ def register(request, login_provider_name=None,
                             email=email,
                             user_identifier=user_identifier,
                             login_provider_name=login_provider_name,
+                            request=request
                         )
                 login(request, user)
                 cleanup_post_register_session(request)
@@ -1280,6 +1284,7 @@ def verify_email_and_register(request):
                     username=username,
                     email=email,
                     password=password,
+                    request=request
                 )
             elif user_identifier and login_provider_name:
                 user = create_authenticated_user_account(
@@ -1287,6 +1292,7 @@ def verify_email_and_register(request):
                     email=email,
                     user_identifier=user_identifier,
                     login_provider_name=login_provider_name,
+                    request=request
                 )
             else:
                 raise NotImplementedError()
@@ -1323,6 +1329,7 @@ def signup_with_password(request):
         RegisterForm = forms.SafeClassicRegisterForm
     else:
         RegisterForm = forms.ClassicRegisterForm
+    RegisterForm = forms.get_password_registration_form_class()
 
     logging.debug('request method was %s' % request.method)
     if request.method == 'POST':
@@ -1338,6 +1345,7 @@ def signup_with_password(request):
                     username=username,
                     email=email,
                     password=password,
+                    request=request
                 )
                 login(request, user)
                 cleanup_post_register_session(request)

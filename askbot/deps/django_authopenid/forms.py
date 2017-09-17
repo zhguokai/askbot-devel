@@ -493,14 +493,26 @@ class EmailPasswordForm(forms.Form):
                 raise forms.ValidationError(_("sorry, there is no such user name"))
         return self.cleaned_data['username']
 
-def get_registration_form_class():
+def get_federated_registration_form_class():
     """returns class for the user registration form
-    user has a chance to specify the form via setting `REGISTRATION_FORM`
+    user has a chance to specify the form via setting `FEDERATED_REGISTRATION_FORM`
     """
-    custom_class = getattr(django_settings, 'REGISTRATION_FORM', None)
+    custom_class = getattr(django_settings, 'FEDERATED_REGISTRATION_FORM', None)
     if custom_class:
         return load_module(custom_class)
     elif askbot_settings.USE_RECAPTCHA:
         return SafeOpenidRegisterForm
     else:
         return OpenidRegisterForm
+
+def get_password_registration_form_class():
+    """returns class for the user registration form
+    user has a chance to specify the form via setting `PASSWORD_REGISTRATION_FORM`
+    """
+    custom_class = getattr(django_settings, 'PASSWORD_REGISTRATION_FORM', None)
+    if custom_class:
+        return load_module(custom_class)
+    elif askbot_settings.USE_RECAPTCHA:
+        return SafeClassicRegisterForm
+    else:
+        return ClassicRegisterForm
