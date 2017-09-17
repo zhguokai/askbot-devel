@@ -59,6 +59,7 @@ from askbot.utils.html import site_url
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
 from askbot.deps.django_authopenid.exceptions import OAuthError
+from askbot.middleware.anon_user import connect_messages_to_anon_user
 from askbot.utils.loading import load_module
 from sanction.client import Client as OAuth2Client
 from urlparse import urlparse
@@ -177,6 +178,7 @@ def login(request, user):
 def logout(request):
     from django.contrib.auth import logout as _logout#for login I've added wrapper below - called login
     _logout(request)
+    connect_messages_to_anon_user(request)
 
 def logout_page(request):
     data = {
@@ -1148,6 +1150,7 @@ def register(request, login_provider_name=None,
 
     form_class = forms.get_federated_registration_form_class()
     register_form = form_class(
+                request=request,
                 initial={
                     'next': next_url,
                     'username': request.session.get('username', ''),
@@ -1179,7 +1182,7 @@ def register(request, login_provider_name=None,
 
         logging.debug('trying to create new account associated with openid')
         form_class = forms.get_federated_registration_form_class()
-        register_form = form_class(request.POST)
+        register_form = form_class(request.POST, request=request)
         if not register_form.is_valid():
             logging.debug('registration form is INVALID')
         else:
@@ -1325,15 +1328,11 @@ def signup_with_password(request):
     login_form = forms.LoginForm(initial = {'next': get_next_url(request)})
     #this is safe because second decorator cleans this field
 
-    if askbot_settings.USE_RECAPTCHA:
-        RegisterForm = forms.SafeClassicRegisterForm
-    else:
-        RegisterForm = forms.ClassicRegisterForm
     RegisterForm = forms.get_password_registration_form_class()
 
     logging.debug('request method was %s' % request.method)
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request=request)
 
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -1365,7 +1364,7 @@ def signup_with_password(request):
                 return HttpResponseRedirect(redirect_url)
     else:
         #todo: here we have duplication of get_password_login_provider...
-        form = RegisterForm(initial={'next': get_next_url(request)})
+        form = RegisterForm(initial={'next': get_next_url(request)}, request=request)
 
     major_login_providers = util.get_enabled_major_login_providers()
     minor_login_providers = util.get_enabled_minor_login_providers()

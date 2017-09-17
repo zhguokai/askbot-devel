@@ -6,26 +6,14 @@ from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.core.urlresolvers import resolve
-from askbot.shims.django_shims import ResolverMatch
 from askbot.conf import settings as askbot_settings
+from askbot.utils.views import is_askbot_view
 import urllib
 
-PROTECTED_VIEW_MODULES = (
-    'askbot.views',
-    'askbot.feed',
-)
 ALLOWED_VIEWS = (
     'askbot.views.meta.config_variable',
 )
 
-def is_view_protected(view_func):
-    """True if view belongs to one of the
-    protected view modules
-    """
-    for protected_module in PROTECTED_VIEW_MODULES:
-        if view_func.__module__.startswith(protected_module):
-            return True
-    return False
 
 def is_view_allowed(func):
     """True, if view is allowed to access
@@ -50,7 +38,9 @@ class ForumModeMiddleware(object):
         """
         if (askbot_settings.ASKBOT_CLOSED_FORUM_MODE
                 and request.user.is_anonymous()):
-            resolver_match = ResolverMatch(resolve(request.path))
+            resolver_match = resolve(request.path)
+            if not is_askbot_view(resolver_match.func):
+                return
 
             internal_ips = getattr(settings, 'ASKBOT_INTERNAL_IPS', None)
             if internal_ips and request.META.get('REMOTE_ADDR') in internal_ips:
@@ -59,7 +49,7 @@ class ForumModeMiddleware(object):
             if is_view_allowed(resolver_match.func):
                 return
 
-            if is_view_protected(resolver_match.func):
+            if is_askbot_view(resolver_match.func):
                 request.user.message_set.create(
                     _('Please log in to use %s') % \
                     askbot_settings.APP_SHORT_NAME
