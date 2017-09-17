@@ -5,6 +5,19 @@ from django.template import Context
 from django.template.loader import get_template
 import simplejson
 
+ASKBOT_VIEW_MODULES = (
+    'askbot.views',
+    'askbot.feed',
+)
+def is_askbot_view(view_func):
+    """True if view belongs to one of the
+    askbot content view modules
+    """
+    for protected_module in ASKBOT_VIEW_MODULES:
+        if view_func.__module__.startswith(protected_module):
+            return True
+    return False
+
 class PjaxView(object):
     """custom class-based view
     to be used for pjax use and for generation

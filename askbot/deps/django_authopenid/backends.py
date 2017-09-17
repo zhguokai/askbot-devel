@@ -33,17 +33,18 @@ class AuthBackend(object):
         self.login_providers = util.get_enabled_login_providers()
         super(AuthBackend, self).__init__(*args, **kwargs)
 
-    def authenticate(self, method=None, provider_name=None, **kwargs):
+    def authenticate(self, method=None, provider_name=None, request=None, **kwargs):
         """this authentication function supports many login methods"""
         if method == 'password':
             return self.auth_by_password(
                                 provider_name,
                                 kwargs['username'],
-                                kwargs['password']
+                                kwargs['password'],
+                                request
                             )
 
         elif method == 'ldap':
-            return self.auth_by_ldap(kwargs['username'], kwargs['password'])
+            return self.auth_by_ldap(kwargs['username'], kwargs['password'], request)
 
         elif method == 'identifier':
             #methods supporting this are: openid, mozilla-persona, oauth1, oauth2,
@@ -72,11 +73,12 @@ class AuthBackend(object):
         except User.DoesNotExist:
             return None
 
-    def auth_by_password(self, provider_name, username, password):
+    def auth_by_password(self, provider_name, username, password, request):
         if provider_name == 'local':
             return self.auth_by_local_password(username, password)
         else:
-            user = self.auth_by_external_password(provider_name, username, password)
+            user = self.auth_by_external_password(provider_name, username,
+                                                  password, request)
 
         try:
             assoc = UserAssociation.objects.get(
@@ -115,7 +117,7 @@ class AuthBackend(object):
         return None
 
 
-    def auth_by_external_password(self, provider_name, username, password):
+    def auth_by_external_password(self, provider_name, username, password, request):
         """authenticates by external password
         auto-creates local user account.
         """
@@ -137,13 +139,13 @@ class AuthBackend(object):
             if created:
                 user.set_password(password)
                 user.save()
-                user_registered.send(None, user=user)
+                user_registered.send(None, user=user, request=request)
             else:
                 #have username collision - so make up a more unique user name
                 #bug: - if user already exists with the new username - we are in trouble
                 new_username = '%s@%s' % (username, provider_name)
                 user = User.objects.create_user(new_username, '', password)
-                user_registered.send(None, user=user)
+                user_registered.send(None, user=user, request=request)
                 message = _(
                     'Welcome! Please set email address (important!) in your '
                     'profile and adjust screen name, if necessary.'
@@ -196,7 +198,7 @@ class AuthBackend(object):
             )
             return None
 
-    def auth_by_ldap(self, username, password):
+    def auth_by_ldap(self, username, password, request):
         user_info = ldap_authenticate(username, password)
         if user_info['success'] == False:
             return self.auth_by_local_password(username, password)
@@ -214,7 +216,7 @@ class AuthBackend(object):
         except UserAssociation.DoesNotExist:
             #email address is required
             if 'email' in user_info and askbot_settings.LDAP_AUTOCREATE_USERS:
-                assoc = ldap_create_user(user_info)
+                assoc = ldap_create_user(user_info, request)
                 return assoc.user
             else:
                 return None

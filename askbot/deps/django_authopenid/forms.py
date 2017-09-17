@@ -50,12 +50,6 @@ except ImportError:
 
 from askbot.deps.django_authopenid import util
 
-__all__ = [
-    'OpenidSigninForm','OpenidRegisterForm',
-    'ClassicRegisterForm', 'ChangePasswordForm',
-    'ChangeEmailForm', 'EmailPasswordForm', 'DeleteForm',
-]
-
 class ConsentField(forms.BooleanField):
     def __init__(self, *args, **kwargs):
         super(ConsentField, self).__init__(*args, **kwargs)
@@ -299,56 +293,31 @@ class LoginForm(forms.Form):
             raise forms.ValidationError(error_message)
 
 
-class OpenidRegisterForm(forms.Form):
+class RegistrationForm(forms.Form):
     """ openid signin form """
     next = NextUrlField()
     username = UserNameField(widget_attrs={'tabindex': 0})
 
     def __init__(self, *args, **kwargs):
-        super(OpenidRegisterForm, self).__init__(*args, **kwargs)
+        self.request = kwargs.pop('request', None)
+        super(RegistrationForm, self).__init__(*args, **kwargs)
         email_required = not askbot_settings.BLANK_EMAIL_ALLOWED
         self.fields['email'] = UserEmailField(required=email_required)
         if askbot_settings.TERMS_CONSENT_REQUIRED:
             self.fields['terms_accepted'] = ConsentField()
+        if askbot_settings.USE_RECAPTCHA:
+            self.fields['recaptcha'] = AskbotReCaptchaField()
 
-
-class SafeOpenidRegisterForm(OpenidRegisterForm):
-    """this form uses recaptcha in addition
-    to the base register form
-    """
-    def __init__(self, *args, **kwargs):
-        super(SafeOpenidRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['recaptcha'] = AskbotReCaptchaField()
-
-
-class ClassicRegisterForm(SetPasswordForm):
-    """ legacy registration form """
-
-    next = NextUrlField()
-    username = UserNameField(widget_attrs={'tabindex': 0})
-    #fields password1 and password2 are inherited
-
-    def __init__(self, *args, **kwargs):
-        super(ClassicRegisterForm, self).__init__(*args, **kwargs)
-        email_required = not askbot_settings.BLANK_EMAIL_ALLOWED
-        self.fields['email'] = UserEmailField(required=email_required)
-        if askbot_settings.TERMS_CONSENT_REQUIRED:
-            self.fields['terms_accepted'] = ConsentField()
 
     def clean(self):
         if askbot_settings.NEW_REGISTRATIONS_DISABLED:
             raise forms.ValidationError(askbot_settings.NEW_REGISTRATIONS_DISABLED_MESSAGE)
-        data = super(ClassicRegisterForm, self).clean()
-        return data
+        return super(RegistrationForm, self).clean()
 
 
-class SafeClassicRegisterForm(ClassicRegisterForm):
-    """this form uses recaptcha in addition
-    to the base register form
-    """
-    def __init__(self, *args, **kwargs):
-        super(SafeClassicRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['recaptcha'] = AskbotReCaptchaField()
+class PasswordRegistrationForm(RegistrationForm, SetPasswordForm):
+    """Password registration form.
+    Fields are inherited from the parent classes"""
 
 
 class ChangePasswordForm(forms.Form):
@@ -493,14 +462,20 @@ class EmailPasswordForm(forms.Form):
                 raise forms.ValidationError(_("sorry, there is no such user name"))
         return self.cleaned_data['username']
 
-def get_registration_form_class():
+def get_federated_registration_form_class():
     """returns class for the user registration form
-    user has a chance to specify the form via setting `REGISTRATION_FORM`
+    user has a chance to specify the form via setting `FEDERATED_REGISTRATION_FORM`
     """
-    custom_class = getattr(django_settings, 'REGISTRATION_FORM', None)
+    custom_class = getattr(django_settings, 'FEDERATED_REGISTRATION_FORM', None)
     if custom_class:
         return load_module(custom_class)
-    elif askbot_settings.USE_RECAPTCHA:
-        return SafeOpenidRegisterForm
-    else:
-        return OpenidRegisterForm
+    return RegistrationForm
+
+def get_password_registration_form_class():
+    """returns class for the user registration form
+    user has a chance to specify the form via setting `PASSWORD_REGISTRATION_FORM`
+    """
+    custom_class = getattr(django_settings, 'PASSWORD_REGISTRATION_FORM', None)
+    if custom_class:
+        return load_module(custom_class)
+    return PasswordRegistrationForm
