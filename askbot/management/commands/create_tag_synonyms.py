@@ -12,13 +12,6 @@ from askbot.management.commands.rename_tags import get_admin
 from askbot.utils import console
 
 
-
-def decode_input(input):
-    decoded_input = input.decode(sys.stdin.encoding)
-    decoded_input = decoded_input.strip()
-    return decoded_input
-
-
 class Command(BaseCommand):
 
     help = """create TagSynonym,
@@ -70,8 +63,8 @@ remove source_tag"""
         if options['to'] is None:
             raise CommandError('the --to argument is required')
 
-        source_tag_name = decode_input(options['from'])
-        target_tag_name = decode_input(options['to'])
+        source_tag_name = console.decode_input(options['from'])
+        target_tag_name = console.decode_input(options['to'])
 
         if source_tag_name == target_tag_name:
             raise CommandError("source and target tags appear to be the same")

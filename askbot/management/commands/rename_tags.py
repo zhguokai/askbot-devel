@@ -34,8 +34,7 @@ to run this operation?""" % (seed_user_id, admin.username, admin.id)
     return admin
 
 def parse_tag_names(input):
-    decoded_input = input.decode(sys.stdin.encoding)
-    return set(decoded_input.strip().split(' '))
+    return set(console.decode_input(input).split(' '))
 
 def format_tag_ids(tag_list):
     return ' '.join([str(tag.id) for tag in tag_list])
