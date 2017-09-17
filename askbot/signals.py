@@ -30,7 +30,7 @@ after_post_restored = django.dispatch.Signal(
 flag_offensive = django.dispatch.Signal(providing_args=['instance', 'mark_by'])
 remove_flag_offensive = django.dispatch.Signal(providing_args=['instance', 'mark_by'])
 user_updated = django.dispatch.Signal(providing_args=['instance', 'updated_by'])
-user_registered = django.dispatch.Signal(providing_args=['user',])
+user_registered = django.dispatch.Signal(providing_args=['user', 'request'])
 #todo: move this to authentication app
 user_logged_in = django.dispatch.Signal(providing_args=['session'])
 
