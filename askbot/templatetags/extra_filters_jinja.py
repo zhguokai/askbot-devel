@@ -27,7 +27,6 @@ from askbot.utils.markup import markdown_input_converter
 from askbot.utils.markup import convert_text as _convert_text
 from askbot.utils.slug import slugify
 from askbot.utils.pluralization import py_pluralize as _py_pluralize
-from askbot.shims.django_shims import ResolverMatch
 
 from django_countries import countries
 from django_countries import settings as countries_settings
@@ -116,7 +115,7 @@ def can_see_private_user_data(viewer, target):
 def clean_login_url(url):
     """pass through, unless user was originally on the logout page"""
     try:
-        resolver_match = ResolverMatch(resolve(url))
+        resolver_match = resolve(url)
         from askbot.views.readers import question
         if resolver_match.func == question:
             return url
