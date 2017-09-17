@@ -5,6 +5,13 @@ import time
 import logging
 from askbot.utils import path
 
+
+def decode_input(input):
+    decoded_input = input.decode(sys.stdin.encoding) if sys.stdin.encoding else input
+    decoded_input = decoded_input.strip()
+    return decoded_input
+
+
 def start_printing_db_queries():
     """starts logging database queries into console,
     should be used for debugging only"""
