@@ -154,6 +154,7 @@
                 (request.user == view_user) or request.user.is_admin_or_mod()
             )
         ) %}
+        {% set user_about=view_user.get_localized_profile().about %}
         {% if editable %}
             <div class="js-editable"
                 id="js-user-about-{{ view_user.pk}}"
@@ -165,15 +166,13 @@
                 data-editor-type="{{ settings.EDITOR_TYPE }}"
                 data-previewer-enabled="false"
             >
-            {% with view_user.get_localized_profile().about as user_about %}
                 <div class="js-editable-content">{{ user_about|convert_text }}</div>
-            {% endwith %}
                 <div class="js-editable-controls">
                     <button id="js-edit-btn-user-about-{{ view_user.pk }}">{% trans %}edit{% endtrans %}</button>
                 </div>
             </div>
         {% else %}
-            {{ view_user.about|convert_text }}
+            {{ user_about|convert_text }}
         {% endif %}
     {% endif %}
     </div>
