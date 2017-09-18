@@ -4,6 +4,7 @@ import regex as re #todo: make explicit import
 import datetime
 import askbot
 import unicodedata
+from collections import OrderedDict
 from django import forms
 from askbot import const
 from askbot.const import message_keys
@@ -12,7 +13,6 @@ from django.core.exceptions import PermissionDenied
 from django.forms.util import ErrorList
 from django.utils import timezone
 from django.utils.html import strip_tags
-from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy, string_concat
 from askbot.utils.translation import get_language
@@ -1511,7 +1511,7 @@ class EditUserEmailFeedsForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(EditUserEmailFeedsForm, self).__init__(*args, **kwargs)
-        self.fields = SortedDict((
+        self.fields = OrderedDict((
             ('asked_by_me', EmailFeedSettingField(label=askbot_settings.WORDS_ASKED_BY_ME)),
             ('answered_by_me', EmailFeedSettingField(label=askbot_settings.WORDS_ANSWERED_BY_ME)),
             ('individually_selected', EmailFeedSettingField(label=_('Individually selected'))),

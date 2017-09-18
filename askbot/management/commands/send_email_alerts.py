@@ -1,6 +1,7 @@
 import askbot
 import datetime
 import traceback
+from collections import OrderedDict
 
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
@@ -8,7 +9,6 @@ from django.contrib.sites.models import Site
 from django.core.management.base import NoArgsCommand
 from django.db import connection
 from django.db.models import Q, F
-from django.utils.datastructures import SortedDict
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.utils.translation import activate as activate_language
@@ -104,7 +104,7 @@ class Command(NoArgsCommand):
             connection.close()
 
     def format_debug_msg(self, user, content):
-        msg = u"%s site_id=%d user=%s: %s" % ( 
+        msg = u"%s site_id=%d user=%s: %s" % (
             timezone.now().strftime('%y-%m-%d %h:%m:%s'),
             SITE_ID,
             repr(user.username),
@@ -259,7 +259,7 @@ class Command(NoArgsCommand):
                     q_all_B.cutoff_time = cutoff_time
 
         #build ordered list questions for the email report
-        q_list = SortedDict()
+        q_list = OrderedDict()
 
         #todo: refactor q_list into a separate class?
         extend_question_list(q_sel_A, q_list, languages=languages)
@@ -374,8 +374,8 @@ class Command(NoArgsCommand):
                 emailed_at = update_info.active_at
             except Activity.DoesNotExist:
                 update_info = Activity(
-                                    user=user, 
-                                    content_object=q, 
+                                    user=user,
+                                    content_object=q,
                                     activity_type=EMAIL_UPDATE_ACTIVITY
                                 )
                 emailed_at = datetime.datetime(1970, 1, 1)  #long time ago
@@ -439,7 +439,7 @@ class Command(NoArgsCommand):
             else:
                 meta_data['skip'] = False
                 #print 'not skipping'
-                update_info.active_at = timezone.now() 
+                update_info.active_at = timezone.now()
                 if DEBUG_THIS_COMMAND == False:
                     update_info.save() #save question email update activity
         #q_list is actually an ordered dictionary
