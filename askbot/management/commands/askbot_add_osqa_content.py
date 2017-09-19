@@ -1,3 +1,4 @@
+from __future__ import print_function
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.management.commands.base import BaseImportXMLCommand
 from askbot.models import Award
@@ -239,7 +240,7 @@ class Command(BaseImportXMLCommand):
             try:
                 askbot_badge = BadgeData.objects.get(slug=badge_slug)
             except BadgeData.DoesNotExist:
-                print 'Could not find an equivalent to badge %s in Askbot' % osqa_badge.cls
+                print('Could not find an equivalent to badge %s in Askbot' % osqa_badge.cls)
                 continue
             self.log_action(osqa_badge, askbot_badge)
         """
@@ -271,7 +272,7 @@ class Command(BaseImportXMLCommand):
             badge = self.get_imported_object_by_old_id(BadgeData, osqa_award.badge)
             if badge is None:
                 continue
-            print 'awarding badge %s' % badge.slug
+            print('awarding badge %s' % badge.slug)
             #if multiple or user does not have this badge, then award
             if badge.is_multiple() or (not user.has_badge(badge)):
                 award = Award()

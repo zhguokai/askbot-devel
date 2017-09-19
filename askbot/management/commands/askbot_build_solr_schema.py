@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 
 from django.utils.translation import activate as activate_language
@@ -69,7 +70,7 @@ class Command(BaseCommand):
         sys.stderr.write("Save the following output to 'schema.xml' and place it in your Solr configuration directory.\n")
         sys.stderr.write("--------------------------------------------------------------------------------------------\n")
         sys.stderr.write("\n")
-        print schema_xml
+        print(schema_xml)
 
     def write_file(self, filename, schema_xml):
         schema_file = open(filename, 'w')

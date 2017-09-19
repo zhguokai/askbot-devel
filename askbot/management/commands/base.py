@@ -1,3 +1,4 @@
+from __future__ import print_function
 from askbot.models import Message
 from askbot.models import User
 from askbot.models import ImportedObjectInfo
@@ -132,7 +133,7 @@ class BaseImportXMLCommand(BaseCommand):
         if os.path.exists(name_hint):
             info = mkstemp(dir=os.getcwd(), prefix=name_hint + '_')
             name_hint = info[1]
-        print 'saving file: %s' % name_hint
+        print('saving file: %s' % name_hint)
         return open(name_hint, 'w')
 
     def write_redirect(self, from_url, to_url, redirects_file):

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import re
 import sys
 from django.core.management.base import NoArgsCommand
@@ -83,13 +84,13 @@ class Command(NoArgsCommand):
 
             #if fixed name is empty after cleaning, delete the tag
             if fixed_name == '':
-                print 'Deleting invalid tag: %s' % name
+                print('Deleting invalid tag: %s' % name)
                 tag.delete()
                 found_count += 1
                 continue
 
             if fixed_name != name:
-                print 'Renaming tag: %s -> %s' % (name, fixed_name)
+                print('Renaming tag: %s -> %s' % (name, fixed_name))
 
             #if tag name changed, see if there is a duplicate
             #with the same name, in which case we re-assign questions
@@ -134,7 +135,7 @@ class Command(NoArgsCommand):
         threads = models.Thread.objects.all()
         checked_count = 0
         total_count = threads.count()
-        print "Searching for questions with inconsistent copies of tag records:",
+        print("Searching for questions with inconsistent copies of tag records:", end=' ')
         for thread in threads:
             #make sure that denormalized tag set is the same as normalized
             #we just add both the tags together and try to apply them
@@ -162,6 +163,6 @@ class Command(NoArgsCommand):
         console.print_progress(checked_count, total_count)
 
         if found_count:
-            print '%d problem questions found, tag records restored' % found_count
+            print('%d problem questions found, tag records restored' % found_count)
         else:
-            print 'Did not find any problems'
+            print('Did not find any problems')

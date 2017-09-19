@@ -1,6 +1,7 @@
 """management command that creates a tag synonym
 all corresponding questions are retagged
 """
+from __future__ import print_function
 
 import sys
 from django.conf import settings as django_settings
@@ -82,7 +83,7 @@ remove source_tag"""
     %s ==> %s?""" % (source_tag_name, source_tag_name, target_tag_name)
                 choice = console.choice_dialog(prompt, choices=('yes', 'no'))
                 if choice == 'no':
-                    print 'Cancled'
+                    print('Cancled')
                     sys.exit()
             source_tag = models.Tag.objects.create(
                                             name=source_tag_name,
@@ -105,7 +106,7 @@ remove source_tag"""
                                                                          source_tag_name, tag_synonym_tmp.target_tag_name)
                 choice = console.choice_dialog(prompt, choices=('yes', 'no'))
                 if choice == 'no':
-                    print 'Cancled'
+                    print('Cancled')
                     sys.exit()
             target_tag_name = tag_synonym_tmp.target_tag_name
             options['to'] = target_tag_name

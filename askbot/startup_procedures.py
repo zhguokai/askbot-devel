@@ -7,6 +7,7 @@ question: why not run these from askbot/__init__.py?
 
 the main function is run_startup_tests
 """
+from __future__ import print_function
 from askbot.conf.static_settings import settings as django_settings
 import askbot
 import django
@@ -60,7 +61,7 @@ def domain_is_bad():
 
 def askbot_warning(line):
     """prints a warning with the nice header, but does not quit"""
-    print >> sys.stderr, unicode(line).encode('utf-8')
+    print(unicode(line).encode('utf-8'), file=sys.stderr)
 
 
 def print_errors(error_messages, header=None, footer=None):
@@ -691,7 +692,7 @@ def test_custom_user_profile_tab():
     tab_settings = getattr(django_settings, setting_name)
     if tab_settings:
         if not isinstance(tab_settings, dict):
-            print "Setting %s must be a dictionary!!!" % setting_name
+            print("Setting %s must be a dictionary!!!" % setting_name)
 
         name = tab_settings.get('NAME', None)
         slug = tab_settings.get('SLUG', None)
@@ -1082,7 +1083,7 @@ def run():
         if django_settings.ASKBOT_SELF_TEST:
             run_startup_tests()
     except AskbotConfigError, error:
-        print error
+        print(error)
         sys.exit(1)
     # close DB and cache connections to prevent issues in prefork mode
     connection.close()

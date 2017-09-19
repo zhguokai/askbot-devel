@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 from django.core.management.base import NoArgsCommand
 from django.db import transaction
@@ -74,6 +75,6 @@ class NoArgsJob(NoArgsCommand):
         console.print_progress(checked_count, total_count)
 
         if changed_count:
-            print batch['changed_count_message'] % changed_count
+            print(batch['changed_count_message'] % changed_count)
         else:
-            print batch['nothing_changed_message']
+            print(batch['nothing_changed_message'])

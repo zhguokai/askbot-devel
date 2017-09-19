@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.core.management.base import CommandError, BaseCommand
 from django.db import transaction
 from askbot.deployment import package_utils
@@ -17,8 +18,8 @@ from askbot import const
 
 def print_post_info():
     for p in Post.objects.all():
-        print p.author,
-    print ''
+        print(p.author, end=' ')
+    print('')
 
 class MergeUsersBaseCommand(BaseCommand):
     args = '<from_user_id> <to_user_id>'

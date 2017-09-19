@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import errno
 
@@ -28,5 +29,5 @@ def create_file_if_does_not_exist(file_path, print_warning = True):
         return open(file_path, 'w+')
     else:
         if print_warning:
-            print "File %s exists" % file_path
+            print("File %s exists" % file_path)
         return None
