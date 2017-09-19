@@ -148,9 +148,9 @@ class PageLoadTestCase(AskbotTestCase):
         #todo: merge this with all reader url tests
         response = self.client.get(reverse('index'), follow=True)
         self.assertEqual(response.status_code, 200)
-        self.failUnless(len(response.redirect_chain) == 1)
+        self.assertTrue(len(response.redirect_chain) == 1)
         redirect_url = response.redirect_chain[0][0]
-        self.failUnless(unicode(redirect_url).endswith('/questions/'))
+        self.assertTrue(unicode(redirect_url).endswith('/questions/'))
         if hasattr(response, 'template'):
             templates = response.template
         elif hasattr(response, 'templates'):
