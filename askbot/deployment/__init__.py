@@ -243,12 +243,17 @@ def collect_missing_options(options_dict):
             ('database_host', False),
             ('database_port', False)
         ])
-        for key in db_keys.iterkeys():
+        for key, required in db_keys.items():
             if options_dict[key] is None:
                 key_name = key.replace('_', ' ')
+                fmt_string = '\nPlease enter %s'
+                if not required:
+                    fmt_string += ' (press "Enter" to use the default value)'
+
                 value = console.simple_dialog(
-                    '\nPlease enter %s' % key_name,
+                    fmt_string % key_name,
                     required=db_keys[key]
                 )
+
                 options_dict[key] = value
         return options_dict
