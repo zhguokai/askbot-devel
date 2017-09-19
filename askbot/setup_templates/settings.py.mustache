@@ -27,8 +27,8 @@ DATABASES = {
         'NAME': '{{database_name}}',                      # Or path to database file if using sqlite3.
         'USER': '{{database_user}}',                      # Not used with sqlite3.
         'PASSWORD': '{{database_password}}',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'HOST': '{{database_host}}',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '{{database_port}}',                      # Set to empty string for default. Not used with sqlite3.
         'TEST_CHARSET': 'utf8',              # Setting the character set and collation to utf-8
         'TEST_COLLATION': 'utf8_general_ci', # is necessary for MySQL tests to work properly.
     }
