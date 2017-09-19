@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.core import management, mail
 from django.contrib import auth
 from askbot.tests.utils import AskbotTestCase
@@ -128,7 +129,7 @@ class ManagementCommandTests(AskbotTestCase):
                                                           ).count(), 1)
         self.assertEqual(models.TagSynonym.objects.count(), 5)
 
-        print 'done create_tag_synonym_test'
+        print('done create_tag_synonym_test')
 
     def test_delete_unused_tags(self):
 

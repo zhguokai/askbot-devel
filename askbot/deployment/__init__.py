@@ -1,6 +1,7 @@
 """
 module for deploying askbot
 """
+from __future__ import print_function
 import os.path
 import sys
 import django
@@ -89,7 +90,7 @@ def askbot_setup():
         #ask users to give missing parameters
         #todo: make this more explicit here
         if options.verbosity >= 1:
-            print messages.DEPLOY_PREAMBLE
+            print(messages.DEPLOY_PREAMBLE)
 
         directory = path_utils.clean_directory(options.dir_name)
         while directory is None:
@@ -122,17 +123,17 @@ def askbot_setup():
             try:
                 import psycopg2
             except ImportError:
-                print '\nNEXT STEPS: install python binding for postgresql'
-                print 'pip install psycopg2\n'
+                print('\nNEXT STEPS: install python binding for postgresql')
+                print('pip install psycopg2\n')
         elif database_engine == 'mysql':
             try:
                 import _mysql
             except ImportError:
-                print '\nNEXT STEP: install python binding for mysql'
-                print 'pip install mysql-python\n'
+                print('\nNEXT STEP: install python binding for mysql')
+                print('pip install mysql-python\n')
 
     except KeyboardInterrupt:
-        print "\n\nAborted."
+        print("\n\nAborted.")
         sys.exit(1)
 
 
@@ -207,11 +208,11 @@ def collect_missing_options(options_dict):
                 if console.get_yes_or_no(message) == 'yes':
                     database_file_name = value
             elif os.path.isdir(value):
-                print '%s is a directory, choose another name' % value
+                print('%s is a directory, choose another name' % value)
             elif value in path_utils.FILES_TO_CREATE:
-                print 'name %s cannot be used for the database name' % value
+                print('name %s cannot be used for the database name' % value)
             elif value == path_utils.LOG_DIR_NAME:
-                print 'name %s cannot be used for the database name' % value
+                print('name %s cannot be used for the database name' % value)
             else:
                 database_file_name = value
 

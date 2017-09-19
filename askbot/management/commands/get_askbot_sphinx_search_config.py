@@ -1,5 +1,6 @@
 """the management command that outputs configuration
 for sphinx search"""
+from __future__ import print_function
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.template import Template, Context
@@ -15,4 +16,4 @@ class Command(BaseCommand):
             'db_user': settings.DATABASES['default']['USER'],
             'db_password': settings.DATABASES['default']['PASSWORD'],
         })
-        print tpl.render(context)
+        print(tpl.render(context))

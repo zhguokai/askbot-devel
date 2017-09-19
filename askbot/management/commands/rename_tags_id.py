@@ -5,6 +5,7 @@ both "from" and "to" tags are identified by id
 
 also, corresponding questions are retagged
 """
+from __future__ import print_function
 import re
 import sys
 from django.conf import settings as django_settings
@@ -117,18 +118,18 @@ rename_tags, but using tag id's
         #print some feedback here and give a chance to bail out
         question_count = questions.count()
         if question_count == 0:
-            print """Did not find any matching questions,
+            print("""Did not find any matching questions,
 you might want to run prune_unused_tags
-or repost a bug, if that does not help"""
+or repost a bug, if that does not help""")
         elif question_count == 1:
-            print "One question matches:"
+            print("One question matches:")
         elif question_count <= 10:
-            print "%d questions match:" % question_count
+            print("%d questions match:" % question_count)
         if question_count > 10:
-            print "%d questions match." % question_count
-            print "First 10 are:"
+            print("%d questions match." % question_count)
+            print("First 10 are:")
         for question in questions[:10]:
-            print '* %s' % question.title.strip()
+            print('* %s' % question.title.strip())
 
         formatted_from_tag_names = format_tag_name_list(from_tags)
         formatted_to_tag_names = format_tag_name_list(to_tags)
@@ -137,10 +138,10 @@ or repost a bug, if that does not help"""
             prompt = 'Rename tags %s --> %s?' % (formatted_from_tag_names, formatted_to_tag_names)
             choice = console.choice_dialog(prompt, choices=('yes', 'no'))
             if choice == 'no':
-                print 'Canceled'
+                print('Canceled')
                 sys.exit()
         else:
-            print 'Renaming tags %s --> %s' % (formatted_from_tag_names, formatted_to_tag_names)
+            print('Renaming tags %s --> %s' % (formatted_from_tag_names, formatted_to_tag_names))
         sys.stdout.write('Processing:')
 
         from_tag_names = get_tag_names(from_tags)

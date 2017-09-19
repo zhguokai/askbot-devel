@@ -1,5 +1,6 @@
 """Messages used in the procedure of deploying Askbot
 """
+from __future__ import print_function
 import os.path
 from askbot.deployment import path_utils
 
@@ -96,4 +97,4 @@ def format_msg_bad_dir_name(directory):
 
 def print_message(message, verbosity):
     if verbosity >= 1:
-        print message
+        print(message)

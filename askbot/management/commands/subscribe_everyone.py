@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.core.management.base import NoArgsCommand
 from django.db import connection
 from askbot.models import EmailFeedSetting, User
@@ -8,7 +9,7 @@ class Command(NoArgsCommand):
             try:
                 self.subscribe_everyone()
             except Exception, e:
-                print e
+                print(e)
         finally:
             connection.close()
 

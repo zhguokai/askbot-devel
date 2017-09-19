@@ -2,6 +2,7 @@
 it to another, all corresponding questions are automatically
 retagged
 """
+from __future__ import print_function
 import sys
 from django.conf import settings as django_settings
 from django.core import management
@@ -29,7 +30,7 @@ would you like to select default moderator %s, id=%d
 to run this operation?""" % (seed_user_id, admin.username, admin.id)
         choice = console.choice_dialog(prompt, choices = ('yes', 'no'))
         if choice == 'no':
-            print 'Canceled'
+            print('Canceled')
             sys.exit()
     return admin
 

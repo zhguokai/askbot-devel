@@ -22,6 +22,7 @@ This script parse a directory tree looking for python modules and packages and
 create ReST files appropriately to create code documentation with Sphinx.
 It also create a modules index.
 """
+from __future__ import print_function
 
 import os
 import optparse
@@ -134,9 +135,9 @@ def write_file(module_name, text_content, opts):
     """
     file_path = create_file_name(module_name, opts)
     if not opts.force and os.path.isfile(file_path):
-        print 'File %s already exists.' % file_path
+        print('File %s already exists.' % file_path)
     else:
-        print 'Writing file %s' % file_path
+        print('Writing file %s' % file_path)
         # write the file
         if not opts.dryrun:
             fd = open(file_path, 'w')
@@ -188,7 +189,7 @@ def recurse_tree(path, excludes, opts):
     Look for every file in the directory tree and create the corresponding
     ReST files.
     """
-    print path
+    print(path)
     base_package_name = None
     # check if the base directory is a package and get is name
     if '__init__.py' in os.listdir(path):
@@ -238,10 +239,10 @@ def modules_toc(modules, opts, name='modules'):
     """
     fname = create_file_name(name, opts)
     if not opts.force and os.path.exists(fname):
-        print "File %s already exists." % name
+        print("File %s already exists." % name)
         return
 
-    print "Creating module's index modules.txt."
+    print("Creating module's index modules.txt.")
     text = write_heading(opts.header, 'Modules')
     text += title_line('Modules:', '-')
     text += '.. toctree::\n'
@@ -333,9 +334,9 @@ Note: By default this script will not overwrite already created files.""")
                 excludes = args[1:]
                 recurse_tree(args[0], excludes, opts)
             else:
-                print '%s is not a valid output destination directory.' % opts.destdir
+                print('%s is not a valid output destination directory.' % opts.destdir)
         else:
-            print '%s is not a valid directory.' % args
+            print('%s is not a valid directory.' % args)
 
 
 if __name__ == '__main__':

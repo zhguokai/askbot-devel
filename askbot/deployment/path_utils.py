@@ -4,6 +4,7 @@ that
 * create necessary directories
 * install deployment files
 """
+from __future__ import print_function
 import os
 import os.path
 import tempfile
@@ -49,7 +50,7 @@ def clean_directory(directory):
 
     if os.path.isfile(directory):
         if options.verbosity >= 1 and os.path.isfile(directory):
-            print messages.CANT_INSTALL_INTO_FILE % {'path':directory}
+            print(messages.CANT_INSTALL_INTO_FILE % {'path':directory})
         sys.exit(1)
 
         return None
@@ -162,7 +163,7 @@ def deploy_into(directory, new_project = False, verbosity = 1, context = None):
         copy_files = FILES_TO_CREATE
         blank_files = BLANK_FILES
         if verbosity >= 1:
-            print 'Copying files: '
+            print('Copying files: ')
         for file_name in copy_files:
             src = os.path.join(SOURCE_DIR, 'setup_templates', file_name)
             if os.path.exists(os.path.join(directory, file_name)):
@@ -174,11 +175,11 @@ def deploy_into(directory, new_project = False, verbosity = 1, context = None):
                         shutil.copy(src, directory)
                     else:
                         if verbosity >= 1:
-                            print '* %s' % file_name,
-                            print "- you already have one, please add contents of %s" % src
+                            print('* %s' % file_name, end=' ')
+                            print("- you already have one, please add contents of %s" % src)
             else:
                 if verbosity >= 1:
-                    print '* %s ' % file_name
+                    print('* %s ' % file_name)
                 shutil.copy(src, directory)
         #copy log directory
         src = os.path.join(SOURCE_DIR, 'setup_templates', LOG_DIR_NAME)
@@ -188,12 +189,12 @@ def deploy_into(directory, new_project = False, verbosity = 1, context = None):
 
         #creating settings file from template
         if verbosity >= 1:
-            print "Creating settings file"
+            print("Creating settings file")
         settings_contents = SettingsTemplate(context).render()
         settings_path = os.path.join(directory, 'settings.py')
         if os.path.exists(settings_path) and new_project == False:
             if verbosity >= 1:
-                print "* you already have a settings file please merge the contents"
+                print("* you already have a settings file please merge the contents")
         elif new_project == True:
             settings_file = open(settings_path, 'w+')
             settings_file.write(settings_contents)
@@ -205,10 +206,10 @@ def deploy_into(directory, new_project = False, verbosity = 1, context = None):
 
             settings_file.close()
             if verbosity >= 1:
-                print "settings file created"
+                print("settings file created")
 
     if verbosity >= 1:
-        print ''
+        print('')
     app_dir = os.path.join(directory, 'askbot')
 
     copy_dirs = ('doc', 'cron', 'upfiles')
@@ -219,21 +220,21 @@ def deploy_into(directory, new_project = False, verbosity = 1, context = None):
         if os.path.abspath(src) != os.path.abspath(dst):
             if dirs_copied == 0:
                 if verbosity >= 1:
-                    print 'copying directories: ',
+                    print('copying directories: ', end=' ')
             if verbosity >= 1:
-                print '* ' + dir_name
+                print('* ' + dir_name)
             if os.path.exists(dst):
                 if os.path.isdir(dst):
                     if verbosity >= 1:
-                        print 'Directory %s not empty - skipped' % dst
+                        print('Directory %s not empty - skipped' % dst)
                 else:
                     if verbosity >= 1:
-                        print 'File %s already exists - skipped' % dst
+                        print('File %s already exists - skipped' % dst)
                 continue
             shutil.copytree(src, dst)
             dirs_copied += 1
     if verbosity >= 1:
-        print ''
+        print('')
 
 def dir_name_unacceptable_for_django_project(directory):
     dir_name = os.path.basename(directory)
@@ -269,18 +270,18 @@ def get_install_directory(force = False):
         return None
 
     if can_create_path(directory) == False:
-        print messages.format_msg_dir_not_writable(directory)
+        print(messages.format_msg_dir_not_writable(directory))
         return None
 
     if os.path.exists(directory):
         if path_is_clean_for_django(directory):
             if has_existing_django_project(directory):
                 if not force:
-                    print messages.CANNOT_OVERWRITE_DJANGO_PROJECT % \
-                        {'directory': directory}
+                    print(messages.CANNOT_OVERWRITE_DJANGO_PROJECT % \
+                        {'directory': directory})
                     return None
         else:
-            print messages.format_msg_dir_unclean_django(directory)
+            print(messages.format_msg_dir_unclean_django(directory))
             return None
     elif force == False:
         message = messages.format_msg_create(directory)
@@ -293,12 +294,12 @@ def get_install_directory(force = False):
             return None
 
     if dir_taken_by_python_module(directory):
-        print messages.format_msg_bad_dir_name(directory)
+        print(messages.format_msg_bad_dir_name(directory))
         return None
     if dir_name_unacceptable_for_django_project(directory):
-        print """\nDirectory %s is not acceptable for a Django project.
+        print("""\nDirectory %s is not acceptable for a Django project.
 Please use lower case characters, numbers and underscore.
-The first character cannot be a number.\n""" % os.path.basename(directory)
+The first character cannot be a number.\n""" % os.path.basename(directory))
         return None
 
     return directory

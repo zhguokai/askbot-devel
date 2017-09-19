@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.core.management.base import NoArgsCommand
 from askbot.utils.console import ProgressBar
 from askbot.models import Activity
@@ -18,6 +19,6 @@ class Command(NoArgsCommand):
                 act.delete()
 
         if deleted_count:
-            print "%d activity objects deleted" % deleted_count
+            print("%d activity objects deleted" % deleted_count)
         else:
-            print "None found"
+            print("None found")

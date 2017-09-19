@@ -1,5 +1,6 @@
 """HTML Diff: http://www.aaronsw.com/2002/diff
 Rough code, badly documented. Send me comments and patches."""
+from __future__ import print_function
 
 __author__ = 'Aaron Swartz <me@aaronsw.com>'
 __copyright__ = '(C) 2003 Aaron Swartz. GNU GPL 2.'
@@ -72,7 +73,7 @@ if __name__ == '__main__':
     try:
         a, b = sys.argv[1:3]
     except ValueError:
-        print "htmldiff: highlight the differences between two html files"
-        print "usage: " + sys.argv[0] + " a b"
+        print("htmldiff: highlight the differences between two html files")
+        print("usage: " + sys.argv[0] + " a b")
         sys.exit(1)
-    print textDiff(open(a).read(), open(b).read())
+    print(textDiff(open(a).read(), open(b).read()))

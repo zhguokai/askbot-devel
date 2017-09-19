@@ -1,3 +1,4 @@
+from __future__ import print_function
 import ez_setup
 ez_setup.use_setuptools()
 from setuptools import setup, find_packages
@@ -122,7 +123,7 @@ Footnotes
 (**) - With MySQL you have to use MyISAM data backend, because it's the only one that supports Full Text Search."""
 )
 
-print """**************************************************************
+print("""**************************************************************
 *                                                            *
 *  Thanks for installing Askbot.                             *
 *                                                            *
@@ -132,4 +133,4 @@ print """**************************************************************
 *  And please do not hesitate to ask your questions at       *
 *  at http://askbot.org/en/questions/                        *
 *                                                            *
-**************************************************************"""
+**************************************************************""")

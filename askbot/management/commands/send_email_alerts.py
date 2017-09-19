@@ -1,3 +1,4 @@
+from __future__ import print_function
 import askbot
 import datetime
 import traceback
@@ -115,7 +116,7 @@ class Command(NoArgsCommand):
     def report_exception(self, user):
         """reports exception that happened during sending email alert to user"""
         message = self.format_debug_msg(user, traceback.format_exc())
-        print message
+        print(message)
         admin_email = askbot_settings.ADMIN_EMAIL
         try:
             subject_line = u"Error processing daily/weekly notification for User '%s' for Site '%s'" % (user.username, SITE_ID)
@@ -126,10 +127,10 @@ class Command(NoArgsCommand):
             )
         except:
             message = u"ERROR: was unable to report this exception to %s: %s" % (admin_email, traceback.format_exc())
-            print self.format_debug_msg(user, message)
+            print(self.format_debug_msg(user, message))
         else:
             message = u"Sent email reporting this exception to %s" % admin_email
-            print self.format_debug_msg(user, message)
+            print(self.format_debug_msg(user, message))
 
     def get_updated_questions_for_user(self, user):
         """

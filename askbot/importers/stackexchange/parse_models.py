@@ -1,3 +1,4 @@
+from __future__ import print_function
 from xml.etree import ElementTree as et
 import sys
 import re
@@ -209,7 +210,7 @@ def parse_value(input, field_object):
         except:
             raise Exception('datetime expected "%s" found' % input)
 
-print 'from django.db import models'
+print('from django.db import models')
 for file in sys.argv:
     if '.xsd' in file:
         tname = os.path.basename(file).replace('.xsd','')
@@ -222,4 +223,4 @@ for file in sys.argv:
             field = make_field_from_xml_tree(col)
             if field:
                 model.add_field(field)
-        print model
+        print(model)

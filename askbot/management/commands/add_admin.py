@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.core.management.base import NoArgsCommand
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save
@@ -16,26 +17,26 @@ class Command(NoArgsCommand):
             uid = int(uid_str)
             return User.objects.get(id=uid)
         except User.DoesNotExist:
-            print 'sorry there is no user with id=%d' % uid
+            print('sorry there is no user with id=%d' % uid)
             sys.exit(1)
         except ValueError:
-            print 'user id must be integer, have %s' % uid_str
+            print('user id must be integer, have %s' % uid_str)
             sys.exit(1)
 
     def parse_arguments(self, arguments):
         if len(arguments) != 1:
-            print 'argument for this command id <user_id>'
+            print('argument for this command id <user_id>')
             sys.exit(1)
         self.user = self.get_user(arguments[0])
 
     def confirm_action(self):
         u = self.user
-        print ''
+        print('')
         prompt = 'Do you really wish to make user (id=%d, name=%s) a site administrator? yes/no: ' \
                 % (u.id, u.username)
         str = raw_input(prompt)
         if str != 'yes':
-            print 'action canceled'
+            print('action canceled')
             sys.exit(1)
 
     def remove_signals(self):
