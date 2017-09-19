@@ -13,7 +13,7 @@ Installing Askbot as a new Django project (standalone app)
 .. note::
     Firstly - if you are preparing the project directory manually,
     make sure that the directory name does not
-    have the `.` - dot - symbol, because it is illegal for Python modules. 
+    have the `.` - dot - symbol, because it is illegal for Python modules.
     For example::
 
         mkdir mydjangosite
@@ -47,7 +47,7 @@ in the same project.
     `askbot-setup` adds those files to the directory you select (and some more things specific to Askbot).
 
 .. versionadded:: 0.7.24
-    `askbot-setup` also have command line arguments such as folder name(name), database name, database password and database user also added verbosity support. 
+    `askbot-setup` also have command line arguments such as folder name(name), database name, database password and database user also added verbosity support.
     You can also specify a local settings file to append it's contents to the deployment settings file.
 
     +----------------------------------+------------------------------------------------------------+
@@ -63,8 +63,6 @@ in the same project.
     | -u <DATABASE_USER>               | The database user that the instance will use.              |
     +----------------------------------+------------------------------------------------------------+
     | -p <DATABASE_PASSWORD>           | The database password for the user.                        |
-    +----------------------------------+------------------------------------------------------------+
-    | --domain=<DOMAIN_NAME>           | Domain name for the application.                           |
     +----------------------------------+------------------------------------------------------------+
     | --append-settings=<SETTINGS_FILE>| Allows to append a setting file content to the             |
     |                                  | settings file, the parameter is the file to use.           |
@@ -89,8 +87,8 @@ All values must be enclosed in single quotes, as shown below::
 
 .. note::
 
-    The files settings.py_ and urls.py_ may also need to be touched up 
-    when you upgrate the software, because new versions may bring 
+    The files settings.py_ and urls.py_ may also need to be touched up
+    when you upgrate the software, because new versions may bring
     new dependencies and add new site urls.
 
 
