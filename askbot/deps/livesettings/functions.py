@@ -28,7 +28,7 @@ class ConfigurationSettings(object):
             try:
                 return self[key]
             except:
-                raise AttributeError, key
+                raise AttributeError(key)
 
         def __iter__(self):
             for v in self.groups():

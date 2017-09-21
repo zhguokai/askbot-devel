@@ -40,7 +40,7 @@ class MergeUsersBaseCommand(BaseCommand):
         self.cleanup()
 
     def cleanup(self):
-        raise Exception, 'Not implemented'
+        raise Exception('Not implemented')
 
     def prepare(self):
         pass
