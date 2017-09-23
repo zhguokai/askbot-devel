@@ -156,13 +156,13 @@ def ldap_authenticate_default(username, password):
         else:
             user_info['success'] = False
 
-    except ldap.INVALID_CREDENTIALS, e:
+    except ldap.INVALID_CREDENTIALS as e:
         user_info['success'] = False
-    except ldap.LDAPError, e:
+    except ldap.LDAPError as e:
         LOG.error("LDAPError Exception")
         LOG.exception(e)
         user_info['success'] = False
-    except Exception, e:
+    except Exception as e:
         LOG.error("Unexpected Exception Occurred")
         LOG.exception(e)
         user_info['success'] = False

@@ -891,7 +891,7 @@ it may be helpful to split this procedure in two:\n
                 field_name = se_parser.parse_field_name(col.tag)
                 try:
                     field_type = model._meta.get_field(field_name)
-                except fields.FieldDoesNotExist, e:
+                except fields.FieldDoesNotExist as e:
                     print(u"Warning: %s" % unicode(e))
                     continue
                 field_value = se_parser.parse_value(col.text, field_type)

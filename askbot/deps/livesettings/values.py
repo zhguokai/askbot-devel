@@ -442,7 +442,7 @@ class Value(object):
             try:
                 val = self.setting.value
 
-            except SettingNotSet, sns:
+            except SettingNotSet as sns:
 
                 if self.localized and lang == django_settings.LANGUAGE_CODE:
                     try:
@@ -461,12 +461,12 @@ class Value(object):
                 else:
                     val = NOTSET
 
-            except AttributeError, ae:
+            except AttributeError as ae:
                 log.error("Attribute error: %s", ae)
                 log.error("%s: Could not get _value of %s", key, self.setting)
                 raise(ae)
 
-            except Exception, e:
+            except Exception as e:
                 global _WARN
                 log.error(e)
                 if str(e).find("configuration_setting") > -1:
@@ -633,7 +633,7 @@ class DecimalValue(Value):
 
         try:
             return Decimal(value)
-        except TypeError, te:
+        except TypeError as te:
             log.warning("Can't convert %s to Decimal for settings %s.%s", value, self.group.key, self.key)
             raise TypeError(te)
 

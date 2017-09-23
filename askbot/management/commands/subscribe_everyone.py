@@ -8,7 +8,7 @@ class Command(NoArgsCommand):
         try:
             try:
                 self.subscribe_everyone()
-            except Exception, e:
+            except Exception as e:
                 print(e)
         finally:
             connection.close()

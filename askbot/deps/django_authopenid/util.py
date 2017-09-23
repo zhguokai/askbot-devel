@@ -1018,7 +1018,7 @@ def ldap_check_password(username, password):
         ldap_session.simple_bind_s(username, password)
         ldap_session.unbind_s()
         return True
-    except ldap.LDAPError, e:
+    except ldap.LDAPError as e:
         logging.critical(unicode(e))
         return False
 

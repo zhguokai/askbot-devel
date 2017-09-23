@@ -282,7 +282,7 @@ def send_instant_notifications_about_activity_in_post(
         })
         try:
             email.send([user.email])
-        except askbot_exceptions.EmailNotSent, error:
+        except askbot_exceptions.EmailNotSent as error:
             logger.debug(
                 '%s, error=%s, logId=%s' % (user.email, error, log_id)
             )

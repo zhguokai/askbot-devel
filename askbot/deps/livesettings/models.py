@@ -42,7 +42,7 @@ def find_setting(group, key, site=None):
     elif use_db:
         try:
             setting = cache_get(ck)
-        except NotCachedError, nce:
+        except NotCachedError as nce:
             if loading.app_cache_ready():
                 try:
                     setting = Setting.objects.get(site__id__exact=siteid, key__exact=key, group__exact=group)
