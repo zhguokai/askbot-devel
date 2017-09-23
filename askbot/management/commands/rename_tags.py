@@ -16,7 +16,7 @@ def get_admin(seed_user_id = None):
     """
     try:
         admin = api.get_admin(seed_user_id=seed_user_id)
-    except models.User.DoesNotExist, e:
+    except models.User.DoesNotExist as e:
         raise CommandError(e)
 
     if admin.id != seed_user_id:

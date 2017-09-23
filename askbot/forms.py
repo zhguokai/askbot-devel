@@ -388,7 +388,7 @@ class EditorField(forms.CharField):
 
         try:
             self.user.assert_can_post_text(value)
-        except PermissionDenied, err:
+        except PermissionDenied as err:
             raise forms.ValidationError(unicode(err))
 
         return value

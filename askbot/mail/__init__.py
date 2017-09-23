@@ -115,7 +115,7 @@ def send_mail(
             attachments=attachments
         )
         logging.debug('sent update to %s' % ','.join(recipient_list))
-    except Exception, error:
+    except Exception as error:
         sys.stderr.write('\n' + unicode(error).encode('utf-8') + '\n')
         if raise_on_failure == True:
             raise exceptions.EmailNotSent(unicode(error))
@@ -434,7 +434,7 @@ def process_emailed_question(
         bounce_email(email_address, subject, reason = 'unknown_user')
     except User.MultipleObjectsReturned:
         bounce_email(email_address, subject, reason = 'problem_posting')
-    except PermissionDenied, error:
+    except PermissionDenied as error:
         bounce_email(
             email_address,
             subject,

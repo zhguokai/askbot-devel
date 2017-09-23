@@ -208,7 +208,7 @@ def try_import(module_name, pypi_package_name, show_requirements_message=True,
     A corresponding Python package in the case import fails"""
     try:
         load_module(module_name)
-    except ImportError, error:
+    except ImportError as error:
         message = 'Error: ' + unicode(error)
         message += '\n\nPlease run: >pip install %s' % pypi_package_name
         if show_requirements_message:
@@ -1082,7 +1082,7 @@ def run():
     try:
         if django_settings.ASKBOT_SELF_TEST:
             run_startup_tests()
-    except AskbotConfigError, error:
+    except AskbotConfigError as error:
         print(error)
         sys.exit(1)
     # close DB and cache connections to prevent issues in prefork mode
