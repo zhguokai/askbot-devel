@@ -161,7 +161,6 @@ settings.register(
     )
 )
 
-
 settings.register(
     livesettings.StringValue(
         EXTERNAL_KEYS,
@@ -201,5 +200,26 @@ settings.register(
         EXTERNAL_KEYS,
         'IDENTICA_SECRET',
         description=_('ident.ca consumer secret'),
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'YAMMER_KEY',
+        description=_('Yammer client id'),
+        help_text=_(
+            'Please register your client application at <a href="%(url)s">'
+            'yammer applications site</a>'
+        ) % {'url': const.DEPENDENCY_URLS['yammer-apps']},
+
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'YAMMER_SECRET',
+        description=_('Yammer secret key'),
     )
 )

@@ -220,12 +220,13 @@ providers = (
     'identi.ca',
     'LaunchPad',
     'OpenStackID',
+    'Yammer',
 )
 
 DISABLED_BY_DEFAULT = ('LaunchPad', 'Mozilla Persona', 'OpenStackID')
 
 NEED_EXTRA_SETUP = ('Google Plus', 'Twitter', 'MediaWiki', 'Facebook',
-                    'LinkedIn', 'identi.ca')
+                    'LinkedIn', 'identi.ca', 'Yammer',)
 
 for provider in providers:
     if provider == 'local':
