@@ -692,12 +692,12 @@ class GroupTests(AskbotTestCase):
 class LinkPostingTests(AskbotTestCase):
 
     def assert_no_link(self, html):
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, 'html5lib')
         links = soup.findAll('a')
         self.assertEqual(len(links), 0)
 
     def assert_has_link(self, html, url):
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, 'html5lib')
         links = soup.findAll('a')
         self.assertTrue(len(links) > 0)
         self.assertEqual(links[0]['href'], url)
