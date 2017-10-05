@@ -97,9 +97,9 @@ def upload(request):#ajax upload file to a question or answer
                     {'file_size': settings.ASKBOT_MAX_UPLOAD_FILE_SIZE}
             raise exceptions.PermissionDenied(msg)
 
-    except exceptions.PermissionDenied, e:
+    except exceptions.PermissionDenied as e:
         error = unicode(e)
-    except Exception, e:
+    except Exception as e:
         logging.critical(unicode(e))
         error = _('Error uploading file. Please contact the site administrator. Thank you.')
 
@@ -257,7 +257,7 @@ def ask(request):#view used to ask a new question
                         form_data=form.cleaned_data
                     )
                     return HttpResponseRedirect(question.get_absolute_url())
-                except exceptions.PermissionDenied, e:
+                except exceptions.PermissionDenied as e:
                     request.user.message_set.create(message = unicode(e))
                     return HttpResponseRedirect(reverse('index'))
 
@@ -379,7 +379,7 @@ def retag_question(request, id):
             'form' : form,
         }
         return render(request, 'question_retag.html', data)
-    except exceptions.PermissionDenied, e:
+    except exceptions.PermissionDenied as e:
         if request.is_ajax():
             response_data = {
                 'message': unicode(e),
@@ -503,7 +503,7 @@ def edit_question(request, id):
         data.update(context.get_for_tag_editor())
         return render(request, 'question_edit.html', data)
 
-    except exceptions.PermissionDenied, e:
+    except exceptions.PermissionDenied as e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
 
@@ -602,7 +602,7 @@ def edit_answer(request, id):
 
         return render(request, 'answer_edit.html', data)
 
-    except exceptions.PermissionDenied, e:
+    except exceptions.PermissionDenied as e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(answer.get_absolute_url())
 
@@ -660,11 +660,11 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
                     )
 
                     return HttpResponseRedirect(answer.get_absolute_url())
-                except askbot_exceptions.AnswerAlreadyGiven, e:
+                except askbot_exceptions.AnswerAlreadyGiven as e:
                     request.user.message_set.create(message = unicode(e))
                     answer = question.thread.get_answers_by_user(user)[0]
                     return HttpResponseRedirect(answer.get_absolute_url())
-                except exceptions.PermissionDenied, e:
+                except exceptions.PermissionDenied as e:
                     request.user.message_set.create(message = unicode(e))
             else:
                 if request.session.session_key is None:
@@ -797,7 +797,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
                 form_data=form.cleaned_data
             )
             response = __generate_comments_json(post, user, avatar_size)
-        except exceptions.PermissionDenied, e:
+        except exceptions.PermissionDenied as e:
             response = HttpResponseForbidden(unicode(e), content_type="application/json")
 
     return response
@@ -902,7 +902,7 @@ def delete_comment(request):
         raise exceptions.PermissionDenied(
                     _('sorry, we seem to have some technical difficulties')
                 )
-    except exceptions.PermissionDenied, e:
+    except exceptions.PermissionDenied as e:
         return HttpResponseForbidden(
                     unicode(e),
                     content_type='application/json'

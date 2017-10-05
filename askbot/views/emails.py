@@ -56,7 +56,7 @@ def preview_email(request, slug):
         try:
             sample['subject'] = email.render_subject(context)
             sample['body'] = email.render_body(context)
-        except Exception, e:
+        except Exception as e:
             tech_error = unicode(e)
             LOG.critical(tech_error)
             error_message = getattr(

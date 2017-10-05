@@ -444,7 +444,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     try:
         question_post.assert_is_visible_to(request.user)
-    except exceptions.QuestionHidden, error:
+    except exceptions.QuestionHidden as error:
         request.user.message_set.create(message = unicode(error))
         return HttpResponseRedirect(reverse('index'))
 
@@ -490,11 +490,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
         try:
             show_comment.assert_is_visible_to(request.user)
-        except exceptions.AnswerHidden, error:
+        except exceptions.AnswerHidden as error:
             request.user.message_set.create(message = unicode(error))
             #use reverse function here because question is not yet loaded
             return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
-        except exceptions.QuestionHidden, error:
+        except exceptions.QuestionHidden as error:
             request.user.message_set.create(message = unicode(error))
             return HttpResponseRedirect(reverse('index'))
 
@@ -509,7 +509,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
         try:
             show_post.assert_is_visible_to(request.user)
-        except django_exceptions.PermissionDenied, error:
+        except django_exceptions.PermissionDenied as error:
             request.user.message_set.create(message = unicode(error))
             return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
 

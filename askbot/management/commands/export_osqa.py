@@ -132,7 +132,7 @@ class Command(BaseCommand):
         try:
             serializer = XMLExportSerializer()
             return serializer.serialize(objects, indent=indent, use_natural_keys=use_natural_keys)
-        except Exception, e:
+        except Exception as e:
             if show_traceback:
                 raise
             raise CommandError("Unable to serialize database: %s" % e)

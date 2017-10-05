@@ -471,6 +471,19 @@ def get_enabled_major_login_providers():
             'scope': ['email',],
         }
 
+    if askbot_settings.YAMMER_KEY and askbot_settings.YAMMER_SECRET:
+        data['yammer'] = {
+            'name': 'yammer',
+            'display_name': 'Yammer',
+            'type': 'oauth2',
+            'auth_endpoint': 'https://www.yammer.com/dialog/oauth',
+            'token_endpoint': 'https://www.yammer.com/oauth2/access_token',
+            'resource_endpoint': 'https://www.yammer.com/api/v1/users/current.json',
+            'icon_media_path': 'images/jquery-openid/yammer.png',
+            'get_user_id_function': lambda data: data.user['id'],
+            'response_parser': lambda data: simplejson.loads(data),
+        }
+
     if askbot_settings.SIGNIN_FEDORA_ENABLED:
         data['fedora'] = {
             'name': 'fedora',
@@ -820,6 +833,9 @@ def get_oauth_parameters(provider_name):
     elif provider_name == 'facebook':
         consumer_key = askbot_settings.FACEBOOK_KEY
         consumer_secret = askbot_settings.FACEBOOK_SECRET
+    elif provider_name == 'yammer':
+        consumer_key = askbot_settings.YAMMER_KEY
+        consumer_secret = askbot_settings.YAMMER_SECRET
     elif provider_name != 'mediawiki':
         raise ValueError('unexpected oauth provider %s' % provider_name)
 
@@ -1018,7 +1034,7 @@ def ldap_check_password(username, password):
         ldap_session.simple_bind_s(username, password)
         ldap_session.unbind_s()
         return True
-    except ldap.LDAPError, e:
+    except ldap.LDAPError as e:
         logging.critical(unicode(e))
         return False
 

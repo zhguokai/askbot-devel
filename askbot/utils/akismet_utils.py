@@ -33,6 +33,6 @@ def akismet_check_spam(text, request):
         logging.critical('Akismet Key is missing')
     except AkismetError:
         logging.critical('Akismet error: Invalid Akismet key or Akismet account issue!')
-    except Exception, e:
+    except Exception as e:
         logging.critical((u'Akismet error: %s' % unicode(e)).encode('utf-8'))
     return False

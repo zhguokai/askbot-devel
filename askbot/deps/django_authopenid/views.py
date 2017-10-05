@@ -430,7 +430,7 @@ def complete_oauth1_signin(request):
         request.session['username'] = oauth.get_username()
 
         logging.debug('have %s user id=%s' % (oauth_provider_name, user_id))
-    except Exception, e:
+    except Exception as e:
         logging.critical(e)
         msg = _('Unfortunately, there was some problem when '
                 'connecting to %(provider)s, please try again '
@@ -663,7 +663,7 @@ def signin(request, template_name='authopenid/signin.html'):
                     oauth_url = connection.get_auth_url(login_only=True)
                     return HttpResponseRedirect(oauth_url)
 
-                except util.OAuthError, e:
+                except util.OAuthError as e:
                     logging.critical(unicode(e))
                     msg = _('Unfortunately, there was some problem when '
                             'connecting to %(provider)s, please try again '
@@ -679,7 +679,7 @@ def signin(request, template_name='authopenid/signin.html'):
                     request.session['provider_name'] = provider_name
                     request.session['next_url'] = next_url
                     return HttpResponseRedirect(redirect_url)
-                except util.OAuthError, e:
+                except util.OAuthError as e:
                     logging.critical(unicode(e))
                     msg = _('Unfortunately, there was some problem when '
                             'connecting to %(provider)s, please try again '
@@ -709,7 +709,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                     login_provider_name=provider_name,
                                     redirect_url=next_url
                                 )
-                except WpFault, e:
+                except WpFault as e:
                     logging.critical(unicode(e))
                     msg = _('The login password combination was not correct')
                     request.user.message_set.create(message = msg)
@@ -1307,7 +1307,7 @@ def verify_email_and_register(request):
             cleanup_post_register_session(request)
 
             return HttpResponseRedirect(get_next_url(request))
-        except Exception, e:
+        except Exception as e:
             message = _(
                 'Sorry, registration failed. '
                 'The token can be already used or has expired. Please try again'

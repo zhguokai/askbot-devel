@@ -248,7 +248,7 @@ def post_question(zendesk_entry):
                 close_reason=5)
             askbot_post.thread.save()
         return askbot_post
-    except Exception, e:
+    except Exception as e:
         msg = unicode(e)
         print("Warning: entry %d skipped: %s" % (zendesk_entry.entry_id, msg))
 
@@ -274,7 +274,7 @@ def post_question_from_ticket(zendesk_ticket):
             timestamp = zendesk_ticket.created_at
         )
         return askbot_post
-    except Exception, e:
+    except Exception as e:
         msg = unicode(e)
         print("Warning: ticket %d skipped: %s" % (zendesk_ticket.ticket_id, msg))
 
@@ -296,7 +296,7 @@ def post_comment(source_post, parent):
             timestamp = source_post.created_at
         )
         return askbot_comment
-    except Exception, e:
+    except Exception as e:
         msg = unicode(e)
         print("Warning: post %d skipped: %s" % (source_post.post_id, msg))
 
@@ -338,7 +338,7 @@ def post_answer(zendesk_post, question):
         answer = question.thread.get_answers_by_user(user=zendesk_post.get_author())[0]
         askbot_comment = post_comment(zendesk_post, answer)
         return askbot_comment
-    except Exception, e:
+    except Exception as e:
         msg = unicode(e)
         print("Warning: post %d skipped: %s" % (zendesk_post.post_id, msg))
 
@@ -371,7 +371,7 @@ def post_answer_from_comment(zendesk_comment, question):
         answer = question.thread.get_answers_by_user(user=zendesk_comment.get_author())[0]
         askbot_comment = post_comment(zendesk_comment, answer)
         return askbot_comment
-    except Exception, e:
+    except Exception as e:
         msg = unicode(e)
         print("Warning: comment %d skipped: %s" % (zendesk_comment.id, msg))
 
