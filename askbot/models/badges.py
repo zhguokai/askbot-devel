@@ -24,6 +24,7 @@ from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
+from django.utils import timezone
 from django.dispatch import Signal
 
 from askbot import const
@@ -840,6 +841,16 @@ class RapidResponder(Badge):
         delta = datetime.timedelta(hours=askbot_settings.RAPID_RESPONDER_BADGE_MAX_DELAY)
         if answer.added_at - question.added_at <= delta:
             return self.award(answer.author, answer, timestamp)
+        return False
+
+    @classmethod
+    def expire(cls, award):
+        """special method to check if badge should be expired and expire it"""
+        now = timezone.now()
+        expire_date = award.awarded_at + datetime.timedelta(askbot_settings.RAPID_RESPONDER_BADGE_EXPIRES)
+        if now > expire_date:
+            award.delete()
+            return True
         return False
 
 
