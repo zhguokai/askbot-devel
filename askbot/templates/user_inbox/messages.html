@@ -11,6 +11,9 @@
     {% include group_messaging_template_name %}
 {% endblock %}
 {% block userjs %}
+    <script type="text/javascript">
+        askbot['urls']['get_users_info'] = '{% url get_users_info %}';
+    </script>
     {% compress js %}
     <script type="text/javascript" src="{{ '/js/group_messaging.js'|media }}"></script>
     {% endcompress %}
