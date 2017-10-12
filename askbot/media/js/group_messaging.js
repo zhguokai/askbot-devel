@@ -246,7 +246,7 @@ MessageComposer.prototype.decorate = function (element) {
     var userSelectHandler = function () {};
 
     var usersAc = new AutoCompleter({
-        url: '/get-users-info/',//askbot.urls['get_users_info'],
+        url: askbot.urls['get_users_info'],
         minChars: 1,
         useCache: true,
         matchInside: false,
