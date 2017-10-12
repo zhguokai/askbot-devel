@@ -592,7 +592,7 @@ class QuestionViewTests(AskbotTestCase):
         text = 'this is a question'
         question = self.post_question(user=user, body_text=text)
         response = self.client.get(question.get_absolute_url())
-        soup = BeautifulSoup(response.content)
+        soup = BeautifulSoup(response.content, 'html5lib')
         meta_descr = soup.find_all('meta', attrs={'name': 'description'})[0]
         self.assertTrue(text in meta_descr.attrs['content'])
 

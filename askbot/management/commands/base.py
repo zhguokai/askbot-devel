@@ -170,7 +170,7 @@ class BaseImportXMLCommand(BaseCommand):
 
     def get_m2m_ids_for_field(self, obj, field_name):
         xml = obj._source_xml
-        soup = BeautifulSoup(xml)
+        soup = BeautifulSoup(xml, ['lxml', 'xml'])
         ids = list()
         for field in soup.findAll('field', attrs={'name': field_name}):
             objs = field.findAll('object')

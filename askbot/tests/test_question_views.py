@@ -29,7 +29,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         data['post_privately'] = 'checked'
         response1 = self.client.post(reverse('ask'), data=data)
         response2 = self.client.get(response1['location'])
-        dom = BeautifulSoup(response2.content)
+        dom = BeautifulSoup(response2.content, 'html5lib')
         title = dom.find('h1').text
         self.assertTrue(unicode(const.POST_STATUS['private']) in title)
         question = models.Thread.objects.get()
@@ -63,7 +63,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
             data=data
         )
         response2 = self.client.get(question.get_absolute_url())
-        dom = BeautifulSoup(response2.content)
+        dom = BeautifulSoup(response2.content, 'html5lib')
         h1 = dom.find('h1')
         title = h1.find('div', {'class': 'js-editable-content'}).text
         self.assertTrue(models.Group.objects.get_global_group() in set(question.groups.all()))
@@ -85,7 +85,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
             data=data
         )
         response2 = self.client.get(question.get_absolute_url())
-        dom = BeautifulSoup(response2.content)
+        dom = BeautifulSoup(response2.content, 'html5lib')
         title = dom.find('h1').text
         self.assertFalse(models.Group.objects.get_global_group() in set(question.groups.all()))
         self.assertTrue(unicode(const.POST_STATUS['private']) in title)
@@ -95,7 +95,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         response = self.client.get(
             reverse('edit_question', kwargs={'id':question.id})
         )
-        dom = BeautifulSoup(response.content)
+        dom = BeautifulSoup(response.content, 'html5lib')
         checkbox = dom.find(
             'input', attrs={'type': 'checkbox', 'name': 'post_privately'}
         )
@@ -106,7 +106,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         response = self.client.get(
             reverse('edit_question', kwargs={'id':question.id})
         )
-        dom = BeautifulSoup(response.content)
+        dom = BeautifulSoup(response.content, 'html5lib')
         checkbox = dom.find(
             'input', attrs={'type': 'checkbox', 'name': 'post_privately'}
         )
@@ -154,7 +154,7 @@ class PrivateAnswerViewsTests(AskbotTestCase):
         response = self.client.get(
             reverse('edit_answer', kwargs={'id': answer.id})
         )
-        dom = BeautifulSoup(response.content)
+        dom = BeautifulSoup(response.content, 'html5lib')
         checkbox = dom.find(
             'input', attrs={'type': 'checkbox', 'name': 'post_privately'}
         )
@@ -165,7 +165,7 @@ class PrivateAnswerViewsTests(AskbotTestCase):
         response = self.client.get(
             reverse('edit_answer', kwargs={'id': answer.id})
         )
-        dom = BeautifulSoup(response.content)
+        dom = BeautifulSoup(response.content, 'html5lib')
         checkbox = dom.find(
             'input', attrs={'type': 'checkbox', 'name': 'post_privately'}
         )

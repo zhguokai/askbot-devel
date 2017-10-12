@@ -17,7 +17,6 @@ from askbot.utils import url_utils
 from askbot.utils.file_utils import store_file
 from askbot.utils.html import absolutize_urls
 from askbot.utils.html import get_text_from_html
-from bs4 import BeautifulSoup
 from django.core import mail
 from django.core.exceptions import PermissionDenied
 from django.forms import ValidationError
