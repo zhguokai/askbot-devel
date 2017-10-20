@@ -17,7 +17,7 @@ def get_hash_of_dirs(dirs):
                     filepath = os.path.join(root, names)
                     try:
                         file_obj = open(filepath, 'rb')
-                    except Exception, error:
+                    except Exception as error:
                         # You can't open the file for some reason
                         logging.critical(
                             'cannot open file %s: %s',

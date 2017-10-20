@@ -294,7 +294,7 @@ def add_import_library_function():
         app_module = import_module(app_path)
         try:
             mod = import_module(taglib_module)
-        except ImportError, e:
+        except ImportError as e:
             # If the ImportError is because the taglib submodule does not exist, that's not
             # an error that should be raised. If the submodule exists and raised an ImportError
             # on the attempt to load it, that we want to raise.

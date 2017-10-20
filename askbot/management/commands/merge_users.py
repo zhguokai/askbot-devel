@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.core.management.base import CommandError, BaseCommand
 from django.db import transaction
 from askbot.deployment import package_utils
@@ -17,8 +18,8 @@ from askbot import const
 
 def print_post_info():
     for p in Post.objects.all():
-        print p.author,
-    print ''
+        print(p.author, end=' ')
+    print('')
 
 class MergeUsersBaseCommand(BaseCommand):
     args = '<from_user_id> <to_user_id>'
@@ -39,7 +40,7 @@ class MergeUsersBaseCommand(BaseCommand):
         self.cleanup()
 
     def cleanup(self):
-        raise Exception, 'Not implemented'
+        raise Exception('Not implemented')
 
     def prepare(self):
         pass
@@ -53,13 +54,13 @@ class MergeUsersBaseCommand(BaseCommand):
     def process_relation(self, rel):
         try:
             self.process_field(rel.related_model, rel.field.name)
-        except Exception, error:
+        except Exception as error:
             self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
 
     def process_m2m(self, rel):
         try:
             self.process_m2m_field(rel.related_model, rel.field.name)
-        except Exception, error:
+        except Exception as error:
             self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
 
     def process_field(self, model, field_name):

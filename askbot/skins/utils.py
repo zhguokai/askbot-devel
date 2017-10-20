@@ -9,9 +9,10 @@ import os
 import logging
 import urllib
 import askbot
+from collections import OrderedDict
 from askbot.utils import hasher
 from django.conf import settings as django_settings
-from django.utils.datastructures import SortedDict
+
 
 class MediaNotFound(Exception):
     """raised when media file is not found"""
@@ -21,7 +22,7 @@ def get_skins_from_dir(directory):
     """returns sorted dict with skin data, like get_available_skins
     but from a specific directory
     """
-    skins = SortedDict()
+    skins = OrderedDict()
     for item in sorted(os.listdir(directory)):
         item_dir = os.path.join(directory, item)
         if os.path.isdir(item_dir):
@@ -39,7 +40,7 @@ def get_available_skins(selected=None):
 
     selected skin is guaranteed to be the first item in the dictionary
     """
-    skins = SortedDict()
+    skins = OrderedDict()
     extra_skins_dir = getattr(django_settings, 'ASKBOT_EXTRA_SKINS_DIR', None)
     if extra_skins_dir:
         skins.update(get_skins_from_dir(extra_skins_dir))
@@ -52,7 +53,7 @@ def get_available_skins(selected=None):
         skins.clear()
         skins[selected] = selected_dir
     elif selected == 'default':
-        skins = SortedDict()
+        skins = OrderedDict()
     elif selected:
         raise ValueError(
             'skin ' + str(selected) + \

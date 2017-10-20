@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.core.management.base import NoArgsCommand
 from askbot import models
 from askbot.utils.console import ProgressBar
@@ -29,14 +30,14 @@ class Command(NoArgsCommand):
         if deleted_tags:
             found_count = len(deleted_tags)
             if found_count == 1:
-                print "Found an unused tag %s" % deleted_tags[0]
+                print("Found an unused tag %s" % deleted_tags[0])
             else:
                 sys.stdout.write("Found %d unused tags" % found_count)
                 if found_count > 50:
-                    print ", first 50 are:",
-                    print ', '.join(deleted_tags[:50]) + '.'
+                    print(", first 50 are:", end=' ')
+                    print(', '.join(deleted_tags[:50]) + '.')
                 else:
-                    print ": " + ', '.join(deleted_tags) + '.'
-            print "Deleted."
+                    print(": " + ', '.join(deleted_tags) + '.')
+            print("Deleted.")
         else:
-            print "Did not find any."
+            print("Did not find any.")

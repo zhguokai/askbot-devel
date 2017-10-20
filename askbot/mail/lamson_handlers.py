@@ -169,7 +169,7 @@ def process_reply(func):
             error = _("You were replying to an email address\
              unknown to the system or you were replying from a different address from the one where you\
              received the notification.")
-        except Exception, e:
+        except Exception as e:
             import sys
             sys.stderr.write(unicode(e).encode('utf-8'))
             import traceback

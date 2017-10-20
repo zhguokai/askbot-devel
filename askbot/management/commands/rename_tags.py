@@ -2,6 +2,7 @@
 it to another, all corresponding questions are automatically
 retagged
 """
+from __future__ import print_function
 import sys
 from django.conf import settings as django_settings
 from django.core import management
@@ -15,7 +16,7 @@ def get_admin(seed_user_id = None):
     """
     try:
         admin = api.get_admin(seed_user_id=seed_user_id)
-    except models.User.DoesNotExist, e:
+    except models.User.DoesNotExist as e:
         raise CommandError(e)
 
     if admin.id != seed_user_id:
@@ -29,13 +30,12 @@ would you like to select default moderator %s, id=%d
 to run this operation?""" % (seed_user_id, admin.username, admin.id)
         choice = console.choice_dialog(prompt, choices = ('yes', 'no'))
         if choice == 'no':
-            print 'Canceled'
+            print('Canceled')
             sys.exit()
     return admin
 
 def parse_tag_names(input):
-    decoded_input = input.decode(sys.stdin.encoding)
-    return set(decoded_input.strip().split(' '))
+    return set(console.decode_input(input).split(' '))
 
 def format_tag_ids(tag_list):
     return ' '.join([str(tag.id) for tag in tag_list])

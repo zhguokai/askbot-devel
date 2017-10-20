@@ -1,9 +1,11 @@
 """
 module for deploying askbot
 """
+from __future__ import print_function
 import os.path
 import sys
 import django
+from collections import OrderedDict
 from optparse import OptionParser
 from askbot.deployment import messages
 from askbot.deployment.messages import print_message
@@ -69,6 +71,20 @@ def askbot_setup():
             )
 
     parser.add_option(
+                "--db-host",
+                dest = "database_host",
+                default = None,
+                help = "the database host"
+            )
+
+    parser.add_option(
+                "--db-port",
+                dest = "database_port",
+                default = None,
+                help = "the database host"
+            )
+
+    parser.add_option(
                 "--append-settings",
                 dest = "local_settings",
                 default = '',
@@ -89,7 +105,7 @@ def askbot_setup():
         #ask users to give missing parameters
         #todo: make this more explicit here
         if options.verbosity >= 1:
-            print messages.DEPLOY_PREAMBLE
+            print(messages.DEPLOY_PREAMBLE)
 
         directory = path_utils.clean_directory(options.dir_name)
         while directory is None:
@@ -122,17 +138,17 @@ def askbot_setup():
             try:
                 import psycopg2
             except ImportError:
-                print '\nNEXT STEPS: install python binding for postgresql'
-                print 'pip install psycopg2\n'
+                print('\nNEXT STEPS: install python binding for postgresql')
+                print('pip install psycopg2\n')
         elif database_engine == 'mysql':
             try:
                 import _mysql
             except ImportError:
-                print '\nNEXT STEP: install python binding for mysql'
-                print 'pip install mysql-python\n'
+                print('\nNEXT STEP: install python binding for mysql')
+                print('pip install mysql-python\n')
 
     except KeyboardInterrupt:
-        print "\n\nAborted."
+        print("\n\nAborted.")
         sys.exit(1)
 
 
@@ -207,11 +223,11 @@ def collect_missing_options(options_dict):
                 if console.get_yes_or_no(message) == 'yes':
                     database_file_name = value
             elif os.path.isdir(value):
-                print '%s is a directory, choose another name' % value
+                print('%s is a directory, choose another name' % value)
             elif value in path_utils.FILES_TO_CREATE:
-                print 'name %s cannot be used for the database name' % value
+                print('name %s cannot be used for the database name' % value)
             elif value == path_utils.LOG_DIR_NAME:
-                print 'name %s cannot be used for the database name' % value
+                print('name %s cannot be used for the database name' % value)
             else:
                 database_file_name = value
 
@@ -220,12 +236,24 @@ def collect_missing_options(options_dict):
                 return options_dict
 
     else:#others
-        for key in ('database_name', 'database_user', 'database_password'):
+        db_keys = OrderedDict([
+            ('database_name', True),
+            ('database_user', True),
+            ('database_password', True),
+            ('database_host', False),
+            ('database_port', False)
+        ])
+        for key, required in db_keys.items():
             if options_dict[key] is None:
                 key_name = key.replace('_', ' ')
+                fmt_string = '\nPlease enter %s'
+                if not required:
+                    fmt_string += ' (press "Enter" to use the default value)'
+
                 value = console.simple_dialog(
-                    '\nPlease enter %s' % key_name,
-                    required=True
+                    fmt_string % key_name,
+                    required=db_keys[key]
                 )
+
                 options_dict[key] = value
         return options_dict

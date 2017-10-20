@@ -71,6 +71,7 @@ TODO:
     - Use logging for more verbose output
     - Add option to import Attachments from existing Zendesk installation
 """
+from __future__ import print_function
 import os
 import re
 import sys
@@ -247,9 +248,9 @@ def post_question(zendesk_entry):
                 close_reason=5)
             askbot_post.thread.save()
         return askbot_post
-    except Exception, e:
+    except Exception as e:
         msg = unicode(e)
-        print "Warning: entry %d skipped: %s" % (zendesk_entry.entry_id, msg)
+        print("Warning: entry %d skipped: %s" % (zendesk_entry.entry_id, msg))
 
 def post_question_from_ticket(zendesk_ticket):
     """Posts question to Askbot from Zendesk Ticket
@@ -273,9 +274,9 @@ def post_question_from_ticket(zendesk_ticket):
             timestamp = zendesk_ticket.created_at
         )
         return askbot_post
-    except Exception, e:
+    except Exception as e:
         msg = unicode(e)
-        print "Warning: ticket %d skipped: %s" % (zendesk_ticket.ticket_id, msg)
+        print("Warning: ticket %d skipped: %s" % (zendesk_ticket.ticket_id, msg))
 
 def post_comment(source_post, parent):
     """Post comment on an answer from a Zendesk Post or Comment.
@@ -295,9 +296,9 @@ def post_comment(source_post, parent):
             timestamp = source_post.created_at
         )
         return askbot_comment
-    except Exception, e:
+    except Exception as e:
         msg = unicode(e)
-        print "Warning: post %d skipped: %s" % (source_post.post_id, msg)
+        print("Warning: post %d skipped: %s" % (source_post.post_id, msg))
 
 def post_answer(zendesk_post, question):
     """Posts an answer to Askbot, from a Zendesk Post
@@ -337,9 +338,9 @@ def post_answer(zendesk_post, question):
         answer = question.thread.get_answers_by_user(user=zendesk_post.get_author())[0]
         askbot_comment = post_comment(zendesk_post, answer)
         return askbot_comment
-    except Exception, e:
+    except Exception as e:
         msg = unicode(e)
-        print "Warning: post %d skipped: %s" % (zendesk_post.post_id, msg)
+        print("Warning: post %d skipped: %s" % (zendesk_post.post_id, msg))
 
 def post_answer_from_comment(zendesk_comment, question):
     """Posts an answer to Askbot, from Zendesk Comment on a ticket
@@ -370,9 +371,9 @@ def post_answer_from_comment(zendesk_comment, question):
         answer = question.thread.get_answers_by_user(user=zendesk_comment.get_author())[0]
         askbot_comment = post_comment(zendesk_comment, answer)
         return askbot_comment
-    except Exception, e:
+    except Exception as e:
         msg = unicode(e)
-        print "Warning: comment %d skipped: %s" % (zendesk_comment.id, msg)
+        print("Warning: comment %d skipped: %s" % (zendesk_comment.id, msg))
 
 def get_xml_element_val(elem, field_name):
     """Return the value of the etree element for field_name and cast it to the
@@ -438,7 +439,7 @@ def toggle_user_answer_limit_setting(val):
         askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', True)
     else:
         askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', False)
-    print "set LIMIT_ONE_ANSWER_PER_USER to %s" % val
+    print("set LIMIT_ONE_ANSWER_PER_USER to %s" % val)
 
 def check_user_answer_limit():
     """Checks if LIMIT_ONE_ANSWER_PER_USER is True, if so, warn the user
@@ -452,27 +453,27 @@ def check_user_answer_limit():
     if not askbot_settings.LIMIT_ONE_ANSWER_PER_USER:
         return
     else:
-        print
-        print "*"*64
-        print "* WARNING"
-        print "*"*64
-        print "* Your settings are currently limiting users to a single"
-        print "* answer per question. Zendesk doesn't translate well to"
-        print "* this. It's highly recommended you let us switch this"
-        print "* off temporarily while the import proceeds. We'll switch"
-        print "* it back on when we're done."
-        print "*"
-        print "* If you choose not to do this, each additional post on"
-        print "* a forum topic or additional comment on a ticket will be"
-        print "* appended as a comment on to the first answer by the user."
-        print "*" * 64
+        print()
+        print("*"*64)
+        print("* WARNING")
+        print("*"*64)
+        print("* Your settings are currently limiting users to a single")
+        print("* answer per question. Zendesk doesn't translate well to")
+        print("* this. It's highly recommended you let us switch this")
+        print("* off temporarily while the import proceeds. We'll switch")
+        print("* it back on when we're done.")
+        print("*")
+        print("* If you choose not to do this, each additional post on")
+        print("* a forum topic or additional comment on a ticket will be")
+        print("* appended as a comment on to the first answer by the user.")
+        print("*" * 64)
         prompt = "Okay to turn off the LIMIT_ONE_ANSWER_PER_USER setting?"
         response = console.get_yes_or_no(prompt, 'yes')
         if response == 'yes':
             toggle_user_answer_limit_setting(False)
-            print
+            print()
             return True
-        print
+        print()
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
@@ -519,24 +520,24 @@ class Command(BaseCommand):
         self.tar = tarfile.open(args[0], 'r:gz')
 
         # ask what data we are importing
-        print
-        print
-        print "-"*64
-        print "This script will attempt to import your Zendesk data into"
-        print "Askbot. If you are importing into an existing installation,"
-        print "** backup your database before continuing **!"
-        print "-"*64
-        print "You will have a chance to decide if you want to import"
-        print "tickets, forums, or both. Additional options are presented"
-        print "to filter the imported content by forum, tag, and date."
-        print "Users are always imported."
-        print "-"*64
+        print()
+        print()
+        print("-"*64)
+        print("This script will attempt to import your Zendesk data into")
+        print("Askbot. If you are importing into an existing installation,")
+        print("** backup your database before continuing **!")
+        print("-"*64)
+        print("You will have a chance to decide if you want to import")
+        print("tickets, forums, or both. Additional options are presented")
+        print("to filter the imported content by forum, tag, and date.")
+        print("Users are always imported.")
+        print("-"*64)
 
         user_answer_limit_reset = check_user_answer_limit()
         choices = ['Forums and Tickets', 'Forums Only', 'Tickets Only']
         prompt = "What data do you wish to import from Zendesk?"
         data_choice = console.numeric_choice_dialog(prompt, choices=choices)
-        print
+        print()
 
         # read relevant data into temporary tables. We read everything and then
         # filter when we actually import into the Askbot tablespace
@@ -557,11 +558,11 @@ class Command(BaseCommand):
 
         # forums choices
         # ---------------------------------------------------------------------
-        print
+        print()
         if data_choice in [DATA_IMPORT_ALL, DATA_IMPORT_FORUMS]:
-            print "="*64
-            print " FORUMS"
-            print "="*64
+            print("="*64)
+            print(" FORUMS")
+            print("="*64)
             forum_choices = self.prompt_for_forums()
             forum_tag_choices = self.prompt_for_tags()
             (forum_date_filter) = self.prompt_for_date()
@@ -569,10 +570,10 @@ class Command(BaseCommand):
         # tickets choices
         # ---------------------------------------------------------------------
         if data_choice in [DATA_IMPORT_ALL, DATA_IMPORT_TICKETS]:
-            print
-            print "="*64
-            print " TICKETS"
-            print "="*64
+            print()
+            print("="*64)
+            print(" TICKETS")
+            print("="*64)
             ticket_tag_choices = self.prompt_for_tags()
             (ticket_date_filter) = self.prompt_for_date()
 
@@ -589,9 +590,9 @@ class Command(BaseCommand):
         # ---------------------------------------------------------------------
         if user_answer_limit_reset:
             toggle_user_answer_limit_setting(True)
-        print
-        print "Done!"
-        print
+        print()
+        print("Done!")
+        print()
 
 
     def prompt_for_forums(self):
@@ -640,8 +641,8 @@ class Command(BaseCommand):
                 try:
                     start_date = datetime.strptime(start,"%Y-%m-%d")
                 except ValueError:
-                    print
-                    print "*** Please enter a date in the format YYYY-MM-DD or leave it blank ***"
+                    print()
+                    print("*** Please enter a date in the format YYYY-MM-DD or leave it blank ***")
             else:
                 start_date = None
                 break
@@ -652,8 +653,8 @@ class Command(BaseCommand):
                 try:
                     end_date = datetime.strptime(end,"%Y-%m-%d")
                 except ValueError:
-                    print
-                    print "*** Please enter a date in the format YYYY-MM-DD or leave it blank ***"
+                    print()
+                    print("*** Please enter a date in the format YYYY-MM-DD or leave it blank ***")
             else:
                 end_date = None
                 break
@@ -998,11 +999,11 @@ class Command(BaseCommand):
         tuple values are datetime objects or None.
         """
         if tags:
-            print "Filtering forum posts by tags: %s" % tags
+            print("Filtering forum posts by tags: %s" % tags)
         if date_filter:
-            print "Filtering forum post by dates between %s and %s" % (date_filter[0], date_filter[1])
-        print "Importing forums... "
-        print "="*64
+            print("Filtering forum post by dates between %s and %s" % (date_filter[0], date_filter[1]))
+        print("Importing forums... ")
+        print("="*64)
         for forum in forums:
             thread_count = 0
             # don't import private forums, forums restricted to organizations
@@ -1068,9 +1069,9 @@ class Command(BaseCommand):
         #     Q(tags__icontains='foo') | Q(tags__icontains='bar')
         # )
         if tags:
-            print "Filtering tickets by tags: %s" % tags
+            print("Filtering tickets by tags: %s" % tags)
         if date_filter:
-            print "Filtering tickets by dates between %s and %s" % (date_filter[0], date_filter[1])
+            print("Filtering tickets by dates between %s and %s" % (date_filter[0], date_filter[1]))
         sys.stdout.write("Importing tickets: ")
         ticket_count = 0
         for ticket in zendesk_models.Ticket.objects.all():

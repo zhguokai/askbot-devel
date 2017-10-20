@@ -1,3 +1,4 @@
+from __future__ import print_function
 from askbot import models
 from askbot.conf import settings as askbot_settings
 from askbot.utils.console import ProgressBar
@@ -216,7 +217,7 @@ For your reference, the original is [available here|%s]{quote}"""
 
     def fix_internal_links(self):
         jive_url = self.jive_url
-        print 'Base url of old forum: %s' % jive_url
+        print('Base url of old forum: %s' % jive_url)
         posts = models.Post.objects.filter(text__contains=jive_url)
         count = posts.count()
         message = 'Fixing internal links'
@@ -229,7 +230,7 @@ For your reference, the original is [available here|%s]{quote}"""
     def promote_company_replies(self, domain):
         admin = turn_first_company_user_to_admin(domain)
         if admin is None:
-            print "Note: did not find any users with email matching %s" % domain
+            print("Note: did not find any users with email matching %s" % domain)
             return
         message = 'Promoting company replies to accepted answers:'
         threads = models.Thread.objects.all()
@@ -280,7 +281,7 @@ For your reference, the original is [available here|%s]{quote}"""
         and then importing all threads for the tag"""
         admin = models.User.objects.get(id=1)
         forum_soup = self.soup.find_all('Forum')
-        print 'Have %d forums' % len(forum_soup)
+        print('Have %d forums' % len(forum_soup))
         for forum in forum_soup:
             threads_soup = forum.find_all('Thread')
             self.import_threads(threads_soup, forum.find('Name').text)

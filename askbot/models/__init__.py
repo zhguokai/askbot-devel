@@ -289,7 +289,7 @@ def user_calculate_avatar_url(self, size=48):
 
         try:
             from avatar.utils import get_primary_avatar
-        except ImportError, error:
+        except ImportError as error:
             # If the updated version of django-avatar isn't installed
             # Let's fall back
             from avatar.util import get_primary_avatar
@@ -1031,7 +1031,7 @@ def user_assert_can_see_deleted_post(self, post=None):
             admin_or_moderator_required=True,
             owner_can=True
         )
-    except django_exceptions.PermissionDenied, e:
+    except django_exceptions.PermissionDenied as e:
         #re-raise the same exception with a different message
         error_message = _(
             'This post has been deleted and can be seen only '
@@ -1044,7 +1044,7 @@ def user_assert_can_edit_deleted_post(self, post = None):
     assert(post.deleted == True)
     try:
         self.assert_can_see_deleted_post(post)
-    except django_exceptions.PermissionDenied, e:
+    except django_exceptions.PermissionDenied as e:
         error_message = _(
             'Sorry, only moderators, site administrators '
             'and post owners can edit deleted posts'
@@ -2327,8 +2327,6 @@ def user_post_answer(
         raise TypeError('question argument must be provided')
     if body_text is None:
         raise ValueError('Body text is required to post answer')
-    if timestamp is None:
-        timestamp = timezone.now()
 #    answer = Answer.objects.create_new(
 #        thread = question.thread,
 #        author = self,
@@ -2341,7 +2339,7 @@ def user_post_answer(
         thread=question.thread,
         author=self,
         text=body_text,
-        added_at=timestamp,
+        added_at=timestamp if timestamp else timezone.now(),
         email_notify=follow,
         wiki=wiki,
         is_private=is_private,
@@ -2355,7 +2353,8 @@ def user_post_answer(
     award_badges_signal.send(None,
         event = 'post_answer',
         actor = self,
-        context_object = answer_post
+        context_object = answer_post,
+        timestamp = timestamp
     )
     return answer_post
 
@@ -4050,7 +4049,7 @@ def notify_punished_users(user, **kwargs):
                     blocked_user_cannot=True,
                     suspended_user_cannot=True
                 )
-    except django_exceptions.PermissionDenied, e:
+    except django_exceptions.PermissionDenied as e:
         user.message_set.create(message = unicode(e))
 
 def post_anonymous_askbot_content(

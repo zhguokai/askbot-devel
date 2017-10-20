@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from __future__ import print_function
 
 from django.db import models, migrations
 from django.db.models import Sum
@@ -12,7 +13,7 @@ def populate_language_in_reps(apps, schema_editor):
     Repute = apps.get_model('askbot', 'Repute')
     reputes = Repute.objects
     message = 'Applying language to the reputation records'
-    print ''
+    print('')
     for rep in ProgressBar(reputes.iterator(), reputes.count(), message):
         if rep.question_id:
             lang = rep.question.language_code
@@ -29,7 +30,7 @@ def calculate_localized_reps(apps, schema_editor):
 
     users = User.objects
     message = 'Calculating localized reputations'
-    print ''
+    print('')
     for user in ProgressBar(users.iterator(), users.count(), message):
         reps = user.repute_set.values('language_code')
         reps = reps.annotate(
@@ -69,7 +70,7 @@ def calculate_localized_reps(apps, schema_editor):
         if new_rep != old_rep:
             user.askbot_profile.reputation = new_rep
             user.askbot_profile.save()
-            print 'old %d new %d' % (old_rep, new_rep)
+            print('old %d new %d' % (old_rep, new_rep))
 
 
 class Migration(migrations.Migration):

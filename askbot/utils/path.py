@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import errno
 
@@ -7,7 +8,7 @@ def mkdir_p(path):
     """
     try:
         os.makedirs(path)
-    except OSError, e:
+    except OSError as e:
         if e.errno == errno.EEXIST:
             pass
         else:
@@ -28,5 +29,5 @@ def create_file_if_does_not_exist(file_path, print_warning = True):
         return open(file_path, 'w+')
     else:
         if print_warning:
-            print "File %s exists" % file_path
+            print("File %s exists" % file_path)
         return None

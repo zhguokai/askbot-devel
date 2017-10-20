@@ -1119,7 +1119,7 @@ class AbsolutizeUrlsInEmailsTests(utils.AskbotTestCase):
         content_type = outbox[0].alternatives[0][1]
         self.assertEqual(content_type, 'text/html')
 
-        soup = bs4.BeautifulSoup(html_message)
+        soup = bs4.BeautifulSoup(html_message, 'html5lib')
         links = soup.find_all('a')
         url_bits = {}
         for link in links:

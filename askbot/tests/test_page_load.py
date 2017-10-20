@@ -1,3 +1,4 @@
+from __future__ import print_function
 from askbot.search.state_manager import SearchState
 from django.test import signals
 from django.conf import settings
@@ -104,7 +105,7 @@ class PageLoadTestCase(AskbotTestCase):
             url_info = 'getting url %s' % url
         if data:
             url_info += '?' + '&'.join(['%s=%s' % (k, v) for k, v in data.iteritems()])
-        print url_info
+        print(url_info)
 
         # if redirect expected, but we wont' follow
         if status_code == 302 and follow:
@@ -114,10 +115,10 @@ class PageLoadTestCase(AskbotTestCase):
 
         r = self.client.get(url, data=data, follow=follow)
         if hasattr(self.client, 'redirect_chain'):
-            print 'redirect chain: %s' % ','.join(self.client.redirect_chain)
+            print('redirect chain: %s' % ','.join(self.client.redirect_chain))
 
         if r.status_code != status_code:
-            print 'Error in status code for url: %s' % url
+            print('Error in status code for url: %s' % url)
 
         self.assertEqual(r.status_code, status_code)
 
@@ -137,7 +138,7 @@ class PageLoadTestCase(AskbotTestCase):
             if isinstance(templates, list):
                 #asuming that there is more than one template
                 template_names = [t.name for t in templates]
-                print 'templates are %s' % ','.join(template_names)
+                print('templates are %s' % ','.join(template_names))
                 self.assertIn(template, template_names)
             else:
                 raise Exception('unexpected error while runnig test')
@@ -147,9 +148,9 @@ class PageLoadTestCase(AskbotTestCase):
         #todo: merge this with all reader url tests
         response = self.client.get(reverse('index'), follow=True)
         self.assertEqual(response.status_code, 200)
-        self.failUnless(len(response.redirect_chain) == 1)
+        self.assertTrue(len(response.redirect_chain) == 1)
         redirect_url = response.redirect_chain[0][0]
-        self.failUnless(unicode(redirect_url).endswith('/questions/'))
+        self.assertTrue(unicode(redirect_url).endswith('/questions/'))
         if hasattr(response, 'template'):
             templates = response.template
         elif hasattr(response, 'templates'):
@@ -591,7 +592,7 @@ class QuestionViewTests(AskbotTestCase):
         text = 'this is a question'
         question = self.post_question(user=user, body_text=text)
         response = self.client.get(question.get_absolute_url())
-        soup = BeautifulSoup(response.content)
+        soup = BeautifulSoup(response.content, 'html5lib')
         meta_descr = soup.find_all('meta', attrs={'name': 'description'})[0]
         self.assertTrue(text in meta_descr.attrs['content'])
 

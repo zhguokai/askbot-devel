@@ -7,6 +7,7 @@ import random
 import re
 import urllib
 import urlparse
+from collections import OrderedDict
 from askbot.utils.html import site_url
 from askbot.utils.functions import format_setting_name
 from askbot.utils.loading import load_module, module_exists
@@ -19,7 +20,6 @@ from django.db.models.query import Q
 from django.conf import settings
 from django.core.urlresolvers import reverse
 import simplejson
-from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ImproperlyConfigured
 from askbot.deps.django_authopenid import providers
@@ -424,7 +424,7 @@ def get_enabled_major_login_providers():
       and consumer secret. The purpose of this function is to hide the differences
       between the ways user id is accessed from the different OAuth providers
     """
-    data = SortedDict()
+    data = OrderedDict()
 
     if use_password_login():
         site_name = askbot_settings.APP_SHORT_NAME
@@ -469,6 +469,19 @@ def get_enabled_major_login_providers():
             'get_user_id_function': get_facebook_user_id,
             'response_parser': lambda data: simplejson.loads(data),
             'scope': ['email',],
+        }
+
+    if askbot_settings.YAMMER_KEY and askbot_settings.YAMMER_SECRET:
+        data['yammer'] = {
+            'name': 'yammer',
+            'display_name': 'Yammer',
+            'type': 'oauth2',
+            'auth_endpoint': 'https://www.yammer.com/dialog/oauth',
+            'token_endpoint': 'https://www.yammer.com/oauth2/access_token',
+            'resource_endpoint': 'https://www.yammer.com/api/v1/users/current.json',
+            'icon_media_path': 'images/jquery-openid/yammer.png',
+            'get_user_id_function': lambda data: data.user['id'],
+            'response_parser': lambda data: simplejson.loads(data),
         }
 
     if askbot_settings.SIGNIN_FEDORA_ENABLED:
@@ -633,7 +646,7 @@ def get_enabled_minor_login_providers():
 
     structure of dictionary values is the same as in get_enabled_major_login_providers
     """
-    data = SortedDict()
+    data = OrderedDict()
     #data['myopenid'] = {
     #    'name': 'myopenid',
     #    'display_name': 'MyOpenid',
@@ -820,6 +833,9 @@ def get_oauth_parameters(provider_name):
     elif provider_name == 'facebook':
         consumer_key = askbot_settings.FACEBOOK_KEY
         consumer_secret = askbot_settings.FACEBOOK_SECRET
+    elif provider_name == 'yammer':
+        consumer_key = askbot_settings.YAMMER_KEY
+        consumer_secret = askbot_settings.YAMMER_SECRET
     elif provider_name != 'mediawiki':
         raise ValueError('unexpected oauth provider %s' % provider_name)
 
@@ -1018,7 +1034,7 @@ def ldap_check_password(username, password):
         ldap_session.simple_bind_s(username, password)
         ldap_session.unbind_s()
         return True
-    except ldap.LDAPError, e:
+    except ldap.LDAPError as e:
         logging.critical(unicode(e))
         return False
 

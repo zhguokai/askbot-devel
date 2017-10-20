@@ -1,3 +1,4 @@
+from __future__ import print_function
 import datetime
 from django.core.management.base import NoArgsCommand
 from django.conf import settings as django_settings
@@ -63,7 +64,7 @@ class Command(NoArgsCommand):
                     })
 
             if DEBUG_THIS_COMMAND:
-                print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \
-                    (user.email, email.render_subject(), email.render_body())
+                print("User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \
+                    (user.email, email.render_subject(), email.render_body()))
             else:
                 email.send([user.email],)

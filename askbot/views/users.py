@@ -305,7 +305,7 @@ def user_moderate(request, subject, context):
                             raise_on_failure = True
                         )
                     message_sent = True
-                except exceptions.EmailNotSent, e:
+                except exceptions.EmailNotSent as e:
                     email_error_message = unicode(e)
                 send_message_form = forms.SendMessageForm()
         else:

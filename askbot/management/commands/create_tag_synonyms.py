@@ -1,6 +1,7 @@
 """management command that creates a tag synonym
 all corresponding questions are retagged
 """
+from __future__ import print_function
 
 import sys
 from django.conf import settings as django_settings
@@ -10,13 +11,6 @@ from django.utils import timezone
 from askbot import models
 from askbot.management.commands.rename_tags import get_admin
 from askbot.utils import console
-
-
-
-def decode_input(input):
-    decoded_input = input.decode(sys.stdin.encoding)
-    decoded_input = decoded_input.strip()
-    return decoded_input
 
 
 class Command(BaseCommand):
@@ -70,8 +64,8 @@ remove source_tag"""
         if options['to'] is None:
             raise CommandError('the --to argument is required')
 
-        source_tag_name = decode_input(options['from'])
-        target_tag_name = decode_input(options['to'])
+        source_tag_name = console.decode_input(options['from'])
+        target_tag_name = console.decode_input(options['to'])
 
         if source_tag_name == target_tag_name:
             raise CommandError("source and target tags appear to be the same")
@@ -89,7 +83,7 @@ remove source_tag"""
     %s ==> %s?""" % (source_tag_name, source_tag_name, target_tag_name)
                 choice = console.choice_dialog(prompt, choices=('yes', 'no'))
                 if choice == 'no':
-                    print 'Cancled'
+                    print('Cancled')
                     sys.exit()
             source_tag = models.Tag.objects.create(
                                             name=source_tag_name,
@@ -112,7 +106,7 @@ remove source_tag"""
                                                                          source_tag_name, tag_synonym_tmp.target_tag_name)
                 choice = console.choice_dialog(prompt, choices=('yes', 'no'))
                 if choice == 'no':
-                    print 'Cancled'
+                    print('Cancled')
                     sys.exit()
             target_tag_name = tag_synonym_tmp.target_tag_name
             options['to'] = target_tag_name

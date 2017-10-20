@@ -4,12 +4,12 @@
 http://code.google.com/p/django-values/
 """
 from decimal import Decimal
+from collections import OrderedDict
 from django import forms
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.cache import cache
 import simplejson
-from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -22,7 +22,6 @@ from askbot.deps.livesettings.overrides import get_overrides
 from askbot.deps.livesettings.utils import load_module, is_string_like, is_list_or_tuple
 from askbot.deps.livesettings.widgets import ImageInput
 from askbot.utils.functions import format_setting_name
-from collections import OrderedDict
 import datetime
 import logging
 import signals
@@ -42,24 +41,100 @@ NOTSET = object()
 def get_language():
     return _get_language() or django_settings.LANGUAGE_CODE
 
-class SortedDotDict(SortedDict):
+
+class SortedDotDict(object):
+    def __init__(self, *args, **kwargs):
+        super(SortedDotDict, self).__init__(*args, **kwargs)
+        self._dict = OrderedDict()
+
+    def __contains__(self, *args, **kwargs):
+        return self._dict.__contains__(*args, **kwargs)
+
+    def __eq__(self, *args, **kwargs):
+        return self._dict.__eq__(*args, **kwargs)
+
+    def __format__(self, *args, **kwargs):
+        return self._dict.__format__(*args, **kwargs)
+
+    def __ge__(self, *args, **kwargs):
+        return self._dict.__ge__(*args, **kwargs)
 
     def __getattr__(self, key):
         try:
-            return self[key]
+            return self._dict[key]
         except:
-            raise AttributeError, key
+            raise AttributeError(key)
 
     def __iter__(self):
         vals = self.values()
         for k in vals:
             yield k
 
+    def __getitem__(self, key):
+        return self._dict[key]
+
+    def __setitem__(self, key, value):
+        self._dict[key] = value
+
+    def __delitem__(self, key):
+        del self._dict[key]
+
+    def keys(self):
+        return self._dict.keys()
+
     def values(self):
-        vals = super(SortedDotDict, self).values()
+        vals = self._dict.values()
         vals = [v for v in vals if isinstance(v, (ConfigurationGroup, Value))]
         vals.sort()
         return vals
+
+    def items(self):
+        return self._dict.items()
+
+    def iterkeys(self):
+        return self._dict.iterkeys()
+
+    def itervalues(self):
+        return self._dict.itervalues()
+
+    def iteritems(self):
+        return self._dict.iteritems()
+
+    def get(self, *args, **kwargs):
+        return self._dict.get(*args, **kwargs)
+
+    def clear(self):
+        return self._dict.clear()
+
+    def copy(self):
+        s = SortedDotDict()
+        s._dict = self._dict.copy()
+        return s
+
+    def fromkeys(self):
+        return self._dict.fromkeys()
+
+    def has_key(self, key):
+        return key in self._dict
+
+    def pop(self, *args, **kwargs):
+        return self._dict.pop(*args, **kwargs)
+
+    def popitem(self, *args, **kwargs):
+        return self._dict.popitem(*args, **kwargs)
+
+    def setdefault(self, key, default):
+        return self._dict.setdefault(key, default)
+
+    def update(self, d):
+        return self._dict.update(d)
+
+    def viewitems(self, *args, **kwargs):
+        return self._dict.viewitems(*args, **kwargs)
+
+    def viewvalues(self, *args, **kwargs):
+        return self._dict.viewvalues(*args, **kwargs)
+
 
 class SuperGroup(object):
     """Aggregates ConfigurationGroup's into super-groups
@@ -367,7 +442,7 @@ class Value(object):
             try:
                 val = self.setting.value
 
-            except SettingNotSet, sns:
+            except SettingNotSet as sns:
 
                 if self.localized and lang == django_settings.LANGUAGE_CODE:
                     try:
@@ -386,12 +461,12 @@ class Value(object):
                 else:
                     val = NOTSET
 
-            except AttributeError, ae:
+            except AttributeError as ae:
                 log.error("Attribute error: %s", ae)
                 log.error("%s: Could not get _value of %s", key, self.setting)
                 raise(ae)
 
-            except Exception, e:
+            except Exception as e:
                 global _WARN
                 log.error(e)
                 if str(e).find("configuration_setting") > -1:
@@ -558,7 +633,7 @@ class DecimalValue(Value):
 
         try:
             return Decimal(value)
-        except TypeError, te:
+        except TypeError as te:
             log.warning("Can't convert %s to Decimal for settings %s.%s", value, self.group.key, self.key)
             raise TypeError(te)
 

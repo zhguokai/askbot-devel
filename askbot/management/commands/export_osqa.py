@@ -1,8 +1,8 @@
+from collections import OrderedDict
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand, CommandError
 from django.core.serializers.xml_serializer import Serializer
 from django.db import connections, router, DEFAULT_DB_ALIAS
-from django.utils.datastructures import SortedDict
 from StringIO import StringIO
 
 class XMLExportSerializer(Serializer):
@@ -86,9 +86,9 @@ class Command(BaseCommand):
                     raise CommandError('Unknown app in excludes: %s' % exclude)
 
         if len(app_labels) == 0:
-            app_list = SortedDict((app, None) for app in get_apps() if app not in excluded_apps)
+            app_list = OrderedDict((app, None) for app in get_apps() if app not in excluded_apps)
         else:
-            app_list = SortedDict()
+            app_list = OrderedDict()
             for label in app_labels:
                 try:
                     app_label, model_label = label.split('.')
@@ -132,7 +132,7 @@ class Command(BaseCommand):
         try:
             serializer = XMLExportSerializer()
             return serializer.serialize(objects, indent=indent, use_natural_keys=use_natural_keys)
-        except Exception, e:
+        except Exception as e:
             if show_traceback:
                 raise
             raise CommandError("Unable to serialize database: %s" % e)
