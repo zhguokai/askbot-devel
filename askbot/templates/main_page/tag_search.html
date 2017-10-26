@@ -1,7 +1,11 @@
 <div id="tagSearch" class="box">
     <h2>{% trans %}Tag search{% endtrans %}</h2>
-    <div class="inputs">
-        <input id="ab-tag-search" autocomplete="off" type="text"/>
-        <input id="ab-tag-search-add" type="submit" value="{% trans %}search{% endtrans %}"/>
+    <div class="input-group input-group-sm mt-1 mb-2">
+        <input id="ab-tag-search" class="form-control d-inline-block"
+         autocomplete="off" type="text"/>
+        <span class="input-group-btn">
+            <input id="ab-tag-search-add" class="btn btn-info"
+              type="submit" value="{% trans %}search{% endtrans %}"/>
+        </span>
     </div>
 </div>
