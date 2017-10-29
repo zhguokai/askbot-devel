@@ -484,6 +484,21 @@ def get_enabled_major_login_providers():
             'response_parser': lambda data: simplejson.loads(data),
         }
 
+
+    if askbot_settings.WINDOWS_LIVE_KEY and askbot_settings.WINDOWS_LIVE_SECRET:
+        data['windows-live'] = {
+            'name': 'windows-live',
+            'display_name': 'Windows Live',
+            'type': 'oauth2',
+            'auth_endpoint': 'https://login.live.com/oauth20_authorize.srf',
+            'token_endpoint': 'https://login.live.com/oauth20_token.srf',
+            'resource_endpoint': 'https://apis.live.net/v5.0/me',
+            'icon_media_path': 'images/jquery-openid/windows-live.png',
+            'get_user_id_function': lambda data: data.user_id,
+            'response_parser': lambda data: simplejson.loads(data),
+            'extra_auth_params': {'scope': ('wl.basic',)},
+        }
+
     if askbot_settings.SIGNIN_FEDORA_ENABLED:
         data['fedora'] = {
             'name': 'fedora',
@@ -836,6 +851,9 @@ def get_oauth_parameters(provider_name):
     elif provider_name == 'yammer':
         consumer_key = askbot_settings.YAMMER_KEY
         consumer_secret = askbot_settings.YAMMER_SECRET
+    elif provider_name == 'windows-live':
+        consumer_key = askbot_settings.WINDOWS_LIVE_KEY
+        consumer_secret = askbot_settings.WINDOWS_LIVE_SECRET
     elif provider_name != 'mediawiki':
         raise ValueError('unexpected oauth provider %s' % provider_name)
 
@@ -1024,6 +1042,7 @@ def get_oauth2_starter_url(provider_name, csrf_token):
         client_id=client_id,
         redirect_uri=redirect_uri
     )
+    
     return client.auth_uri(state=csrf_token, **params.get('extra_auth_params', {}))
 
 
