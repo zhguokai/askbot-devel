@@ -19,7 +19,7 @@
     {% endif %}
     </h1>
     <div class="tab-bar">
-        <div class="tabs-a">
+        <div class="input-group">
         {#% if settings.GROUPS_ENABLED and user_groups %}
             <span class="label">{% trans %}Select/Sort by &raquo;{% endtrans %}</span>
             {% for a_group in user_groups %}
@@ -30,33 +30,32 @@
                 ><span>{{ a_group.name|replace('-',' ')|escape }}</span></a>
             {% endfor %}
         {% else %#}
-            <span class="label">{% trans %}Sort by &raquo;{% endtrans %}</span>
+            <span class="input-group-addon">
+                <span class="d-none d-md-inline">{% trans %}Sort by &raquo;{% endtrans %}</span>
+                <span class="d-block d-md-none"><i class="fa fa-sort-amount-desc" aria-hidden="true"></i></span>
+            </span>
         {#% endif %#}
             {% if settings.KARMA_MODE == 'public' %}
-            <a
-                id="sort_reputation"
-                href="{{ request.path|escape }}?sort=reputation"
-                {% if tab_id == 'reputation' %}class="on"{% endif %}
-                title="{% trans %}see people with the highest reputation{% endtrans %}"
+            <a id="sort_reputation"
+               href="{{ request.path|escape }}?sort=reputation"
+               class="input-group-addon{% if tab_id == 'reputation' %} on{% endif %}"
+               title="{% trans %}see people with the highest reputation{% endtrans %}"
             ><span>{% trans %}karma{% endtrans %}</span></a>
             {% endif %}
-            <a
-                id="sort_newest"
-                href="{{ request.path|escape }}?sort=newest"
-                {% if tab_id == 'newest' %}class="on"{% endif %}
-                class="off" title="{% trans %}see people who joined most recently{% endtrans %}"
+            <a id="sort_newest"
+               href="{{ request.path|escape }}?sort=newest"
+               class="input-group-addon{% if tab_id == 'newest' %} on{% endif %}"
+               title="{% trans %}see people who joined most recently{% endtrans %}"
             ><span>{% trans %}recent{% endtrans %}</span></a>
-            <a
-                id="sort_last"
-                href="{{ request.path|escape }}?sort=last"
-                {% if tab_id == 'last' %}class="on"{% endif %}
-                class="off" title="{% trans %}see people who joined the site first{% endtrans %}"
+            <a id="sort_last"
+               href="{{ request.path|escape }}?sort=last"
+               class="input-group-addon{% if tab_id == 'last' %} on{% endif %}"
+               title="{% trans %}see people who joined the site first{% endtrans %}"
             ><span>{% trans %}oldest{% endtrans %}</span></a>
-            <a
-                id="sort_user"
-                href="{{ request.path|escape }}?sort=name"
-                {% if tab_id == 'name' %}class="on"{% endif %}
-                title="{% trans %}see people sorted by name{% endtrans %}"
+            <a id="sort_user"
+               href="{{ request.path|escape }}?sort=name"
+               class="input-group-addon{% if tab_id == 'name' %} on{% endif %}"
+               title="{% trans %}see people sorted by name{% endtrans %}"
             ><span>{% trans %}by username{% endtrans %}</span></a>
         </div>
     </div>

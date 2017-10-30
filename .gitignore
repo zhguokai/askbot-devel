@@ -4,6 +4,7 @@
 *~
 fetch
 push
+.sass-cache
 propagate
 db
 rebuild-locales.pl

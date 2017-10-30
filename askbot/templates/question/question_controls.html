@@ -1,9 +1,6 @@
 <a id="js-edit-btn-post-body-{{ question.pk }}"
-   class="question-edit js-edit"
-   href="{% url edit_question question.id %}"><i class="fa fa-pencil" aria-hidden="true"></i>{% trans %}edit{% endtrans %}</a>
-<a id="retag" class="question-retag"
-   href="{% url retag_question question.id %}"
-><i class="fa fa-tag" aria-hidden="true"></i>{% trans %}retag{% endtrans %}</a>
+   class="question-edit js-edit"><i class="fa fa-pencil" aria-hidden="true"></i>{% trans %}edit{% endtrans %}</a>
+<a id="retag" class="question-retag"><i class="fa fa-tag" aria-hidden="true"></i>{% trans %}retag{% endtrans %}</a>
 {% if question.offensive_flag_count > 0 %}
     <span
         id="question-offensive-remove-flag-{{ question.id }}"

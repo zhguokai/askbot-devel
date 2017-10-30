@@ -66,7 +66,7 @@ class TinyMCESettings(AppConf):
         'theme_advanced_statusbar_location': 'bottom',
         'editor_deselector': 'mceNoEditor',
         'width': '100%',
-        'height': '250'
+        'height': '200'
     }
 
 
