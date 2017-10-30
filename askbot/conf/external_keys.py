@@ -223,3 +223,24 @@ settings.register(
         description=_('Yammer secret key'),
     )
 )
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'WINDOWS_LIVE_KEY',
+        description=_('Windows Live client id'),
+        help_text=_(
+            'Please register your client application at <a href="%(url)s">'
+            'windows applications site</a>'
+        ) % {'url': const.DEPENDENCY_URLS['windows-live-apps']},
+
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'WINDOWS_LIVE_SECRET',
+        description=_('Windows Live secret key'),
+    )
+)
