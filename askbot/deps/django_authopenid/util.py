@@ -484,7 +484,6 @@ def get_enabled_major_login_providers():
             'response_parser': lambda data: simplejson.loads(data),
         }
 
-
     if askbot_settings.WINDOWS_LIVE_KEY and askbot_settings.WINDOWS_LIVE_SECRET:
         data['windows-live'] = {
             'name': 'windows-live',
@@ -497,6 +496,31 @@ def get_enabled_major_login_providers():
             'get_user_id_function': lambda data: data.user_id,
             'response_parser': lambda data: simplejson.loads(data),
             'extra_auth_params': {'scope': ('wl.basic',)},
+        }
+
+    def get_microsoft_azure_user_id(client):
+        conn = httplib.HTTPSConnection('graph.microsoft.com')
+        headers = {
+            'Authorization' : 'Bearer {0}'.format(client.access_token),
+            'Accept' : 'application/json',
+        }
+        conn.request('GET', '/v1.0/me', '', headers)
+        response = conn.getresponse()
+        profile = simplejson.loads(response.read())
+        return profile['id']
+
+    if askbot_settings.MICROSOFT_AZURE_KEY and askbot_settings.MICROSOFT_AZURE_SECRET:
+        data['microsoft-azure'] = {
+            'name': 'microsoft-azure',
+            'display_name': 'Microsoft Azure',
+            'type': 'oauth2',
+            'auth_endpoint': 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+            'token_endpoint': 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+            'resource_endpoint': 'https://graph.microsoft.com/v1.0/',
+            'icon_media_path': 'images/jquery-openid/microsoft-azure.png',
+            'get_user_id_function': get_microsoft_azure_user_id,
+            'response_parser': lambda data: simplejson.loads(data),
+            'extra_auth_params': {'scope': ('User.Read',),},
         }
 
     if askbot_settings.SIGNIN_FEDORA_ENABLED:
@@ -854,6 +878,9 @@ def get_oauth_parameters(provider_name):
     elif provider_name == 'windows-live':
         consumer_key = askbot_settings.WINDOWS_LIVE_KEY
         consumer_secret = askbot_settings.WINDOWS_LIVE_SECRET
+    elif provider_name == 'microsoft-azure':
+        consumer_key = askbot_settings.MICROSOFT_AZURE_KEY
+        consumer_secret = askbot_settings.MICROSOFT_AZURE_SECRET
     elif provider_name != 'mediawiki':
         raise ValueError('unexpected oauth provider %s' % provider_name)
 

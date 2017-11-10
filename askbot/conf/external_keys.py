@@ -244,3 +244,24 @@ settings.register(
         description=_('Windows Live secret key'),
     )
 )
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'MICROSOFT_AZURE_KEY',
+        description=_('Microsoft Azure client id'),
+        help_text=_(
+            'Please register your client application at <a href="%(url)s">'
+            'windows applications site</a>'
+        ) % {'url': const.DEPENDENCY_URLS['microsoft-azure-apps']},
+
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'MICROSOFT_AZURE_SECRET',
+        description=_('Microsoft Azure secret key'),
+    )
+)
