@@ -523,6 +523,7 @@ DEPENDENCY_URLS = {
     'mediawiki-oauth-extension': 'https://www.mediawiki.org/wiki/Extension:OAuth',
     'yammer-apps': 'https://www.yammer.com/client_applications',
     'windows-live-apps': 'https://apps.dev.microsoft.com/#/appList',
+    'microsoft-azure-apps': 'https://apps.dev.microsoft.com/#/appList',
 }
 
 PASSWORD_MIN_LENGTH = 8
