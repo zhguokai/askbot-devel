@@ -5,6 +5,8 @@
 fetch
 push
 propagate
+askbot/media/style/.sass-cache/
+.sass-cache
 db
 rebuild-locales.pl
 /src
