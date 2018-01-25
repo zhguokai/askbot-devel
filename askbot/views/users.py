@@ -1290,17 +1290,17 @@ def user_custom_tab(request, user, context):
     """works only if `ASKBOT_CUSTOM_USER_PROFILE_TAB`
     setting in the ``settings.py`` is properly configured"""
     tab_settings = django_settings.ASKBOT_CUSTOM_USER_PROFILE_TAB
-    module_path = tab_settings['CONTENT_GENERATOR']
-    content_generator = load_module(module_path)
+    module_path = tab_settings['CONTEXT_GENERATOR']
+    context_generator = load_module(module_path)
 
     page_title = _('profile - %(section)s') % \
         {'section': tab_settings['NAME']}
 
     context.update({
-        'custom_tab_content': content_generator(request, user),
         'tab_name': tab_settings['SLUG'],
         'page_title': page_title
     })
+    context.update(context_generator(request, user))
     return render(request, 'user_profile/custom_tab.html', context)
 
 USER_VIEW_CALL_TABLE = {
