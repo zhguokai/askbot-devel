@@ -849,7 +849,7 @@ input[type="submit"].searchBtn {
 }
 input[type="submit"].searchBtn:hover {
   background-image: none;
-  background: #dddddd url(../images/sprites.png) no-repeat -146px -37px !important;
+  background: #ddd url(../images/sprites.png) no-repeat -146px -37px !important;
 }
 input[type="button"].cancelSearchBtn {
   font-size: 30px !important;
@@ -2433,7 +2433,7 @@ tr.mceLast {
   width: 175px;
 }
 .question-page .post-update-info {
-  background: #ffffff url(../images/background-user-info.png) repeat-x bottom;
+  background: #fff url(../images/background-user-info.png) repeat-x bottom;
   float: right;
   font-size: 9px;
   font-family: Arial;
@@ -3547,7 +3547,7 @@ a:hover.medal {
   font-family: 'Open Sans Condensed', Arial, sans-serif;
   font-size: 200%;
   font-weight: 700;
-  color: #777777;
+  color: #777;
 }
 .scoreNumber {
   font-family: 'Open Sans Condensed', Arial, sans-serif;
@@ -4393,49 +4393,49 @@ a.edit {
 }
 /* Pretty printing styles. Used with prettify.js. minified in one line */
 .pln {
-  color: #000000;
+  color: #000;
 }
 @media screen {
   .str {
-    color: #008800;
+    color: #080;
   }
   .kwd {
-    color: #000088;
+    color: #008;
   }
   .com {
-    color: #880000;
+    color: #800;
   }
   .typ {
-    color: #660066;
+    color: #606;
   }
   .lit {
-    color: #006666;
+    color: #066;
   }
   .pun,
   .opn,
   .clo {
-    color: #666600;
+    color: #660;
   }
   .tag {
-    color: #000088;
+    color: #008;
   }
   .atn {
-    color: #660066;
+    color: #606;
   }
   .atv {
-    color: #008800;
+    color: #080;
   }
   .dec,
   .var {
-    color: #660066;
+    color: #606;
   }
   .fun {
-    color: #ff0000;
+    color: red;
   }
 }
 @media print, projection {
   .str {
-    color: #006600;
+    color: #060;
   }
   .kwd {
     color: #006;
@@ -4450,27 +4450,27 @@ a.edit {
     font-weight: bold;
   }
   .lit {
-    color: #004444;
+    color: #044;
   }
   .pun,
   .opn,
   .clo {
-    color: #444400;
+    color: #440;
   }
   .tag {
     color: #006;
     font-weight: bold;
   }
   .atn {
-    color: #440044;
+    color: #404;
   }
   .atv {
-    color: #006600;
+    color: #060;
   }
 }
 pre.prettyprint {
   padding: 2px;
-  border: 1px solid #888888;
+  border: 1px solid #888;
 }
 ol.linenums {
   margin-top: 0;
@@ -4491,7 +4491,7 @@ li.L3,
 li.L5,
 li.L7,
 li.L9 {
-  background: #eeeeee;
+  background: #eee;
 }
 #leading-sidebar {
   float: left;
@@ -5294,6 +5294,16 @@ body.lang-zh-cn.question-page a.submit,
 body.lang-zh-tw.question-page a.submit,
 body.lang-zh_TW.question-page a.submit {
   line-height: 30px !important;
+}
+body.lang-zh-tw .box .inputs #interestingTagInput,
+body.lang-zh_TW .box .inputs #interestingTagInput,
+body.lang-zh-tw .box .inputs #ignoredTagInput,
+body.lang-zh_TW .box .inputs #ignoredTagInput,
+body.lang-zh-tw .box .inputs #subscribedTagInput,
+body.lang-zh_TW .box .inputs #subscribedTagInput,
+body.lang-zh-tw .box .inputs #ab-tag-search,
+body.lang-zh_TW .box .inputs #ab-tag-search {
+  width: 137px;
 }
 body.lang-hu .scope-selector {
   font-size: 17px;
