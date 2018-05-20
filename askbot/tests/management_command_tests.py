@@ -1,9 +1,31 @@
+import os
+from unittest import TestCase
 from django.core import management, mail
+from django.conf import settings as django_settings
 from django.contrib import auth
 from askbot.tests.utils import AskbotTestCase
 from askbot.tests.utils import with_settings
 from askbot import models
 from django.contrib.auth.models import User
+
+class ExportUserDataTests(TestCase):
+    def test_extract_upfile_paths_from_text(self):
+        prefix = django_settings.MEDIA_URL
+        path = os.path.join(prefix, 'somefile')
+        text = """hello {url}1.jpg) blabla <img src="{url}2.jpg" /> 
+        <img src='{url}3.jpg' /> :{url}4.jpg {url}5.jpg""".format(url=path)
+        from askbot.management.commands.askbot_export_user_data import Command
+        paths = Command.extract_upfile_paths_from_text(text)
+        self.assertEqual(len(paths), 5)
+        expected = ('/upfiles/somefile1.jpg',
+                    '/upfiles/somefile2.jpg',
+                    '/upfiles/somefile3.jpg',
+                    '/upfiles/somefile4.jpg',
+                    '/upfiles/somefile5.jpg')
+
+        self.assertEqual(set(paths), set(expected))
+
+
 
 class ManagementCommandTests(AskbotTestCase):
     def test_askbot_add_user(self):
