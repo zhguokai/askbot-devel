@@ -25,6 +25,20 @@ class ExportUserDataTests(TestCase):
 
         self.assertEqual(set(paths), set(expected))
 
+    def test_upfile_is_on_disk(self):
+        file_name = 'some.jpg'
+        media_url = django_settings.MEDIA_URL
+        url = os.path.join(media_url, file_name)
+        media_root = django_settings.MEDIA_ROOT
+        path = os.path.join(media_root, file_name)
+        file_obj = open(path, 'w')
+        file_obj.write('haha')
+        file_obj.close()
+        from askbot.management.commands.askbot_export_user_data import Command
+        is_on_disk = Command.upfile_is_on_disk(url)
+        self.assertEqual(is_on_disk, True)
+        os.remove(path)
+
 
 
 class ManagementCommandTests(AskbotTestCase):
