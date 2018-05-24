@@ -1,5 +1,10 @@
+from datetime import date
+import json
 import os
-from unittest import TestCase
+import shutil
+import zipfile
+import askbot
+from askbot.utils.html import site_url
 from django.core import management, mail
 from django.conf import settings as django_settings
 from django.contrib import auth
@@ -8,7 +13,26 @@ from askbot.tests.utils import with_settings
 from askbot import models
 from django.contrib.auth.models import User
 
-class ExportUserDataTests(TestCase):
+class ExportUserDataTests(AskbotTestCase):
+    @classmethod
+    def put_upfile(cls, file_name):
+        """Creates a test upfile with contents
+        being the file name.
+        Returns file path."""
+        media_root = django_settings.MEDIA_ROOT
+        path = os.path.join(media_root, file_name)
+        file_obj = open(path, 'w')
+        file_obj.write(file_name)
+        file_obj.close()
+        return path
+
+    @classmethod
+    def get_upfile_url_from_path(cls, path):
+        #pylint: disable=missing-docstring
+        file_name = os.path.basename(path)
+        media_url = django_settings.MEDIA_URL
+        return os.path.join(media_url, file_name)
+
     def test_extract_upfile_paths_from_text(self):
         prefix = django_settings.MEDIA_URL
         path = os.path.join(prefix, 'somefile')
@@ -26,20 +50,101 @@ class ExportUserDataTests(TestCase):
         self.assertEqual(set(paths), set(expected))
 
     def test_upfile_is_on_disk(self):
-        file_name = 'some.jpg'
-        media_url = django_settings.MEDIA_URL
-        url = os.path.join(media_url, file_name)
-        media_root = django_settings.MEDIA_ROOT
-        path = os.path.join(media_root, file_name)
-        file_obj = open(path, 'w')
-        file_obj.write('haha')
-        file_obj.close()
         from askbot.management.commands.askbot_export_user_data import Command
+        path = self.put_upfile('somefile.jpg')
+        url = self.get_upfile_url_from_path(path)
         is_on_disk = Command.upfile_is_on_disk(url)
         self.assertEqual(is_on_disk, True)
         os.remove(path)
 
+    def test_command(self):
+        # create user
+        today = date.today()
+        # create user & fill out profile
+        user = User.objects.create(username='bob',
+                                email='bob@example.com',
+                                date_of_birth=today,
+                                about='hello world')
 
+        # put three upfiles in place
+        paths = list()
+        for idx in range(1, 4):
+            path = self.put_upfile('file{}.txt'.format(idx))
+            paths.append(path)
+
+        # post question with an image
+        text_tpl ='hello there ![image]({} "Image {}")'
+        url = self.get_upfile_url_from_path(paths[0])
+        question_text = text_tpl.format(url, 1)
+        question = user.post_question(title='question',
+                                      body_text=question_text,
+                                      tags='one two')
+
+        # post answer with an image
+        url = self.get_upfile_url_from_path(paths[1])
+        answer_text = text_tpl.format(url, 2)
+        answer = user.post_answer(question, answer_text)
+
+        # post comment with an image
+        url = self.get_upfile_url_from_path(paths[2])
+        comment_text = text_tpl.format(url, 3)
+        comment = user.post_comment(answer, comment_text)
+
+        # run extract data command into a temp dir
+        askbot_dir = askbot.get_install_directory()
+        test_dir = os.path.join(askbot_dir, 'tests',
+                                'temp_export_user_data')
+
+        if os.path.isdir(test_dir):
+            shutil.rmtree(test_dir)
+        os.makedirs(test_dir)
+
+        backup_file = os.path.join(test_dir, 'backup.zip')
+        management.call_command('askbot_export_user_data',
+                     user_id=user.pk, file_name=backup_file)
+        # test: unzip the file
+        zip_file = zipfile.ZipFile(backup_file, 'r')
+        extract_dir = os.path.join(test_dir, 'extracted')
+        zip_file.extractall(extract_dir)
+
+        json_file = os.path.join(extract_dir, 'data.json')
+        self.assertTrue(os.path.isfile(json_file))
+
+        # test: load json
+        json_data = json.loads(open(json_file).read())
+        # test: validate question
+        q_data = json_data['questions'][0]
+        thread = question.thread
+        self.assertEqual(q_data['title'], thread.title)
+        self.assertEqual(q_data['tags'], thread.tagnames)
+        self.assertEqual(q_data['text'], question.text)
+        self.assertEqual(q_data['added_at'], str(question.added_at))
+        self.assertEqual(q_data['last_edited_at'],
+                         str(question.last_edited_at))
+        question_url = site_url(question.get_absolute_url())
+        self.assertEqual(q_data['url'], question_url)
+
+        # test: validate answer, just check it's there
+        self.assertEqual(len(json_data['answers']), 1)
+        # test: validate comment
+        self.assertEqual(len(json_data['comments']), 1)
+
+        # test: validate user profile data
+        user_data = json_data['user_profile']
+        self.assertEqual(user_data['username'], user.username)
+        self.assertEqual(user_data['about'], user.about)
+        self.assertEqual(user_data['email'], user.email)
+        self.assertEqual(user_data['date_of_birth'], str(user.date_of_birth))
+        user_url = site_url(user.get_absolute_url())
+        self.assertEqual(user_data['profile_url'], user_url)
+
+        # test: verify that uploaded files are there
+        upfile_names = [os.path.basename(path) for path in paths]
+        for name in upfile_names:
+            extracted_path = os.path.join(extract_dir, 'upfiles', name)
+            self.assertTrue(os.path.isfile(extracted_path))
+
+        shutil.rmtree(test_dir)
 
 class ManagementCommandTests(AskbotTestCase):
     def test_askbot_add_user(self):

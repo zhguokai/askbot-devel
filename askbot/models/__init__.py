@@ -2017,7 +2017,7 @@ def user_post_question(
                     self,
                     title=None,
                     body_text='',
-                    tags=None,
+                    tags=None, # string of space-separated tags
                     wiki=False,
                     is_anonymous=False,
                     is_private=False,

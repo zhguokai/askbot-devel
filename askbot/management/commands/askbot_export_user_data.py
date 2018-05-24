@@ -37,11 +37,13 @@ class Command(BaseCommand):
         except User.DoesNotExist: #pylint: disable=no-member
             raise CommandError('User with id {} does not exist'.format(uid))
 
-        data = {'about': user.about,
-                'date_of_birth': user.date_of_birth,
-                'username': user.username,
-                'profile_url': site_url(user.get_absolute_url()),
-                'email': user.email}
+        user_profile = {'about': user.about,
+                        'date_of_birth': str(user.date_of_birth),
+                        'username': user.username,
+                        'profile_url': site_url(user.get_absolute_url()),
+                        'email': user.email}
+
+        data = {'user_profile': user_profile}
 
         question_data = self.get_question_data(user)
         data['questions'] = question_data.values()
@@ -52,13 +54,13 @@ class Command(BaseCommand):
         comment_data = self.get_post_data(user, 'comment')
         data['comments'] = comment_data.values()
 
-        upfiles = self.get_user_upfiles(user)
+        upfiles = self.get_upfiles(data)
 
         temp_dir = tempfile.mkdtemp()
-        dir_path = self.backup_upfiles_and_avatar(upfiles, user, temp_dir)
+        self.backup_upfiles_and_avatar(upfiles, user, temp_dir)
 
         self.save_json_file(data, temp_dir)
-        self.zip_tempdir(temp_dir, options['file_name'])
+        self.zip_tempdir(temp_dir, file_name)
 
         shutil.rmtree(temp_dir)
 
@@ -102,7 +104,13 @@ class Command(BaseCommand):
     def backup_upfiles_and_avatar(cls, upfiles, user, temp_dir):
         """Copies the uploaded files and the avatar to the
         temporary directory"""
-        pass
+        updir = os.path.join(temp_dir, 'upfiles')
+        os.makedirs(updir)
+        for upfile in upfiles:
+            path = cls.get_upfile_path(upfile)
+            shutil.copy(path, updir)
+
+        #todo: backup avatar
 
     @classmethod
     def extract_upfile_paths_from_text(cls, text):
@@ -114,9 +122,8 @@ class Command(BaseCommand):
         non_space = '[^)\\s\'\"]+'
         pattern = '(' + start + non_space + ')'
         upfile_re = re.compile(pattern)
-        ptr = re.compile(pattern)
         upfiles = set()
-        for match in ptr.finditer(text):
+        for match in upfile_re.finditer(text):
             upfiles |= set(match.groups())
         return upfiles
 
@@ -124,38 +131,32 @@ class Command(BaseCommand):
     def upfile_is_on_disk(cls, upfile):
         """`True` if file is found relative to the
         `settings.MEDIA_ROOT` directory"""
-        media_root = django_settings.MEDIA_ROOT
-        media_url = django_settings.MEDIA_URL
-        file_name = upfile[len(media_url):]
-        file_path = os.path.join(media_root, file_name)
+        file_path = cls.get_upfile_path(upfile)
         return os.path.isfile(file_path)
 
     @classmethod
-    def get_user_upfiles(cls, user):
+    def get_upfile_path(cls, upfile):
+        """Returns path to the upfile by file name"""
+        media_root = django_settings.MEDIA_ROOT
+        file_name = os.path.basename(upfile)
+        return os.path.join(media_root, file_name)
+
+    @classmethod
+    def get_upfiles(cls, data):
         """Returns set of upfiles of all user posts, and only those
         that can be found in the upfiles directory"""
-        post_types = ('question', 'answer', 'comment')
-        posts = user.posts.filter(post_type__in=post_types)
-        have_thread = [post for post in posts if post.thread_id]
-        exportable = list()
-        for post in have_thread:
-            if post.is_question() or post.parent_id:
-                exportable.append(post)
+        texts = list()
+        sources = ('questions', 'answers', 'comments')
+        for source in sources:
+            source_texts = [datum['text'] for datum in data[source]]
+            texts.extend(source_texts)
 
         upfiles = set()
-        for post in exportable:
-            upfiles |= cls.extract_upfile_paths_from_text(post.text) #pylint: disable=no-member
+        for text in texts:
+            upfiles |= cls.extract_upfile_paths_from_text(text) #pylint: disable=no-member
 
         confirmed = [upfile for upfile in upfiles if cls.upfile_is_on_disk(upfile)] #pylint: disable=no-member
         return confirmed
-
-    @classmethod
-    def get_post_upfiles(cls, post):
-        """Returns dictionary valued with uploaded file paths
-        relative to the upfiles directory, extracted from
-        the post.text and present on the file system.
-        Keys are posts."""
-        paths = cls.extract_upfile_paths_from_text(post.text)
 
     @classmethod
     def get_post_data(cls, user, post_type):
@@ -164,12 +165,13 @@ class Command(BaseCommand):
         posts = user.posts.filter(post_type=post_type)
 
         # prune threadless posts and parentless
-        good_posts = list()
         have_threads = [post for post in posts if post.thread_id]
         if post_type == 'question':
             exportable = have_threads
-        else:
+        elif post_type == 'comment':
             exportable = [post for post in posts if post.parent_id]
+        elif post_type == 'answer':
+            exportable = posts
 
         # collect data per post:
         data = dict()
