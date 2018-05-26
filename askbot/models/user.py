@@ -2,6 +2,7 @@ import datetime
 import logging
 import re
 from django.db import models
+from django.db.models import Q
 from django.db.backends.dummy.base import IntegrityError
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
@@ -51,6 +52,14 @@ class InvitedModerator(object):
         name = ' '.join(bits[1:])
 
         return cls(name, email)
+
+def get_moderator_emails():
+    """Returns a set of email addresses of all site
+    moderators and administrators"""
+    mods = User.objects.filter(Q(status='m') | Q(is_superuser=True))
+    active_mods = mods.filter(is_active = True)
+    emails = active_mods.values_list('email', flat=True)
+    return set(emails)
 
 def get_invited_moderators(include_registered=False):
     """Returns list of InvitedModerator instances
