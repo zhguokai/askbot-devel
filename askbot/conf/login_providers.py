@@ -130,7 +130,7 @@ if module_exists('cas'):
                 ' ',
                 settings.get_related_settings_info(
                     ('EMAIL', 'BLANK_EMAIL_ALLOWED', True, _('Must be enabled')),
-                    ('ACCESS_CONTROL', 'REQUIRE_VALID_EMAIL_FOR', True, _('Must be not be required')),
+                    ('ACCESS_CONTROL', 'REQUIRE_VALID_EMAIL_FOR', True, _('Must be optional')),
                 )
             ),
         )

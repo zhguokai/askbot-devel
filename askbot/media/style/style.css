@@ -1130,7 +1130,7 @@ body.anon.ask-page .search-drop-menu {
 .box .inputs #ignoredTagInput,
 .box .inputs #subscribedTagInput,
 .box .inputs #ab-tag-search {
-  width: 147px;
+  width: 145px;
   padding-left: 5px;
   border: #c9c9b5 1px solid;
   height: 25px;
@@ -1199,7 +1199,8 @@ body.anon.ask-page .search-drop-menu {
   line-height: 1.3;
 }
 /* tips and markdown help are widgets for ask template */
-.question-instructions {
+.question-instructions,
+.instructions-message {
   background: #e9e9e1;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1208,8 +1209,16 @@ body.anon.ask-page .search-drop-menu {
   margin-bottom: 10px;
   width: 100%;
 }
-.question-instructions ul {
+.question-instructions ul,
+.instructions-message ul {
   margin: 0 0 0 27px;
+}
+.openid-signin .instructions-message {
+  margin: 10px 0;
+  padding: 10px;
+}
+.openid-signin .instructions-message p {
+  color: #666;
 }
 #markdownHelp li {
   color: #707070;
